@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -501,8 +502,13 @@
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         .footer {
@@ -725,6 +731,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="header">
@@ -760,12 +767,8 @@
 
         <div class="controls">
             <div class="search-bar">
-                <input 
-                    type="text" 
-                    id="searchInput" 
-                    class="search-input" 
-                    placeholder="Search by name, description, or program address..."
-                >
+                <input type="text" id="searchInput" class="search-input"
+                    placeholder="Search by name, description, or program address...">
             </div>
             <div class="filter-section">
                 <span class="filter-label">Filter by:</span>
@@ -792,7 +795,8 @@
         </div>
 
         <div class="footer">
-            <p>Open source IDL registry for the Solana ecosystem • <a href="https://github.com/openSVM/idl-registry" target="_blank">GitHub</a></p>
+            <p>Open source IDL registry for the Solana ecosystem • <a href="https://github.com/openSVM/idl-registry"
+                    target="_blank">GitHub</a></p>
             <p style="margin-top: 10px; font-size: 12px;">Contributions welcome! Help us complete missing IDLs.</p>
         </div>
 
@@ -843,7 +847,7 @@
         async function showProtocolPage(identifier) {
             // Hide main view
             document.querySelector('.container > div:not(.protocol-page)').style.display = 'none';
-            
+
             // Find protocol by ID or address
             let protocol = allProtocols.find(p => p.id === identifier.toLowerCase());
             if (!protocol && protocolAddressMap[identifier]) {
@@ -863,7 +867,7 @@
 
             // Load IDL
             try {
-                const response = await fetch('../' + protocol.idlPath);
+                const response = await fetch('./' + protocol.idlPath);
                 const idl = await response.json();
                 const programAddress = idl.metadata?.address || 'N/A';
 
@@ -990,25 +994,25 @@
         async function init() {
             loadBookmarks();
             try {
-                const response = await fetch('../index.json');
+                const response = await fetch('./index.json');
                 const data = await response.json();
                 allProtocols = data.protocols;
                 filteredProtocols = allProtocols;
-                
+
                 // Build program address map
                 await buildAddressMap();
-                
+
                 updateStats();
                 renderFilters(data.categories);
-                
+
                 // Handle initial route
                 handleRoute();
-                
+
                 // Only render protocols if on main view
                 if (!window.location.hash.startsWith('#/')) {
                     renderProtocols();
                 }
-                
+
                 setupEventListeners();
             } catch (error) {
                 document.getElementById('protocolsList').innerHTML = `
@@ -1024,7 +1028,7 @@
         async function buildAddressMap() {
             for (const protocol of allProtocols) {
                 try {
-                    const response = await fetch('../' + protocol.idlPath);
+                    const response = await fetch('./' + protocol.idlPath);
                     const idl = await response.json();
                     if (idl.metadata?.address) {
                         protocolAddressMap[idl.metadata.address] = protocol.id;
@@ -1044,7 +1048,7 @@
 
         function renderFilters(categories) {
             const filterButtons = document.getElementById('filterButtons');
-            
+
             const allBtn = document.createElement('button');
             allBtn.className = 'filter-btn active';
             allBtn.textContent = 'All';
@@ -1071,19 +1075,19 @@
 
         function applyFilters() {
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            
+
             filteredProtocols = allProtocols.filter(protocol => {
                 const matchesCategory = currentCategory === 'all' || protocol.category === currentCategory;
-                const matchesSearch = searchTerm === '' || 
+                const matchesSearch = searchTerm === '' ||
                     protocol.name.toLowerCase().includes(searchTerm) ||
                     protocol.description.toLowerCase().includes(searchTerm) ||
                     protocol.id.toLowerCase().includes(searchTerm) ||
                     // Check if search term matches a program address
-                    Object.keys(protocolAddressMap).some(address => 
-                        address.toLowerCase().includes(searchTerm) && 
+                    Object.keys(protocolAddressMap).some(address =>
+                        address.toLowerCase().includes(searchTerm) &&
                         protocolAddressMap[address] === protocol.id
                     );
-                
+
                 return matchesCategory && matchesSearch;
             });
 
@@ -1092,7 +1096,7 @@
 
         function renderProtocols() {
             const container = document.getElementById('protocolsList');
-            
+
             if (filteredProtocols.length === 0) {
                 container.innerHTML = `
                     <div class="no-results">
@@ -1150,7 +1154,7 @@
             // Add click listeners to protocol items
             document.querySelectorAll('.protocol-item').forEach(item => {
                 item.addEventListener('click', (e) => {
-                    if (e.target.classList.contains('protocol-checkbox') || 
+                    if (e.target.classList.contains('protocol-checkbox') ||
                         e.target.classList.contains('icon-btn') ||
                         e.target.classList.contains('bookmark-icon') ||
                         e.target.tagName === 'A') {
@@ -1166,9 +1170,9 @@
         function updateSelection() {
             updateStats();
             document.getElementById('exportBtn').disabled = selectedProtocols.size === 0;
-            
+
             if (selectedProtocols.size > 0) {
-                document.getElementById('selectionInfo').textContent = 
+                document.getElementById('selectionInfo').textContent =
                     `${selectedProtocols.size} protocol${selectedProtocols.size > 1 ? 's' : ''} selected`;
             } else {
                 document.getElementById('selectionInfo').textContent = 'Select protocols to export their IDLs';
@@ -1187,9 +1191,9 @@
 
         function setupEventListeners() {
             document.getElementById('searchInput').addEventListener('input', applyFilters);
-            
+
             document.getElementById('showBookmarksBtn').addEventListener('click', toggleBookmarksView);
-            
+
             document.getElementById('selectAllBtn').addEventListener('click', () => {
                 filteredProtocols.forEach(p => selectedProtocols.add(p.id));
                 updateSelection();
@@ -1203,10 +1207,10 @@
             });
 
             document.getElementById('exportBtn').addEventListener('click', exportSelectedIDLs);
-            
+
             // Hash change listener for routing
             window.addEventListener('hashchange', handleRoute);
-            
+
             // Keyboard navigation
             document.addEventListener('keydown', handleKeyboardNavigation);
         }
@@ -1224,7 +1228,7 @@
             const items = Array.from(document.querySelectorAll('.protocol-item'));
             if (items.length === 0) return;
 
-            switch(e.key) {
+            switch (e.key) {
                 case 'ArrowDown':
                     e.preventDefault();
                     keyboardFocusIndex = Math.min(keyboardFocusIndex + 1, items.length - 1);
@@ -1275,9 +1279,9 @@
             if (!protocol) return;
 
             try {
-                const response = await fetch('../' + protocol.idlPath);
+                const response = await fetch('./' + protocol.idlPath);
                 const idl = await response.json();
-                
+
                 const newWindow = window.open('', '_blank');
                 newWindow.document.write(`
                     <html>
@@ -1304,9 +1308,9 @@
             if (!protocol) return;
 
             try {
-                const response = await fetch('../' + protocol.idlPath);
+                const response = await fetch('./' + protocol.idlPath);
                 const idl = await response.json();
-                
+
                 const blob = new Blob([JSON.stringify(idl, null, 2)], { type: 'application/json' });
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
@@ -1330,7 +1334,7 @@
                 if (!protocol) continue;
 
                 try {
-                    const response = await fetch('../' + protocol.idlPath);
+                    const response = await fetch('./' + protocol.idlPath);
                     const idl = await response.json();
                     idls[protocolId] = idl;
                 } catch (error) {
@@ -1361,4 +1365,5 @@
         init();
     </script>
 </body>
+
 </html>
