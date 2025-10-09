@@ -75,16 +75,64 @@
             --bg-primary: #002b36;
             --bg-secondary: #073642;
             --bg-tertiary: #094251;
-            --text-primary: #839496;
-            --text-secondary: #657b83;
-            --text-muted: #586e75;
-            --border-primary: #2aa198;
+            --text-primary: #93a1a1;
+            --text-secondary: #839496;
+            --text-muted: #657b83;
+            --border-primary: #b58900;
             --border-secondary: #094251;
-            --accent-primary: #268bd2;
-            --accent-hover: #2aa198;
+            --accent-primary: #b58900;
+            --accent-hover: #cb4b16;
             --error-color: #dc322f;
-            --selection-bg: #268bd2;
+            --selection-bg: #b58900;
             --checkbox-bg: #073642;
+        }
+
+        [data-theme="solarized-light"] {
+            --bg-primary: #fdf6e3;
+            --bg-secondary: #eee8d5;
+            --bg-tertiary: #e8e2d0;
+            --text-primary: #657b83;
+            --text-secondary: #839496;
+            --text-muted: #93a1a1;
+            --border-primary: #b58900;
+            --border-secondary: #e8e2d0;
+            --accent-primary: #b58900;
+            --accent-hover: #cb4b16;
+            --error-color: #dc322f;
+            --selection-bg: #b58900;
+            --checkbox-bg: #eee8d5;
+        }
+
+        [data-theme="github-light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f6f8fa;
+            --bg-tertiary: #eaeef2;
+            --text-primary: #24292f;
+            --text-secondary: #57606a;
+            --text-muted: #6e7781;
+            --border-primary: #24292f;
+            --border-secondary: #d0d7de;
+            --accent-primary: #0969da;
+            --accent-hover: #0550ae;
+            --error-color: #cf222e;
+            --selection-bg: #0969da;
+            --checkbox-bg: #f6f8fa;
+        }
+
+        [data-theme="dos"] {
+            --bg-primary: #0000aa;
+            --bg-secondary: #0000bb;
+            --bg-tertiary: #0000cc;
+            --text-primary: #aaaaaa;
+            --text-secondary: #ffffff;
+            --text-muted: #888888;
+            --border-primary: #5555ff;
+            --border-secondary: #0000cc;
+            --accent-primary: #55ffff;
+            --accent-hover: #ffff55;
+            --error-color: #ff5555;
+            --selection-bg: #55ffff;
+            --checkbox-bg: #0000bb;
         }
 
         [data-theme="dracula"] {
@@ -964,13 +1012,16 @@
                         </button>
                         <div class="theme-dropdown" id="themeDropdown">
                             <div class="theme-option" data-theme="light">Light</div>
+                            <div class="theme-option" data-theme="github-light">GitHub Light</div>
+                            <div class="theme-option" data-theme="solarized-light">Solarized Light</div>
                             <div class="theme-option" data-theme="dark">Dark</div>
+                            <div class="theme-option" data-theme="solarized">Solarized Dark</div>
                             <div class="theme-option" data-theme="night">Night</div>
-                            <div class="theme-option" data-theme="terminal">Terminal</div>
-                            <div class="theme-option" data-theme="solarized">Solarized</div>
                             <div class="theme-option" data-theme="dracula">Dracula</div>
                             <div class="theme-option" data-theme="nord">Nord</div>
                             <div class="theme-option" data-theme="onedark">One Dark</div>
+                            <div class="theme-option" data-theme="terminal">Terminal</div>
+                            <div class="theme-option" data-theme="dos">DOS / Borland</div>
                         </div>
                     </div>
                     <button class="bookmark-btn" id="showBookmarksBtn">
