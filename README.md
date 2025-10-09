@@ -10,6 +10,7 @@ idlhub - a comprehensive, searchable registry of Interface Definition Language (
 - **Organized Structure**: Clean directory layout with standardized naming
 - **Searchable**: Filter by category, search by name or description
 - **Extensible**: Easy to contribute new IDLs or update existing ones
+- **🆕 MCP Server**: Model Context Protocol server for LLM and editor integration with schema lookup, code generation, and diagnostics
 
 ## 📁 Structure
 
@@ -22,6 +23,10 @@ idl-registry/
 │   ├── orcaIDL.json
 │   ├── marinadeIDL.json
 │   └── ...
+├── mcp-server/        # Model Context Protocol server
+│   ├── src/           # Server source code
+│   ├── config.json    # Server configuration
+│   └── README.md      # MCP server documentation
 └── README.md
 ```
 
@@ -61,6 +66,53 @@ const jupiter = registry.protocols.find(p => p.id === 'jupiter');
 const idlResponse = await fetch(`https://raw.githubusercontent.com/openSVM/idl-registry/main/${jupiter.idlPath}`);
 const idl = await idlResponse.json();
 ```
+
+### Model Context Protocol (MCP) Server
+
+IDLHub includes a **Model Context Protocol (MCP) server** that provides structured, high-performance access to IDL schemas, symbol lookup, code generation, and diagnostics. Perfect for LLM integration and editor tooling.
+
+**One-Line Install:**
+
+```bash
+curl -fsSL https://idlhub.com/mcp | sh
+```
+
+Or if you have the repository already:
+
+```bash
+# Install dependencies
+npm install
+
+# Start the MCP server (stdio transport)
+npm run mcp:start
+
+# Or start with WebSocket transport
+npm run mcp:websocket
+```
+
+**Features:**
+- 📋 Schema listing & retrieval
+- 🔍 Symbol lookup (types, instructions, accounts, enums)
+- 💻 Code generation (TypeScript, Rust, Python, Anchor TS)
+- ✅ IDL validation and diagnostics
+- 🚀 High performance (p95 < 100ms)
+- 🔌 Multiple transports (stdio, WebSocket)
+
+**Integration Examples:**
+
+```json
+// Claude Desktop / Cline
+{
+  "mcpServers": {
+    "idlhub": {
+      "command": "node",
+      "args": ["/path/to/idlhub/mcp-server/src/index.js"]
+    }
+  }
+}
+```
+
+See [mcp-server/README.md](mcp-server/README.md) for complete documentation.
 
 ## 📦 Protocol Categories
 
