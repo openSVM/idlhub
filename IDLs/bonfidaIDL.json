@@ -1,0 +1,96 @@
+{
+  "version": "0.1.0",
+  "name": "name_service",
+  "instructions": [
+    {
+      "name": "create",
+      "accounts": [
+        {
+          "name": "namingServiceProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rootDomain",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "name",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "nameOwner",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "nameClass",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "parentName",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "parentNameOwner",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "buyer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "hashedName",
+          "type": "bytes"
+        },
+        {
+          "name": "lamports",
+          "type": "u64"
+        },
+        {
+          "name": "space",
+          "type": "u32"
+        }
+      ]
+    },
+    {
+      "name": "transfer",
+      "accounts": [
+        {
+          "name": "nameAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "currentNameOwner",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "newNameOwner",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    }
+  ],
+  "accounts": [],
+  "types": [],
+  "metadata": {
+    "address": "namesLPneVptA9Z5rqUDD9tMTWEJwofgaYwp8cawRkX"
+  }
+}

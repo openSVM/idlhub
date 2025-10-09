@@ -1,0 +1,108 @@
+{
+  "version": "0.1.0",
+  "name": "dexterity",
+  "instructions": [
+    {
+      "name": "initializeTrader",
+      "accounts": [
+        {
+          "name": "trader",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "marketProductGroup",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "owner",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "newOrder",
+      "accounts": [
+        {
+          "name": "marketProductGroup",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "product",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "orderbook",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "eventQueue",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "bids",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "asks",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "trader",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "owner",
+          "isMut": false,
+          "isSigner": true
+        }
+      ],
+      "args": [
+        {
+          "name": "side",
+          "type": "u8"
+        },
+        {
+          "name": "maxBaseQty",
+          "type": "u64"
+        },
+        {
+          "name": "orderType",
+          "type": "u8"
+        },
+        {
+          "name": "selfTradeBehavior",
+          "type": "u8"
+        },
+        {
+          "name": "matchLimit",
+          "type": "u64"
+        },
+        {
+          "name": "limitPrice",
+          "type": "u64"
+        }
+      ]
+    }
+  ],
+  "accounts": [],
+  "types": [],
+  "metadata": {
+    "address": "Dex1111111111111111111111111111111111111111"
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "version": "0.1.0",
+  "name": "jupiter_aggregator",
+  "instructions": [
+    {
+      "name": "route",
+      "accounts": [
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "userSourceTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userDestinationTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userTransferAuthority",
+          "isMut": false,
+          "isSigner": true
+        }
+      ],
+      "args": [
+        {
+          "name": "routePlan",
+          "type": "bytes"
+        },
+        {
+          "name": "inAmount",
+          "type": "u64"
+        },
+        {
+          "name": "quotedOutAmount",
+          "type": "u64"
+        },
+        {
+          "name": "slippageBps",
+          "type": "u16"
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "address": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4"
+  }
+}

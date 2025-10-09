@@ -1,0 +1,55 @@
+{
+  "version": "0.1.0",
+  "name": "kamino",
+  "instructions": [
+    {
+      "name": "deposit",
+      "accounts": [
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "userCollateralAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "reserve",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "reserveCollateralMint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "reserveLiquiditySupply",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "market",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "liquidityAmount",
+          "type": "u64"
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "address": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD"
+  }
+}

@@ -1,0 +1,155 @@
+{
+  "version": "0.1.0",
+  "name": "meteora",
+  "instructions": [
+    {
+      "name": "addLiquidity",
+      "accounts": [
+        {
+          "name": "pool",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "lpMint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userTransferAuthority",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "userTokenA",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userTokenB",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "aVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "bVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userLpToken",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "tokenAAmount",
+          "type": "u64"
+        },
+        {
+          "name": "tokenBAmount",
+          "type": "u64"
+        },
+        {
+          "name": "minMintAmount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "swap",
+      "accounts": [
+        {
+          "name": "pool",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userSourceToken",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userDestinationToken",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "aVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "bVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "aTokenVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "bTokenVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "aVaultLpMint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "bVaultLpMint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "aVaultLp",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "bVaultLp",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userTransferAuthority",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "inAmount",
+          "type": "u64"
+        },
+        {
+          "name": "minimumOutAmount",
+          "type": "u64"
+        }
+      ]
+    }
+  ],
+  "accounts": [],
+  "types": [],
+  "metadata": {
+    "address": "Eo7WjKq67rjJQSZxS6z3YkapzY3eMj6Xy8X5EQVn5UaB"
+  }
+}

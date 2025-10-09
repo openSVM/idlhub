@@ -1,0 +1,108 @@
+{
+  "version": "0.1.0",
+  "name": "larix",
+  "instructions": [
+    {
+      "name": "deposit",
+      "accounts": [
+        {
+          "name": "lendingMarket",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "reserve",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "reserveSupplyAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "reserveCollateralMint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "user",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "userSourceLiquidity",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userDestinationCollateral",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "liquidityAmount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "borrow",
+      "accounts": [
+        {
+          "name": "lendingMarket",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "borrowReserve",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "borrowReserveLiquiditySupply",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "obligation",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "obligationOwner",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "destinationLiquidity",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "liquidityAmount",
+          "type": "u64"
+        }
+      ]
+    }
+  ],
+  "accounts": [],
+  "types": [],
+  "metadata": {
+    "address": "LARiTAAoXkNqwt2fQAL9QsWvBm7fLZZP1fgmj5R2Lf2"
+  }
+}

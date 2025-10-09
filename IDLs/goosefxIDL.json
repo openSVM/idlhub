@@ -1,0 +1,135 @@
+{
+  "version": "0.1.0",
+  "name": "goosefx_ssl",
+  "instructions": [
+    {
+      "name": "swap",
+      "accounts": [
+        {
+          "name": "sslPool",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "sslPoolSigner",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "userTransferAuthority",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "userSourceToken",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userDestinationToken",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "poolSourceToken",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "poolDestinationToken",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "amountIn",
+          "type": "u64"
+        },
+        {
+          "name": "minimumAmountOut",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "addLiquidity",
+      "accounts": [
+        {
+          "name": "sslPool",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "sslPoolSigner",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "userTransferAuthority",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "userTokenA",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userTokenB",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "poolTokenA",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "poolTokenB",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "lpMint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userLpToken",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "tokenAAmount",
+          "type": "u64"
+        },
+        {
+          "name": "tokenBAmount",
+          "type": "u64"
+        },
+        {
+          "name": "minLpAmount",
+          "type": "u64"
+        }
+      ]
+    }
+  ],
+  "accounts": [],
+  "types": [],
+  "metadata": {
+    "address": "7WduLbRfYhTJktjLw5FDEyrqoEv61aTTCuGAetgLjzN5"
+  }
+}

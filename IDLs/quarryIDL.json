@@ -1,0 +1,174 @@
+{
+  "version": "0.1.0",
+  "name": "quarry_mine",
+  "instructions": [
+    {
+      "name": "createMiner",
+      "accounts": [
+        {
+          "name": "authority",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "miner",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "quarry",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "rewarder",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "tokenMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "minerVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "bump",
+          "type": "u8"
+        }
+      ]
+    },
+    {
+      "name": "stakeTokens",
+      "accounts": [
+        {
+          "name": "authority",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "miner",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "quarry",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "minerVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rewarder",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "claimRewards",
+      "accounts": [
+        {
+          "name": "mintWrapper",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "mintWrapperProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "minter",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "rewardsTokenMint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "rewardsTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "claimFeeTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "authority",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "miner",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "quarry",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "rewarder",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    }
+  ],
+  "accounts": [],
+  "types": [],
+  "metadata": {
+    "address": "QMNeHCGYnLVDn1icRAfQZpjPLBNkfGbSKRB83G5d8KB"
+  }
+}

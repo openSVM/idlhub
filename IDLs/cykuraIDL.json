@@ -1,0 +1,136 @@
+{
+  "version": "0.1.0",
+  "name": "cykura",
+  "instructions": [
+    {
+      "name": "createPool",
+      "accounts": [
+        {
+          "name": "factory",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "pool",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "token0",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "token1",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "token0Vault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "token1Vault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "observationState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "sqrtPriceX32",
+          "type": "u128"
+        }
+      ]
+    },
+    {
+      "name": "swap",
+      "accounts": [
+        {
+          "name": "pool",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "signer",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "token0Account",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "token1Account",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "token0Vault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "token1Vault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "observationState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "amountSpecified",
+          "type": "i64"
+        },
+        {
+          "name": "sqrtPriceLimitX32",
+          "type": "u128"
+        },
+        {
+          "name": "zeroForOne",
+          "type": "bool"
+        }
+      ]
+    }
+  ],
+  "accounts": [],
+  "types": [],
+  "metadata": {
+    "address": "cysPXAjehMpVKUapzbMCCnpFxUFFryEWEaLgnb9NrR8"
+  }
+}

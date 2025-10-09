@@ -1,0 +1,155 @@
+{
+  "version": "0.2.0",
+  "name": "serum_dex_v2",
+  "instructions": [
+    {
+      "name": "newOrderV3",
+      "accounts": [
+        {
+          "name": "market",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "openOrders",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "requestQueue",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "eventQueue",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "bids",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "asks",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "owner",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "baseVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "quoteVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "side",
+          "type": "u8"
+        },
+        {
+          "name": "limitPrice",
+          "type": "u64"
+        },
+        {
+          "name": "maxCoinQty",
+          "type": "u64"
+        },
+        {
+          "name": "maxNativePcQtyIncludingFees",
+          "type": "u64"
+        },
+        {
+          "name": "selfTradeBehavior",
+          "type": "u8"
+        },
+        {
+          "name": "orderType",
+          "type": "u8"
+        },
+        {
+          "name": "clientOrderId",
+          "type": "u64"
+        },
+        {
+          "name": "limit",
+          "type": "u16"
+        }
+      ]
+    },
+    {
+      "name": "cancelOrderV2",
+      "accounts": [
+        {
+          "name": "market",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "bids",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "asks",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "openOrders",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "owner",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "eventQueue",
+          "isMut": true,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "side",
+          "type": "u8"
+        },
+        {
+          "name": "orderId",
+          "type": "u128"
+        }
+      ]
+    }
+  ],
+  "accounts": [],
+  "types": [],
+  "metadata": {
+    "address": "9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin"
+  }
+}

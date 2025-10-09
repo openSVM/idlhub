@@ -1,0 +1,129 @@
+{
+  "version": "0.1.0",
+  "name": "phoenix",
+  "instructions": [
+    {
+      "name": "placeLimit Order",
+      "accounts": [
+        {
+          "name": "phoenixProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "logAuthority",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "market",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "trader",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "baseAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "quoteAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "baseVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "quoteVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "side",
+          "type": "u8"
+        },
+        {
+          "name": "priceInTicks",
+          "type": "u64"
+        },
+        {
+          "name": "numBaseLots",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "swap",
+      "accounts": [
+        {
+          "name": "market",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "trader",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "baseAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "quoteAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "baseVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "quoteVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "side",
+          "type": "u8"
+        },
+        {
+          "name": "inAmount",
+          "type": "u64"
+        },
+        {
+          "name": "minOutAmount",
+          "type": "u64"
+        }
+      ]
+    }
+  ],
+  "accounts": [],
+  "types": [],
+  "metadata": {
+    "address": "PhoeNiXZ8ByJGLkxNfZRnkUfjvmuYqLR89jjFHGqdXY"
+  }
+}

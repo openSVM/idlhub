@@ -1,0 +1,144 @@
+{
+  "version": "0.1.0",
+  "name": "govern",
+  "instructions": [
+    {
+      "name": "createGovernor",
+      "accounts": [
+        {
+          "name": "base",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "governor",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "smartWallet",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "locker",
+          "type": "publicKey"
+        },
+        {
+          "name": "params",
+          "type": {
+            "defined": "GovernanceParameters"
+          }
+        }
+      ]
+    },
+    {
+      "name": "createProposal",
+      "accounts": [
+        {
+          "name": "governor",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "proposal",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "proposer",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "instructions",
+          "type": {
+            "vec": {
+              "defined": "ProposalInstruction"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "castVote",
+      "accounts": [
+        {
+          "name": "governor",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "proposal",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "vote",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "voter",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "locker",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "escrow",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "side",
+          "type": "u8"
+        }
+      ]
+    }
+  ],
+  "accounts": [],
+  "types": [],
+  "metadata": {
+    "address": "Govz1VyoyLD5BL6CSCxUJLVLsQHRwjfFj1prNsdNg5Jw"
+  }
+}

@@ -1,0 +1,149 @@
+{
+  "version": "0.1.0",
+  "name": "aldrin_amm",
+  "instructions": [
+    {
+      "name": "swap",
+      "accounts": [
+        {
+          "name": "pool",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "poolSigner",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "poolMint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "baseTokenVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "quoteTokenVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "feePoolTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "walletAuthority",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "userBaseTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userQuoteTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "side",
+          "type": "u8"
+        },
+        {
+          "name": "amountIn",
+          "type": "u64"
+        },
+        {
+          "name": "minimumAmountOut",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "addLiquidity",
+      "accounts": [
+        {
+          "name": "pool",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "poolSigner",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "poolMint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "baseTokenVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "quoteTokenVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "walletAuthority",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "userBaseTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userQuoteTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userPoolTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "baseAmount",
+          "type": "u64"
+        },
+        {
+          "name": "quoteAmount",
+          "type": "u64"
+        },
+        {
+          "name": "minMintAmount",
+          "type": "u64"
+        }
+      ]
+    }
+  ],
+  "accounts": [],
+  "types": [],
+  "metadata": {
+    "address": "AMM55ShdkoGRB5jVYPjWziwk8m5MpwyDgsMWHaMSQWH6"
+  }
+}

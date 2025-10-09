@@ -1,0 +1,159 @@
+{
+  "version": "0.1.0",
+  "name": "clmm",
+  "instructions": [
+    {
+      "name": "openPosition",
+      "accounts": [
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "poolState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "positionNftOwner",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "positionNftMint",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "positionNftAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "metadataAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "protocolPosition",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tickArrayLower",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tickArrayUpper",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "tickLowerIndex",
+          "type": "i32"
+        },
+        {
+          "name": "tickUpperIndex",
+          "type": "i32"
+        }
+      ]
+    },
+    {
+      "name": "swap",
+      "accounts": [
+        {
+          "name": "payer",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "poolState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "inputTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "outputTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "inputVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "outputVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "lastObservationState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tickArray",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        },
+        {
+          "name": "amountLimit",
+          "type": "u64"
+        },
+        {
+          "name": "sqrtPriceLimit",
+          "type": "u128"
+        },
+        {
+          "name": "isBaseInput",
+          "type": "bool"
+        }
+      ]
+    }
+  ],
+  "accounts": [],
+  "types": [],
+  "metadata": {
+    "address": "CLMM9tUoggJu2wagPkkqs9eFG4BWhVBZWkP1qv3Sp7tR"
+  }
+}

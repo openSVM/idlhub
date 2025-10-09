@@ -1,0 +1,128 @@
+{
+  "version": "0.1.0",
+  "name": "uxd",
+  "instructions": [
+    {
+      "name": "mintWithCredix",
+      "accounts": [
+        {
+          "name": "controller",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "user",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "collateral",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "collateralMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "redeemableMint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "collateralVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userCollateral",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userRedeemable",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "collateralAmount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "redeem",
+      "accounts": [
+        {
+          "name": "controller",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "user",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "collateral",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "redeemableMint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "collateralVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userCollateral",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userRedeemable",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "redeemableAmount",
+          "type": "u64"
+        }
+      ]
+    }
+  ],
+  "accounts": [],
+  "types": [],
+  "metadata": {
+    "address": "UXD8m9cvwk4RcSxnX2HZ9VudQCEeDH6fRnB4CAP57Dr"
+  }
+}

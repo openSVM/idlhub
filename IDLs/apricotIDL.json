@@ -1,0 +1,107 @@
+{
+  "version": "0.1.0",
+  "name": "apricot",
+  "instructions": [
+    {
+      "name": "deposit",
+      "accounts": [
+        {
+          "name": "userFarm",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "obligationVaultAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "leveragedFarm",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "authority",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "userCoinTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userPcTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "coinAmount",
+          "type": "u64"
+        },
+        {
+          "name": "pcAmount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "withdraw",
+      "accounts": [
+        {
+          "name": "userFarm",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "obligationVaultAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "leveragedFarm",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "authority",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "userCoinTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userPcTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "lpAmount",
+          "type": "u64"
+        }
+      ]
+    }
+  ],
+  "accounts": [],
+  "types": [],
+  "metadata": {
+    "address": "6FLTtosMrW1JgPDZ8TAffNJDQ9zr3L78bDdpzqHCevDm"
+  }
+}
