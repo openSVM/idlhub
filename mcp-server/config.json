@@ -1,0 +1,46 @@
+{
+  "server": {
+    "name": "idlhub-mcp-server",
+    "version": "1.0.0",
+    "description": "Model Context Protocol server for IDLHub - provides structured access to Solana IDL schemas"
+  },
+  "transports": {
+    "stdio": {
+      "enabled": true,
+      "command": "node",
+      "args": ["mcp-server/src/index.js"]
+    },
+    "websocket": {
+      "enabled": true,
+      "port": 8080,
+      "command": "node",
+      "args": ["mcp-server/src/websocket-server.js"]
+    }
+  },
+  "capabilities": {
+    "tools": [
+      "list_schemas",
+      "get_schema",
+      "lookup_symbol",
+      "generate_code",
+      "validate_idl"
+    ],
+    "resources": true
+  },
+  "performance": {
+    "targets": {
+      "schema_list_p95_ms": 50,
+      "schema_get_p95_ms": 100,
+      "symbol_lookup_p95_ms": 50,
+      "codegen_p95_ms": 200
+    }
+  },
+  "code_generation": {
+    "supported_targets": [
+      "typescript",
+      "rust",
+      "python",
+      "anchor-ts"
+    ]
+  }
+}
