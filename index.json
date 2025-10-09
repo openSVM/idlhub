@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
   "description": "IDL Registry for Solana Protocols",
-  "lastUpdated": "2025-10-09T13:12:27.672193",
+  "lastUpdated": "2025-10-09T13:33:22.590145",
   "totalProtocols": 101,
   "categories": [
     "defi",
@@ -197,7 +197,7 @@
       "category": "defi",
       "idlPath": "IDLs/cyclosIDL.json",
       "repo": null,
-      "status": "placeholder",
+      "status": "available",
       "version": "0.1.0",
       "lastUpdated": "2025-10-09"
     },
@@ -230,7 +230,7 @@
       "category": "defi",
       "idlPath": "IDLs/dexlabIDL.json",
       "repo": null,
-      "status": "placeholder",
+      "status": "available",
       "version": "0.1.0",
       "lastUpdated": "2025-10-09"
     },
@@ -417,7 +417,7 @@
       "category": "defi",
       "idlPath": "IDLs/hxroIDL.json",
       "repo": null,
-      "status": "placeholder",
+      "status": "available",
       "version": "0.1.0",
       "lastUpdated": "2025-10-09"
     },
@@ -439,7 +439,7 @@
       "category": "defi",
       "idlPath": "IDLs/jetIDL.json",
       "repo": null,
-      "status": "placeholder",
+      "status": "available",
       "version": "0.1.0",
       "lastUpdated": "2025-10-09"
     },
@@ -516,7 +516,7 @@
       "category": "defi",
       "idlPath": "IDLs/lifinity-v2IDL.json",
       "repo": null,
-      "status": "placeholder",
+      "status": "available",
       "version": "0.1.0",
       "lastUpdated": "2025-10-09"
     },
@@ -527,7 +527,7 @@
       "category": "defi",
       "idlPath": "IDLs/magicedenIDL.json",
       "repo": null,
-      "status": "placeholder",
+      "status": "available",
       "version": "0.1.0",
       "lastUpdated": "2025-10-09"
     },
@@ -769,7 +769,7 @@
       "category": "defi",
       "idlPath": "IDLs/ribbonIDL.json",
       "repo": null,
-      "status": "placeholder",
+      "status": "available",
       "version": "0.1.0",
       "lastUpdated": "2025-10-09"
     },
@@ -868,7 +868,7 @@
       "category": "defi",
       "idlPath": "IDLs/solaniumIDL.json",
       "repo": null,
-      "status": "placeholder",
+      "status": "available",
       "version": "0.1.0",
       "lastUpdated": "2025-10-09"
     },
@@ -934,7 +934,7 @@
       "category": "defi",
       "idlPath": "IDLs/stable-swapIDL.json",
       "repo": null,
-      "status": "placeholder",
+      "status": "available",
       "version": "0.1.0",
       "lastUpdated": "2025-10-09"
     },

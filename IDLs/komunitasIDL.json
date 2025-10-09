@@ -1,6 +1,6 @@
 {
   "version": "0.1.0",
-  "name": "cyclos",
+  "name": "kommunitas",
   "instructions": [
     {
       "name": "createPool",
@@ -11,37 +11,22 @@
           "isSigner": false
         },
         {
-          "name": "poolAuthority",
+          "name": "poolSigner",
           "isMut": false,
           "isSigner": false
         },
         {
-          "name": "tokenAAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenBAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "lpMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenAMint",
+          "name": "tokenMint",
           "isMut": false,
           "isSigner": false
         },
         {
-          "name": "tokenBMint",
-          "isMut": false,
+          "name": "tokenVault",
+          "isMut": true,
           "isSigner": false
         },
         {
-          "name": "admin",
+          "name": "authority",
           "isMut": true,
           "isSigner": true
         },
@@ -63,13 +48,21 @@
       ],
       "args": [
         {
-          "name": "fees",
+          "name": "startTime",
+          "type": "i64"
+        },
+        {
+          "name": "endTime",
+          "type": "i64"
+        },
+        {
+          "name": "price",
           "type": "u64"
         }
       ]
     },
     {
-      "name": "swap",
+      "name": "participate",
       "accounts": [
         {
           "name": "pool",
@@ -77,27 +70,7 @@
           "isSigner": false
         },
         {
-          "name": "poolAuthority",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "userSourceToken",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "userDestToken",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "poolSourceToken",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "poolDestToken",
+          "name": "participant",
           "isMut": true,
           "isSigner": false
         },
@@ -107,6 +80,16 @@
           "isSigner": true
         },
         {
+          "name": "userTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "poolTokenVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
           "name": "tokenProgram",
           "isMut": false,
           "isSigner": false
@@ -114,11 +97,7 @@
       ],
       "args": [
         {
-          "name": "amountIn",
-          "type": "u64"
-        },
-        {
-          "name": "minimumAmountOut",
+          "name": "amount",
           "type": "u64"
         }
       ]
@@ -127,6 +106,6 @@
   "accounts": [],
   "types": [],
   "metadata": {
-    "address": "CYCLosMaPQkNaMfNXWg4eZJ2TgQ1Ckrwq8TKbBkuLcxu"
+    "address": "KoMNiTasVCj6xgJwXaf67FwToS2iE6jHyR7zE8x8Dqt"
   }
 }
