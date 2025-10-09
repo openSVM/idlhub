@@ -1,10 +1,148 @@
 {
   "version": "0.1.0",
   "name": "synthetify",
-  "instructions": [],
+  "instructions": [
+    {
+      "name": "swap",
+      "accounts": [
+        {
+          "name": "state",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "exchangeAuthority",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "assetsList",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenIn",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenFor",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "userTokenAccountIn",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userTokenAccountFor",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgramIn",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgramFor",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "assetIn",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "assetFor",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "owner",
+          "isMut": false,
+          "isSigner": true
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "mint",
+      "accounts": [
+        {
+          "name": "state",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "exchangeAuthority",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "assetsList",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "collateral",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "synthetic",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "userCollateralAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userSyntheticAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "collateralToken",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "assetAddress",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "owner",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    }
+  ],
   "accounts": [],
   "types": [],
   "metadata": {
-    "note": "Placeholder - IDL not yet available. Contributions welcome."
+    "address": "SNTYtJHabQgFsEHV1vvZhQ7XLk2TwK6c6M6dXqK8C4C"
   }
 }

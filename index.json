@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
   "description": "IDL Registry for Solana Protocols",
-  "lastUpdated": "2025-10-09T13:08:50.169561",
+  "lastUpdated": "2025-10-09T13:12:27.672193",
   "totalProtocols": 101,
   "categories": [
     "defi",
@@ -43,7 +43,7 @@
       "category": "dex",
       "idlPath": "IDLs/aldrinIDL.json",
       "repo": null,
-      "status": "placeholder",
+      "status": "available",
       "version": "0.1.0",
       "lastUpdated": "2025-10-09"
     },
@@ -54,7 +54,7 @@
       "category": "defi",
       "idlPath": "IDLs/apricotIDL.json",
       "repo": null,
-      "status": "placeholder",
+      "status": "available",
       "version": "0.1.0",
       "lastUpdated": "2025-10-09"
     },
@@ -76,7 +76,7 @@
       "category": "defi",
       "idlPath": "IDLs/atrixIDL.json",
       "repo": null,
-      "status": "placeholder",
+      "status": "available",
       "version": "0.1.0",
       "lastUpdated": "2025-10-09"
     },
@@ -120,7 +120,7 @@
       "category": "defi",
       "idlPath": "IDLs/bonfidaIDL.json",
       "repo": null,
-      "status": "placeholder",
+      "status": "available",
       "version": "0.1.0",
       "lastUpdated": "2025-10-09"
     },
@@ -208,7 +208,7 @@
       "category": "defi",
       "idlPath": "IDLs/cykuraIDL.json",
       "repo": null,
-      "status": "placeholder",
+      "status": "available",
       "version": "0.1.0",
       "lastUpdated": "2025-10-09"
     },
@@ -373,7 +373,7 @@
       "category": "defi",
       "idlPath": "IDLs/goosefxIDL.json",
       "repo": null,
-      "status": "placeholder",
+      "status": "available",
       "version": "0.1.0",
       "lastUpdated": "2025-10-09"
     },
@@ -483,7 +483,7 @@
       "category": "defi",
       "idlPath": "IDLs/larixIDL.json",
       "repo": null,
-      "status": "placeholder",
+      "status": "available",
       "version": "0.1.0",
       "lastUpdated": "2025-10-09"
     },
@@ -582,7 +582,7 @@
       "category": "defi",
       "idlPath": "IDLs/mercurialIDL.json",
       "repo": null,
-      "status": "placeholder",
+      "status": "available",
       "version": "0.1.0",
       "lastUpdated": "2025-10-09"
     },
@@ -956,7 +956,7 @@
       "category": "defi",
       "idlPath": "IDLs/stepIDL.json",
       "repo": null,
-      "status": "placeholder",
+      "status": "available",
       "version": "0.1.0",
       "lastUpdated": "2025-10-09"
     },
@@ -978,7 +978,7 @@
       "category": "defi",
       "idlPath": "IDLs/sunnyIDL.json",
       "repo": null,
-      "status": "placeholder",
+      "status": "available",
       "version": "0.1.0",
       "lastUpdated": "2025-10-09"
     },
@@ -1011,7 +1011,7 @@
       "category": "defi",
       "idlPath": "IDLs/synthetifyIDL.json",
       "repo": null,
-      "status": "placeholder",
+      "status": "available",
       "version": "0.1.0",
       "lastUpdated": "2025-10-09"
     },
