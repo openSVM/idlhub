@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
   "description": "IDL Registry for Solana Protocols",
-  "lastUpdated": "2025-10-09T13:59:54.965407",
+  "lastUpdated": "2025-10-09T14:04:53.373481",
   "totalProtocols": 101,
   "categories": [
     "defi",
@@ -296,7 +296,7 @@
       "category": "defi",
       "idlPath": "IDLs/fluxbeamIDL.json",
       "repo": null,
-      "status": "placeholder",
+      "status": "available",
       "version": "0.1.0",
       "lastUpdated": "2025-10-09"
     },
@@ -351,7 +351,7 @@
       "category": "defi",
       "idlPath": "IDLs/gokiIDL.json",
       "repo": null,
-      "status": "placeholder",
+      "status": "available",
       "version": "0.1.0",
       "lastUpdated": "2025-10-09"
     },
@@ -813,7 +813,7 @@
       "category": "defi",
       "idlPath": "IDLs/sarosIDL.json",
       "repo": null,
-      "status": "placeholder",
+      "status": "available",
       "version": "0.1.0",
       "lastUpdated": "2025-10-09"
     },
@@ -835,7 +835,7 @@
       "category": "defi",
       "idlPath": "IDLs/senchaIDL.json",
       "repo": null,
-      "status": "placeholder",
+      "status": "available",
       "version": "0.1.0",
       "lastUpdated": "2025-10-09"
     },
@@ -846,7 +846,7 @@
       "category": "defi",
       "idlPath": "IDLs/serum-v2IDL.json",
       "repo": null,
-      "status": "placeholder",
+      "status": "available",
       "version": "0.1.0",
       "lastUpdated": "2025-10-09"
     },
