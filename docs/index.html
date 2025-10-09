@@ -441,7 +441,7 @@
         // Load index.json and initialize
         async function init() {
             try {
-                const response = await fetch('index.json');
+                const response = await fetch('../index.json');
                 const data = await response.json();
                 allProtocols = data.protocols;
                 filteredProtocols = allProtocols;
@@ -625,7 +625,7 @@
             if (!protocol) return;
 
             try {
-                const response = await fetch(protocol.idlPath);
+                const response = await fetch('../' + protocol.idlPath);
                 const idl = await response.json();
                 
                 const newWindow = window.open('', '_blank');
@@ -654,7 +654,7 @@
             if (!protocol) return;
 
             try {
-                const response = await fetch(protocol.idlPath);
+                const response = await fetch('../' + protocol.idlPath);
                 const idl = await response.json();
                 
                 const blob = new Blob([JSON.stringify(idl, null, 2)], { type: 'application/json' });
@@ -680,7 +680,7 @@
                 if (!protocol) continue;
 
                 try {
-                    const response = await fetch(protocol.idlPath);
+                    const response = await fetch('../' + protocol.idlPath);
                     const idl = await response.json();
                     idls[protocolId] = idl;
                 } catch (error) {
