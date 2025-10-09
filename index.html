@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solana IDL Registry</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+
+        .controls {
+            padding: 30px 40px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 14px 20px;
+            font-size: 16px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .filter-section {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-label {
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            background: white;
+            border: 2px solid #dee2e6;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .filter-btn:hover {
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+        .filter-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .action-bar {
+            padding: 20px 40px;
+            background: white;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .selection-info {
+            font-size: 14px;
+            color: #6c757d;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .protocols-list {
+            padding: 20px 40px 40px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .protocol-item {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            margin-bottom: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+
+        .protocol-item:hover {
+            background: #e9ecef;
+            border-color: #667eea;
+        }
+
+        .protocol-item.selected {
+            background: #e7f1ff;
+            border-color: #667eea;
+        }
+
+        .protocol-checkbox {
+            width: 20px;
+            height: 20px;
+            margin-right: 16px;
+            cursor: pointer;
+        }
+
+        .protocol-info {
+            flex: 1;
+        }
+
+        .protocol-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 4px;
+        }
+
+        .protocol-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #212529;
+        }
+
+        .protocol-badge {
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-available {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .badge-placeholder {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .category-badge {
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            background: #e7e7ff;
+            color: #4c51bf;
+        }
+
+        .protocol-description {
+            font-size: 14px;
+            color: #6c757d;
+            margin-bottom: 4px;
+        }
+
+        .protocol-meta {
+            font-size: 12px;
+            color: #adb5bd;
+        }
+
+        .protocol-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .icon-btn {
+            padding: 8px;
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .icon-btn:hover {
+            background: #667eea;
+            border-color: #667eea;
+            color: white;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6c757d;
+        }
+
+        .no-results-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6c757d;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .footer {
+            padding: 20px 40px;
+            background: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+            text-align: center;
+            color: #6c757d;
+            font-size: 14px;
+        }
+
+        .footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .stats {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .controls {
+                padding: 20px;
+            }
+
+            .protocols-list {
+                padding: 20px;
+            }
+
+            .action-bar {
+                padding: 15px 20px;
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Solana IDL Registry</h1>
+            <p>A comprehensive collection of Interface Definition Language files for Solana protocols</p>
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-number" id="totalProtocols">-</div>
+                    <div class="stat-label">Total Protocols</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number" id="availableProtocols">-</div>
+                    <div class="stat-label">IDLs Available</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number" id="selectedCount">0</div>
+                    <div class="stat-label">Selected</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="search-bar">
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    class="search-input" 
+                    placeholder="🔍 Search protocols by name or description..."
+                >
+            </div>
+            <div class="filter-section">
+                <span class="filter-label">Filter by:</span>
+                <div class="filter-buttons" id="filterButtons"></div>
+            </div>
+        </div>
+
+        <div class="action-bar">
+            <div class="selection-info">
+                <span id="selectionInfo">Select protocols to export their IDLs</span>
+            </div>
+            <div class="action-buttons">
+                <button class="btn btn-secondary" id="selectAllBtn">Select All Visible</button>
+                <button class="btn btn-secondary" id="clearBtn">Clear Selection</button>
+                <button class="btn btn-primary" id="exportBtn" disabled>Export Selected IDLs</button>
+            </div>
+        </div>
+
+        <div class="protocols-list" id="protocolsList">
+            <div class="loading">
+                <div class="spinner"></div>
+                <p>Loading protocols...</p>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Open source IDL registry for the Solana ecosystem • <a href="https://github.com/openSVM/idl-registry" target="_blank">GitHub</a></p>
+            <p style="margin-top: 10px; font-size: 12px;">Contributions welcome! Help us complete missing IDLs.</p>
+        </div>
+    </div>
+
+    <script>
+        let allProtocols = [];
+        let filteredProtocols = [];
+        let selectedProtocols = new Set();
+        let currentCategory = 'all';
+
+        // Load index.json and initialize
+        async function init() {
+            try {
+                const response = await fetch('index.json');
+                const data = await response.json();
+                allProtocols = data.protocols;
+                filteredProtocols = allProtocols;
+                
+                updateStats();
+                renderFilters(data.categories);
+                renderProtocols();
+                setupEventListeners();
+            } catch (error) {
+                document.getElementById('protocolsList').innerHTML = `
+                    <div class="no-results">
+                        <div class="no-results-icon">⚠️</div>
+                        <h3>Failed to load protocols</h3>
+                        <p>Error: ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        function updateStats() {
+            const available = allProtocols.filter(p => p.status === 'available').length;
+            document.getElementById('totalProtocols').textContent = allProtocols.length;
+            document.getElementById('availableProtocols').textContent = available;
+            document.getElementById('selectedCount').textContent = selectedProtocols.size;
+        }
+
+        function renderFilters(categories) {
+            const filterButtons = document.getElementById('filterButtons');
+            
+            const allBtn = document.createElement('button');
+            allBtn.className = 'filter-btn active';
+            allBtn.textContent = 'All';
+            allBtn.dataset.category = 'all';
+            filterButtons.appendChild(allBtn);
+
+            categories.forEach(category => {
+                const btn = document.createElement('button');
+                btn.className = 'filter-btn';
+                btn.textContent = category.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+                btn.dataset.category = category;
+                filterButtons.appendChild(btn);
+            });
+
+            filterButtons.addEventListener('click', (e) => {
+                if (e.target.classList.contains('filter-btn')) {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    e.target.classList.add('active');
+                    currentCategory = e.target.dataset.category;
+                    applyFilters();
+                }
+            });
+        }
+
+        function applyFilters() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            filteredProtocols = allProtocols.filter(protocol => {
+                const matchesCategory = currentCategory === 'all' || protocol.category === currentCategory;
+                const matchesSearch = searchTerm === '' || 
+                    protocol.name.toLowerCase().includes(searchTerm) ||
+                    protocol.description.toLowerCase().includes(searchTerm) ||
+                    protocol.id.toLowerCase().includes(searchTerm);
+                
+                return matchesCategory && matchesSearch;
+            });
+
+            renderProtocols();
+        }
+
+        function renderProtocols() {
+            const container = document.getElementById('protocolsList');
+            
+            if (filteredProtocols.length === 0) {
+                container.innerHTML = `
+                    <div class="no-results">
+                        <div class="no-results-icon">🔍</div>
+                        <h3>No protocols found</h3>
+                        <p>Try adjusting your search or filters</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filteredProtocols.map(protocol => `
+                <div class="protocol-item ${selectedProtocols.has(protocol.id) ? 'selected' : ''}" data-id="${protocol.id}">
+                    <input 
+                        type="checkbox" 
+                        class="protocol-checkbox" 
+                        ${selectedProtocols.has(protocol.id) ? 'checked' : ''}
+                        data-id="${protocol.id}"
+                    >
+                    <div class="protocol-info">
+                        <div class="protocol-header">
+                            <span class="protocol-name">${protocol.name}</span>
+                            <span class="protocol-badge badge-${protocol.status}">${protocol.status}</span>
+                            <span class="category-badge">${protocol.category}</span>
+                        </div>
+                        <div class="protocol-description">${protocol.description}</div>
+                        <div class="protocol-meta">
+                            ${protocol.repo ? `<a href="${protocol.repo}" target="_blank">Repository</a> • ` : ''}
+                            Version ${protocol.version} • Updated ${protocol.lastUpdated}
+                        </div>
+                    </div>
+                    <div class="protocol-actions">
+                        <button class="icon-btn" onclick="viewIDL('${protocol.id}')" title="View IDL">👁️</button>
+                        <button class="icon-btn" onclick="downloadSingle('${protocol.id}')" title="Download IDL">⬇️</button>
+                    </div>
+                </div>
+            `).join('');
+
+            // Add click listeners to checkboxes
+            document.querySelectorAll('.protocol-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', (e) => {
+                    const id = e.target.dataset.id;
+                    if (e.target.checked) {
+                        selectedProtocols.add(id);
+                    } else {
+                        selectedProtocols.delete(id);
+                    }
+                    updateSelection();
+                });
+            });
+
+            // Add click listeners to protocol items
+            document.querySelectorAll('.protocol-item').forEach(item => {
+                item.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('protocol-checkbox') || 
+                        e.target.classList.contains('icon-btn') ||
+                        e.target.tagName === 'A') {
+                        return;
+                    }
+                    const checkbox = item.querySelector('.protocol-checkbox');
+                    checkbox.checked = !checkbox.checked;
+                    checkbox.dispatchEvent(new Event('change'));
+                });
+            });
+        }
+
+        function updateSelection() {
+            updateStats();
+            document.getElementById('exportBtn').disabled = selectedProtocols.size === 0;
+            
+            if (selectedProtocols.size > 0) {
+                document.getElementById('selectionInfo').textContent = 
+                    `${selectedProtocols.size} protocol${selectedProtocols.size > 1 ? 's' : ''} selected`;
+            } else {
+                document.getElementById('selectionInfo').textContent = 'Select protocols to export their IDLs';
+            }
+
+            // Update visual state
+            document.querySelectorAll('.protocol-item').forEach(item => {
+                const id = item.dataset.id;
+                if (selectedProtocols.has(id)) {
+                    item.classList.add('selected');
+                } else {
+                    item.classList.remove('selected');
+                }
+            });
+        }
+
+        function setupEventListeners() {
+            document.getElementById('searchInput').addEventListener('input', applyFilters);
+            
+            document.getElementById('selectAllBtn').addEventListener('click', () => {
+                filteredProtocols.forEach(p => selectedProtocols.add(p.id));
+                updateSelection();
+                renderProtocols();
+            });
+
+            document.getElementById('clearBtn').addEventListener('click', () => {
+                selectedProtocols.clear();
+                updateSelection();
+                renderProtocols();
+            });
+
+            document.getElementById('exportBtn').addEventListener('click', exportSelectedIDLs);
+        }
+
+        async function viewIDL(protocolId) {
+            const protocol = allProtocols.find(p => p.id === protocolId);
+            if (!protocol) return;
+
+            try {
+                const response = await fetch(protocol.idlPath);
+                const idl = await response.json();
+                
+                const newWindow = window.open('', '_blank');
+                newWindow.document.write(`
+                    <html>
+                        <head>
+                            <title>${protocol.name} IDL</title>
+                            <style>
+                                body { font-family: monospace; padding: 20px; background: #1e1e1e; color: #d4d4d4; }
+                                pre { white-space: pre-wrap; word-wrap: break-word; }
+                            </style>
+                        </head>
+                        <body>
+                            <h1>${protocol.name} IDL</h1>
+                            <pre>${JSON.stringify(idl, null, 2)}</pre>
+                        </body>
+                    </html>
+                `);
+            } catch (error) {
+                alert(`Failed to load IDL: ${error.message}`);
+            }
+        }
+
+        async function downloadSingle(protocolId) {
+            const protocol = allProtocols.find(p => p.id === protocolId);
+            if (!protocol) return;
+
+            try {
+                const response = await fetch(protocol.idlPath);
+                const idl = await response.json();
+                
+                const blob = new Blob([JSON.stringify(idl, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${protocol.id}-idl.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+            } catch (error) {
+                alert(`Failed to download IDL: ${error.message}`);
+            }
+        }
+
+        async function exportSelectedIDLs() {
+            if (selectedProtocols.size === 0) return;
+
+            const idls = {};
+            const errors = [];
+
+            for (const protocolId of selectedProtocols) {
+                const protocol = allProtocols.find(p => p.id === protocolId);
+                if (!protocol) continue;
+
+                try {
+                    const response = await fetch(protocol.idlPath);
+                    const idl = await response.json();
+                    idls[protocolId] = idl;
+                } catch (error) {
+                    errors.push(`${protocol.name}: ${error.message}`);
+                }
+            }
+
+            if (errors.length > 0) {
+                alert(`Warning: Some IDLs failed to load:\n${errors.join('\n')}`);
+            }
+
+            const exportData = {
+                exportedAt: new Date().toISOString(),
+                totalProtocols: selectedProtocols.size,
+                protocols: idls
+            };
+
+            const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `solana-idls-export-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Initialize on page load
+        init();
+    </script>
+</body>
+</html>
