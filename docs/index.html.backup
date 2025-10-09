@@ -611,118 +611,6 @@
                 gap: 15px;
             }
         }
-
-        /* Individual Protocol Page Styles */
-        .protocol-page {
-            display: none;
-            padding: 24px;
-        }
-
-        .protocol-page.active {
-            display: block;
-        }
-
-        .protocol-header-page {
-            margin-bottom: 24px;
-            padding-bottom: 16px;
-            border-bottom: 2px solid #24292f;
-        }
-
-        .protocol-title {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .protocol-address {
-            font-size: 11px;
-            color: #0969da;
-            background: #f6f8fa;
-            padding: 8px 12px;
-            border: 1px solid #d0d7de;
-            margin: 12px 0;
-            word-break: break-all;
-            font-family: inherit;
-        }
-
-        .protocol-stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 16px;
-            margin: 16px 0;
-        }
-
-        .stat-box {
-            border: 1px solid #24292f;
-            padding: 12px;
-            background: #ffffff;
-        }
-
-        .stat-box-label {
-            font-size: 10px;
-            color: #57606a;
-            text-transform: uppercase;
-            margin-bottom: 4px;
-        }
-
-        .stat-box-value {
-            font-size: 18px;
-            font-weight: 700;
-            color: #24292f;
-        }
-
-        .idl-viewer {
-            background: #f6f8fa;
-            border: 1px solid #24292f;
-            padding: 16px;
-            margin-top: 24px;
-            max-height: 600px;
-            overflow: auto;
-        }
-
-        .idl-viewer pre {
-            font-size: 11px;
-            line-height: 1.5;
-            margin: 0;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-        }
-
-        .back-button {
-            display: inline-block;
-            padding: 6px 16px;
-            background: #ffffff;
-            border: 1px solid #24292f;
-            color: #24292f;
-            text-decoration: none;
-            font-size: 12px;
-            font-weight: 700;
-            margin-bottom: 16px;
-            cursor: pointer;
-        }
-
-        .back-button:hover {
-            background: #24292f;
-            color: #ffffff;
-        }
-
-        .back-button::before {
-            content: '< ';
-        }
-
-        /* Keyboard navigation highlight */
-        .protocol-item.keyboard-focus {
-            outline: 2px solid #0969da;
-            outline-offset: -2px;
-        }
-
-        .main-view {
-            display: block;
-        }
-
-        .main-view.hidden {
-            display: none;
-        }
     </style>
 </head>
 <body>
@@ -764,7 +652,7 @@
                     type="text" 
                     id="searchInput" 
                     class="search-input" 
-                    placeholder="Search by name, description, or program address..."
+                    placeholder="Search protocols by name or description..."
                 >
             </div>
             <div class="filter-section">
@@ -795,12 +683,6 @@
             <p>Open source IDL registry for the Solana ecosystem • <a href="https://github.com/openSVM/idl-registry" target="_blank">GitHub</a></p>
             <p style="margin-top: 10px; font-size: 12px;">Contributions welcome! Help us complete missing IDLs.</p>
         </div>
-
-        <!-- Individual Protocol Page View -->
-        <div class="protocol-page" id="protocolPage">
-            <button class="back-button" onclick="navigateHome()">Back to List</button>
-            <div id="protocolPageContent"></div>
-        </div>
     </div>
 
     <script>
@@ -810,127 +692,6 @@
         let bookmarkedProtocols = new Set();
         let currentCategory = 'all';
         let showingBookmarks = false;
-        let keyboardFocusIndex = -1;
-        let protocolAddressMap = {}; // Map program addresses to protocol IDs
-
-        // Navigation functions
-        function navigateHome() {
-            window.location.hash = '';
-        }
-
-        function navigateToProtocol(protocolIdOrAddress) {
-            window.location.hash = '#/' + protocolIdOrAddress;
-        }
-
-        // Handle hash-based routing
-        function handleRoute() {
-            const hash = window.location.hash;
-            if (hash.startsWith('#/')) {
-                const identifier = hash.substring(2);
-                showProtocolPage(identifier);
-            } else {
-                showMainView();
-            }
-        }
-
-        // Show main list view
-        function showMainView() {
-            document.querySelector('.container > div:not(.protocol-page)').style.display = 'block';
-            document.getElementById('protocolPage').classList.remove('active');
-        }
-
-        // Show individual protocol page
-        async function showProtocolPage(identifier) {
-            // Hide main view
-            document.querySelector('.container > div:not(.protocol-page)').style.display = 'none';
-            
-            // Find protocol by ID or address
-            let protocol = allProtocols.find(p => p.id === identifier.toLowerCase());
-            if (!protocol && protocolAddressMap[identifier]) {
-                protocol = allProtocols.find(p => p.id === protocolAddressMap[identifier]);
-            }
-
-            if (!protocol) {
-                document.getElementById('protocolPageContent').innerHTML = `
-                    <div class="protocol-header-page">
-                        <h2 class="protocol-title">Protocol Not Found</h2>
-                        <p>Could not find protocol with identifier: ${identifier}</p>
-                    </div>
-                `;
-                document.getElementById('protocolPage').classList.add('active');
-                return;
-            }
-
-            // Load IDL
-            try {
-                const response = await fetch('../' + protocol.idlPath);
-                const idl = await response.json();
-                const programAddress = idl.metadata?.address || 'N/A';
-
-                // Count instructions and accounts
-                const instructionCount = idl.instructions?.length || 0;
-                const accountCount = idl.accounts?.length || 0;
-                const typeCount = idl.types?.length || 0;
-
-                document.getElementById('protocolPageContent').innerHTML = `
-                    <div class="protocol-header-page">
-                        <h2 class="protocol-title">${protocol.name}</h2>
-                        <p>${protocol.description}</p>
-                        ${programAddress !== 'N/A' ? `
-                            <div class="protocol-address">
-                                <strong>Program Address:</strong> ${programAddress}
-                            </div>
-                        ` : ''}
-                        <div class="protocol-stats-grid">
-                            <div class="stat-box">
-                                <div class="stat-box-label">Status</div>
-                                <div class="stat-box-value">${protocol.status}</div>
-                            </div>
-                            <div class="stat-box">
-                                <div class="stat-box-label">Category</div>
-                                <div class="stat-box-value">${protocol.category}</div>
-                            </div>
-                            <div class="stat-box">
-                                <div class="stat-box-label">Instructions</div>
-                                <div class="stat-box-value">${instructionCount}</div>
-                            </div>
-                            <div class="stat-box">
-                                <div class="stat-box-label">Accounts</div>
-                                <div class="stat-box-value">${accountCount}</div>
-                            </div>
-                            <div class="stat-box">
-                                <div class="stat-box-label">Types</div>
-                                <div class="stat-box-value">${typeCount}</div>
-                            </div>
-                            <div class="stat-box">
-                                <div class="stat-box-label">Version</div>
-                                <div class="stat-box-value">${protocol.version}</div>
-                            </div>
-                        </div>
-                        ${protocol.repo ? `
-                            <p style="margin-top: 16px;">
-                                <a href="${protocol.repo}" target="_blank" style="color: #0969da;">&lt;Repository&gt;</a>
-                            </p>
-                        ` : ''}
-                    </div>
-                    <div style="margin-top: 24px;">
-                        <h3 style="margin-bottom: 12px; font-size: 16px;">IDL Data</h3>
-                        <div class="idl-viewer">
-                            <pre>${JSON.stringify(idl, null, 2)}</pre>
-                        </div>
-                    </div>
-                `;
-            } catch (error) {
-                document.getElementById('protocolPageContent').innerHTML = `
-                    <div class="protocol-header-page">
-                        <h2 class="protocol-title">${protocol.name}</h2>
-                        <p style="color: #cf222e;">Error loading IDL: ${error.message}</p>
-                    </div>
-                `;
-            }
-
-            document.getElementById('protocolPage').classList.add('active');
-        }
 
         // Load bookmarks from localStorage
         function loadBookmarks() {
@@ -995,20 +756,9 @@
                 allProtocols = data.protocols;
                 filteredProtocols = allProtocols;
                 
-                // Build program address map
-                await buildAddressMap();
-                
                 updateStats();
                 renderFilters(data.categories);
-                
-                // Handle initial route
-                handleRoute();
-                
-                // Only render protocols if on main view
-                if (!window.location.hash.startsWith('#/')) {
-                    renderProtocols();
-                }
-                
+                renderProtocols();
                 setupEventListeners();
             } catch (error) {
                 document.getElementById('protocolsList').innerHTML = `
@@ -1017,21 +767,6 @@
                         <p>Error: ${error.message}</p>
                     </div>
                 `;
-            }
-        }
-
-        // Build map of program addresses to protocol IDs
-        async function buildAddressMap() {
-            for (const protocol of allProtocols) {
-                try {
-                    const response = await fetch('../' + protocol.idlPath);
-                    const idl = await response.json();
-                    if (idl.metadata?.address) {
-                        protocolAddressMap[idl.metadata.address] = protocol.id;
-                    }
-                } catch (error) {
-                    // Silently skip protocols with missing/invalid IDLs
-                }
             }
         }
 
@@ -1077,12 +812,7 @@
                 const matchesSearch = searchTerm === '' || 
                     protocol.name.toLowerCase().includes(searchTerm) ||
                     protocol.description.toLowerCase().includes(searchTerm) ||
-                    protocol.id.toLowerCase().includes(searchTerm) ||
-                    // Check if search term matches a program address
-                    Object.keys(protocolAddressMap).some(address => 
-                        address.toLowerCase().includes(searchTerm) && 
-                        protocolAddressMap[address] === protocol.id
-                    );
+                    protocol.id.toLowerCase().includes(searchTerm);
                 
                 return matchesCategory && matchesSearch;
             });
@@ -1128,7 +858,7 @@
                         <button class="bookmark-icon ${bookmarkedProtocols.has(protocol.id) ? 'bookmarked' : ''}" onclick="toggleBookmark('${protocol.id}')" title="Bookmark">
                             ${bookmarkedProtocols.has(protocol.id) ? '★' : '☆'}
                         </button>
-                        <button class="icon-btn" onclick="navigateToProtocol('${protocol.id}')" title="View IDL">View</button>
+                        <button class="icon-btn" onclick="viewIDL('${protocol.id}')" title="View IDL">View</button>
                         <button class="icon-btn" onclick="downloadSingle('${protocol.id}')" title="Download IDL">Download</button>
                     </div>
                 </div>
@@ -1203,71 +933,6 @@
             });
 
             document.getElementById('exportBtn').addEventListener('click', exportSelectedIDLs);
-            
-            // Hash change listener for routing
-            window.addEventListener('hashchange', handleRoute);
-            
-            // Keyboard navigation
-            document.addEventListener('keydown', handleKeyboardNavigation);
-        }
-
-        // Keyboard navigation handler
-        function handleKeyboardNavigation(e) {
-            // Only handle keyboard nav on main view
-            if (document.getElementById('protocolPage').classList.contains('active')) {
-                if (e.key === 'Escape') {
-                    navigateHome();
-                }
-                return;
-            }
-
-            const items = Array.from(document.querySelectorAll('.protocol-item'));
-            if (items.length === 0) return;
-
-            switch(e.key) {
-                case 'ArrowDown':
-                    e.preventDefault();
-                    keyboardFocusIndex = Math.min(keyboardFocusIndex + 1, items.length - 1);
-                    updateKeyboardFocus(items);
-                    break;
-                case 'ArrowUp':
-                    e.preventDefault();
-                    keyboardFocusIndex = Math.max(keyboardFocusIndex - 1, 0);
-                    updateKeyboardFocus(items);
-                    break;
-                case 'Enter':
-                    e.preventDefault();
-                    if (keyboardFocusIndex >= 0 && keyboardFocusIndex < items.length) {
-                        const protocolId = items[keyboardFocusIndex].dataset.id;
-                        navigateToProtocol(protocolId);
-                    }
-                    break;
-                case 'Escape':
-                    e.preventDefault();
-                    keyboardFocusIndex = -1;
-                    updateKeyboardFocus(items);
-                    break;
-                case ' ':
-                    // Space to select/deselect
-                    if (keyboardFocusIndex >= 0 && keyboardFocusIndex < items.length) {
-                        e.preventDefault();
-                        const checkbox = items[keyboardFocusIndex].querySelector('.protocol-checkbox');
-                        checkbox.checked = !checkbox.checked;
-                        checkbox.dispatchEvent(new Event('change'));
-                    }
-                    break;
-            }
-        }
-
-        function updateKeyboardFocus(items) {
-            items.forEach((item, index) => {
-                if (index === keyboardFocusIndex) {
-                    item.classList.add('keyboard-focus');
-                    item.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-                } else {
-                    item.classList.remove('keyboard-focus');
-                }
-            });
         }
 
         async function viewIDL(protocolId) {
