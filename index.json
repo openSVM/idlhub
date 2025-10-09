@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
   "description": "IDL Registry for Solana Protocols",
-  "lastUpdated": "2025-10-09T12:19:54.984Z",
+  "lastUpdated": "2025-10-09T13:08:50.169561",
   "totalProtocols": 101,
   "categories": [
     "defi",
@@ -175,7 +175,7 @@
       "category": "defi",
       "idlPath": "IDLs/cremaIDL.json",
       "repo": null,
-      "status": "placeholder",
+      "status": "available",
       "version": "0.1.0",
       "lastUpdated": "2025-10-09"
     },
@@ -307,7 +307,7 @@
       "category": "defi",
       "idlPath": "IDLs/franciumIDL.json",
       "repo": null,
-      "status": "placeholder",
+      "status": "available",
       "version": "0.1.0",
       "lastUpdated": "2025-10-09"
     },
@@ -395,7 +395,7 @@
       "category": "defi",
       "idlPath": "IDLs/hubbleIDL.json",
       "repo": null,
-      "status": "placeholder",
+      "status": "available",
       "version": "0.1.0",
       "lastUpdated": "2025-10-09"
     },
@@ -428,7 +428,7 @@
       "category": "defi",
       "idlPath": "IDLs/invariantIDL.json",
       "repo": null,
-      "status": "placeholder",
+      "status": "available",
       "version": "0.1.0",
       "lastUpdated": "2025-10-09"
     },
@@ -450,7 +450,7 @@
       "category": "liquid-staking",
       "idlPath": "IDLs/jitoIDL.json",
       "repo": null,
-      "status": "placeholder",
+      "status": "available",
       "version": "0.1.0",
       "lastUpdated": "2025-10-09"
     },
@@ -505,7 +505,7 @@
       "category": "defi",
       "idlPath": "IDLs/lifinityIDL.json",
       "repo": null,
-      "status": "placeholder",
+      "status": "available",
       "version": "0.1.0",
       "lastUpdated": "2025-10-09"
     },
@@ -538,7 +538,7 @@
       "category": "dex",
       "idlPath": "IDLs/mangoIDL.json",
       "repo": null,
-      "status": "placeholder",
+      "status": "available",
       "version": "0.1.0",
       "lastUpdated": "2025-10-09"
     },
@@ -560,7 +560,7 @@
       "category": "lending",
       "idlPath": "IDLs/marginfiIDL.json",
       "repo": null,
-      "status": "placeholder",
+      "status": "available",
       "version": "0.1.0",
       "lastUpdated": "2025-10-09"
     },
@@ -604,7 +604,7 @@
       "category": "dex",
       "idlPath": "IDLs/meteoraIDL.json",
       "repo": null,
-      "status": "placeholder",
+      "status": "available",
       "version": "0.1.0",
       "lastUpdated": "2025-10-09"
     },
@@ -626,7 +626,7 @@
       "category": "dex",
       "idlPath": "IDLs/openbookIDL.json",
       "repo": null,
-      "status": "placeholder",
+      "status": "available",
       "version": "0.1.0",
       "lastUpdated": "2025-10-09"
     },
@@ -681,7 +681,7 @@
       "category": "dex",
       "idlPath": "IDLs/phoenixIDL.json",
       "repo": null,
-      "status": "placeholder",
+      "status": "available",
       "version": "0.1.0",
       "lastUpdated": "2025-10-09"
     },
@@ -714,7 +714,7 @@
       "category": "defi",
       "idlPath": "IDLs/portIDL.json",
       "repo": null,
-      "status": "placeholder",
+      "status": "available",
       "version": "0.1.0",
       "lastUpdated": "2025-10-09"
     },
@@ -758,7 +758,7 @@
       "category": "defi",
       "idlPath": "IDLs/quarryIDL.json",
       "repo": null,
-      "status": "placeholder",
+      "status": "available",
       "version": "0.1.0",
       "lastUpdated": "2025-10-09"
     },
@@ -780,7 +780,7 @@
       "category": "defi",
       "idlPath": "IDLs/saberIDL.json",
       "repo": null,
-      "status": "placeholder",
+      "status": "available",
       "version": "0.1.0",
       "lastUpdated": "2025-10-09"
     },
@@ -802,7 +802,7 @@
       "category": "liquid-staking",
       "idlPath": "IDLs/sanctumIDL.json",
       "repo": null,
-      "status": "placeholder",
+      "status": "available",
       "version": "0.1.0",
       "lastUpdated": "2025-10-09"
     },
@@ -879,7 +879,7 @@
       "category": "lending",
       "idlPath": "IDLs/solendIDL.json",
       "repo": null,
-      "status": "placeholder",
+      "status": "available",
       "version": "0.1.0",
       "lastUpdated": "2025-10-09"
     },
@@ -989,7 +989,7 @@
       "category": "defi",
       "idlPath": "IDLs/switchboardIDL.json",
       "repo": null,
-      "status": "placeholder",
+      "status": "available",
       "version": "0.1.0",
       "lastUpdated": "2025-10-09"
     },
@@ -1000,7 +1000,7 @@
       "category": "defi",
       "idlPath": "IDLs/symmetryIDL.json",
       "repo": null,
-      "status": "placeholder",
+      "status": "available",
       "version": "0.1.0",
       "lastUpdated": "2025-10-09"
     },
@@ -1044,7 +1044,7 @@
       "category": "defi",
       "idlPath": "IDLs/tribecaIDL.json",
       "repo": null,
-      "status": "placeholder",
+      "status": "available",
       "version": "0.1.0",
       "lastUpdated": "2025-10-09"
     },
@@ -1055,7 +1055,7 @@
       "category": "defi",
       "idlPath": "IDLs/tulipIDL.json",
       "repo": null,
-      "status": "placeholder",
+      "status": "available",
       "version": "0.1.0",
       "lastUpdated": "2025-10-09"
     },
@@ -1066,7 +1066,7 @@
       "category": "defi",
       "idlPath": "IDLs/uxdIDL.json",
       "repo": null,
-      "status": "placeholder",
+      "status": "available",
       "version": "0.1.0",
       "lastUpdated": "2025-10-09"
     },
@@ -1121,7 +1121,7 @@
       "category": "derivatives",
       "idlPath": "IDLs/zetaIDL.json",
       "repo": null,
-      "status": "placeholder",
+      "status": "available",
       "version": "0.1.0",
       "lastUpdated": "2025-10-09"
     }
