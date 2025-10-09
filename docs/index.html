@@ -13,84 +13,132 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #0d1117;
             min-height: 100vh;
-            padding: 20px;
+            padding: 0;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1280px;
             margin: 0 auto;
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            overflow: hidden;
+            background: #ffffff;
+            min-height: 100vh;
         }
 
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #24292f;
             color: white;
-            padding: 40px;
-            text-align: center;
+            padding: 24px 32px;
+            border-bottom: 1px solid #30363d;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
         }
 
         .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            font-weight: 700;
+            font-size: 20px;
+            margin: 0;
+            font-weight: 600;
+            color: #ffffff;
         }
 
         .header p {
-            font-size: 1.1em;
-            opacity: 0.9;
+            font-size: 14px;
+            color: #8b949e;
+            margin: 4px 0 0 0;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .bookmark-btn {
+            background: transparent;
+            border: 1px solid #30363d;
+            color: #c9d1d9;
+            padding: 5px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .bookmark-btn:hover {
+            background: #30363d;
+            border-color: #8b949e;
+        }
+
+        .bookmark-btn.active {
+            background: #1f6feb;
+            border-color: #1f6feb;
+            color: white;
         }
 
         .stats {
             display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin-top: 20px;
+            gap: 24px;
+            padding: 16px 0;
         }
 
         .stat {
-            text-align: center;
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
         }
 
         .stat-number {
-            font-size: 2em;
-            font-weight: bold;
+            font-size: 20px;
+            font-weight: 600;
+            color: #ffffff;
         }
 
         .stat-label {
-            font-size: 0.9em;
-            opacity: 0.8;
+            font-size: 14px;
+            color: #8b949e;
         }
 
         .controls {
-            padding: 30px 40px;
-            background: #f8f9fa;
-            border-bottom: 1px solid #e9ecef;
+            padding: 16px 32px;
+            background: #f6f8fa;
+            border-bottom: 1px solid #d0d7de;
         }
 
         .search-bar {
             display: flex;
             gap: 10px;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
 
         .search-input {
             flex: 1;
-            padding: 14px 20px;
-            font-size: 16px;
-            border: 2px solid #dee2e6;
-            border-radius: 8px;
-            transition: all 0.3s;
+            padding: 5px 12px;
+            font-size: 14px;
+            border: 1px solid #d0d7de;
+            border-radius: 6px;
+            background: #ffffff;
+            transition: all 0.2s;
         }
 
         .search-input:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            border-color: #0969da;
+            box-shadow: 0 0 0 3px rgba(9, 105, 218, 0.1);
         }
 
         .filter-section {
@@ -101,8 +149,9 @@
         }
 
         .filter-label {
+            font-size: 14px;
             font-weight: 600;
-            color: #495057;
+            color: #24292f;
         }
 
         .filter-buttons {
@@ -112,31 +161,32 @@
         }
 
         .filter-btn {
-            padding: 8px 16px;
+            padding: 5px 12px;
+            font-size: 14px;
+            border: 1px solid #d0d7de;
             background: white;
-            border: 2px solid #dee2e6;
-            border-radius: 20px;
+            border-radius: 6px;
             cursor: pointer;
             transition: all 0.2s;
-            font-size: 14px;
+            color: #24292f;
             font-weight: 500;
         }
 
         .filter-btn:hover {
-            border-color: #667eea;
-            color: #667eea;
+            background: #f6f8fa;
+            border-color: #0969da;
         }
 
         .filter-btn.active {
-            background: #667eea;
+            background: #0969da;
             color: white;
-            border-color: #667eea;
+            border-color: #0969da;
         }
 
         .action-bar {
-            padding: 20px 40px;
+            padding: 16px 32px;
             background: white;
-            border-bottom: 1px solid #e9ecef;
+            border-bottom: 1px solid #d0d7de;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -144,42 +194,50 @@
 
         .selection-info {
             font-size: 14px;
-            color: #6c757d;
+            color: #57606a;
         }
 
         .action-buttons {
             display: flex;
-            gap: 10px;
+            gap: 8px;
         }
 
         .btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
+            padding: 5px 16px;
+            border-radius: 6px;
             cursor: pointer;
             font-size: 14px;
-            font-weight: 600;
+            font-weight: 500;
             transition: all 0.2s;
+            border: 1px solid;
         }
 
         .btn-primary {
-            background: #667eea;
+            background: #2da44e;
             color: white;
+            border-color: #2da44e;
         }
 
-        .btn-primary:hover {
-            background: #5568d3;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        .btn-primary:hover:not(:disabled) {
+            background: #2c974b;
+        }
+
+        .btn-primary:disabled {
+            background: #94d3a2;
+            border-color: #94d3a2;
+            cursor: not-allowed;
+            opacity: 0.6;
         }
 
         .btn-secondary {
-            background: #6c757d;
-            color: white;
+            background: #f6f8fa;
+            color: #24292f;
+            border-color: #d0d7de;
         }
 
         .btn-secondary:hover {
-            background: #5a6268;
+            background: #f3f4f6;
+            border-color: #0969da;
         }
 
         .btn:disabled {
@@ -188,7 +246,7 @@
         }
 
         .protocols-list {
-            padding: 20px 40px 40px;
+            padding: 20px 32px 40px;
             max-height: 600px;
             overflow-y: auto;
         }
@@ -197,21 +255,25 @@
             display: flex;
             align-items: center;
             padding: 16px;
-            margin-bottom: 10px;
-            background: #f8f9fa;
-            border-radius: 8px;
+            margin-bottom: 8px;
+            background: white;
+            border-radius: 6px;
             transition: all 0.2s;
-            border: 2px solid transparent;
+            border: 1px solid #d0d7de;
         }
 
         .protocol-item:hover {
-            background: #e9ecef;
-            border-color: #667eea;
+            background: #f6f8fa;
+            border-color: #0969da;
         }
 
         .protocol-item.selected {
-            background: #e7f1ff;
-            border-color: #667eea;
+            background: #ddf4ff;
+            border-color: #0969da;
+        }
+
+        .protocol-item.bookmarked {
+            border-left: 3px solid #bf8700;
         }
 
         .protocol-checkbox {
@@ -233,46 +295,55 @@
         }
 
         .protocol-name {
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 600;
-            color: #212529;
+            color: #0969da;
         }
 
         .protocol-badge {
-            padding: 3px 10px;
+            padding: 2px 7px;
             border-radius: 12px;
-            font-size: 11px;
-            font-weight: 600;
-            text-transform: uppercase;
+            font-size: 12px;
+            font-weight: 500;
         }
 
         .badge-available {
-            background: #d4edda;
-            color: #155724;
+            background: #ddf4ff;
+            color: #0969da;
         }
 
         .badge-placeholder {
-            background: #fff3cd;
-            color: #856404;
+            background: #fff8c5;
+            color: #7d4e00;
         }
 
         .category-badge {
-            padding: 3px 10px;
+            padding: 2px 7px;
             border-radius: 12px;
-            font-size: 11px;
-            background: #e7e7ff;
-            color: #4c51bf;
+            font-size: 12px;
+            background: #f6f8fa;
+            color: #57606a;
+            border: 1px solid #d0d7de;
         }
 
         .protocol-description {
             font-size: 14px;
-            color: #6c757d;
+            color: #57606a;
             margin-bottom: 4px;
         }
 
         .protocol-meta {
             font-size: 12px;
-            color: #adb5bd;
+            color: #57606a;
+        }
+
+        .protocol-meta a {
+            color: #0969da;
+            text-decoration: none;
+        }
+
+        .protocol-meta a:hover {
+            text-decoration: underline;
         }
 
         .protocol-actions {
@@ -281,43 +352,67 @@
         }
 
         .icon-btn {
-            padding: 8px;
-            background: white;
-            border: 1px solid #dee2e6;
+            padding: 5px 12px;
+            background: #f6f8fa;
+            border: 1px solid #d0d7de;
             border-radius: 6px;
             cursor: pointer;
             transition: all 0.2s;
+            font-size: 14px;
+            color: #24292f;
         }
 
         .icon-btn:hover {
-            background: #667eea;
-            border-color: #667eea;
+            background: #0969da;
+            border-color: #0969da;
             color: white;
+        }
+
+        .bookmark-icon {
+            padding: 5px 12px;
+            background: transparent;
+            border: 1px solid #d0d7de;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+            color: #57606a;
+        }
+
+        .bookmark-icon:hover {
+            background: #fff8c5;
+            border-color: #bf8700;
+            color: #bf8700;
+        }
+
+        .bookmark-icon.bookmarked {
+            background: #fff8c5;
+            border-color: #bf8700;
+            color: #bf8700;
         }
 
         .no-results {
             text-align: center;
             padding: 60px 20px;
-            color: #6c757d;
+            color: #57606a;
         }
 
-        .no-results-icon {
-            font-size: 64px;
-            margin-bottom: 20px;
-            opacity: 0.3;
+        .no-results h3 {
+            color: #24292f;
+            margin: 10px 0;
         }
 
         .loading {
             text-align: center;
             padding: 60px 20px;
-            color: #6c757d;
+            color: #57606a;
         }
 
         .spinner {
             width: 50px;
             height: 50px;
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #667eea;
+            border: 4px solid #f6f8fa;
+            border-top: 4px solid #0969da;
             border-radius: 50%;
             animation: spin 1s linear infinite;
             margin: 0 auto 20px;
@@ -329,16 +424,16 @@
         }
 
         .footer {
-            padding: 20px 40px;
-            background: #f8f9fa;
-            border-top: 1px solid #e9ecef;
+            padding: 24px 32px;
+            background: #f6f8fa;
+            border-top: 1px solid #d0d7de;
             text-align: center;
-            color: #6c757d;
-            font-size: 14px;
+            color: #57606a;
+            font-size: 12px;
         }
 
         .footer a {
-            color: #667eea;
+            color: #0969da;
             text-decoration: none;
         }
 
@@ -375,8 +470,20 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🚀 Solana IDL Registry</h1>
-            <p>A comprehensive collection of Interface Definition Language files for Solana protocols</p>
+            <div class="header-content">
+                <div class="header-left">
+                    <div>
+                        <h1>Solana IDL Registry</h1>
+                        <p>A comprehensive collection of Interface Definition Language files for Solana protocols</p>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <button class="bookmark-btn" id="showBookmarksBtn">
+                        <span id="bookmarkBtnText">Bookmarks</span>
+                        <span id="bookmarkCount" style="display: none;"></span>
+                    </button>
+                </div>
+            </div>
             <div class="stats">
                 <div class="stat">
                     <div class="stat-number" id="totalProtocols">-</div>
@@ -399,7 +506,7 @@
                     type="text" 
                     id="searchInput" 
                     class="search-input" 
-                    placeholder="🔍 Search protocols by name or description..."
+                    placeholder="Search protocols by name or description..."
                 >
             </div>
             <div class="filter-section">
@@ -436,10 +543,67 @@
         let allProtocols = [];
         let filteredProtocols = [];
         let selectedProtocols = new Set();
+        let bookmarkedProtocols = new Set();
         let currentCategory = 'all';
+        let showingBookmarks = false;
+
+        // Load bookmarks from localStorage
+        function loadBookmarks() {
+            const saved = localStorage.getItem('bookmarkedProtocols');
+            if (saved) {
+                bookmarkedProtocols = new Set(JSON.parse(saved));
+            }
+            updateBookmarkCount();
+        }
+
+        // Save bookmarks to localStorage
+        function saveBookmarks() {
+            localStorage.setItem('bookmarkedProtocols', JSON.stringify([...bookmarkedProtocols]));
+            updateBookmarkCount();
+        }
+
+        // Toggle bookmark for a protocol
+        function toggleBookmark(protocolId) {
+            if (bookmarkedProtocols.has(protocolId)) {
+                bookmarkedProtocols.delete(protocolId);
+            } else {
+                bookmarkedProtocols.add(protocolId);
+            }
+            saveBookmarks();
+            renderProtocols();
+        }
+
+        // Update bookmark count in header
+        function updateBookmarkCount() {
+            const count = bookmarkedProtocols.size;
+            const countElement = document.getElementById('bookmarkCount');
+            if (count > 0) {
+                countElement.textContent = `(${count})`;
+                countElement.style.display = 'inline';
+            } else {
+                countElement.style.display = 'none';
+            }
+        }
+
+        // Toggle showing bookmarks
+        function toggleBookmarksView() {
+            showingBookmarks = !showingBookmarks;
+            const btn = document.getElementById('showBookmarksBtn');
+            if (showingBookmarks) {
+                btn.classList.add('active');
+                document.getElementById('bookmarkBtnText').textContent = 'Show All';
+                filteredProtocols = allProtocols.filter(p => bookmarkedProtocols.has(p.id));
+            } else {
+                btn.classList.remove('active');
+                document.getElementById('bookmarkBtnText').textContent = 'Bookmarks';
+                applyFilters();
+            }
+            renderProtocols();
+        }
 
         // Load index.json and initialize
         async function init() {
+            loadBookmarks();
             try {
                 const response = await fetch('../index.json');
                 const data = await response.json();
@@ -453,7 +617,6 @@
             } catch (error) {
                 document.getElementById('protocolsList').innerHTML = `
                     <div class="no-results">
-                        <div class="no-results-icon">⚠️</div>
                         <h3>Failed to load protocols</h3>
                         <p>Error: ${error.message}</p>
                     </div>
@@ -526,7 +689,7 @@
             }
 
             container.innerHTML = filteredProtocols.map(protocol => `
-                <div class="protocol-item ${selectedProtocols.has(protocol.id) ? 'selected' : ''}" data-id="${protocol.id}">
+                <div class="protocol-item ${selectedProtocols.has(protocol.id) ? 'selected' : ''} ${bookmarkedProtocols.has(protocol.id) ? 'bookmarked' : ''}" data-id="${protocol.id}">
                     <input 
                         type="checkbox" 
                         class="protocol-checkbox" 
@@ -546,8 +709,11 @@
                         </div>
                     </div>
                     <div class="protocol-actions">
-                        <button class="icon-btn" onclick="viewIDL('${protocol.id}')" title="View IDL">👁️</button>
-                        <button class="icon-btn" onclick="downloadSingle('${protocol.id}')" title="Download IDL">⬇️</button>
+                        <button class="bookmark-icon ${bookmarkedProtocols.has(protocol.id) ? 'bookmarked' : ''}" onclick="toggleBookmark('${protocol.id}')" title="Bookmark">
+                            ${bookmarkedProtocols.has(protocol.id) ? '★' : '☆'}
+                        </button>
+                        <button class="icon-btn" onclick="viewIDL('${protocol.id}')" title="View IDL">View</button>
+                        <button class="icon-btn" onclick="downloadSingle('${protocol.id}')" title="Download IDL">Download</button>
                     </div>
                 </div>
             `).join('');
@@ -570,6 +736,7 @@
                 item.addEventListener('click', (e) => {
                     if (e.target.classList.contains('protocol-checkbox') || 
                         e.target.classList.contains('icon-btn') ||
+                        e.target.classList.contains('bookmark-icon') ||
                         e.target.tagName === 'A') {
                         return;
                     }
@@ -604,6 +771,8 @@
 
         function setupEventListeners() {
             document.getElementById('searchInput').addEventListener('input', applyFilters);
+            
+            document.getElementById('showBookmarksBtn').addEventListener('click', toggleBookmarksView);
             
             document.getElementById('selectAllBtn').addEventListener('click', () => {
                 filteredProtocols.forEach(p => selectedProtocols.add(p.id));
