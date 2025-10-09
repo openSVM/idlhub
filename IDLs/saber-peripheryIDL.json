@@ -1,10 +1,113 @@
 {
   "version": "0.1.0",
   "name": "saber_periphery",
-  "instructions": [],
+  "instructions": [
+    {
+      "name": "addDecimalsDeposit",
+      "accounts": [
+        {
+          "name": "addDecimals",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "wrapper",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "wrapperMint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "wrapperUnderlyingTokens",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "owner",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "userUnderlyingTokens",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userWrappedTokens",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "addDecimalsWithdraw",
+      "accounts": [
+        {
+          "name": "addDecimals",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "wrapper",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "wrapperMint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "wrapperUnderlyingTokens",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "owner",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "userUnderlyingTokens",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userWrappedTokens",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    }
+  ],
   "accounts": [],
   "types": [],
   "metadata": {
-    "note": "Placeholder - IDL not yet available. Contributions welcome."
+    "address": "DecZY86MU5Gj7kppfUCEmd4LbXXuyZH1yHaP2NTqdiZB"
   }
 }

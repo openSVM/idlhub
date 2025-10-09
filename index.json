@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
   "description": "IDL Registry for Solana Protocols",
-  "lastUpdated": "2025-10-09T13:33:22.590145",
+  "lastUpdated": "2025-10-09T13:59:54.965407",
   "totalProtocols": 101,
   "categories": [
     "defi",
@@ -65,7 +65,7 @@
       "category": "defi",
       "idlPath": "IDLs/arrowIDL.json",
       "repo": null,
-      "status": "placeholder",
+      "status": "available",
       "version": "0.1.0",
       "lastUpdated": "2025-10-09"
     },
@@ -241,7 +241,7 @@
       "category": "defi",
       "idlPath": "IDLs/dexterityIDL.json",
       "repo": null,
-      "status": "placeholder",
+      "status": "available",
       "version": "0.1.0",
       "lastUpdated": "2025-10-09"
     },
@@ -549,7 +549,7 @@
       "category": "defi",
       "idlPath": "IDLs/mango-v3IDL.json",
       "repo": null,
-      "status": "placeholder",
+      "status": "available",
       "version": "0.1.0",
       "lastUpdated": "2025-10-09"
     },
@@ -725,7 +725,7 @@
       "category": "defi",
       "idlPath": "IDLs/prismIDL.json",
       "repo": null,
-      "status": "placeholder",
+      "status": "available",
       "version": "0.1.0",
       "lastUpdated": "2025-10-09"
     },
@@ -736,7 +736,7 @@
       "category": "defi",
       "idlPath": "IDLs/pumpfunIDL.json",
       "repo": null,
-      "status": "placeholder",
+      "status": "available",
       "version": "0.1.0",
       "lastUpdated": "2025-10-09"
     },
@@ -791,7 +791,7 @@
       "category": "defi",
       "idlPath": "IDLs/saber-peripheryIDL.json",
       "repo": null,
-      "status": "placeholder",
+      "status": "available",
       "version": "0.1.0",
       "lastUpdated": "2025-10-09"
     },

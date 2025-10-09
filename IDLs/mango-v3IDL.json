@@ -1,10 +1,139 @@
 {
   "version": "0.1.0",
   "name": "mango_v3",
-  "instructions": [],
+  "instructions": [
+    {
+      "name": "initMangoGroup",
+      "accounts": [
+        {
+          "name": "mangoGroup",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "signerKey",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "admin",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "quoteMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "quoteVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "insuranceVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "msrmVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "feesVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "dexProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "signerNonce",
+          "type": "u64"
+        },
+        {
+          "name": "validInterval",
+          "type": "u64"
+        },
+        {
+          "name": "quoteOptimalUtil",
+          "type": "u64"
+        },
+        {
+          "name": "quoteOptimalRate",
+          "type": "u64"
+        },
+        {
+          "name": "quoteMaxRate",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "deposit",
+      "accounts": [
+        {
+          "name": "mangoGroup",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "mangoAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "owner",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "mangoCache",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rootBank",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "nodeBank",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "vault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "quantity",
+          "type": "u64"
+        }
+      ]
+    }
+  ],
   "accounts": [],
   "types": [],
   "metadata": {
-    "note": "Placeholder - IDL not yet available. Contributions welcome."
+    "address": "mv3ekLzLbnVPNxjSKvqBpU3ZeZXPQdEC3bp5MDEBG68"
   }
 }
