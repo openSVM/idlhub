@@ -71,7 +71,13 @@ const idl = await idlResponse.json();
 
 IDLHub includes a **Model Context Protocol (MCP) server** that provides structured, high-performance access to IDL schemas, symbol lookup, code generation, and diagnostics. Perfect for LLM integration and editor tooling.
 
-**Quick Start:**
+**One-Line Install:**
+
+```bash
+curl -fsSL https://idlhub.com/mcp | sh
+```
+
+Or if you have the repository already:
 
 ```bash
 # Install dependencies

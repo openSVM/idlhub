@@ -2,12 +2,21 @@
 
 Get started with the IDLHub Model Context Protocol server in minutes!
 
-## Prerequisites
-
-- Node.js v14 or higher
-- npm or yarn
-
 ## Installation
+
+### One-Line Install (Recommended)
+
+The fastest way to get started:
+
+```bash
+curl -fsSL https://idlhub.com/mcp | sh
+```
+
+This automatically installs everything you need on macOS, Linux, or Windows (WSL).
+
+### Manual Installation
+
+If you prefer manual setup:
 
 ```bash
 # Clone the repository

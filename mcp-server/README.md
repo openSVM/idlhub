@@ -21,9 +21,38 @@ A foundational implementation of the [Model Context Protocol (MCP) 2025-06-18 sp
 
 ## Installation
 
+### Quick Install (Recommended)
+
+The easiest way to install the IDLHub MCP Server:
+
 ```bash
-npm install
+curl -fsSL https://idlhub.com/mcp | sh
 ```
+
+This will automatically:
+- Detect your OS (Linux, macOS, Windows/WSL)
+- Install Node.js and dependencies if needed
+- Clone the repository to `~/.idlhub`
+- Configure your environment
+- Run tests to verify installation
+
+### Manual Installation
+
+If you prefer to install manually or already have the repository:
+
+```bash
+# Clone the repository (if not already cloned)
+git clone https://github.com/openSVM/idlhub.git
+cd idlhub
+
+# Install npm dependencies
+npm install
+
+# Test the installation
+npm test
+```
+
+See [INSTALL.md](../INSTALL.md) for detailed installation instructions and troubleshooting.
 
 ## Usage
 
