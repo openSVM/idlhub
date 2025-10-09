@@ -1,6 +1,6 @@
-# Solana IDL Registry
+# IDLHUB.COM - Solana IDL Registry
 
-A comprehensive, searchable registry of Interface Definition Language (IDL) files for Solana protocols. This repository provides a centralized location for discovering and accessing IDLs across the Solana ecosystem.
+idlhub - a comprehensive, searchable registry of Interface Definition Language (IDL) files for Solana protocols. This repository provides a centralized location for discovering and accessing IDLs across the Solana ecosystem.
 
 ## 🚀 Features
 
