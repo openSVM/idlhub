@@ -12,7 +12,8 @@ permissions:
   pages: write
   id-token: write
 
-# Allow only one concurrent deployment per branch, cancelling any in-progress deployments
+# Allow only one concurrent deployment per branch, cancelling
+# any in-progress deployments
 concurrency:
   group: ${{ github.ref }}
   cancel-in-progress: true
@@ -26,15 +27,15 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
-      
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: 'docs'
-      
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
