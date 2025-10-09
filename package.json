@@ -4,7 +4,7 @@
   "description": "idlhub - a comprehensive, searchable registry of Interface Definition Language (IDL) files for Solana protocols. This repository provides a centralized location for discovering and accessing IDLs across the Solana ecosystem.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node mcp-server/test/basic.test.js",
     "mcp:stdio": "node mcp-server/src/index.js",
     "mcp:websocket": "node mcp-server/src/websocket-server.js",
     "mcp:start": "npm run mcp:stdio"
