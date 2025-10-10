@@ -40,19 +40,19 @@
         }
 
         [data-theme="night"] {
-            --bg-primary: #1a1d29;
-            --bg-secondary: #22252e;
-            --bg-tertiary: #2a2d38;
-            --text-primary: #d4d7dd;
-            --text-secondary: #9ca3af;
-            --text-muted: #6b7280;
-            --border-primary: #3b3f4c;
-            --border-secondary: #2a2d38;
-            --accent-primary: #60a5fa;
-            --accent-hover: #3b82f6;
-            --error-color: #f87171;
-            --selection-bg: #3b82f6;
-            --checkbox-bg: #22252e;
+            --bg-primary: #0f0f23;
+            --bg-secondary: #1a1a3e;
+            --bg-tertiary: #252550;
+            --text-primary: #ccccff;
+            --text-secondary: #9999ff;
+            --text-muted: #6666cc;
+            --border-primary: #9966ff;
+            --border-secondary: #252550;
+            --accent-primary: #ff6ec7;
+            --accent-hover: #ffcc00;
+            --error-color: #ff3366;
+            --selection-bg: #ff6ec7;
+            --checkbox-bg: #1a1a3e;
         }
 
         [data-theme="terminal"] {
@@ -75,16 +75,64 @@
             --bg-primary: #002b36;
             --bg-secondary: #073642;
             --bg-tertiary: #094251;
-            --text-primary: #839496;
-            --text-secondary: #657b83;
-            --text-muted: #586e75;
-            --border-primary: #2aa198;
+            --text-primary: #93a1a1;
+            --text-secondary: #839496;
+            --text-muted: #657b83;
+            --border-primary: #b58900;
             --border-secondary: #094251;
-            --accent-primary: #268bd2;
-            --accent-hover: #2aa198;
+            --accent-primary: #b58900;
+            --accent-hover: #cb4b16;
             --error-color: #dc322f;
-            --selection-bg: #268bd2;
+            --selection-bg: #b58900;
             --checkbox-bg: #073642;
+        }
+
+        [data-theme="solarized-light"] {
+            --bg-primary: #fdf6e3;
+            --bg-secondary: #eee8d5;
+            --bg-tertiary: #e8e2d0;
+            --text-primary: #657b83;
+            --text-secondary: #839496;
+            --text-muted: #93a1a1;
+            --border-primary: #b58900;
+            --border-secondary: #e8e2d0;
+            --accent-primary: #b58900;
+            --accent-hover: #cb4b16;
+            --error-color: #dc322f;
+            --selection-bg: #b58900;
+            --checkbox-bg: #eee8d5;
+        }
+
+        [data-theme="monokai-light"] {
+            --bg-primary: #fafafa;
+            --bg-secondary: #f5f5f5;
+            --bg-tertiary: #eeeeee;
+            --text-primary: #272822;
+            --text-secondary: #75715e;
+            --text-muted: #999988;
+            --border-primary: #f92672;
+            --border-secondary: #eeeeee;
+            --accent-primary: #f92672;
+            --accent-hover: #fd971f;
+            --error-color: #f92672;
+            --selection-bg: #a6e22e;
+            --checkbox-bg: #f5f5f5;
+        }
+
+        [data-theme="dos"] {
+            --bg-primary: #0000aa;
+            --bg-secondary: #0000bb;
+            --bg-tertiary: #1111cc;
+            --text-primary: #ffff55;
+            --text-secondary: #ffffff;
+            --text-muted: #aaaaaa;
+            --border-primary: #ffff55;
+            --border-secondary: #5555ff;
+            --accent-primary: #00ffff;
+            --accent-hover: #ffff00;
+            --error-color: #ff5555;
+            --selection-bg: #00ffff;
+            --checkbox-bg: #0000bb;
         }
 
         [data-theme="dracula"] {
@@ -112,8 +160,8 @@
             --text-muted: #4c566a;
             --border-primary: #88c0d0;
             --border-secondary: #434c5e;
-            --accent-primary: #81a1c1;
-            --accent-hover: #88c0d0;
+            --accent-primary: #88c0d0;
+            --accent-hover: #8fbcbb;
             --error-color: #bf616a;
             --selection-bg: #5e81ac;
             --checkbox-bg: #3b4252;
@@ -126,10 +174,10 @@
             --text-primary: #abb2bf;
             --text-secondary: #5c6370;
             --text-muted: #4b5263;
-            --border-primary: #61afef;
+            --border-primary: #98c379;
             --border-secondary: #2c313a;
-            --accent-primary: #61afef;
-            --accent-hover: #56b6c2;
+            --accent-primary: #e5c07b;
+            --accent-hover: #e06c75;
             --error-color: #e06c75;
             --selection-bg: #528bff;
             --checkbox-bg: #282c34;
@@ -964,13 +1012,16 @@
                         </button>
                         <div class="theme-dropdown" id="themeDropdown">
                             <div class="theme-option" data-theme="light">Light</div>
+                            <div class="theme-option" data-theme="monokai-light">Monokai Light</div>
+                            <div class="theme-option" data-theme="solarized-light">Solarized Light</div>
                             <div class="theme-option" data-theme="dark">Dark</div>
+                            <div class="theme-option" data-theme="solarized">Solarized Dark</div>
                             <div class="theme-option" data-theme="night">Night</div>
-                            <div class="theme-option" data-theme="terminal">Terminal</div>
-                            <div class="theme-option" data-theme="solarized">Solarized</div>
                             <div class="theme-option" data-theme="dracula">Dracula</div>
                             <div class="theme-option" data-theme="nord">Nord</div>
                             <div class="theme-option" data-theme="onedark">One Dark</div>
+                            <div class="theme-option" data-theme="terminal">Terminal</div>
+                            <div class="theme-option" data-theme="dos">DOS / Borland</div>
                         </div>
                     </div>
                     <button class="bookmark-btn" id="showBookmarksBtn">
