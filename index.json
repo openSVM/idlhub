@@ -1,8 +1,8 @@
 {
   "version": "1.0.0",
   "description": "IDL Registry for Solana Protocols",
-  "lastUpdated": "2025-10-10T06:26:43.720Z",
-  "totalProtocols": 102,
+  "lastUpdated": "2025-10-09T14:04:53.373481",
+  "totalProtocols": 101,
   "categories": [
     "defi",
     "derivatives",
@@ -607,17 +607,6 @@
       "status": "available",
       "version": "0.1.0",
       "lastUpdated": "2025-10-09"
-    },
-    {
-      "id": "netflix",
-      "name": "Netflix",
-      "description": "Netflix protocol on Solana",
-      "category": "defi",
-      "idlPath": "IDLs/netflixIDL.json",
-      "repo": null,
-      "status": "placeholder",
-      "version": "0.1.0",
-      "lastUpdated": "2025-10-10"
     },
     {
       "id": "obric",
