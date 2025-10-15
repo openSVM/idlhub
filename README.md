@@ -114,6 +114,50 @@ npm run mcp:websocket
 
 See [mcp-server/README.md](mcp-server/README.md) for complete documentation.
 
+## 🚀 Deployment
+
+### Netlify (Recommended)
+
+Deploy IDLHub to Netlify with one click:
+
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/openSVM/idlhub)
+
+IDLHub includes a complete Netlify configuration (`netlify.toml`) with:
+- Automatic redirects for the `/mcp` installation endpoint
+- Optimized caching and security headers
+- CDN distribution for fast global access
+
+**Quick setup:**
+1. Click the deploy button above
+2. Configure environment variables for Qdrant (optional)
+3. Deploy and get your custom domain
+
+See [NETLIFY.md](NETLIFY.md) for detailed deployment instructions.
+
+### Qdrant Integration
+
+IDLHub supports Qdrant for enhanced search and discovery:
+
+```bash
+# Install dependencies
+npm install
+
+# Configure Qdrant credentials
+cp .env.example .env
+# Edit .env with your Qdrant URL and API key
+
+# Initialize Qdrant collections
+npm run qdrant:init
+```
+
+This enables:
+- Semantic search across protocols
+- Similar protocol discovery
+- Fast metadata queries
+- Search history tracking
+
+Qdrant configuration is based on [aldrin-labs/openSVM](https://github.com/aldrin-labs/openSVM) for compatibility.
+
 ## 📦 Protocol Categories
 
 - **DEX**: Decentralized exchanges (Orca, Raydium, Phoenix, OpenBook)

@@ -7,7 +7,8 @@
     "test": "node mcp-server/test/basic.test.js",
     "mcp:stdio": "node mcp-server/src/index.js",
     "mcp:websocket": "node mcp-server/src/websocket-server.js",
-    "mcp:start": "npm run mcp:stdio"
+    "mcp:start": "npm run mcp:stdio",
+    "qdrant:init": "node scripts/init-qdrant.js"
   },
   "bin": {
     "idlhub-mcp": "./mcp-server/src/index.js"
@@ -23,6 +24,7 @@
   "license": "ISC",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.19.1",
+    "@qdrant/js-client-rest": "^1.13.0",
     "ws": "^8.18.3"
   }
 }
