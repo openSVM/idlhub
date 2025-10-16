@@ -93,19 +93,27 @@ The `netlify.toml` file configures:
 
 Once Qdrant is initialized, IDLHub gains:
 
-- **Semantic search** for protocols
-- **Similar protocol discovery**
+- **Semantic search** for programs and protocols
+- **Similar program discovery**
 - **Fast metadata queries**
-- **Search history tracking**
+- **Full IDL storage** within program metadata
+- **openSVM compatibility** - Uses the same ProgramMetadataEntry model
 
 ### Qdrant Collections
 
-The following collections are created:
+The following collections are created (matching aldrin-labs/openSVM structure):
 
-1. **idl_metadata** - Protocol metadata and information
-2. **protocol_search** - Optimized search index
-3. **user_searches** - User search history
-4. **idl_cache** - Cached IDL content
+1. **program_metadata** - Program metadata with full IDL objects (ProgramMetadataEntry model)
+2. **token_metadata** - Token metadata (for future expansion)
+3. **idl_cache** - Additional IDL caching layer
+
+### openSVM Compatibility
+
+IDLHub uses the same database model as aldrin-labs/openSVM:
+- **ProgramMetadataEntry** interface for all programs
+- IDL stored as part of program metadata (`idl` field)
+- Same collection names and structure
+- Compatible search and retrieval patterns
 
 ## Testing the Deployment
 

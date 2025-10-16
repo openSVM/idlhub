@@ -40,12 +40,14 @@ async function initializeQdrant() {
     console.log(`Found ${protocols.length} protocols\n`);
 
     // Batch store protocols
-    console.log('Storing protocols in Qdrant...');
-    await qdrant.batchStoreProtocols(protocols);
+    console.log('Storing programs with IDLs in Qdrant...');
+    await qdrant.batchStorePrograms(protocols);
     
     console.log('\n✅ Qdrant initialization complete!');
-    console.log(`\nStored ${protocols.length} protocols across ${Object.keys(qdrant.COLLECTIONS).length} collections`);
-    console.log('\nYou can now use Qdrant for semantic search and protocol discovery.');
+    console.log(`\nStored ${protocols.length} programs with IDLs in openSVM-compatible format`);
+    console.log(`Collections: ${Object.keys(qdrant.COLLECTIONS).join(', ')}`);
+    console.log('\nYou can now use Qdrant for semantic search and program discovery.');
+    console.log('This database is compatible with aldrin-labs/openSVM.');
     
   } catch (error) {
     console.error('\n❌ Error during initialization:', error.message);
