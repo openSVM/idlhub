@@ -114,6 +114,62 @@ npm run mcp:websocket
 
 See [mcp-server/README.md](mcp-server/README.md) for complete documentation.
 
+## 🔌 REST API
+
+IDLHub provides a REST API for dynamically loading and uploading IDL files.
+
+### Quick Start
+
+```bash
+# Start the API server
+npm run api:start
+
+# Server runs on http://localhost:3000
+```
+
+### Key Endpoints
+
+- **`POST /api/idl/load-from-github`** - Load IDL from GitHub repository
+- **`POST /api/idl/upload`** - Upload IDL directly
+- **`GET /api/programs`** - List all programs
+- **`GET /api/programs/:id/idl`** - Get specific program IDL
+- **`GET /api/search`** - Semantic search using Qdrant
+
+### Load IDL from GitHub
+
+```bash
+curl -X POST http://localhost:3000/api/idl/load-from-github \
+  -H "Content-Type: application/json" \
+  -d '{
+    "owner": "coral-xyz",
+    "repo": "anchor",
+    "path": "tests/example.json",
+    "branch": "master",
+    "programId": "example",
+    "name": "Example Program",
+    "category": "defi"
+  }'
+```
+
+### Upload IDL Directly
+
+```bash
+curl -X POST http://localhost:3000/api/idl/upload \
+  -H "Content-Type: application/json" \
+  -d '{
+    "programId": "myprogram",
+    "name": "My Program",
+    "category": "defi",
+    "idl": {
+      "version": "0.1.0",
+      "name": "my_program",
+      "instructions": []
+    }
+  }'
+```
+
+See [api/README.md](api/README.md) for complete API documentation.
+
 ## 🚀 Deployment
 
 ### Netlify (Recommended)
