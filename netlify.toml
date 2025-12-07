@@ -17,12 +17,14 @@
   status = 200
   force = true
 
-# SPA fallback for the web interface
+# SPA fallback for the web interface (excluding API routes)
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
   conditions = {Role = ["public"]}
+  force = false
+  # This won't catch /api/* routes or files with extensions
 
 # Headers for install script
 [[headers]]

@@ -34,7 +34,21 @@ async function initializeQdrant() {
     // Load index.json
     console.log('Loading protocols from index.json...');
     const indexPath = path.join(__dirname, '..', 'index.json');
-    const indexData = JSON.parse(fs.readFileSync(indexPath, 'utf8'));
+    
+    let indexData;
+    try {
+      indexData = JSON.parse(fs.readFileSync(indexPath, 'utf8'));
+    } catch (err) {
+      if (err.code === 'ENOENT') {
+        console.error(`\n❌ index.json not found in the expected location: ${indexPath}`);
+      } else if (err instanceof SyntaxError) {
+        console.error(`\n❌ index.json is not valid JSON or is corrupted: ${indexPath}`);
+      } else {
+        console.error(`\n❌ Failed to read or parse index.json: ${indexPath}`);
+      }
+      console.error('Please ensure index.json exists and is a valid JSON file.');
+      process.exit(1);
+    }
     
     const protocols = indexData.protocols;
     console.log(`Found ${protocols.length} protocols\n`);

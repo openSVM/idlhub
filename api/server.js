@@ -130,6 +130,29 @@ app.post('/api/idl/load-from-github', async (req, res) => {
       });
     }
     
+    // Validate GitHub parameters to prevent path traversal and injection attacks
+    const ownerRepoPattern = /^[a-zA-Z0-9-]+$/;
+    const branchPattern = /^[\w.\-]+$/; // Standard branch naming (no slashes)
+    const filePathPattern = /^(?!\/)(?!.*\.\.)(?!.*\/\/)[\w\-./]+$/;
+    
+    if (!ownerRepoPattern.test(owner) || !ownerRepoPattern.test(repo)) {
+      return res.status(400).json({
+        error: 'Invalid owner or repo format. Only alphanumeric characters and hyphens are allowed.'
+      });
+    }
+    
+    if (!branchPattern.test(branch)) {
+      return res.status(400).json({
+        error: 'Invalid branch format.'
+      });
+    }
+    
+    if (!filePathPattern.test(filePath)) {
+      return res.status(400).json({
+        error: 'Invalid file path format. Path must not contain "..", leading slashes, or double slashes.'
+      });
+    }
+    
     const githubUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${filePath}`;
     console.log(`Fetching IDL from: ${githubUrl}`);
     
@@ -348,7 +371,9 @@ app.get('/api/docs', (req, res) => {
 });
 
 // Error handler
-app.use((err, req, res, next) => {
+// The 'next' parameter is required for Express to recognize this as error-handling middleware
+// It is intentionally unused here
+app.use((err, req, res, _next) => {
   console.error('Error:', err);
   res.status(500).json({
     error: 'Internal server error',
