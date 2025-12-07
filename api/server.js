@@ -1,434 +1,366 @@
 /**
  * IDLHub REST API Server
- * Provides endpoints for dynamically loading/uploading IDL files
+ * Acts as a wrapper for OpenSVM API (https://opensvm.com/api)
  */
 
 const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
-const fs = require('fs').promises;
-const path = require('path');
-const qdrant = require('../lib/qdrant');
 
 const app = express();
 const PORT = process.env.API_PORT || 3000;
+const OPENSVM_API_BASE = process.env.OPENSVM_API_BASE || 'https://opensvm.com/api';
 
 // Middleware
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
-// Request logging middleware
+// Request logging
 app.use((req, res, next) => {
   console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
   next();
 });
 
-/**
- * Health check endpoint
- */
+// Health check
 app.get('/health', (req, res) => {
   res.json({
     status: 'ok',
     timestamp: new Date().toISOString(),
-    version: '1.0.0'
+    version: '2.0.0',
+    backend: OPENSVM_API_BASE
   });
 });
 
-/**
- * Get all programs/protocols
- */
-app.get('/api/programs', async (req, res) => {
+// List IDLs
+app.get('/api/idl', async (req, res) => {
   try {
-    const indexPath = path.join(__dirname, '..', 'index.json');
-    const indexData = JSON.parse(await fs.readFile(indexPath, 'utf8'));
-    
-    const { category, status, search } = req.query;
-    let protocols = indexData.protocols;
-    
-    // Filter by category
-    if (category) {
-      protocols = protocols.filter(p => p.category === category);
-    }
-    
-    // Filter by status
-    if (status) {
-      protocols = protocols.filter(p => p.status === status);
-    }
-    
-    // Search by name or description
-    if (search) {
-      const searchLower = search.toLowerCase();
-      protocols = protocols.filter(p => 
-        p.name.toLowerCase().includes(searchLower) ||
-        p.description.toLowerCase().includes(searchLower)
-      );
-    }
-    
-    res.json({
-      total: protocols.length,
-      protocols
+    const { network = 'mainnet', limit = 50, offset = 0 } = req.query;
+    const response = await axios.get(`${OPENSVM_API_BASE}/idl`, {
+      params: { network, limit, offset }
     });
+    res.json(response.data);
   } catch (error) {
-    console.error('Error fetching programs:', error);
-    res.status(500).json({ error: 'Failed to fetch programs' });
+    console.error('Error:', error.message);
+    res.status(error.response?.status || 500).json({
+      error: 'Failed to fetch IDLs',
+      details: error.response?.data || error.message
+    });
   }
 });
 
-/**
- * Get a specific program by ID
- */
-app.get('/api/programs/:id', async (req, res) => {
+// Get IDL by program ID
+app.get('/api/idl/:programId', async (req, res) => {
   try {
-    const { id } = req.params;
-    const indexPath = path.join(__dirname, '..', 'index.json');
-    const indexData = JSON.parse(await fs.readFile(indexPath, 'utf8'));
-    
-    const protocol = indexData.protocols.find(p => p.id === id);
-    
-    if (!protocol) {
-      return res.status(404).json({ error: 'Program not found' });
-    }
-    
-    res.json(protocol);
+    const { programId } = req.params;
+    const { network = 'mainnet', all = false } = req.query;
+    const response = await axios.get(`${OPENSVM_API_BASE}/idl/${programId}`, {
+      params: { network, all }
+    });
+    res.json(response.data);
   } catch (error) {
-    console.error('Error fetching program:', error);
-    res.status(500).json({ error: 'Failed to fetch program' });
+    console.error('Error:', error.message);
+    res.status(error.response?.status || 500).json({
+      error: 'Failed to fetch IDL',
+      details: error.response?.data || error.message
+    });
   }
 });
 
-/**
- * Get IDL for a specific program
- */
-app.get('/api/programs/:id/idl', async (req, res) => {
+// Create/Update IDL
+app.post('/api/idl', async (req, res) => {
   try {
-    const { id } = req.params;
-    const indexPath = path.join(__dirname, '..', 'index.json');
-    const indexData = JSON.parse(await fs.readFile(indexPath, 'utf8'));
-    
-    const protocol = indexData.protocols.find(p => p.id === id);
-    
-    if (!protocol) {
-      return res.status(404).json({ error: 'Program not found' });
-    }
-    
-    if (!protocol.idlPath) {
-      return res.status(404).json({ error: 'IDL not available for this program' });
-    }
-    
-    const idlPath = path.join(__dirname, '..', protocol.idlPath);
-    const idlData = JSON.parse(await fs.readFile(idlPath, 'utf8'));
-    
-    res.json(idlData);
+    const response = await axios.post(`${OPENSVM_API_BASE}/idl`, req.body);
+    res.status(201).json(response.data);
   } catch (error) {
-    console.error('Error fetching IDL:', error);
-    res.status(500).json({ error: 'Failed to fetch IDL' });
+    console.error('Error:', error.message);
+    res.status(error.response?.status || 500).json({
+      error: 'Failed to create/update IDL',
+      details: error.response?.data || error.message
+    });
   }
 });
 
-/**
- * Load IDL from GitHub repository
- * POST /api/idl/load-from-github
- * Body: { owner, repo, path, branch?, programId, name, description, category }
- */
+// Delete IDL
+app.delete('/api/idl/:programId', async (req, res) => {
+  try {
+    const { programId } = req.params;
+    const { network = 'mainnet' } = req.query;
+    const response = await axios.delete(`${OPENSVM_API_BASE}/idl/${programId}`, {
+      params: { network }
+    });
+    res.json(response.data);
+  } catch (error) {
+    console.error('Error:', error.message);
+    res.status(error.response?.status || 500).json({
+      error: 'Failed to delete IDL',
+      details: error.response?.data || error.message
+    });
+  }
+});
+
+// Search IDLs
+app.get('/api/idl/search', async (req, res) => {
+  try {
+    const { q, network = 'mainnet', limit = 20 } = req.query;
+    if (!q) {
+      return res.status(400).json({ error: 'Query parameter "q" is required' });
+    }
+    const response = await axios.get(`${OPENSVM_API_BASE}/idl/search`, {
+      params: { q, network, limit }
+    });
+    res.json(response.data);
+  } catch (error) {
+    console.error('Error:', error.message);
+    res.status(error.response?.status || 500).json({
+      error: 'Failed to search IDLs',
+      details: error.response?.data || error.message
+    });
+  }
+});
+
+// Load IDL from GitHub
 app.post('/api/idl/load-from-github', async (req, res) => {
   try {
-    const { owner, repo, path: filePath, branch = 'main', programId, name, description, category } = req.body;
+    const { owner, repo, path: filePath, branch = 'main', programId, name, network = 'mainnet' } = req.body;
     
-    if (!owner || !repo || !filePath || !programId || !name) {
-      return res.status(400).json({ 
-        error: 'Missing required fields: owner, repo, path, programId, name' 
+    if (!owner || !repo || !filePath || !programId) {
+      return res.status(400).json({
+        error: 'Missing required fields: owner, repo, path, programId'
       });
     }
     
-    // Construct GitHub raw URL
     const githubUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${filePath}`;
     console.log(`Fetching IDL from: ${githubUrl}`);
     
-    // Fetch IDL from GitHub
-    const response = await axios.get(githubUrl, {
-      headers: {
-        'Accept': 'application/json'
-      }
+    const githubResponse = await axios.get(githubUrl, {
+      headers: { 'Accept': 'application/json' }
     });
     
-    const idlData = response.data;
+    const idlData = githubResponse.data;
     
-    // Validate IDL structure
     if (!idlData.version || !idlData.name) {
-      return res.status(400).json({ 
-        error: 'Invalid IDL format: missing version or name' 
+      return res.status(400).json({
+        error: 'Invalid IDL format: missing version or name'
       });
     }
     
-    // Save IDL to file
-    const idlFileName = `${programId}IDL.json`;
-    const idlPath = path.join(__dirname, '..', 'IDLs', idlFileName);
-    await fs.writeFile(idlPath, JSON.stringify(idlData, null, 2));
-    
-    // Update index.json
-    const indexPath = path.join(__dirname, '..', 'index.json');
-    const indexData = JSON.parse(await fs.readFile(indexPath, 'utf8'));
-    
-    // Check if program already exists
-    const existingIndex = indexData.protocols.findIndex(p => p.id === programId);
-    const newProtocol = {
-      id: programId,
-      name,
-      description: description || `${name} protocol on Solana`,
-      category: category || 'defi',
-      idlPath: `IDLs/${idlFileName}`,
-      repo: `https://github.com/${owner}/${repo}`,
-      status: 'available',
-      version: idlData.version || '0.1.0',
-      lastUpdated: new Date().toISOString().split('T')[0]
+    const storePayload = {
+      programId,
+      network,
+      idl: idlData,
+      metadata: {
+        name: name || idlData.name,
+        github: `https://github.com/${owner}/${repo}`,
+        source: githubUrl
+      }
     };
     
-    if (existingIndex >= 0) {
-      // Update existing
-      indexData.protocols[existingIndex] = newProtocol;
-    } else {
-      // Add new and sort alphabetically
-      indexData.protocols.push(newProtocol);
-      indexData.protocols.sort((a, b) => a.id.localeCompare(b.id));
-      indexData.totalProtocols = indexData.protocols.length;
-    }
+    const opensvmResponse = await axios.post(`${OPENSVM_API_BASE}/idl`, storePayload);
     
-    indexData.lastUpdated = new Date().toISOString();
-    await fs.writeFile(indexPath, JSON.stringify(indexData, null, 2));
-    
-    // Store in Qdrant if available
-    try {
-      await qdrant.storeProgramMetadata(newProtocol, idlData);
-      console.log(`Stored ${programId} in Qdrant`);
-    } catch (qdrantError) {
-      console.warn('Qdrant storage failed (continuing anyway):', qdrantError.message);
-    }
-    
-    res.json({
+    res.status(201).json({
       success: true,
-      message: 'IDL loaded successfully from GitHub',
-      program: newProtocol,
-      idl: idlData
+      message: 'IDL loaded from GitHub and stored in OpenSVM',
+      data: opensvmResponse.data
     });
     
   } catch (error) {
-    console.error('Error loading IDL from GitHub:', error);
-    
+    console.error('Error:', error.message);
     if (error.response?.status === 404) {
-      return res.status(404).json({ 
+      return res.status(404).json({
         error: 'IDL file not found on GitHub',
-        details: error.message 
+        details: error.message
       });
     }
-    
-    res.status(500).json({ 
+    res.status(error.response?.status || 500).json({
       error: 'Failed to load IDL from GitHub',
-      details: error.message 
+      details: error.response?.data || error.message
     });
   }
 });
 
-/**
- * Upload IDL directly
- * POST /api/idl/upload
- * Body: { programId, name, description, category, idl }
- */
+// Upload IDL
 app.post('/api/idl/upload', async (req, res) => {
   try {
-    const { programId, name, description, category, idl: idlData, repo } = req.body;
+    const { programId, name, idl: idlData, network = 'mainnet' } = req.body;
     
-    if (!programId || !name || !idlData) {
-      return res.status(400).json({ 
-        error: 'Missing required fields: programId, name, idl' 
+    if (!programId || !idlData) {
+      return res.status(400).json({
+        error: 'Missing required fields: programId, idl'
       });
     }
     
-    // Validate IDL structure
     if (!idlData.version || !idlData.name) {
-      return res.status(400).json({ 
-        error: 'Invalid IDL format: missing version or name' 
+      return res.status(400).json({
+        error: 'Invalid IDL format: missing version or name'
       });
     }
     
-    // Save IDL to file
-    const idlFileName = `${programId}IDL.json`;
-    const idlPath = path.join(__dirname, '..', 'IDLs', idlFileName);
-    await fs.writeFile(idlPath, JSON.stringify(idlData, null, 2));
-    
-    // Update index.json
-    const indexPath = path.join(__dirname, '..', 'index.json');
-    const indexData = JSON.parse(await fs.readFile(indexPath, 'utf8'));
-    
-    // Check if program already exists
-    const existingIndex = indexData.protocols.findIndex(p => p.id === programId);
-    const newProtocol = {
-      id: programId,
-      name,
-      description: description || `${name} protocol on Solana`,
-      category: category || 'defi',
-      idlPath: `IDLs/${idlFileName}`,
-      repo: repo || null,
-      status: 'available',
-      version: idlData.version || '0.1.0',
-      lastUpdated: new Date().toISOString().split('T')[0]
+    const storePayload = {
+      programId,
+      network,
+      idl: idlData,
+      metadata: {
+        name: name || idlData.name
+      }
     };
     
-    if (existingIndex >= 0) {
-      // Update existing
-      indexData.protocols[existingIndex] = newProtocol;
-    } else {
-      // Add new and sort alphabetically
-      indexData.protocols.push(newProtocol);
-      indexData.protocols.sort((a, b) => a.id.localeCompare(b.id));
-      indexData.totalProtocols = indexData.protocols.length;
-    }
+    const response = await axios.post(`${OPENSVM_API_BASE}/idl`, storePayload);
     
-    indexData.lastUpdated = new Date().toISOString();
-    await fs.writeFile(indexPath, JSON.stringify(indexData, null, 2));
-    
-    // Store in Qdrant if available
-    try {
-      await qdrant.storeProgramMetadata(newProtocol, idlData);
-      console.log(`Stored ${programId} in Qdrant`);
-    } catch (qdrantError) {
-      console.warn('Qdrant storage failed (continuing anyway):', qdrantError.message);
-    }
-    
-    res.json({
+    res.status(201).json({
       success: true,
       message: 'IDL uploaded successfully',
-      program: newProtocol
+      data: response.data
     });
     
   } catch (error) {
-    console.error('Error uploading IDL:', error);
-    res.status(500).json({ 
+    console.error('Error:', error.message);
+    res.status(error.response?.status || 500).json({
       error: 'Failed to upload IDL',
-      details: error.message 
+      details: error.response?.data || error.message
     });
   }
 });
 
-/**
- * Search programs using Qdrant semantic search
- */
-app.get('/api/search', async (req, res) => {
+// Legacy: List programs
+app.get('/api/programs', async (req, res) => {
   try {
-    const { q, limit = 10 } = req.query;
+    const { category, status, search, network = 'mainnet', limit = 50, offset = 0 } = req.query;
     
-    if (!q) {
-      return res.status(400).json({ error: 'Missing query parameter: q' });
+    let url = `${OPENSVM_API_BASE}/idl`;
+    let params = { network, limit, offset };
+    
+    if (search) {
+      url = `${OPENSVM_API_BASE}/idl/search`;
+      params.q = search;
     }
     
-    const results = await qdrant.searchPrograms(q, parseInt(limit));
+    const response = await axios.get(url, { params });
+    let programs = response.data.idls || response.data.results || [];
+    
+    if (category) {
+      programs = programs.filter(p => 
+        p.metadata?.category === category || p.category === category
+      );
+    }
+    
+    if (status) {
+      programs = programs.filter(p => p.status === status);
+    }
     
     res.json({
-      query: q,
-      total: results.length,
-      results
+      total: programs.length,
+      protocols: programs,
+      programs: programs
     });
   } catch (error) {
-    console.error('Error searching programs:', error);
-    res.status(500).json({ 
-      error: 'Search failed',
-      details: error.message 
+    console.error('Error:', error.message);
+    res.status(error.response?.status || 500).json({
+      error: 'Failed to fetch programs',
+      details: error.response?.data || error.message
     });
   }
 });
 
-/**
- * Get program metadata from Qdrant
- */
-app.get('/api/qdrant/programs/:id', async (req, res) => {
+// Legacy: Get program
+app.get('/api/programs/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const metadata = await qdrant.getProgramMetadata(id);
-    
-    if (!metadata) {
-      return res.status(404).json({ error: 'Program not found in Qdrant' });
-    }
-    
-    res.json(metadata);
+    const { network = 'mainnet' } = req.query;
+    const response = await axios.get(`${OPENSVM_API_BASE}/idl/${id}`, {
+      params: { network }
+    });
+    res.json(response.data);
   } catch (error) {
-    console.error('Error fetching from Qdrant:', error);
-    res.status(500).json({ 
-      error: 'Failed to fetch from Qdrant',
-      details: error.message 
+    console.error('Error:', error.message);
+    res.status(error.response?.status || 500).json({
+      error: 'Program not found',
+      details: error.response?.data || error.message
     });
   }
 });
 
-/**
- * Get API documentation
- */
+// Legacy: Get program IDL
+app.get('/api/programs/:id/idl', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { network = 'mainnet' } = req.query;
+    const response = await axios.get(`${OPENSVM_API_BASE}/idl/${id}`, {
+      params: { network }
+    });
+    res.json(response.data.idl || response.data);
+  } catch (error) {
+    console.error('Error:', error.message);
+    res.status(error.response?.status || 500).json({
+      error: 'IDL not found',
+      details: error.response?.data || error.message
+    });
+  }
+});
+
+// Search alias
+app.get('/api/search', async (req, res) => {
+  try {
+    const { q, network = 'mainnet', limit = 20 } = req.query;
+    if (!q) {
+      return res.status(400).json({ error: 'Query parameter "q" is required' });
+    }
+    const response = await axios.get(`${OPENSVM_API_BASE}/idl/search`, {
+      params: { q, network, limit }
+    });
+    res.json({
+      query: q,
+      total: response.data.results?.length || 0,
+      results: response.data.results || response.data
+    });
+  } catch (error) {
+    console.error('Error:', error.message);
+    res.status(error.response?.status || 500).json({
+      error: 'Search failed',
+      details: error.response?.data || error.message
+    });
+  }
+});
+
+// API documentation
 app.get('/api/docs', (req, res) => {
   res.json({
     title: 'IDLHub REST API',
-    version: '1.0.0',
-    description: 'REST API for managing Solana program IDLs',
+    version: '2.0.0',
+    description: 'REST API wrapper for OpenSVM IDL storage',
+    backend: OPENSVM_API_BASE,
     endpoints: {
       'GET /health': 'Health check',
-      'GET /api/programs': 'List all programs (query params: category, status, search)',
-      'GET /api/programs/:id': 'Get specific program',
-      'GET /api/programs/:id/idl': 'Get IDL for specific program',
-      'POST /api/idl/load-from-github': 'Load IDL from GitHub',
-      'POST /api/idl/upload': 'Upload IDL directly',
-      'GET /api/search': 'Semantic search using Qdrant',
-      'GET /api/qdrant/programs/:id': 'Get program from Qdrant',
-      'GET /api/docs': 'This documentation'
-    },
-    examples: {
-      loadFromGitHub: {
-        method: 'POST',
-        url: '/api/idl/load-from-github',
-        body: {
-          owner: 'coral-xyz',
-          repo: 'anchor',
-          path: 'tests/example.json',
-          branch: 'master',
-          programId: 'example',
-          name: 'Example Program',
-          description: 'Example Anchor program',
-          category: 'defi'
-        }
-      },
-      upload: {
-        method: 'POST',
-        url: '/api/idl/upload',
-        body: {
-          programId: 'myprogram',
-          name: 'My Program',
-          description: 'My custom program',
-          category: 'defi',
-          repo: 'https://github.com/myorg/myrepo',
-          idl: {
-            version: '0.1.0',
-            name: 'myprogram',
-            instructions: [],
-            accounts: [],
-            types: []
-          }
-        }
-      }
+      'GET /api/idl': 'List IDLs (proxied to OpenSVM)',
+      'GET /api/idl/:programId': 'Get IDL (proxied to OpenSVM)',
+      'POST /api/idl': 'Create/update IDL (proxied to OpenSVM)',
+      'DELETE /api/idl/:programId': 'Delete IDL (proxied to OpenSVM)',
+      'GET /api/idl/search': 'Search IDLs (proxied to OpenSVM)',
+      'POST /api/idl/load-from-github': 'Load from GitHub',
+      'POST /api/idl/upload': 'Upload IDL',
+      'GET /api/programs': 'List programs (legacy)',
+      'GET /api/programs/:id': 'Get program (legacy)',
+      'GET /api/programs/:id/idl': 'Get program IDL (legacy)',
+      'GET /api/search': 'Search (alias)',
+      'GET /api/docs': 'Documentation'
     }
   });
 });
 
-// Error handling middleware
+// Error handler
 app.use((err, req, res, next) => {
-  console.error('Unhandled error:', err);
-  res.status(500).json({ 
+  console.error('Error:', err);
+  res.status(500).json({
     error: 'Internal server error',
-    details: err.message 
+    details: err.message
   });
 });
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`\n🚀 IDLHub REST API Server running on port ${PORT}`);
-  console.log(`📚 API Documentation: http://localhost:${PORT}/api/docs`);
-  console.log(`💚 Health Check: http://localhost:${PORT}/health\n`);
+  console.log(`\n🚀 IDLHub API Server on port ${PORT}`);
+  console.log(`📚 Docs: http://localhost:${PORT}/api/docs`);
+  console.log(`🔗 Backend: ${OPENSVM_API_BASE}\n`);
 });
 
 module.exports = app;

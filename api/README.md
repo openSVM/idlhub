@@ -2,7 +2,19 @@
 
 ## Overview
 
-The IDLHub REST API provides endpoints for dynamically loading, uploading, and managing Solana program IDL files. The API supports loading IDLs directly from GitHub repositories and uploading custom IDL data.
+The IDLHub REST API acts as a **wrapper for the OpenSVM API** (https://opensvm.com/api), providing endpoints for dynamically loading, uploading, and managing Solana program IDL files. The API forwards requests to OpenSVM while maintaining backward compatibility with the legacy IDLHub API endpoints.
+
+## Architecture
+
+```
+Frontend/Client → IDLHub API (idlhub.com) → OpenSVM API (opensvm.com) → Qdrant Database
+```
+
+The IDLHub API provides:
+- **Simplified interface** for common operations
+- **GitHub integration** for loading IDLs directly from repositories
+- **Legacy endpoint support** for backward compatibility
+- **Proxy functionality** to OpenSVM's powerful IDL storage and search capabilities
 
 ## Base URL
 
@@ -11,6 +23,11 @@ http://localhost:3000
 ```
 
 For production deployments, replace with your actual domain.
+
+## Environment Variables
+
+- `API_PORT`: Port for the API server (default: 3000)
+- `OPENSVM_API_BASE`: OpenSVM API base URL (default: https://opensvm.com/api)
 
 ## Authentication
 
