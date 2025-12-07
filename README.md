@@ -114,6 +114,106 @@ npm run mcp:websocket
 
 See [mcp-server/README.md](mcp-server/README.md) for complete documentation.
 
+## 🔌 REST API
+
+IDLHub provides a REST API for dynamically loading and uploading IDL files.
+
+### Quick Start
+
+```bash
+# Start the API server
+npm run api:start
+
+# Server runs on http://localhost:3000
+```
+
+### Key Endpoints
+
+- **`POST /api/idl/load-from-github`** - Load IDL from GitHub repository
+- **`POST /api/idl/upload`** - Upload IDL directly
+- **`GET /api/programs`** - List all programs
+- **`GET /api/programs/:id/idl`** - Get specific program IDL
+- **`GET /api/search`** - Semantic search using Qdrant
+
+### Load IDL from GitHub
+
+```bash
+curl -X POST http://localhost:3000/api/idl/load-from-github \
+  -H "Content-Type: application/json" \
+  -d '{
+    "owner": "coral-xyz",
+    "repo": "anchor",
+    "path": "tests/example.json",
+    "branch": "master",
+    "programId": "example",
+    "name": "Example Program",
+    "category": "defi"
+  }'
+```
+
+### Upload IDL Directly
+
+```bash
+curl -X POST http://localhost:3000/api/idl/upload \
+  -H "Content-Type: application/json" \
+  -d '{
+    "programId": "myprogram",
+    "name": "My Program",
+    "category": "defi",
+    "idl": {
+      "version": "0.1.0",
+      "name": "my_program",
+      "instructions": []
+    }
+  }'
+```
+
+See [api/README.md](api/README.md) for complete API documentation.
+
+## 🚀 Deployment
+
+### Netlify (Recommended)
+
+Deploy IDLHub to Netlify with one click:
+
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/openSVM/idlhub)
+
+IDLHub includes a complete Netlify configuration (`netlify.toml`) with:
+- Automatic redirects for the `/mcp` installation endpoint
+- Optimized caching and security headers
+- CDN distribution for fast global access
+
+**Quick setup:**
+1. Click the deploy button above
+2. Configure environment variables for Qdrant (optional)
+3. Deploy and get your custom domain
+
+See [NETLIFY.md](NETLIFY.md) for detailed deployment instructions.
+
+### Qdrant Integration
+
+IDLHub supports Qdrant for enhanced search and discovery:
+
+```bash
+# Install dependencies
+npm install
+
+# Configure Qdrant credentials
+cp .env.example .env
+# Edit .env with your Qdrant URL and API key
+
+# Initialize Qdrant collections
+npm run qdrant:init
+```
+
+This enables:
+- Semantic search across protocols
+- Similar protocol discovery
+- Fast metadata queries
+- Search history tracking
+
+Qdrant configuration is based on [aldrin-labs/openSVM](https://github.com/aldrin-labs/openSVM) for compatibility.
+
 ## 📦 Protocol Categories
 
 - **DEX**: Decentralized exchanges (Orca, Raydium, Phoenix, OpenBook)

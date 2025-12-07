@@ -1,0 +1,78 @@
+[build]
+  # No build command needed for static site
+  publish = "."
+  command = "echo 'No build required'"
+
+# Redirect /mcp to install.sh script
+[[redirects]]
+  from = "/mcp"
+  to = "/install.sh"
+  status = 200
+  force = true
+
+# Additional redirects for convenience
+[[redirects]]
+  from = "/install"
+  to = "/install.sh"
+  status = 200
+  force = true
+
+# LLM agent guide
+[[redirects]]
+  from = "/llms.txt"
+  to = "/llms.txt"
+  status = 200
+  force = true
+
+# SPA fallback for the web interface (excluding API routes)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  conditions = {Role = ["public"]}
+  force = false
+  # This won't catch /api/* routes or files with extensions
+
+# Headers for install script
+[[headers]]
+  for = "/install.sh"
+  [headers.values]
+    Content-Type = "text/plain; charset=utf-8"
+    X-Content-Type-Options = "nosniff"
+    Cache-Control = "public, max-age=3600"
+
+[[headers]]
+  for = "/mcp"
+  [headers.values]
+    Content-Type = "text/plain; charset=utf-8"
+    X-Content-Type-Options = "nosniff"
+    Cache-Control = "public, max-age=3600"
+
+[[headers]]
+  for = "/llms.txt"
+  [headers.values]
+    Content-Type = "text/plain; charset=utf-8"
+    X-Content-Type-Options = "nosniff"
+    Cache-Control = "public, max-age=3600"
+
+# Headers for JSON files
+[[headers]]
+  for = "/*.json"
+  [headers.values]
+    Content-Type = "application/json; charset=utf-8"
+    Cache-Control = "public, max-age=300"
+
+# Headers for security
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+# Environment configuration
+[context.production.environment]
+  NODE_VERSION = "18"
+
+[context.deploy-preview.environment]
+  NODE_VERSION = "18"

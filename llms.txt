@@ -1,0 +1,612 @@
+# IDLHub API - LLM Agent Guide
+
+> This guide teaches AI agents how to use the IDLHub API for managing Solana program IDL files.
+
+## What is IDLHub?
+
+IDLHub is a REST API that acts as a wrapper for the OpenSVM API, providing simplified access to Solana program Interface Definition Language (IDL) files. The API enables:
+- Loading IDL files from GitHub repositories
+- Direct IDL upload
+- Searching and listing programs
+- Programmatic IDL management
+
+## Architecture
+
+```
+Your Agent → IDLHub API (idlhub.com) → OpenSVM API (opensvm.com) → Qdrant Database
+```
+
+## Base URLs
+
+- **Production**: `https://idlhub.com`
+- **Local Development**: `http://localhost:3000`
+
+## Quick Start Examples
+
+### 1. List All IDLs
+
+Get a list of all available Solana program IDLs:
+
+```bash
+curl "https://idlhub.com/api/idl?network=mainnet&limit=10"
+```
+
+**Response:**
+```json
+{
+  "idls": [
+    {
+      "programId": "JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN",
+      "name": "Jupiter",
+      "version": "0.1.0",
+      "network": "mainnet",
+      "instructionCount": 25,
+      "createdAt": "2024-01-01T00:00:00Z"
+    }
+  ],
+  "total": 100,
+  "hasMore": true
+}
+```
+
+### 2. Get Specific IDL
+
+Retrieve the complete IDL for a specific program:
+
+```bash
+curl "https://idlhub.com/api/idl/JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN?network=mainnet"
+```
+
+**Response:**
+```json
+{
+  "programId": "JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN",
+  "name": "Jupiter",
+  "network": "mainnet",
+  "idl": {
+    "version": "0.1.0",
+    "name": "jupiter",
+    "instructions": [...],
+    "accounts": [...],
+    "types": [...],
+    "errors": [...]
+  },
+  "createdAt": "2024-01-01T00:00:00Z",
+  "updatedAt": "2024-01-15T00:00:00Z"
+}
+```
+
+### 3. Load IDL from GitHub
+
+Load an IDL file directly from a GitHub repository:
+
+```bash
+curl -X POST "https://idlhub.com/api/idl/load-from-github" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "owner": "coral-xyz",
+    "repo": "anchor",
+    "path": "tests/example-program/idl.json",
+    "programId": "ExampleProgram11111111111111111111111111111",
+    "name": "Example Program",
+    "network": "mainnet",
+    "branch": "master"
+  }'
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "programId": "ExampleProgram11111111111111111111111111111",
+  "message": "IDL loaded and stored in OpenSVM",
+  "idl": { ... }
+}
+```
+
+### 4. Upload IDL Directly
+
+Upload an IDL file with JSON payload:
+
+```bash
+curl -X POST "https://idlhub.com/api/idl/upload" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "programId": "MyProgram1111111111111111111111111111111",
+    "network": "mainnet",
+    "name": "My Custom Program",
+    "idl": {
+      "version": "0.1.0",
+      "name": "my_program",
+      "instructions": [
+        {
+          "name": "initialize",
+          "accounts": [],
+          "args": []
+        }
+      ],
+      "accounts": [],
+      "types": [],
+      "errors": []
+    }
+  }'
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "programId": "MyProgram1111111111111111111111111111111",
+  "message": "IDL uploaded to OpenSVM",
+  "idl": { ... }
+}
+```
+
+### 5. Search IDLs
+
+Search for IDLs using semantic search:
+
+```bash
+curl "https://idlhub.com/api/idl/search?q=jupiter+swap&network=mainnet&limit=5"
+```
+
+**Response:**
+```json
+{
+  "query": "jupiter swap",
+  "results": [
+    {
+      "programId": "JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN",
+      "name": "Jupiter",
+      "score": 0.95,
+      "network": "mainnet"
+    }
+  ],
+  "total": 5
+}
+```
+
+### 6. Delete IDL
+
+Remove an IDL from the registry:
+
+```bash
+curl -X DELETE "https://idlhub.com/api/idl/MyProgram1111111111111111111111111111111?network=mainnet"
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "IDL deleted from OpenSVM"
+}
+```
+
+## Common Use Cases
+
+### Use Case 1: Building a Solana Program Explorer
+
+```javascript
+// Fetch all available programs
+const response = await fetch('https://idlhub.com/api/idl?limit=100');
+const { idls } = await response.json();
+
+// Get detailed IDL for each program
+for (const program of idls) {
+  const detailResponse = await fetch(
+    `https://idlhub.com/api/idl/${program.programId}`
+  );
+  const { idl } = await detailResponse.json();
+  // Process IDL...
+}
+```
+
+### Use Case 2: Syncing IDLs from GitHub
+
+```javascript
+// Load IDL from your repository
+const response = await fetch('https://idlhub.com/api/idl/load-from-github', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    owner: 'your-org',
+    repo: 'your-solana-program',
+    path: 'target/idl/your_program.json',
+    programId: 'YourProgram11111111111111111111111111111',
+    name: 'Your Program',
+    network: 'mainnet',
+    branch: 'main'
+  })
+});
+
+const result = await response.json();
+console.log('IDL synced:', result.success);
+```
+
+### Use Case 3: Finding Similar Programs
+
+```javascript
+// Search for programs related to lending
+const response = await fetch(
+  'https://idlhub.com/api/idl/search?q=lending+protocol&network=mainnet'
+);
+const { results } = await response.json();
+
+// Get IDLs for top results
+const topPrograms = results.slice(0, 3);
+for (const program of topPrograms) {
+  const idlResponse = await fetch(
+    `https://idlhub.com/api/idl/${program.programId}`
+  );
+  const { idl } = await idlResponse.json();
+  // Analyze lending program structure...
+}
+```
+
+## API Endpoints Reference
+
+### IDL Operations
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/idl` | List all IDLs with filtering |
+| GET | `/api/idl/:programId` | Get specific IDL by program ID |
+| POST | `/api/idl` | Create/update an IDL |
+| DELETE | `/api/idl/:programId` | Delete an IDL |
+| GET | `/api/idl/search` | Search IDLs semantically |
+| POST | `/api/idl/load-from-github` | Load IDL from GitHub repository |
+| POST | `/api/idl/upload` | Upload IDL with JSON payload |
+
+### Legacy Endpoints (Backward Compatible)
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/programs` | List programs (maps to IDL list) |
+| GET | `/api/programs/:id` | Get program by ID (maps to IDL get) |
+| GET | `/api/programs/:id/idl` | Get program IDL (maps to IDL get) |
+| GET | `/api/search` | Search (alias for IDL search) |
+
+### Utility Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/health` | Health check |
+| GET | `/api/docs` | Interactive API documentation |
+
+## Query Parameters
+
+### List IDLs (`GET /api/idl`)
+
+- `network` (string): Filter by network (mainnet/devnet/testnet) - Default: mainnet
+- `limit` (number): Results per page (1-100) - Default: 50
+- `offset` (number): Pagination offset - Default: 0
+
+### Get IDL (`GET /api/idl/:programId`)
+
+- `network` (string): Network to query - Default: mainnet
+- `all` (boolean): Return IDLs from all networks - Default: false
+
+### Search IDLs (`GET /api/idl/search`)
+
+- `q` (string): Search query (required)
+- `network` (string): Network filter - Default: mainnet
+- `limit` (number): Maximum results (1-50) - Default: 10
+
+## Request Body Schemas
+
+### Load from GitHub (`POST /api/idl/load-from-github`)
+
+```json
+{
+  "owner": "string (required) - GitHub repository owner",
+  "repo": "string (required) - GitHub repository name",
+  "path": "string (required) - Path to IDL file in repo",
+  "programId": "string (required) - Solana program address",
+  "name": "string (required) - Program name",
+  "network": "string (optional) - Network (mainnet/devnet/testnet)",
+  "branch": "string (optional) - Git branch (default: main)"
+}
+```
+
+### Upload IDL (`POST /api/idl/upload`)
+
+```json
+{
+  "programId": "string (required) - Solana program address",
+  "network": "string (required) - Network (mainnet/devnet/testnet)",
+  "name": "string (optional) - Program name",
+  "idl": "object (required) - Complete IDL JSON object"
+}
+```
+
+### Create/Update IDL (`POST /api/idl`)
+
+```json
+{
+  "programId": "string (required) - Solana program address",
+  "network": "string (required) - Network",
+  "name": "string (optional) - Program name",
+  "idl": "object (required) - IDL object",
+  "metadata": "object (optional) - Additional metadata"
+}
+```
+
+## Error Responses
+
+All errors follow this format:
+
+```json
+{
+  "error": "Error message describing what went wrong",
+  "code": "ERROR_CODE",
+  "details": { ... }
+}
+```
+
+### Common HTTP Status Codes
+
+- `200` - Success
+- `201` - Created
+- `400` - Bad Request (invalid parameters)
+- `404` - Not Found (program/IDL not found)
+- `429` - Too Many Requests (rate limited)
+- `500` - Internal Server Error
+- `502` - Bad Gateway (OpenSVM API unavailable)
+
+## Best Practices for AI Agents
+
+### 1. Always Handle Errors
+
+```javascript
+try {
+  const response = await fetch('https://idlhub.com/api/idl');
+  if (!response.ok) {
+    const error = await response.json();
+    console.error('API Error:', error.error);
+    return;
+  }
+  const data = await response.json();
+  // Process data...
+} catch (err) {
+  console.error('Network Error:', err.message);
+}
+```
+
+### 2. Use Pagination for Large Datasets
+
+```javascript
+let offset = 0;
+const limit = 50;
+let allIdls = [];
+
+while (true) {
+  const response = await fetch(
+    `https://idlhub.com/api/idl?limit=${limit}&offset=${offset}`
+  );
+  const { idls, hasMore } = await response.json();
+  allIdls = allIdls.concat(idls);
+  
+  if (!hasMore) break;
+  offset += limit;
+}
+```
+
+### 3. Validate Program IDs
+
+Program IDs must be valid Solana addresses (base58 encoded, 32-44 characters):
+
+```javascript
+function isValidProgramId(programId) {
+  return /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(programId);
+}
+
+if (!isValidProgramId(programId)) {
+  console.error('Invalid program ID format');
+  return;
+}
+```
+
+### 4. Filter by Network
+
+Always specify the network to avoid confusion:
+
+```javascript
+// Good - explicit network
+const response = await fetch('https://idlhub.com/api/idl?network=mainnet');
+
+// Also good - devnet for testing
+const devResponse = await fetch('https://idlhub.com/api/idl?network=devnet');
+```
+
+### 5. Cache IDL Data Locally
+
+IDLs don't change frequently, so cache them:
+
+```javascript
+const cache = new Map();
+
+async function getIdl(programId, network = 'mainnet') {
+  const cacheKey = `${programId}-${network}`;
+  
+  if (cache.has(cacheKey)) {
+    return cache.get(cacheKey);
+  }
+  
+  const response = await fetch(
+    `https://idlhub.com/api/idl/${programId}?network=${network}`
+  );
+  const data = await response.json();
+  
+  cache.set(cacheKey, data);
+  return data;
+}
+```
+
+## Integration Examples
+
+### Python
+
+```python
+import requests
+
+# List IDLs
+response = requests.get('https://idlhub.com/api/idl', params={
+    'network': 'mainnet',
+    'limit': 10
+})
+idls = response.json()
+
+# Get specific IDL
+program_id = 'JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN'
+response = requests.get(f'https://idlhub.com/api/idl/{program_id}')
+idl_data = response.json()
+
+# Upload IDL
+response = requests.post('https://idlhub.com/api/idl/upload', json={
+    'programId': 'MyProgram1111111111111111111111111111111',
+    'network': 'mainnet',
+    'name': 'My Program',
+    'idl': {...}
+})
+result = response.json()
+```
+
+### Node.js
+
+```javascript
+const axios = require('axios');
+
+// List IDLs
+const { data: idls } = await axios.get('https://idlhub.com/api/idl', {
+  params: { network: 'mainnet', limit: 10 }
+});
+
+// Get specific IDL
+const programId = 'JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN';
+const { data: idlData } = await axios.get(
+  `https://idlhub.com/api/idl/${programId}`
+);
+
+// Upload IDL
+const { data: result } = await axios.post(
+  'https://idlhub.com/api/idl/upload',
+  {
+    programId: 'MyProgram1111111111111111111111111111111',
+    network: 'mainnet',
+    name: 'My Program',
+    idl: {...}
+  }
+);
+```
+
+### cURL
+
+```bash
+# List IDLs
+curl "https://idlhub.com/api/idl?network=mainnet&limit=10"
+
+# Get specific IDL
+curl "https://idlhub.com/api/idl/JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN"
+
+# Upload IDL
+curl -X POST "https://idlhub.com/api/idl/upload" \
+  -H "Content-Type: application/json" \
+  -d '{"programId":"...","network":"mainnet","idl":{...}}'
+
+# Load from GitHub
+curl -X POST "https://idlhub.com/api/idl/load-from-github" \
+  -H "Content-Type: application/json" \
+  -d '{"owner":"coral-xyz","repo":"anchor","path":"idl.json","programId":"..."}'
+
+# Search
+curl "https://idlhub.com/api/idl/search?q=jupiter&network=mainnet"
+```
+
+## Rate Limiting
+
+The API does not currently enforce rate limits, but please be respectful:
+- Limit requests to 100 per minute per IP
+- Use pagination instead of fetching all data at once
+- Cache responses when possible
+
+## Support and Documentation
+
+- **Full API Docs**: See `/api/README.md` in the repository
+- **Quick Start Guide**: See `/api/QUICKSTART.md` in the repository
+- **GitHub**: https://github.com/openSVM/idlhub
+- **Issues**: https://github.com/openSVM/idlhub/issues
+
+## Notes for AI Agents
+
+1. **IDLHub is a proxy**: All data is stored in OpenSVM's backend. IDLHub adds GitHub integration and simplified endpoints.
+
+2. **Network matters**: Always specify the network parameter (mainnet/devnet/testnet) to avoid confusion.
+
+3. **Program IDs are addresses**: These are Solana blockchain addresses, not arbitrary identifiers.
+
+4. **IDL format**: IDLs follow the Anchor framework format with instructions, accounts, types, and errors sections.
+
+5. **GitHub integration**: The `/api/idl/load-from-github` endpoint is unique to IDLHub and not available in the OpenSVM API directly.
+
+6. **Backward compatibility**: Legacy `/api/programs/*` endpoints are maintained for existing clients but map to IDL endpoints internally.
+
+7. **No authentication required**: The API is currently open, but this may change in production.
+
+## Example: Complete Workflow
+
+Here's a complete workflow for managing IDLs:
+
+```javascript
+// 1. Check API health
+const health = await fetch('https://idlhub.com/health');
+console.log('API Status:', await health.json());
+
+// 2. Search for existing programs
+const searchResponse = await fetch(
+  'https://idlhub.com/api/idl/search?q=dex+swap&network=mainnet'
+);
+const { results } = await searchResponse.json();
+console.log('Found programs:', results.length);
+
+// 3. Get detailed IDL for first result
+if (results.length > 0) {
+  const programId = results[0].programId;
+  const idlResponse = await fetch(
+    `https://idlhub.com/api/idl/${programId}?network=mainnet`
+  );
+  const idlData = await idlResponse.json();
+  console.log('Program instructions:', idlData.idl.instructions.length);
+}
+
+// 4. Load a new IDL from GitHub
+const loadResponse = await fetch(
+  'https://idlhub.com/api/idl/load-from-github',
+  {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      owner: 'your-org',
+      repo: 'your-program',
+      path: 'target/idl/program.json',
+      programId: 'YourProgram11111111111111111111111111111',
+      name: 'Your Program',
+      network: 'devnet'
+    })
+  }
+);
+const loadResult = await loadResponse.json();
+console.log('IDL loaded:', loadResult.success);
+
+// 5. Verify it was stored
+const verifyResponse = await fetch(
+  'https://idlhub.com/api/idl/YourProgram11111111111111111111111111111?network=devnet'
+);
+const verifyData = await verifyResponse.json();
+console.log('Verification:', verifyData.name);
+```
+
+---
+
+**Last Updated**: December 2025  
+**API Version**: 1.0.0  
+**Maintained by**: openSVM Team
