@@ -58,7 +58,7 @@ class IDLHubAPIMCPServer {
     const url = `${this.apiBaseUrl}${endpoint}`;
     
     try {
-      console.error(`[${traceId}] ${method} ${url}`);
+      console.log(`[${traceId}] ${method} ${url}`);
       
       const config = {
         method,
@@ -90,7 +90,7 @@ class IDLHubAPIMCPServer {
             this.metrics.latencies.shift();
           }
           
-          console.error(`[${traceId}] Success in ${latency}ms (attempt ${attempt})`);
+          console.log(`[${traceId}] Success in ${latency}ms (attempt ${attempt})`);
           
           return {
             success: true,
@@ -434,8 +434,10 @@ class IDLHubAPIMCPServer {
       ? this.metrics.latencies.reduce((a, b) => a + b, 0) / this.metrics.latencies.length
       : 0;
     
-    const p95Latency = this.metrics.latencies.length > 0
-      ? this.metrics.latencies.sort((a, b) => a - b)[Math.floor(this.metrics.latencies.length * 0.95)]
+    // Create a copy before sorting to avoid mutating the original array
+    const sortedLatencies = [...this.metrics.latencies].sort((a, b) => a - b);
+    const p95Latency = sortedLatencies.length > 0
+      ? sortedLatencies[Math.floor(sortedLatencies.length * 0.95)]
       : 0;
     
     return {
@@ -477,7 +479,7 @@ class IDLHubAPIMCPServer {
       const transport = new SSEServerTransport('/message', res);
       await this.server.connect(transport);
       
-      console.error('[MCP] Client connected via SSE');
+      console.log('[MCP] Client connected via SSE');
     });
 
     // Message endpoint for SSE
@@ -487,11 +489,11 @@ class IDLHubAPIMCPServer {
     });
 
     app.listen(port, () => {
-      console.error(`\n🚀 IDLHub API MCP Server`);
-      console.error(`📍 Health: http://localhost:${port}/health`);
-      console.error(`📊 Metrics: http://localhost:${port}/metrics`);
-      console.error(`🔌 SSE: http://localhost:${port}/sse`);
-      console.error(`🔗 API Base: ${this.apiBaseUrl}\n`);
+      console.log(`\n🚀 IDLHub API MCP Server`);
+      console.log(`📍 Health: http://localhost:${port}/health`);
+      console.log(`📊 Metrics: http://localhost:${port}/metrics`);
+      console.log(`🔌 SSE: http://localhost:${port}/sse`);
+      console.log(`🔗 API Base: ${this.apiBaseUrl}\n`);
     });
   }
 }

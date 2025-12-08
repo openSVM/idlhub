@@ -85,6 +85,15 @@ async function startMcpServer() {
 
     let resolved = false;
 
+    // Listen to both stdout and stderr for startup message
+    serverProcess.stdout.on('data', (data) => {
+      const output = data.toString();
+      if (!resolved && output.includes('IDLHub API MCP Server')) {
+        resolved = true;
+        setTimeout(resolve, 2000);
+      }
+    });
+
     serverProcess.stderr.on('data', (data) => {
       const output = data.toString();
       if (!resolved && output.includes('IDLHub API MCP Server')) {
