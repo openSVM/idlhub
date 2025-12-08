@@ -46,14 +46,15 @@ The IDLHub API MCP Server bridges the gap between MCP-compatible clients (like C
 
 ### MCP Tools
 
-The server provides 6 MCP tools that map to IDLHub API endpoints:
+The server provides 7 MCP tools that map to IDLHub API endpoints:
 
 1. **list_idls** - List all IDLs with filtering
 2. **get_idl** - Get a specific IDL by program ID
 3. **search_idls** - Semantic search for IDLs
 4. **upload_idl** - Upload an IDL directly
-5. **load_from_github** - Load IDL from GitHub repository
-6. **delete_idl** - Delete an IDL from the registry
+5. **create_or_update_idl** - Create or update an IDL
+6. **load_from_github** - Load IDL from GitHub repository
+7. **delete_idl** - Delete an IDL from the registry
 
 ### Error Handling
 
@@ -246,7 +247,44 @@ Upload an IDL directly to the registry.
 }
 ```
 
-### 5. load_from_github
+### 5. create_or_update_idl
+
+Create or update an IDL in the registry (alternative to upload_idl with metadata support).
+
+**Arguments:**
+```json
+{
+  "programId": "MyProgram1111111111111111111111111111111",  // Required
+  "network": "mainnet",  // Required: mainnet/devnet/testnet
+  "name": "My Program",  // Optional
+  "idl": {               // Required: complete IDL object
+    "version": "0.1.0",
+    "name": "my_program",
+    "instructions": [...],
+    "accounts": [],
+    "types": [],
+    "errors": []
+  },
+  "metadata": {          // Optional: additional metadata
+    "github": "https://github.com/example/repo",
+    "description": "Custom description"
+  }
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "IDL created/updated successfully",
+  "data": {
+    "programId": "MyProgram1111111111111111111111111111111",
+    "network": "mainnet"
+  }
+}
+```
+
+### 6. load_from_github
 
 Load an IDL file from a GitHub repository.
 
@@ -275,7 +313,7 @@ Load an IDL file from a GitHub repository.
 }
 ```
 
-### 6. delete_idl
+### 7. delete_idl
 
 Delete an IDL from the registry.
 

@@ -37,11 +37,15 @@ All major API endpoints from `llms.txt` are accessible via MCP tools:
    - Upload IDL directly to registry
    - Full IDL validation
 
-5. **load_from_github** - `POST /api/idl/load-from-github`
+5. **create_or_update_idl** - `POST /api/idl`
+   - Create or update IDL with metadata support
+   - Alternative to upload_idl
+
+6. **load_from_github** - `POST /api/idl/load-from-github`
    - Load IDL from GitHub repository
    - Branch and path specification
 
-6. **delete_idl** - `DELETE /api/idl/:programId`
+7. **delete_idl** - `DELETE /api/idl/:programId`
    - Delete IDL from registry
    - Network-specific deletion
 
@@ -124,7 +128,7 @@ Comprehensive documentation provided:
 
 1. **API_MCP_README.md** - Complete guide for API MCP server
    - Installation and usage
-   - All 6 MCP tools with examples
+   - All 7 MCP tools with examples
    - Integration guides for Claude Desktop, Cline, custom clients
    - Health and metrics documentation
    - Troubleshooting guide

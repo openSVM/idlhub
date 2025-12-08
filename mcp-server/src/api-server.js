@@ -295,6 +295,37 @@ class IDLHubAPIMCPServer {
           },
         },
         {
+          name: 'create_or_update_idl',
+          description: 'Create or update an IDL in the registry',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              programId: {
+                type: 'string',
+                description: 'Solana program address',
+              },
+              network: {
+                type: 'string',
+                description: 'Network (mainnet/devnet/testnet)',
+                enum: ['mainnet', 'devnet', 'testnet'],
+              },
+              name: {
+                type: 'string',
+                description: 'Program name (optional)',
+              },
+              idl: {
+                type: 'object',
+                description: 'Complete IDL JSON object',
+              },
+              metadata: {
+                type: 'object',
+                description: 'Additional metadata (optional)',
+              },
+            },
+            required: ['programId', 'network', 'idl'],
+          },
+        },
+        {
           name: 'delete_idl',
           description: 'Delete an IDL from the registry',
           inputSchema: {
@@ -337,6 +368,9 @@ class IDLHubAPIMCPServer {
             break;
           case 'upload_idl':
             result = await this.handleUploadIdl(args, traceId);
+            break;
+          case 'create_or_update_idl':
+            result = await this.handleCreateOrUpdateIdl(args, traceId);
             break;
           case 'load_from_github':
             result = await this.handleLoadFromGithub(args, traceId);
@@ -409,6 +443,11 @@ class IDLHubAPIMCPServer {
   async handleUploadIdl(args, traceId) {
     const { programId, network, name, idl } = args;
     return await this.makeApiRequest('POST', '/api/idl/upload', { programId, network, name, idl }, null, traceId);
+  }
+
+  async handleCreateOrUpdateIdl(args, traceId) {
+    const { programId, network, name, idl, metadata } = args;
+    return await this.makeApiRequest('POST', '/api/idl', { programId, network, name, idl, metadata }, null, traceId);
   }
 
   async handleLoadFromGithub(args, traceId) {
