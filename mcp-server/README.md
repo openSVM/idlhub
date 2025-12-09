@@ -2,6 +2,22 @@
 
 A foundational implementation of the [Model Context Protocol (MCP) 2025-06-18 specification](https://modelcontextprotocol.io/specification/2025-06-18) for IDLHub, providing structured, high-performance access to Solana IDL schemas, symbol lookup, code generation, and diagnostics.
 
+## Two MCP Server Options
+
+IDLHub provides **two MCP server implementations** for different use cases:
+
+### 1. Local IDL Registry MCP Server (Default)
+- **Use Case**: Direct access to local IDL files
+- **Transport**: stdio, WebSocket
+- **Best For**: LLM integrations, editor plugins, offline work
+- **Documentation**: This README
+
+### 2. API MCP Server
+- **Use Case**: Orchestrator for IDLHub REST API
+- **Transport**: JSON-RPC over SSE (Server-Sent Events)
+- **Best For**: Web applications, remote clients, API proxy
+- **Documentation**: [API_MCP_README.md](./API_MCP_README.md)
+
 ## Features
 
 ### Core Capabilities
@@ -56,7 +72,9 @@ See [INSTALL.md](../INSTALL.md) for detailed installation instructions and troub
 
 ## Usage
 
-### stdio Transport (Default)
+### Local IDL Registry MCP Server
+
+#### stdio Transport (Default)
 
 The stdio transport is ideal for local tools, CLI applications, and editor integrations:
 
@@ -68,7 +86,7 @@ npm run mcp:stdio
 node mcp-server/src/index.js
 ```
 
-### WebSocket Transport
+#### WebSocket Transport
 
 The WebSocket transport is suitable for web applications and remote clients:
 
@@ -80,12 +98,31 @@ npm run mcp:websocket
 MCP_PORT=9000 npm run mcp:websocket
 ```
 
+### API MCP Server
+
+The API MCP Server acts as an orchestrator for the IDLHub REST API:
+
+```bash
+# Start the API MCP server (SSE transport, default port 3001)
+npm run mcp:api
+
+# Or with custom settings
+IDLHUB_API_BASE=https://idlhub.com MCP_PORT=3001 npm run mcp:api
+```
+
+For complete API MCP Server documentation, see [API_MCP_README.md](./API_MCP_README.md).
+
 ### Environment Variables
 
+**Local IDL Registry MCP Server:**
 - `IDL_REGISTRY_PATH`: Path to the IDL registry (defaults to repository root)
 - `MCP_PORT`: WebSocket server port (defaults to 8080)
 
-## MCP Tools
+**API MCP Server:**
+- `IDLHUB_API_BASE`: IDLHub API base URL (defaults to http://localhost:3000)
+- `MCP_PORT`: Server port (defaults to 3001)
+
+## MCP Tools (Local IDL Registry)
 
 The server exposes the following MCP tools:
 
