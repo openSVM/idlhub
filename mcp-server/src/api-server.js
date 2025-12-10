@@ -31,22 +31,21 @@ const crypto = require('crypto');
  * Configuration schema for Smithery
  * Exported for automatic discovery by @smithery/cli
  */
+const BASE_URL = 'https://idlhub.com';
+const DEFAULT_TIMEOUT = 30000; // 30 seconds
+
 const configSchema = {
   apiUrl: {
     type: 'string',
     description: 'Base URL for the IDLHub API',
-    default: 'https://idlhub.com',
+    default: BASE_URL,
   },
   requestTimeout: {
     type: 'number',
     description: 'Timeout for API requests in milliseconds',
-    default: 30000,
+    default: DEFAULT_TIMEOUT,
   },
 };
-
-// API Configuration
-const BASE_URL = 'https://idlhub.com';
-const DEFAULT_TIMEOUT = 30000; // 30 seconds
 
 /**
  * API Client for IDLHub
@@ -79,13 +78,21 @@ class IDLHubAPIClient {
 
       const response = await axios(config);
 
-      return response.data;
+      return {
+        data: response.data,
+        status: response.status,
+      };
     } catch (error) {
       if (error.code === 'ECONNABORTED' || error.message.includes('timeout')) {
-        throw new Error('Request timeout');
+        const err = new Error('Request timeout');
+        err.isTimeout = true;
+        throw err;
       }
       if (error.response) {
-        throw new Error(`HTTP ${error.response.status}: ${error.response.data?.error || error.response.statusText}`);
+        const err = new Error(`HTTP ${error.response.status}: ${error.response.data?.error || error.response.statusText}`);
+        err.status = error.response.status;
+        err.response = error.response;
+        throw err;
       }
       throw error;
     }
@@ -174,13 +181,15 @@ class IDLHubAPIMCPServer {
           
           return {
             success: true,
-            data: response,
-            status: 200,
+            data: response.data,
+            status: response.status,
             latency,
           };
         } catch (error) {
           lastError = error;
-          if (attempt < 3 && (error.message.includes('timeout') || error.message.includes('500'))) {
+          // Retry on timeout or 5xx server errors
+          const shouldRetry = attempt < 3 && (error.isTimeout || (error.status && error.status >= 500));
+          if (shouldRetry) {
             const backoff = Math.pow(2, attempt) * 1000;
             console.error(`[${traceId}] Attempt ${attempt} failed, retrying in ${backoff}ms...`);
             await new Promise(resolve => setTimeout(resolve, backoff));
@@ -200,7 +209,7 @@ class IDLHubAPIMCPServer {
         success: false,
         error: lastError.message,
         code: 'API_ERROR',
-        status: 500,
+        status: lastError.status || 500,
         latency,
         traceId,
       };
