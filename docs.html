@@ -555,6 +555,16 @@ npm run mcp:start</code></pre>
                     program IDL files.
                 </p>
 
+                <h4>Base URL</h4>
+                <p>
+                    For local development: <code>http://localhost:3000</code><br>
+                    For production: <code>https://idlhub.com</code> (or your deployed domain)
+                </p>
+                <p style="font-size: 12px; color: var(--text-muted);">
+                    <strong>Note:</strong> All example commands below use <code>localhost:3000</code>. 
+                    Replace with your actual API endpoint URL when running in production.
+                </p>
+
                 <h3 id="rest-auth">Authentication</h3>
                 <p>
                     Currently, the API is open and does not require authentication. For production use, consider adding
@@ -569,9 +579,10 @@ npm run mcp:start</code></pre>
                         <span class="endpoint-path">/health</span>
                     </div>
                     <p style="margin-top: 12px;">Check if the API server is running.</p>
+                    <h4>Example Response:</h4>
                     <pre><code>{
   "status": "ok",
-  "timestamp": "2025-12-10T10:00:00.000Z",
+  "timestamp": "2025-12-10T10:00:00.000Z",  // Current server time
   "version": "1.0.0"
 }</code></pre>
                 </div>
@@ -798,7 +809,11 @@ ws.on('message', (data) => {
             <div class="doc-section" id="playground">
                 <h2>API Playground</h2>
                 <p>Test API endpoints interactively. Select an endpoint, customize the request, and see the response in
-                    real-time.</p>
+                    real-time. <strong>This makes actual HTTP requests to the API server.</strong></p>
+                <p style="font-size: 12px; color: var(--text-muted);">
+                    <strong>Note:</strong> Ensure the API server is running at <code>http://localhost:3000</code> 
+                    (for local testing) or the endpoint will default to the production URL.
+                </p>
 
                 <div class="playground">
                     <h3>Try It Out</h3>
@@ -951,7 +966,7 @@ curl -X POST https://idlhub.com/api/idl/upload \
         window.addEventListener('scroll', updateActiveLink);
         window.addEventListener('load', updateActiveLink);
 
-        // API Playground functionality
+        // API Playground functionality - Makes real API calls to the server
         async function executeRequest() {
             const select = document.getElementById('endpointSelect');
             const output = document.getElementById('playgroundOutput');
@@ -961,14 +976,11 @@ curl -X POST https://idlhub.com/api/idl/upload \
             output.textContent = 'Loading...';
 
             try {
-                // Note: This is a mock implementation. In production, you would call the actual API
-                // For demo purposes, we'll simulate responses
-                let url = `https://idlhub.com${path}`;
-                
-                // Check if we're on localhost for testing
-                if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-                    url = `http://localhost:3000${path}`;
-                }
+                // Determine API endpoint based on environment
+                const isLocalhost = window.location.hostname === 'localhost' || 
+                                  window.location.hostname === '127.0.0.1';
+                const apiBase = isLocalhost ? 'http://localhost:3000' : 'https://idlhub.com';
+                const url = `${apiBase}${path}`;
 
                 const options = {
                     method: method,
@@ -986,7 +998,11 @@ curl -X POST https://idlhub.com/api/idl/upload \
 
                 output.textContent = JSON.stringify(data, null, 2);
             } catch (error) {
-                output.textContent = `Error: ${error.message}\n\nNote: Make sure the API server is running at http://localhost:3000 or https://idlhub.com`;
+                const apiEndpoint = (window.location.hostname === 'localhost' || 
+                                    window.location.hostname === '127.0.0.1') 
+                    ? 'http://localhost:3000' 
+                    : 'https://idlhub.com';
+                output.textContent = `Error: ${error.message}\n\nNote: Ensure the API server is running at ${apiEndpoint}`;
             }
         }
 
