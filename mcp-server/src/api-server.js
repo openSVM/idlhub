@@ -64,8 +64,6 @@ class IDLHubAPIClient {
 
   async request(method, path, options = {}) {
     const url = this.makeUrl(path);
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), this.timeout);
 
     try {
       const config = {
@@ -80,11 +78,9 @@ class IDLHubAPIClient {
       };
 
       const response = await axios(config);
-      clearTimeout(timeoutId);
 
       return response.data;
     } catch (error) {
-      clearTimeout(timeoutId);
       if (error.code === 'ECONNABORTED' || error.message.includes('timeout')) {
         throw new Error('Request timeout');
       }
