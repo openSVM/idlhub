@@ -4,6 +4,10 @@
     "version": "1.0.0",
     "description": "Model Context Protocol server for IDLHub - provides structured access to Solana IDL schemas"
   },
+  "api": {
+    "baseUrl": "https://idlhub.com",
+    "requestTimeout": 30000
+  },
   "transports": {
     "stdio": {
       "enabled": true,
@@ -15,6 +19,12 @@
       "port": 8080,
       "command": "node",
       "args": ["mcp-server/src/websocket-server.js"]
+    },
+    "sse": {
+      "enabled": true,
+      "port": 3001,
+      "command": "node",
+      "args": ["mcp-server/src/api-server.js"]
     }
   },
   "capabilities": {
