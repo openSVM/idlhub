@@ -1,18 +1,18 @@
 #!/usr/bin/env node
 
 /**
- * IDLHub API MCP Server
- * 
- * MCP server that acts as an orchestrator for the IDLHub REST API.
- * Implements JSON-RPC with SSE transport for routing API requests,
- * error handling, logging, monitoring, and health checks.
- * 
+ * MCP Server for IDLHub API
+ *
+ * This server implements a Model Context Protocol (MCP) interface to the
+ * IDLHub API, providing web-accessible JSON-RPC access to Solana IDL registry.
+ *
  * Features:
+ * - JSON-RPC over SSE transport
  * - Routes requests to IDLHub REST API endpoints
  * - Error handling with trace IDs
- * - Health endpoint
- * - Request/response logging and metrics
- * - Retry logic and fallbacks
+ * - Health and metrics endpoints
+ * - Request/response logging
+ * - Retry logic with exponential backoff
  */
 
 const { Server } = require('@modelcontextprotocol/sdk/server/index.js');
@@ -20,14 +20,105 @@ const { SSEServerTransport } = require('@modelcontextprotocol/sdk/server/sse.js'
 const {
   CallToolRequestSchema,
   ListToolsRequestSchema,
+  ErrorCode,
+  McpError,
 } = require('@modelcontextprotocol/sdk/types.js');
 const express = require('express');
 const axios = require('axios');
 const crypto = require('crypto');
 
+/**
+ * Configuration schema for Smithery
+ * Exported for automatic discovery by @smithery/cli
+ */
+const configSchema = {
+  apiUrl: {
+    type: 'string',
+    description: 'Base URL for the IDLHub API',
+    default: 'https://idlhub.com',
+  },
+  requestTimeout: {
+    type: 'number',
+    description: 'Timeout for API requests in milliseconds',
+    default: 30000,
+  },
+};
+
+// API Configuration
+const BASE_URL = 'https://idlhub.com';
+const DEFAULT_TIMEOUT = 30000; // 30 seconds
+
+/**
+ * API Client for IDLHub
+ * Handles all HTTP requests to the IDLHub API with retry logic and error handling
+ */
+class IDLHubAPIClient {
+  constructor(baseUrl = BASE_URL, timeout = DEFAULT_TIMEOUT) {
+    this.baseUrl = baseUrl.replace(/\/$/, '');
+    this.timeout = timeout;
+  }
+
+  makeUrl(path) {
+    return `${this.baseUrl}${path.startsWith('/') ? path : '/' + path}`;
+  }
+
+  async request(method, path, options = {}) {
+    const url = this.makeUrl(path);
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), this.timeout);
+
+    try {
+      const config = {
+        method,
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          ...options.headers,
+        },
+        timeout: this.timeout,
+        ...options,
+      };
+
+      const response = await axios(config);
+      clearTimeout(timeoutId);
+
+      return response.data;
+    } catch (error) {
+      clearTimeout(timeoutId);
+      if (error.code === 'ECONNABORTED' || error.message.includes('timeout')) {
+        throw new Error('Request timeout');
+      }
+      if (error.response) {
+        throw new Error(`HTTP ${error.response.status}: ${error.response.data?.error || error.response.statusText}`);
+      }
+      throw error;
+    }
+  }
+
+  async get(path, params) {
+    return await this.request('GET', path, { params });
+  }
+
+  async post(path, data) {
+    return await this.request('POST', path, { data });
+  }
+
+  async delete(path, params) {
+    return await this.request('DELETE', path, { params });
+  }
+}
+
+/**
+ * IDLHub API MCP Server
+ * Main server class that handles MCP requests and routes them to the IDLHub API
+ */
 class IDLHubAPIMCPServer {
-  constructor(apiBaseUrl) {
-    this.apiBaseUrl = apiBaseUrl || process.env.IDLHUB_API_BASE || 'https://idlhub.com';
+  constructor(apiBaseUrl, requestTimeout) {
+    this.apiClient = new IDLHubAPIClient(
+      apiBaseUrl || process.env.IDLHUB_API_BASE || BASE_URL,
+      requestTimeout || parseInt(process.env.IDLHUB_REQUEST_TIMEOUT || DEFAULT_TIMEOUT, 10)
+    );
+    
     this.metrics = {
       requests: 0,
       errors: 0,
@@ -55,33 +146,26 @@ class IDLHubAPIMCPServer {
 
   async makeApiRequest(method, endpoint, data = null, params = null, traceId) {
     const startTime = Date.now();
-    const url = `${this.apiBaseUrl}${endpoint}`;
     
     try {
-      console.log(`[${traceId}] ${method} ${url}`);
-      
-      const config = {
-        method,
-        url,
-        headers: {
-          'X-Trace-Id': traceId,
-          'Content-Type': 'application/json',
-        },
-        timeout: 30000, // 30 seconds
-      };
-      
-      if (data) {
-        config.data = data;
-      }
-      if (params) {
-        config.params = params;
-      }
+      console.log(`[${traceId}] ${method} ${endpoint}`);
       
       // Retry logic: 3 attempts with exponential backoff
       let lastError;
       for (let attempt = 1; attempt <= 3; attempt++) {
         try {
-          const response = await axios(config);
+          let response;
+          
+          if (method === 'GET') {
+            response = await this.apiClient.get(endpoint, params);
+          } else if (method === 'POST') {
+            response = await this.apiClient.post(endpoint, data);
+          } else if (method === 'DELETE') {
+            response = await this.apiClient.delete(endpoint, params);
+          } else {
+            throw new Error(`Unsupported HTTP method: ${method}`);
+          }
+          
           const latency = Date.now() - startTime;
           
           this.metrics.requests++;
@@ -94,13 +178,13 @@ class IDLHubAPIMCPServer {
           
           return {
             success: true,
-            data: response.data,
-            status: response.status,
+            data: response,
+            status: 200,
             latency,
           };
         } catch (error) {
           lastError = error;
-          if (attempt < 3 && (!error.response || error.response.status >= 500)) {
+          if (attempt < 3 && (error.message.includes('timeout') || error.message.includes('500'))) {
             const backoff = Math.pow(2, attempt) * 1000;
             console.error(`[${traceId}] Attempt ${attempt} failed, retrying in ${backoff}ms...`);
             await new Promise(resolve => setTimeout(resolve, backoff));
@@ -118,9 +202,9 @@ class IDLHubAPIMCPServer {
       
       return {
         success: false,
-        error: lastError.response?.data?.error || lastError.message,
-        code: lastError.response?.data?.code || 'API_ERROR',
-        status: lastError.response?.status || 500,
+        error: lastError.message,
+        code: 'API_ERROR',
+        status: 500,
         latency,
         traceId,
       };
@@ -499,7 +583,7 @@ class IDLHubAPIMCPServer {
         version: '1.0.0',
         uptime: process.uptime(),
         timestamp: new Date().toISOString(),
-        apiBaseUrl: this.apiBaseUrl,
+        apiBaseUrl: this.apiClient.baseUrl,
         metrics: this.getMetrics(),
       });
     });
@@ -532,17 +616,18 @@ class IDLHubAPIMCPServer {
       console.log(`📍 Health: http://localhost:${port}/health`);
       console.log(`📊 Metrics: http://localhost:${port}/metrics`);
       console.log(`🔌 SSE: http://localhost:${port}/sse`);
-      console.log(`🔗 API Base: ${this.apiBaseUrl}\n`);
+      console.log(`🔗 API Base: ${this.apiClient.baseUrl}\n`);
     });
   }
 }
 
 // Main execution
 async function main() {
-  const apiBaseUrl = process.env.IDLHUB_API_BASE || 'http://localhost:3000';
+  const apiBaseUrl = process.env.IDLHUB_API_BASE || BASE_URL;
+  const requestTimeout = parseInt(process.env.IDLHUB_REQUEST_TIMEOUT || DEFAULT_TIMEOUT, 10);
   const port = parseInt(process.env.MCP_PORT || '3001', 10);
   
-  const server = new IDLHubAPIMCPServer(apiBaseUrl);
+  const server = new IDLHubAPIMCPServer(apiBaseUrl, requestTimeout);
   await server.start(port);
 }
 
@@ -553,4 +638,8 @@ if (require.main === module) {
   });
 }
 
-module.exports = { IDLHubAPIMCPServer };
+module.exports = { 
+  IDLHubAPIMCPServer, 
+  IDLHubAPIClient,
+  configSchema,
+};
