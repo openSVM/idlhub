@@ -33,6 +33,8 @@ const crypto = require('crypto');
  */
 const BASE_URL = 'https://idlhub.com';
 const DEFAULT_TIMEOUT = 30000; // 30 seconds
+const MAX_RETRY_ATTEMPTS = 3;
+const BASE_BACKOFF_MS = 1000;
 
 const configSchema = {
   apiUrl: {
@@ -72,7 +74,7 @@ class IDLHubAPIClient {
           'Content-Type': 'application/json',
           ...options.headers,
         },
-        timeout: this.timeout,
+        timeout: options.timeout || this.timeout,
         ...options,
       };
 
@@ -83,7 +85,8 @@ class IDLHubAPIClient {
         status: response.status,
       };
     } catch (error) {
-      if (error.code === 'ECONNABORTED' || error.message.includes('timeout')) {
+      // Improved timeout detection
+      if (error.code === 'ECONNABORTED' && error.response === undefined) {
         const err = new Error('Request timeout');
         err.isTimeout = true;
         throw err;
@@ -153,9 +156,9 @@ class IDLHubAPIMCPServer {
     try {
       console.log(`[${traceId}] ${method} ${endpoint}`);
       
-      // Retry logic: 3 attempts with exponential backoff
+      // Retry logic with configurable attempts and exponential backoff
       let lastError;
-      for (let attempt = 1; attempt <= 3; attempt++) {
+      for (let attempt = 1; attempt <= MAX_RETRY_ATTEMPTS; attempt++) {
         try {
           let response;
           
@@ -188,9 +191,9 @@ class IDLHubAPIMCPServer {
         } catch (error) {
           lastError = error;
           // Retry on timeout or 5xx server errors
-          const shouldRetry = attempt < 3 && (error.isTimeout || (error.status && error.status >= 500));
+          const shouldRetry = attempt < MAX_RETRY_ATTEMPTS && (error.isTimeout || (error.status && error.status >= 500));
           if (shouldRetry) {
-            const backoff = Math.pow(2, attempt) * 1000;
+            const backoff = Math.pow(2, attempt) * BASE_BACKOFF_MS;
             console.error(`[${traceId}] Attempt ${attempt} failed, retrying in ${backoff}ms...`);
             await new Promise(resolve => setTimeout(resolve, backoff));
           } else {
