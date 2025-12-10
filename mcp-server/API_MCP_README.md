@@ -138,7 +138,7 @@ IDLHUB_API_BASE=https://idlhub.com MCP_PORT=4000 npm run mcp:api
 
 The server is designed to be accessible via web without requiring local git clone:
 
-1. **Direct SSE Connection**: Connect to `https://idlhub.com/sse` for MCP access
+1. **MCP Endpoint**: Connect to `https://idlhub.com/api/mcp` for MCP access via SSE
 2. **Health Check**: `GET https://idlhub.com/health`
 3. **Metrics**: `GET https://idlhub.com/metrics`
 
@@ -152,8 +152,8 @@ The server is designed to be accessible via web without requiring local git clon
 
 - `GET /health` - Health check and server status
 - `GET /metrics` - Request metrics and statistics
-- `GET /sse` - SSE endpoint for MCP connection
-- `POST /message` - Message endpoint for SSE transport
+- `GET /api/mcp` - MCP endpoint with SSE transport
+- `POST /api/mcp/message` - Message endpoint for MCP SSE transport
 
 ## MCP Tools Reference
 
@@ -411,8 +411,8 @@ Add to your Cline MCP settings:
 ```javascript
 const EventSource = require('eventsource');
 
-// Connect to SSE endpoint
-const es = new EventSource('http://localhost:3001/sse');
+// Connect to MCP endpoint
+const es = new EventSource('http://localhost:3001/api/mcp');
 
 es.onmessage = (event) => {
   const data = JSON.parse(event.data);
@@ -420,7 +420,7 @@ es.onmessage = (event) => {
 };
 
 // Send MCP request
-fetch('http://localhost:3001/message', {
+fetch('http://localhost:3001/api/mcp/message', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({

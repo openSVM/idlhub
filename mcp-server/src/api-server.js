@@ -601,20 +601,20 @@ class IDLHubAPIMCPServer {
       res.json(this.getMetrics());
     });
 
-    // SSE endpoint for MCP
-    app.get('/sse', async (req, res) => {
+    // MCP endpoint with SSE transport
+    app.get('/api/mcp', async (req, res) => {
       res.setHeader('Content-Type', 'text/event-stream');
       res.setHeader('Cache-Control', 'no-cache');
       res.setHeader('Connection', 'keep-alive');
 
-      const transport = new SSEServerTransport('/message', res);
+      const transport = new SSEServerTransport('/api/mcp/message', res);
       await this.server.connect(transport);
       
       console.log('[MCP] Client connected via SSE');
     });
 
-    // Message endpoint for SSE
-    app.post('/message', express.text({ type: '*/*' }), async (req, res) => {
+    // Message endpoint for MCP SSE
+    app.post('/api/mcp/message', express.text({ type: '*/*' }), async (req, res) => {
       // SSE transport handles this
       res.status(200).end();
     });
@@ -623,7 +623,7 @@ class IDLHubAPIMCPServer {
       console.log(`\n🚀 IDLHub API MCP Server`);
       console.log(`📍 Health: http://localhost:${port}/health`);
       console.log(`📊 Metrics: http://localhost:${port}/metrics`);
-      console.log(`🔌 SSE: http://localhost:${port}/sse`);
+      console.log(`🔌 MCP: http://localhost:${port}/api/mcp`);
       console.log(`🔗 API Base: ${this.apiClient.baseUrl}\n`);
     });
   }
