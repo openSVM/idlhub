@@ -1,17 +1,20 @@
 # IDLHub API MCP Server
 
-A Model Context Protocol (MCP) server that acts as an orchestrator for the IDLHub REST API. This server provides a standardized interface for AI agents and tools to interact with the IDLHub API using MCP over JSON-RPC with Server-Sent Events (SSE).
+A Model Context Protocol (MCP) server that acts as an orchestrator for the IDLHub REST API. This server provides a standardized, web-accessible JSON-RPC interface for AI agents and tools to interact with the IDLHub API without requiring local git clone.
 
 ## Overview
 
 The IDLHub API MCP Server bridges the gap between MCP-compatible clients (like Claude Desktop, Cline, or custom tools) and the IDLHub REST API. It provides:
 
+- **Web-Accessible**: No local installation required, accessible via idlhub.com
 - **Standardized API Access**: All IDLHub API endpoints accessible via MCP tools
+- **API Client Pattern**: Clean separation with dedicated IDLHubAPIClient class
 - **Error Handling**: Comprehensive error handling with trace IDs for debugging
 - **Retry Logic**: Automatic retries with exponential backoff for failed requests
 - **Health Monitoring**: Built-in health and metrics endpoints
 - **Request Logging**: Detailed logging with trace IDs for all API calls
 - **SSE Transport**: Real-time communication via Server-Sent Events
+- **Smithery Compatible**: Exports configSchema for automatic discovery by @smithery/cli
 
 ## Architecture
 
@@ -28,7 +31,7 @@ The IDLHub API MCP Server bridges the gap between MCP-compatible clients (like C
                  │ HTTP REST
          ┌───────▼────────┐
          │  IDLHub API    │
-         │  (Port 3000)   │
+         │ (idlhub.com)   │
          └───────┬────────┘
                  │
          ┌───────▼────────┐
@@ -40,6 +43,27 @@ The IDLHub API MCP Server bridges the gap between MCP-compatible clients (like C
          │ Qdrant Vector  │
          │    Database    │
          └────────────────┘
+```
+
+## Configuration
+
+### Smithery Configuration Schema
+
+The server exports a `configSchema` for automatic discovery:
+
+```javascript
+{
+  apiUrl: {
+    type: 'string',
+    description: 'Base URL for the IDLHub API',
+    default: 'https://idlhub.com',
+  },
+  requestTimeout: {
+    type: 'number',
+    description: 'Timeout for API requests in milliseconds',
+    default: 30000,
+  },
+}
 ```
 
 ## Features
@@ -90,7 +114,8 @@ The server implements intelligent retry logic:
 npm install
 
 # Set environment variables (optional)
-export IDLHUB_API_BASE=http://localhost:3000
+export IDLHUB_API_BASE=https://idlhub.com
+export IDLHUB_REQUEST_TIMEOUT=30000
 export MCP_PORT=3001
 ```
 
@@ -109,9 +134,18 @@ node mcp-server/src/api-server.js
 IDLHUB_API_BASE=https://idlhub.com MCP_PORT=4000 npm run mcp:api
 ```
 
+### Web Access (No Git Clone Required)
+
+The server is designed to be accessible via web without requiring local git clone:
+
+1. **Direct SSE Connection**: Connect to `https://idlhub.com/sse` for MCP access
+2. **Health Check**: `GET https://idlhub.com/health`
+3. **Metrics**: `GET https://idlhub.com/metrics`
+
 ### Environment Variables
 
-- `IDLHUB_API_BASE`: Base URL for IDLHub API (default: `http://localhost:3000`)
+- `IDLHUB_API_BASE`: Base URL for IDLHub API (default: `https://idlhub.com`)
+- `IDLHUB_REQUEST_TIMEOUT`: Request timeout in milliseconds (default: `30000`)
 - `MCP_PORT`: Port for the MCP server (default: `3001`)
 
 ### Endpoints
