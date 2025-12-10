@@ -99,15 +99,15 @@ class IDLHubAPIClient {
   }
 
   async get(path, params) {
-    return await this.request('GET', path, { params });
+    return this.request('GET', path, { params });
   }
 
   async post(path, data) {
-    return await this.request('POST', path, { data });
+    return this.request('POST', path, { data });
   }
 
   async delete(path, params) {
-    return await this.request('DELETE', path, { params });
+    return this.request('DELETE', path, { params });
   }
 }
 
