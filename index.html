@@ -2050,8 +2050,18 @@ const { results } = await response.json();
 
 ---
 
-Use these instructions to help users interact with IDLHub effectively. The service provides both human-friendly web UI and machine-friendly API access to Solana program IDLs.`;
+Use these instructions to help users interact with IDLHub effectively. The service provides both human-friendly web UI and machine-friendly API access to Solana program IDLs.
 
+## API Endpoints:
+
+- List all programs: `GET /api/programs`
+- Get IDL for a program: `GET /api/programs/:id/idl`
+- Add a new program: `POST /api/programs`
+- Update IDL for a program: `PUT /api/programs/:id/idl`
+- Delete a program: `DELETE /api/programs/:id`
+
+(Replace `:id` with the actual program ID)
+`;
             try {
                 await navigator.clipboard.writeText(rulesText);
                 const btn = document.getElementById('copyRulesBtn');
