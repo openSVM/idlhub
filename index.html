@@ -1009,6 +1009,9 @@
                     <a href="docs.html" class="bookmark-btn" style="text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
                         <span>Docs</span>
                     </a>
+                    <button class="bookmark-btn" id="copyRulesBtn" title="Copy instructions for AI agents">
+                        <span>📋 Copy Rules</span>
+                    </button>
                     <div class="theme-selector">
                         <button class="theme-btn" id="themeBtn">
                             <span id="themeBtnText">Theme</span>
@@ -1524,10 +1527,195 @@
             });
         }
 
+        // Copy Rules for AI Agents
+        async function copyRulesToClipboard() {
+            const rulesText = `# IDLHub Usage Rules for AI Agents
+
+## What is IDLHub?
+
+IDLHub (https://idlhub.com) is a comprehensive registry of Solana program Interface Definition Language (IDL) files. It provides:
+- A searchable web interface to browse and export IDLs
+- REST API for programmatic access
+- GitHub integration for loading IDLs
+- Semantic search capabilities
+
+## Web Interface (https://idlhub.com)
+
+The main page provides:
+1. **Search**: Search by program name, description, or address
+2. **Filters**: Filter by categories (DeFi, DEX, Lending, NFT, etc.)
+3. **Selection**: Select multiple programs and export their IDLs
+4. **Bookmarks**: Save favorite programs for quick access
+5. **Themes**: Multiple color themes for comfortable viewing
+
+### How to Use:
+- Browse the list of Solana programs with IDLs
+- Click on any program to view full details
+- Select programs using checkboxes
+- Click "Export Selected IDLs" to download as JSON
+- Use search to find specific programs
+- Filter by category to narrow results
+
+## REST API (https://idlhub.com/api)
+
+### Quick Start Examples:
+
+**List all IDLs:**
+\`\`\`bash
+curl "https://idlhub.com/api/idl?network=mainnet&limit=10"
+\`\`\`
+
+**Get specific IDL:**
+\`\`\`bash
+curl "https://idlhub.com/api/idl/JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN"
+\`\`\`
+
+**Search IDLs:**
+\`\`\`bash
+curl "https://idlhub.com/api/idl/search?q=jupiter+swap&network=mainnet"
+\`\`\`
+
+**Load IDL from GitHub:**
+\`\`\`bash
+curl -X POST "https://idlhub.com/api/idl/load-from-github" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "owner": "coral-xyz",
+    "repo": "anchor",
+    "path": "tests/example-program/idl.json",
+    "programId": "ExampleProgram11111111111111111111111111111",
+    "name": "Example Program",
+    "network": "mainnet"
+  }'
+\`\`\`
+
+### API Endpoints:
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | /api/idl | List all IDLs |
+| GET | /api/idl/:programId | Get specific IDL |
+| POST | /api/idl/upload | Upload new IDL |
+| POST | /api/idl/load-from-github | Load IDL from GitHub |
+| GET | /api/idl/search | Search IDLs |
+| DELETE | /api/idl/:programId | Delete IDL |
+
+### Query Parameters:
+- \`network\`: mainnet/devnet/testnet (default: mainnet)
+- \`limit\`: Results per page (1-100, default: 50)
+- \`offset\`: Pagination offset
+- \`q\`: Search query (for search endpoint)
+
+## Data Structure
+
+### IDL Format (Anchor Framework):
+\`\`\`json
+{
+  "version": "0.1.0",
+  "name": "program_name",
+  "instructions": [
+    {
+      "name": "instruction_name",
+      "accounts": [...],
+      "args": [...]
+    }
+  ],
+  "accounts": [...],
+  "types": [...],
+  "errors": [...]
+}
+\`\`\`
+
+### Program Metadata:
+\`\`\`json
+{
+  "programId": "Base58EncodedAddress...",
+  "name": "Program Name",
+  "network": "mainnet",
+  "instructionCount": 25,
+  "createdAt": "2024-01-01T00:00:00Z",
+  "idl": { ... }
+}
+\`\`\`
+
+## When to Use IDLHub:
+
+1. **Building Solana dApps**: Get IDLs to interact with programs
+2. **Program Analysis**: Study instruction patterns across protocols
+3. **Documentation**: Generate docs from IDL definitions
+4. **Testing**: Use IDLs to create test fixtures
+5. **Discovery**: Find similar programs or protocols
+
+## Best Practices:
+
+1. **Always specify network**: Use \`network=mainnet\` or \`network=devnet\`
+2. **Use pagination**: Don't fetch all data at once
+3. **Cache responses**: IDLs don't change frequently
+4. **Validate program IDs**: Must be valid base58 Solana addresses (32-44 chars)
+5. **Handle errors**: Check response status and error messages
+
+## Examples for Common Tasks:
+
+### Task: Find all DEX programs
+1. Go to https://idlhub.com
+2. Click "DEX" filter button
+3. Browse results or select and export
+
+### Task: Get Jupiter IDL programmatically
+\`\`\`javascript
+const response = await fetch(
+  'https://idlhub.com/api/idl/JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN'
+);
+const { idl } = await response.json();
+\`\`\`
+
+### Task: Search for lending protocols
+\`\`\`javascript
+const response = await fetch(
+  'https://idlhub.com/api/idl/search?q=lending&network=mainnet'
+);
+const { results } = await response.json();
+\`\`\`
+
+## Additional Resources:
+
+- **Full Documentation**: https://idlhub.com/docs.html
+- **API Guide for Agents**: https://idlhub.com/llms.txt
+- **GitHub Repository**: https://github.com/openSVM/idlhub
+- **Quick Install**: \`curl -fsSL https://idlhub.com/mcp | sh\`
+
+## Notes:
+
+- No authentication required (currently)
+- Data stored in OpenSVM backend
+- Supports mainnet, devnet, and testnet
+- Regular updates from community contributions
+- Open source and community-driven
+
+---
+
+Use these instructions to help users interact with IDLHub effectively. The service provides both human-friendly web UI and machine-friendly API access to Solana program IDLs.`;
+
+            try {
+                await navigator.clipboard.writeText(rulesText);
+                const btn = document.getElementById('copyRulesBtn');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<span>✅ Copied!</span>';
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                }, 2000);
+            } catch (err) {
+                console.error('Failed to copy:', err);
+                alert('Failed to copy to clipboard. Please try again.');
+            }
+        }
+
         function setupEventListeners() {
             document.getElementById('searchInput').addEventListener('input', applyFilters);
 
             document.getElementById('showBookmarksBtn').addEventListener('click', toggleBookmarksView);
+
+            document.getElementById('copyRulesBtn').addEventListener('click', copyRulesToClipboard);
 
             // Theme selector
             document.getElementById('themeBtn').addEventListener('click', toggleThemeDropdown);
