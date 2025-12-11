@@ -1561,33 +1561,24 @@ The main page provides:
 ### Quick Start Examples:
 
 **List all IDLs:**
-\`\`\`bash
+` + '```' + `bash
 curl "https://idlhub.com/api/idl?network=mainnet&limit=10"
-\`\`\`
+` + '```' + `
 
 **Get specific IDL:**
-\`\`\`bash
+` + '```' + `bash
 curl "https://idlhub.com/api/idl/JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN"
-\`\`\`
+` + '```' + `
 
 **Search IDLs:**
-\`\`\`bash
+` + '```' + `bash
 curl "https://idlhub.com/api/idl/search?q=jupiter+swap&network=mainnet"
-\`\`\`
+` + '```' + `
 
 **Load IDL from GitHub:**
-\`\`\`bash
-curl -X POST "https://idlhub.com/api/idl/load-from-github" \\
-  -H "Content-Type: application/json" \\
-  -d '{
-    "owner": "coral-xyz",
-    "repo": "anchor",
-    "path": "tests/example-program/idl.json",
-    "programId": "ExampleProgram11111111111111111111111111111",
-    "name": "Example Program",
-    "network": "mainnet"
-  }'
-\`\`\`
+` + '```' + `bash
+curl -X POST "https://idlhub.com/api/idl/load-from-github" -H "Content-Type: application/json" -d '{"owner":"coral-xyz","repo":"anchor","path":"tests/example-program/idl.json","programId":"ExampleProgram11111111111111111111111111111","name":"Example Program","network":"mainnet"}'
+` + '```' + `
 
 ### API Endpoints:
 
@@ -1601,15 +1592,15 @@ curl -X POST "https://idlhub.com/api/idl/load-from-github" \\
 | DELETE | /api/idl/:programId | Delete IDL |
 
 ### Query Parameters:
-- \`network\`: mainnet/devnet/testnet (default: mainnet)
-- \`limit\`: Results per page (1-100, default: 50)
-- \`offset\`: Pagination offset
-- \`q\`: Search query (for search endpoint)
+- ` + '`' + `network` + '`' + `: mainnet/devnet/testnet (default: mainnet)
+- ` + '`' + `limit` + '`' + `: Results per page (1-100, default: 50)
+- ` + '`' + `offset` + '`' + `: Pagination offset
+- ` + '`' + `q` + '`' + `: Search query (for search endpoint)
 
 ## Data Structure
 
 ### IDL Format (Anchor Framework):
-\`\`\`json
+` + '```' + `json
 {
   "version": "0.1.0",
   "name": "program_name",
@@ -1624,10 +1615,10 @@ curl -X POST "https://idlhub.com/api/idl/load-from-github" \\
   "types": [...],
   "errors": [...]
 }
-\`\`\`
+` + '```' + `
 
 ### Program Metadata:
-\`\`\`json
+` + '```' + `json
 {
   "programId": "Base58EncodedAddress...",
   "name": "Program Name",
@@ -1636,7 +1627,7 @@ curl -X POST "https://idlhub.com/api/idl/load-from-github" \\
   "createdAt": "2024-01-01T00:00:00Z",
   "idl": { ... }
 }
-\`\`\`
+` + '```' + `
 
 ## When to Use IDLHub:
 
@@ -1648,7 +1639,7 @@ curl -X POST "https://idlhub.com/api/idl/load-from-github" \\
 
 ## Best Practices:
 
-1. **Always specify network**: Use \`network=mainnet\` or \`network=devnet\`
+1. **Always specify network**: Use ` + '`' + `network=mainnet` + '`' + ` or ` + '`' + `network=devnet` + '`' + `
 2. **Use pagination**: Don't fetch all data at once
 3. **Cache responses**: IDLs don't change frequently
 4. **Validate program IDs**: Must be valid base58 Solana addresses (32-44 chars)
@@ -1662,20 +1653,20 @@ curl -X POST "https://idlhub.com/api/idl/load-from-github" \\
 3. Browse results or select and export
 
 ### Task: Get Jupiter IDL programmatically
-\`\`\`javascript
+` + '```' + `javascript
 const response = await fetch(
   'https://idlhub.com/api/idl/JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN'
 );
 const { idl } = await response.json();
-\`\`\`
+` + '```' + `
 
 ### Task: Search for lending protocols
-\`\`\`javascript
+` + '```' + `javascript
 const response = await fetch(
   'https://idlhub.com/api/idl/search?q=lending&network=mainnet'
 );
 const { results } = await response.json();
-\`\`\`
+` + '```' + `
 
 ## Additional Resources:
 
