@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Documentation - idlhub.com</title>
+                    <title>API Documentation - idlhub.com</title>
     <style>
         :root {
             --bg-primary: #f5f5f5;
@@ -435,11 +435,11 @@
         <div class="header">
             <div class="header-content">
                 <div>
-                    <h1>idlhub.com - Documentation</h1>
+                    <h1>idlhub.com - API Documentation</h1>
                 </div>
                 <div class="nav-links">
                     <a href="index.html" class="nav-link">Home</a>
-                    <a href="docs.html" class="nav-link">Docs</a>
+                    <a href="docs.html" class="nav-link">API</a>
                     <a href="https://github.com/openSVM/idlhub" target="_blank" class="nav-link">GitHub</a>
                     <button class="theme-btn" onclick="toggleTheme()">Theme</button>
                 </div>
@@ -579,12 +579,15 @@ npm run mcp:start</code></pre>
                         <span class="endpoint-path">/health</span>
                     </div>
                     <p style="margin-top: 12px;">Check if the API server is running.</p>
+                    <h4>Example Request:</h4>
+                    <pre><code>curl http://localhost:3000/health</code></pre>
                     <h4>Example Response:</h4>
                     <pre><code>{
   "status": "ok",
-  "timestamp": "2025-12-10T10:00:00.000Z",  // Current server time
+  "timestamp": "2025-12-10T10:00:00.000Z",
   "version": "1.0.0"
 }</code></pre>
+                    <button class="playground-btn" onclick="testEndpoint('GET', '/health', null)" style="margin-top: 12px;">🚀 Try It Live</button>
                 </div>
 
                 <div class="endpoint">
@@ -595,11 +598,28 @@ npm run mcp:start</code></pre>
                     <p style="margin-top: 12px;">Get a list of all programs/protocols in the registry.</p>
                     <h4>Query Parameters:</h4>
                     <ul>
-                        <li><code>category</code> (optional): Filter by category (e.g., dex, lending)</li>
+                        <li><code>category</code> (optional): Filter by category (e.g., dex, lending, liquid-staking)</li>
                         <li><code>status</code> (optional): Filter by status (available or placeholder)</li>
                         <li><code>search</code> (optional): Search by name or description</li>
                     </ul>
+                    <h4>Example Request:</h4>
                     <pre><code>curl http://localhost:3000/api/programs?category=dex&status=available</code></pre>
+                    <h4>Example Response:</h4>
+                    <pre><code>{
+  "total": 15,
+  "protocols": [
+    {
+      "id": "jupiter",
+      "name": "Jupiter",
+      "description": "Jupiter Aggregator - The key liquidity aggregator for Solana",
+      "category": "dex-aggregator",
+      "status": "available",
+      "version": "0.1.0"
+    }
+  ]
+}</code></pre>
+                    <button class="playground-btn" onclick="testEndpoint('GET', '/api/programs', null)" style="margin-top: 12px;">🚀 Try It Live</button>
+                    <button class="playground-btn" onclick="testEndpoint('GET', '/api/programs?category=dex', null)" style="margin-top: 12px; background: var(--text-secondary);">🚀 Try with Filter (DEX)</button>
                 </div>
 
                 <div class="endpoint">
@@ -608,7 +628,22 @@ npm run mcp:start</code></pre>
                         <span class="endpoint-path">/api/programs/:id</span>
                     </div>
                     <p style="margin-top: 12px;">Get details for a specific program by ID.</p>
+                    <h4>Example Request:</h4>
                     <pre><code>curl http://localhost:3000/api/programs/jupiter</code></pre>
+                    <h4>Example Response:</h4>
+                    <pre><code>{
+  "id": "jupiter",
+  "name": "Jupiter",
+  "description": "Jupiter Aggregator - The key liquidity aggregator for Solana",
+  "category": "dex-aggregator",
+  "idlPath": "IDLs/jupiterIDL.json",
+  "repo": "https://github.com/jup-ag/jupiter-core",
+  "status": "available",
+  "version": "0.1.0",
+  "lastUpdated": "2025-10-09"
+}</code></pre>
+                    <button class="playground-btn" onclick="testEndpoint('GET', '/api/programs/jupiter', null)" style="margin-top: 12px;">🚀 Try It Live (Jupiter)</button>
+                    <button class="playground-btn" onclick="testEndpoint('GET', '/api/programs/orca', null)" style="margin-top: 12px; background: var(--text-secondary);">🚀 Try It Live (Orca)</button>
                 </div>
 
                 <div class="endpoint">
@@ -616,8 +651,26 @@ npm run mcp:start</code></pre>
                         <span class="endpoint-method get">GET</span>
                         <span class="endpoint-path">/api/programs/:id/idl</span>
                     </div>
-                    <p style="margin-top: 12px;">Get the full IDL JSON for a specific program.</p>
+                    <p style="margin-top: 12px;">Get the full IDL JSON for a specific program. This returns the complete Anchor IDL including instructions, accounts, types, and errors.</p>
+                    <h4>Example Request:</h4>
                     <pre><code>curl http://localhost:3000/api/programs/jupiter/idl</code></pre>
+                    <h4>Example Response:</h4>
+                    <pre><code>{
+  "version": "0.1.0",
+  "name": "jupiter",
+  "instructions": [
+    {
+      "name": "swap",
+      "accounts": [...],
+      "args": [...]
+    }
+  ],
+  "accounts": [...],
+  "types": [...],
+  "errors": [...]
+}</code></pre>
+                    <button class="playground-btn" onclick="testEndpoint('GET', '/api/programs/jupiter/idl', null)" style="margin-top: 12px;">🚀 Try It Live (Jupiter IDL)</button>
+                    <button class="playground-btn" onclick="testEndpoint('GET', '/api/programs/marinade/idl', null)" style="margin-top: 12px; background: var(--text-secondary);">🚀 Try It Live (Marinade IDL)</button>
                 </div>
 
                 <div class="endpoint">
@@ -633,7 +686,9 @@ npm run mcp:start</code></pre>
                         <li><code>path</code>: Path to IDL file in repository</li>
                         <li><code>programId</code>: Unique identifier for the program</li>
                         <li><code>name</code>: Program name</li>
+                        <li><code>category</code> (optional): Program category</li>
                     </ul>
+                    <h4>Example Request:</h4>
                     <pre><code>curl -X POST http://localhost:3000/api/idl/load-from-github \
   -H "Content-Type: application/json" \
   -d '{
@@ -644,6 +699,17 @@ npm run mcp:start</code></pre>
     "name": "Example Program",
     "category": "defi"
   }'</code></pre>
+                    <h4>Example Response:</h4>
+                    <pre><code>{
+  "success": true,
+  "message": "IDL loaded successfully from GitHub",
+  "program": {
+    "programId": "example",
+    "name": "Example Program",
+    "idlPath": "IDLs/exampleIDL.json"
+  }
+}</code></pre>
+                    <button class="playground-btn" onclick="testEndpoint('POST', '/api/idl/load-from-github', {owner:'coral-xyz',repo:'anchor',path:'tests/example.json',programId:'test-example',name:'Test Example',category:'defi'})" style="margin-top: 12px;">🚀 Try It Live</button>
                 </div>
 
                 <div class="endpoint">
@@ -656,8 +722,10 @@ npm run mcp:start</code></pre>
                     <ul>
                         <li><code>programId</code>: Unique identifier for the program</li>
                         <li><code>name</code>: Program name</li>
-                        <li><code>idl</code>: Complete IDL JSON object</li>
+                        <li><code>idl</code>: Complete IDL JSON object with version, name, instructions, etc.</li>
+                        <li><code>category</code> (optional): Program category (defi, dex, lending, etc.)</li>
                     </ul>
+                    <h4>Example Request:</h4>
                     <pre><code>curl -X POST http://localhost:3000/api/idl/upload \
   -H "Content-Type: application/json" \
   -d '{
@@ -670,6 +738,17 @@ npm run mcp:start</code></pre>
       "instructions": []
     }
   }'</code></pre>
+                    <h4>Example Response:</h4>
+                    <pre><code>{
+  "success": true,
+  "message": "IDL uploaded successfully",
+  "program": {
+    "programId": "myprogram",
+    "name": "My Program",
+    "idlPath": "IDLs/myprogramIDL.json"
+  }
+}</code></pre>
+                    <button class="playground-btn" onclick="testEndpoint('POST', '/api/idl/upload', {programId:'test-program',name:'Test Program',category:'defi',idl:{version:'0.1.0',name:'test_program',instructions:[]}})" style="margin-top: 12px;">🚀 Try It Live</button>
                 </div>
 
                 <div class="endpoint">
@@ -677,13 +756,30 @@ npm run mcp:start</code></pre>
                         <span class="endpoint-method get">GET</span>
                         <span class="endpoint-path">/api/search</span>
                     </div>
-                    <p style="margin-top: 12px;">Search for programs using Qdrant semantic search.</p>
+                    <p style="margin-top: 12px;">Search for programs using semantic search. This endpoint searches across program names, descriptions, and categories.</p>
                     <h4>Query Parameters:</h4>
                     <ul>
-                        <li><code>q</code>: Search query (required)</li>
-                        <li><code>limit</code>: Number of results (default: 10)</li>
+                        <li><code>q</code>: Search query (required) - e.g., "dex trading", "lending protocol", "liquid staking"</li>
+                        <li><code>limit</code>: Number of results (default: 10, max: 50)</li>
                     </ul>
+                    <h4>Example Request:</h4>
                     <pre><code>curl "http://localhost:3000/api/search?q=dex%20trading&limit=5"</code></pre>
+                    <h4>Example Response:</h4>
+                    <pre><code>{
+  "query": "dex trading",
+  "total": 5,
+  "results": [
+    {
+      "id": "jupiter",
+      "name": "Jupiter",
+      "description": "Jupiter Aggregator - The key liquidity aggregator for Solana",
+      "category": "dex-aggregator",
+      "score": 0.95
+    }
+  ]
+}</code></pre>
+                    <button class="playground-btn" onclick="testEndpoint('GET', '/api/search?q=dex&limit=5', null)" style="margin-top: 12px;">🚀 Try It Live (Search "dex")</button>
+                    <button class="playground-btn" onclick="testEndpoint('GET', '/api/search?q=lending&limit=5', null)" style="margin-top: 12px; background: var(--text-secondary);">🚀 Try It Live (Search "lending")</button>
                 </div>
             </div>
 
@@ -939,6 +1035,63 @@ curl -X POST https://idlhub.com/api/idl/upload \
         const savedTheme = localStorage.getItem('idlhub-theme');
         if (savedTheme) {
             document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+
+        // Helper function to test endpoints directly from the docs
+        async function testEndpoint(method, path, body) {
+            const output = document.getElementById('playgroundOutput');
+            if (!output) {
+                // Display error message inline if possible, otherwise log to console
+                if (document.getElementById('playground')) {
+                    document.getElementById('playground').textContent = 'Error: Playground output element not found. Please ensure you are viewing the API Playground section.';
+                } else {
+                    console.error('Playground output element not found. Please ensure you are viewing the API Playground section.');
+                }
+                return;
+            }
+            
+            // Scroll to playground
+            document.getElementById('playground').scrollIntoView({ behavior: 'smooth' });
+            
+            output.textContent = 'Loading...';
+            
+            try {
+                // Determine API endpoint based on environment
+                const isLocalhost = window.location.hostname === 'localhost' || 
+                                  window.location.hostname === '127.0.0.1';
+                const apiBase = isLocalhost ? 'http://localhost:3000' : 'https://idlhub.com';
+                const url = `${apiBase}${path}`;
+
+                const options = {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                };
+
+                if (method === 'POST' && body) {
+                    options.body = JSON.stringify(body);
+                }
+
+                const response = await fetch(url, options);
+                const contentType = response.headers.get('content-type') || '';
+                let responseBody;
+                if (contentType.includes('application/json')) {
+                    try {
+                        responseBody = await response.json();
+                        output.textContent = JSON.stringify(responseBody, null, 2);
+                    } catch (jsonError) {
+                        // JSON parse failed, fallback to text
+                        const text = await response.text();
+                        output.textContent = `Invalid JSON response:\n${text}`;
+                    }
+                } else {
+                    const text = await response.text();
+                    output.textContent = text;
+                }
+            } catch (error) {
+                output.textContent = `Error: ${error.message}\n\nMake sure the API server is running.`;
+            }
         }
 
         // Sidebar active link tracking
