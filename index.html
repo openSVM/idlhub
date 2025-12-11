@@ -992,6 +992,272 @@
         .main-view.hidden {
             display: none;
         }
+
+        /* Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-primary);
+            max-width: 800px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-header {
+            padding: 20px 24px;
+            border-bottom: 2px solid var(--border-primary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            font-size: 18px;
+            margin: 0;
+            color: var(--text-primary);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close:hover {
+            color: var(--error-color);
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        .modal-tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 24px;
+            border-bottom: 2px solid var(--border-secondary);
+        }
+
+        .modal-tab {
+            padding: 8px 16px;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-family: inherit;
+            margin-bottom: -2px;
+        }
+
+        .modal-tab.active {
+            color: var(--accent-primary);
+            border-bottom-color: var(--accent-primary);
+        }
+
+        .modal-tab:hover {
+            color: var(--text-primary);
+        }
+
+        .modal-tab-content {
+            display: none;
+        }
+
+        .modal-tab-content.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="url"],
+        .form-group textarea {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--border-primary);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 14px;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+        }
+
+        .form-group textarea {
+            min-height: 200px;
+            resize: vertical;
+        }
+
+        .form-group input[type="file"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid var(--border-primary);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .form-hint {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border-secondary);
+        }
+
+        .btn-cancel {
+            padding: 8px 16px;
+            background: transparent;
+            border: 1px solid var(--border-primary);
+            color: var(--text-primary);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            font-family: inherit;
+        }
+
+        .btn-cancel:hover {
+            background: var(--bg-primary);
+        }
+
+        .btn-submit {
+            padding: 8px 16px;
+            background: var(--accent-primary);
+            border: 1px solid var(--accent-primary);
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            font-family: inherit;
+        }
+
+        .btn-submit:hover {
+            background: var(--accent-hover);
+            border-color: var(--accent-hover);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .idl-preview {
+            margin-top: 24px;
+            padding: 16px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-secondary);
+        }
+
+        .idl-preview h3 {
+            font-size: 14px;
+            margin: 0 0 12px 0;
+            color: var(--text-primary);
+        }
+
+        .idl-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .idl-stat {
+            padding: 8px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-secondary);
+        }
+
+        .idl-stat-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .idl-stat-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--accent-primary);
+        }
+
+        .idl-code {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-secondary);
+            padding: 12px;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+            font-size: 12px;
+            overflow-x: auto;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .error-message {
+            padding: 12px;
+            background: var(--error-color);
+            color: white;
+            border-radius: 4px;
+            margin-bottom: 16px;
+            font-size: 14px;
+        }
+
+        .success-message {
+            padding: 12px;
+            background: #2da44e;
+            color: white;
+            border-radius: 4px;
+            margin-bottom: 16px;
+            font-size: 14px;
+        }
+
+        .loading {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
     </style>
 </head>
 
@@ -1006,6 +1272,9 @@
                     </div>
                 </div>
                 <div class="header-actions">
+                    <button class="bookmark-btn" id="addIdlBtn" title="Add new IDL to registry">
+                        <span>➕ Add IDL</span>
+                    </button>
                     <a href="docs.html" class="bookmark-btn" style="text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
                         <span>Docs</span>
                     </a>
@@ -1091,6 +1360,102 @@
         <div class="protocol-page" id="protocolPage">
             <button class="back-button" onclick="navigateHome()">Back to List</button>
             <div id="protocolPageContent"></div>
+        </div>
+    </div>
+
+    <!-- Add IDL Modal -->
+    <div class="modal-overlay" id="addIdlModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>➕ Add New IDL</h2>
+                <button class="modal-close" id="closeModal">×</button>
+            </div>
+            <div class="modal-body">
+                <div id="modalMessage"></div>
+                
+                <div class="modal-tabs">
+                    <button class="modal-tab active" data-tab="upload">Upload JSON</button>
+                    <button class="modal-tab" data-tab="url">From URL</button>
+                    <button class="modal-tab" data-tab="github">From GitHub</button>
+                </div>
+
+                <!-- Upload Tab -->
+                <div class="modal-tab-content active" id="uploadTab">
+                    <div class="form-group">
+                        <label for="idlFile">Select IDL JSON File</label>
+                        <input type="file" id="idlFile" accept=".json" />
+                        <div class="form-hint">Upload a .json file containing the IDL definition</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="uploadProgramName">Program Name</label>
+                        <input type="text" id="uploadProgramName" placeholder="e.g., Jupiter Aggregator" />
+                    </div>
+                    <div class="form-group">
+                        <label for="uploadProgramId">Program ID (Optional)</label>
+                        <input type="text" id="uploadProgramId" placeholder="e.g., JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN" />
+                    </div>
+                </div>
+
+                <!-- URL Tab -->
+                <div class="modal-tab-content" id="urlTab">
+                    <div class="form-group">
+                        <label for="idlUrl">IDL URL</label>
+                        <input type="url" id="idlUrl" placeholder="https://example.com/path/to/idl.json" />
+                        <div class="form-hint">Direct link to a JSON file containing the IDL</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="urlProgramName">Program Name</label>
+                        <input type="text" id="urlProgramName" placeholder="e.g., Jupiter Aggregator" />
+                    </div>
+                    <div class="form-group">
+                        <label for="urlProgramId">Program ID (Optional)</label>
+                        <input type="text" id="urlProgramId" placeholder="e.g., JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN" />
+                    </div>
+                </div>
+
+                <!-- GitHub Tab -->
+                <div class="modal-tab-content" id="githubTab">
+                    <div class="form-group">
+                        <label for="githubOwner">GitHub Owner</label>
+                        <input type="text" id="githubOwner" placeholder="e.g., jup-ag" />
+                        <div class="form-hint">Repository owner or organization</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="githubRepo">Repository Name</label>
+                        <input type="text" id="githubRepo" placeholder="e.g., jupiter-core" />
+                    </div>
+                    <div class="form-group">
+                        <label for="githubPath">Path to IDL (Optional)</label>
+                        <input type="text" id="githubPath" placeholder="e.g., target/idl/jupiter.json" />
+                        <div class="form-hint">Leave empty to auto-detect IDL files in the repository</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="githubBranch">Branch (Optional)</label>
+                        <input type="text" id="githubBranch" placeholder="main" />
+                        <div class="form-hint">Default: main</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="githubProgramName">Program Name</label>
+                        <input type="text" id="githubProgramName" placeholder="e.g., Jupiter Aggregator" />
+                    </div>
+                    <div class="form-group">
+                        <label for="githubProgramId">Program ID (Optional)</label>
+                        <input type="text" id="githubProgramId" placeholder="e.g., JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN" />
+                    </div>
+                </div>
+
+                <!-- IDL Preview -->
+                <div id="idlPreview" style="display: none;" class="idl-preview">
+                    <h3>IDL Preview</h3>
+                    <div class="idl-stats" id="idlStats"></div>
+                    <div class="idl-code" id="idlCode"></div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" id="cancelBtn">Cancel</button>
+                    <button type="button" class="btn-submit" id="submitIdl" disabled>Add IDL</button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -1701,12 +2066,310 @@ Use these instructions to help users interact with IDLHub effectively. The servi
             }
         }
 
+        // Add IDL Modal Functionality
+        let currentIdlData = null;
+        let currentTab = 'upload';
+
+        function openAddIdlModal() {
+            document.getElementById('addIdlModal').classList.add('active');
+            resetModal();
+        }
+
+        function closeAddIdlModal() {
+            document.getElementById('addIdlModal').classList.remove('active');
+            resetModal();
+        }
+
+        function resetModal() {
+            // Clear all inputs
+            document.getElementById('idlFile').value = '';
+            document.getElementById('uploadProgramName').value = '';
+            document.getElementById('uploadProgramId').value = '';
+            document.getElementById('idlUrl').value = '';
+            document.getElementById('urlProgramName').value = '';
+            document.getElementById('urlProgramId').value = '';
+            document.getElementById('githubOwner').value = '';
+            document.getElementById('githubRepo').value = '';
+            document.getElementById('githubPath').value = '';
+            document.getElementById('githubBranch').value = '';
+            document.getElementById('githubProgramName').value = '';
+            document.getElementById('githubProgramId').value = '';
+            
+            // Hide preview
+            document.getElementById('idlPreview').style.display = 'none';
+            document.getElementById('submitIdl').disabled = true;
+            
+            // Clear message
+            document.getElementById('modalMessage').innerHTML = '';
+            
+            // Reset to first tab
+            switchTab('upload');
+            currentIdlData = null;
+        }
+
+        function switchTab(tabName) {
+            currentTab = tabName;
+            
+            // Update tab buttons
+            document.querySelectorAll('.modal-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+            
+            // Update tab content
+            document.querySelectorAll('.modal-tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(`${tabName}Tab`).classList.add('active');
+            
+            // Hide preview when switching tabs
+            document.getElementById('idlPreview').style.display = 'none';
+            document.getElementById('submitIdl').disabled = true;
+            currentIdlData = null;
+        }
+
+        function showMessage(message, type = 'error') {
+            const messageDiv = document.getElementById('modalMessage');
+            messageDiv.innerHTML = `<div class="${type}-message">${message}</div>`;
+            setTimeout(() => {
+                messageDiv.innerHTML = '';
+            }, 5000);
+        }
+
+        function parseIdlStats(idl) {
+            const stats = {
+                instructions: idl.instructions?.length || 0,
+                accounts: idl.accounts?.length || 0,
+                types: idl.types?.length || 0,
+                errors: idl.errors?.length || 0
+            };
+            return stats;
+        }
+
+        function showIdlPreview(idl) {
+            currentIdlData = idl;
+            const stats = parseIdlStats(idl);
+            
+            // Show stats
+            const statsHtml = `
+                <div class="idl-stat">
+                    <div class="idl-stat-label">Instructions</div>
+                    <div class="idl-stat-value">${stats.instructions}</div>
+                </div>
+                <div class="idl-stat">
+                    <div class="idl-stat-label">Accounts</div>
+                    <div class="idl-stat-value">${stats.accounts}</div>
+                </div>
+                <div class="idl-stat">
+                    <div class="idl-stat-label">Types</div>
+                    <div class="idl-stat-value">${stats.types}</div>
+                </div>
+                <div class="idl-stat">
+                    <div class="idl-stat-label">Errors</div>
+                    <div class="idl-stat-value">${stats.errors}</div>
+                </div>
+            `;
+            document.getElementById('idlStats').innerHTML = statsHtml;
+            
+            // Show code with syntax highlighting (basic)
+            const codeHtml = syntaxHighlight(JSON.stringify(idl, null, 2));
+            document.getElementById('idlCode').innerHTML = codeHtml;
+            
+            // Show preview section
+            document.getElementById('idlPreview').style.display = 'block';
+            document.getElementById('submitIdl').disabled = false;
+        }
+
+        function syntaxHighlight(json) {
+            json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+                let cls = 'number';
+                if (/^"/.test(match)) {
+                    if (/:$/.test(match)) {
+                        cls = 'key';
+                        return '<span style="color: var(--accent-primary); font-weight: 600;">' + match + '</span>';
+                    } else {
+                        cls = 'string';
+                        return '<span style="color: #2da44e;">' + match + '</span>';
+                    }
+                } else if (/true|false/.test(match)) {
+                    return '<span style="color: #0969da;">' + match + '</span>';
+                } else if (/null/.test(match)) {
+                    return '<span style="color: #8b949e;">' + match + '</span>';
+                }
+                return '<span style="color: #cf222e;">' + match + '</span>';
+            });
+        }
+
+        // Handle file upload
+        async function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            try {
+                const text = await file.text();
+                const idl = JSON.parse(text);
+                showIdlPreview(idl);
+            } catch (error) {
+                showMessage('Invalid JSON file. Please upload a valid IDL JSON file.', 'error');
+            }
+        }
+
+        // Handle URL fetch
+        async function handleUrlFetch() {
+            const url = document.getElementById('idlUrl').value.trim();
+            if (!url) {
+                showMessage('Please enter a URL', 'error');
+                return;
+            }
+            
+            try {
+                showMessage('Fetching IDL from URL...', 'loading');
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch IDL');
+                }
+                const idl = await response.json();
+                document.getElementById('modalMessage').innerHTML = '';
+                showIdlPreview(idl);
+            } catch (error) {
+                showMessage('Failed to fetch IDL from URL. Please check the URL and try again.', 'error');
+            }
+        }
+
+        // Handle GitHub fetch
+        async function handleGithubFetch() {
+            const owner = document.getElementById('githubOwner').value.trim();
+            const repo = document.getElementById('githubRepo').value.trim();
+            const path = document.getElementById('githubPath').value.trim();
+            const branch = document.getElementById('githubBranch').value.trim() || 'main';
+            
+            if (!owner || !repo) {
+                showMessage('Please enter GitHub owner and repository name', 'error');
+                return;
+            }
+            
+            try {
+                showMessage('Fetching IDL from GitHub...', 'loading');
+                
+                // If path is provided, fetch directly
+                if (path) {
+                    const url = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${path}`;
+                    const response = await fetch(url);
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch IDL');
+                    }
+                    const idl = await response.json();
+                    document.getElementById('modalMessage').innerHTML = '';
+                    showIdlPreview(idl);
+                } else {
+                    // Auto-detect IDL files
+                    showMessage('Auto-detection not implemented yet. Please provide the path to the IDL file.', 'error');
+                }
+            } catch (error) {
+                showMessage('Failed to fetch IDL from GitHub. Please check your inputs and try again.', 'error');
+            }
+        }
+
+        // Submit IDL
+        async function submitIdl() {
+            if (!currentIdlData) {
+                showMessage('Please load an IDL first', 'error');
+                return;
+            }
+            
+            let programName, programId;
+            
+            if (currentTab === 'upload') {
+                programName = document.getElementById('uploadProgramName').value.trim();
+                programId = document.getElementById('uploadProgramId').value.trim();
+            } else if (currentTab === 'url') {
+                programName = document.getElementById('urlProgramName').value.trim();
+                programId = document.getElementById('urlProgramId').value.trim();
+            } else if (currentTab === 'github') {
+                programName = document.getElementById('githubProgramName').value.trim();
+                programId = document.getElementById('githubProgramId').value.trim();
+            }
+            
+            if (!programName) {
+                showMessage('Please enter a program name', 'error');
+                return;
+            }
+            
+            try {
+                document.getElementById('submitIdl').disabled = true;
+                showMessage('Submitting IDL...', 'loading');
+                
+                // Here you would call your API to submit the IDL
+                // For now, we'll just show success
+                const payload = {
+                    programId: programId || currentIdlData.metadata?.address || 'unknown',
+                    name: programName,
+                    network: 'mainnet',
+                    idl: currentIdlData
+                };
+                
+                // Simulated API call
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                showMessage('IDL submitted successfully! The registry will be updated shortly.', 'success');
+                setTimeout(() => {
+                    closeAddIdlModal();
+                }, 2000);
+                
+            } catch (error) {
+                showMessage('Failed to submit IDL. Please try again.', 'error');
+                document.getElementById('submitIdl').disabled = false;
+            }
+        }
+
         function setupEventListeners() {
             document.getElementById('searchInput').addEventListener('input', applyFilters);
 
             document.getElementById('showBookmarksBtn').addEventListener('click', toggleBookmarksView);
 
             document.getElementById('copyRulesBtn').addEventListener('click', copyRulesToClipboard);
+
+            // Add IDL Modal
+            document.getElementById('addIdlBtn').addEventListener('click', openAddIdlModal);
+            document.getElementById('closeModal').addEventListener('click', closeAddIdlModal);
+            document.getElementById('cancelBtn').addEventListener('click', closeAddIdlModal);
+            
+            // Modal tabs
+            document.querySelectorAll('.modal-tab').forEach(tab => {
+                tab.addEventListener('click', (e) => {
+                    switchTab(e.target.dataset.tab);
+                });
+            });
+            
+            // File upload
+            document.getElementById('idlFile').addEventListener('change', handleFileUpload);
+            
+            // URL fetch button - add a button for this
+            document.getElementById('idlUrl').addEventListener('blur', function() {
+                if (this.value.trim()) {
+                    handleUrlFetch();
+                }
+            });
+            
+            // GitHub fetch button - add a button for this
+            document.getElementById('githubRepo').addEventListener('blur', function() {
+                const owner = document.getElementById('githubOwner').value.trim();
+                const repo = this.value.trim();
+                if (owner && repo) {
+                    handleGithubFetch();
+                }
+            });
+            
+            // Submit button
+            document.getElementById('submitIdl').addEventListener('click', submitIdl);
+            
+            // Close modal on overlay click
+            document.getElementById('addIdlModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeAddIdlModal();
+                }
+            });
 
             // Theme selector
             document.getElementById('themeBtn').addEventListener('click', toggleThemeDropdown);
