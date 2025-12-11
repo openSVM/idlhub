@@ -2140,9 +2140,13 @@ Use these instructions to help users interact with IDLHub effectively. The servi
 
         function showMessage(message, type = 'error') {
             const messageDiv = document.getElementById('modalMessage');
-            messageDiv.innerHTML = `<div class="${type}-message">${message}</div>`;
+            const wrapper = document.createElement('div');
+            wrapper.className = `${type}-message`;
+            wrapper.textContent = message;
+            messageDiv.textContent = '';
+            messageDiv.appendChild(wrapper);
             setTimeout(() => {
-                messageDiv.innerHTML = '';
+                messageDiv.textContent = '';
             }, 5000);
         }
 
