@@ -2323,13 +2323,24 @@ Use these instructions to help users interact with IDLHub effectively. The servi
                     idl: currentIdlData
                 };
                 
-                // Simulated API call
-                await new Promise(resolve => setTimeout(resolve, 1000));
-                
-                showMessage('IDL submitted successfully! The registry will be updated shortly.', 'success');
-                setTimeout(() => {
-                    closeAddIdlModal();
-                }, 2000);
+                // Real API call
+                const response = await fetch('/api/submit-idl', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+                if (response.ok) {
+                    showMessage('IDL submitted successfully! The registry will be updated shortly.', 'success');
+                    setTimeout(() => {
+                        closeAddIdlModal();
+                    }, 2000);
+                } else {
+                    const errorText = await response.text();
+                    showMessage('Failed to submit IDL: ' + errorText, 'error');
+                    document.getElementById('submitIdl').disabled = false;
+                }
                 
             } catch (error) {
                 showMessage('Failed to submit IDL. Please try again.', 'error');
