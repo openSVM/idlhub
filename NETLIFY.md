@@ -72,7 +72,8 @@ The `netlify.toml` file configures:
 
 - `/mcp` → `/install.sh` - Installation script endpoint
 - `/install` → `/install.sh` - Alternative endpoint
-- `/*` → `/index.html` - SPA fallback
+- `/docs` → `/docs.html` - Documentation page
+- `/*` → `/404.html` - Custom 404 page for missing routes
 
 ### Headers
 
@@ -181,6 +182,13 @@ Check Netlify deploy logs for errors:
 2. Check redirect configuration syntax
 3. Clear browser cache
 4. Test with curl: `curl -I https://your-site.netlify.app/mcp`
+
+### 404 Page Not Found Errors
+
+The site includes multiple HTML pages (`index.html`, `docs.html`, `404.html`). The redirect configuration ensures:
+- Direct file access works (e.g., `/index.html`, `/docs.html`)
+- Clean URLs work (e.g., `/docs` redirects to `/docs.html`)
+- Missing routes show a custom 404 page instead of Netlify's default error page
 
 ## Local Development
 

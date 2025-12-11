@@ -24,14 +24,18 @@
   status = 200
   force = true
 
-# SPA fallback for the web interface (excluding API routes)
+# Redirect /docs to docs.html
+[[redirects]]
+  from = "/docs"
+  to = "/docs.html"
+  status = 200
+  force = true
+
+# SPA fallback - only for paths without extensions that don't exist
 [[redirects]]
   from = "/*"
-  to = "/index.html"
-  status = 200
-  conditions = {Role = ["public"]}
-  force = false
-  # This won't catch /api/* routes or files with extensions
+  to = "/404.html"
+  status = 404
 
 # Headers for install script
 [[headers]]
