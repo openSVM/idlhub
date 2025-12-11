@@ -1404,6 +1404,9 @@
                         <div class="form-hint">Direct link to a JSON file containing the IDL</div>
                     </div>
                     <div class="form-group">
+                        <button type="button" class="btn-fetch" id="fetchUrlBtn" style="width: 100%; padding: 8px 16px; background: var(--accent-primary); color: white; border: none; cursor: pointer; font-size: 12px; font-weight: 600; font-family: inherit;">Fetch IDL from URL</button>
+                    </div>
+                    <div class="form-group">
                         <label for="urlProgramName">Program Name</label>
                         <input type="text" id="urlProgramName" placeholder="e.g., Jupiter Aggregator" />
                     </div>
@@ -1433,6 +1436,9 @@
                         <label for="githubBranch">Branch (Optional)</label>
                         <input type="text" id="githubBranch" placeholder="main" />
                         <div class="form-hint">Default: main</div>
+                    </div>
+                    <div class="form-group">
+                        <button type="button" class="btn-fetch" id="fetchGithubBtn" style="width: 100%; padding: 8px 16px; background: var(--accent-primary); color: white; border: none; cursor: pointer; font-size: 12px; font-weight: 600; font-family: inherit;">Fetch IDL from GitHub</button>
                     </div>
                     <div class="form-group">
                         <label for="githubProgramName">Program Name</label>
@@ -2054,13 +2060,13 @@ Use these instructions to help users interact with IDLHub effectively. The servi
 
 ## API Endpoints:
 
-- List all programs: `GET /api/programs`
-- Get IDL for a program: `GET /api/programs/:id/idl`
-- Add a new program: `POST /api/programs`
-- Update IDL for a program: `PUT /api/programs/:id/idl`
-- Delete a program: `DELETE /api/programs/:id`
+- List all programs: ` + '`' + `GET /api/programs` + '`' + `
+- Get IDL for a program: ` + '`' + `GET /api/programs/:id/idl` + '`' + `
+- Add a new program: ` + '`' + `POST /api/programs` + '`' + `
+- Update IDL for a program: ` + '`' + `PUT /api/programs/:id/idl` + '`' + `
+- Delete a program: ` + '`' + `DELETE /api/programs/:id` + '`' + `
 
-(Replace `:id` with the actual program ID)
+(Replace ` + '`' + `:id` + '`' + ` with the actual program ID)
 `;
             try {
                 await navigator.clipboard.writeText(rulesText);
@@ -2107,7 +2113,10 @@ Use these instructions to help users interact with IDLHub effectively. The servi
             
             // Hide preview
             document.getElementById('idlPreview').style.display = 'none';
-            document.getElementById('submitIdl').disabled = true;
+            
+            // Reset submit button state
+            const submitBtn = document.getElementById('submitIdl');
+            submitBtn.disabled = true;
             
             // Clear message
             document.getElementById('modalMessage').innerHTML = '';
@@ -2231,23 +2240,49 @@ Use these instructions to help users interact with IDLHub effectively. The servi
 
         // Handle URL fetch
         async function handleUrlFetch() {
-            const url = document.getElementById('idlUrl').value.trim();
-            if (!url) {
+            const urlInput = document.getElementById('idlUrl').value.trim();
+            if (!urlInput) {
                 showMessage('Please enter a URL', 'error');
+                return;
+            }
+            
+            // Validate URL format
+            let url;
+            try {
+                url = new URL(urlInput);
+            } catch (e) {
+                showMessage('Invalid URL format. Please enter a valid URL.', 'error');
+                return;
+            }
+            
+            // Only allow HTTPS and GitHub raw URLs for security
+            const allowedDomains = ['raw.githubusercontent.com', 'gist.githubusercontent.com'];
+            const isGitHub = allowedDomains.some(domain => url.hostname === domain);
+            const isHttps = url.protocol === 'https:';
+            
+            if (!isHttps && !isGitHub) {
+                showMessage('Only HTTPS URLs are allowed for security reasons.', 'error');
                 return;
             }
             
             try {
                 showMessage('Fetching IDL from URL...', 'loading');
-                const response = await fetch(url);
+                const response = await fetch(url.href);
                 if (!response.ok) {
                     throw new Error('Failed to fetch IDL');
                 }
+                
+                // Check response size (limit to 5MB)
+                const contentLength = response.headers.get('content-length');
+                if (contentLength && parseInt(contentLength) > 5 * 1024 * 1024) {
+                    throw new Error('File too large (max 5MB)');
+                }
+                
                 const idl = await response.json();
                 document.getElementById('modalMessage').innerHTML = '';
                 showIdlPreview(idl);
             } catch (error) {
-                showMessage('Failed to fetch IDL from URL. Please check the URL and try again.', 'error');
+                showMessage('Failed to fetch IDL from URL. Please check the URL and try again. ' + error.message, 'error');
             }
         }
 
@@ -2370,21 +2405,11 @@ Use these instructions to help users interact with IDLHub effectively. The servi
             // File upload
             document.getElementById('idlFile').addEventListener('change', handleFileUpload);
             
-            // URL fetch button - add a button for this
-            document.getElementById('idlUrl').addEventListener('blur', function() {
-                if (this.value.trim()) {
-                    handleUrlFetch();
-                }
-            });
+            // URL fetch button
+            document.getElementById('fetchUrlBtn').addEventListener('click', handleUrlFetch);
             
-            // GitHub fetch button - add a button for this
-            document.getElementById('githubRepo').addEventListener('blur', function() {
-                const owner = document.getElementById('githubOwner').value.trim();
-                const repo = this.value.trim();
-                if (owner && repo) {
-                    handleGithubFetch();
-                }
-            });
+            // GitHub fetch button
+            document.getElementById('fetchGithubBtn').addEventListener('click', handleGithubFetch);
             
             // Submit button
             document.getElementById('submitIdl').addEventListener('click', submitIdl);
@@ -2392,6 +2417,14 @@ Use these instructions to help users interact with IDLHub effectively. The servi
             // Close modal on overlay click
             document.getElementById('addIdlModal').addEventListener('click', function(e) {
                 if (e.target === this) {
+                    closeAddIdlModal();
+                }
+            });
+            
+            // Close modal on ESC key
+            document.addEventListener('keydown', function(e) {
+                const modal = document.getElementById('addIdlModal');
+                if (e.key === 'Escape' && modal.classList.contains('active')) {
                     closeAddIdlModal();
                 }
             });
