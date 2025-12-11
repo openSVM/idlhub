@@ -1041,7 +1041,12 @@ curl -X POST https://idlhub.com/api/idl/upload \
         async function testEndpoint(method, path, body) {
             const output = document.getElementById('playgroundOutput');
             if (!output) {
-                alert('Playground not visible. Scroll down to the API Playground section to see results.');
+                // Display error message inline if possible, otherwise log to console
+                if (document.getElementById('playground')) {
+                    document.getElementById('playground').textContent = 'Error: Playground output element not found. Please ensure you are viewing the API Playground section.';
+                } else {
+                    console.error('Playground output element not found. Please ensure you are viewing the API Playground section.');
+                }
                 return;
             }
             
