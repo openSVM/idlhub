@@ -31,7 +31,7 @@
   status = 200
   force = true
 
-# SPA fallback - only for paths without extensions that don't exist
+# Catch-all redirect for missing routes - shows custom 404 page
 [[redirects]]
   from = "/*"
   to = "/404.html"
