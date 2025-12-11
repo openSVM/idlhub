@@ -2268,7 +2268,7 @@ Use these instructions to help users interact with IDLHub effectively. The servi
                 
                 // If path is provided, fetch directly
                 if (path) {
-                    const url = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${path}`;
+                    const url = `https://raw.githubusercontent.com/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/${encodeURIComponent(branch)}/${encodeURIComponent(path)}`;
                     const response = await fetch(url);
                     if (!response.ok) {
                         throw new Error('Failed to fetch IDL');
