@@ -575,12 +575,13 @@ npm run api:start
 
                 <h4>Base URL</h4>
                 <p>
-                    For local development: <code>http://localhost:3000</code><br>
-                    For production: <code>https://idlhub.com</code> (or your deployed domain)
+                    For local development: <code>http://localhost:3000</code>
                 </p>
-                <p style="font-size: 12px; color: var(--text-muted);">
-                    <strong>Note:</strong> All example commands below use <code>localhost:3000</code>. 
-                    Replace with your actual API endpoint URL when running in production.
+                <p style="font-size: 12px; color: var(--text-muted); background: var(--bg-tertiary); padding: 12px; border-left: 3px solid var(--accent-primary); margin: 16px 0;">
+                    <strong>⚠️ Important:</strong> The REST API server must be deployed separately. 
+                    The static site at <code>https://idlhub.com</code> does not include a backend API server.
+                    All example commands and "Try It Live" buttons require a running API server at <code>http://localhost:3000</code>.
+                    See the <a href="#quick-start" style="color: var(--accent-primary);">REST API Server Setup</a> section above for installation instructions.
                 </p>
 
                 <h3 id="rest-auth">Authentication</h3>
@@ -924,9 +925,10 @@ ws.on('message', (data) => {
                 <h2>API Playground</h2>
                 <p>Test API endpoints interactively. Select an endpoint, customize the request, and see the response in
                     real-time. <strong>This makes actual HTTP requests to the API server.</strong></p>
-                <p style="font-size: 12px; color: var(--text-muted);">
-                    <strong>Note:</strong> Ensure the API server is running at <code>http://localhost:3000</code> 
-                    (for local testing) or the endpoint will default to the production URL.
+                <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">
+                    <strong>⚠️ Important:</strong> The API playground requires a running API server. 
+                    To use this feature, you must first <a href="#quick-start" style="color: var(--accent-primary);">set up and run the API server locally</a> 
+                    at <code>http://localhost:3000</code>. The static site at <code>https://idlhub.com</code> does not include a backend API server.
                 </p>
 
                 <div class="playground">
@@ -1077,7 +1079,31 @@ curl -X POST https://idlhub.com/api/idl/upload \
                 // Determine API endpoint based on environment
                 const isLocalhost = window.location.hostname === 'localhost' || 
                                   window.location.hostname === '127.0.0.1';
-                const apiBase = isLocalhost ? 'http://localhost:3000' : 'https://idlhub.com';
+                
+                if (!isLocalhost) {
+                    output.textContent = `⚠️ API Playground Not Available
+
+The API playground requires a local API server to be running.
+
+To use this feature:
+
+1. Clone the repository:
+   git clone https://github.com/openSVM/idlhub.git
+   cd idlhub
+
+2. Install dependencies:
+   npm install
+
+3. Start the API server:
+   npm run api:start
+
+4. Open docs.html locally at http://localhost:3000
+
+The static site at https://idlhub.com does not include a backend API server.`;
+                    return;
+                }
+                
+                const apiBase = 'http://localhost:3000';
                 const url = `${apiBase}${path}`;
 
                 const options = {
@@ -1108,7 +1134,12 @@ curl -X POST https://idlhub.com/api/idl/upload \
                     output.textContent = text;
                 }
             } catch (error) {
-                output.textContent = `Error: ${error.message}\n\nMake sure the API server is running.`;
+                output.textContent = `Error: ${error.message}
+
+Make sure the API server is running locally:
+1. npm install
+2. npm run api:start
+3. Server should be at http://localhost:3000`;
             }
         }
 
@@ -1150,7 +1181,31 @@ curl -X POST https://idlhub.com/api/idl/upload \
                 // Determine API endpoint based on environment
                 const isLocalhost = window.location.hostname === 'localhost' || 
                                   window.location.hostname === '127.0.0.1';
-                const apiBase = isLocalhost ? 'http://localhost:3000' : 'https://idlhub.com';
+                
+                if (!isLocalhost) {
+                    output.textContent = `⚠️ API Playground Not Available
+
+The API playground requires a local API server to be running.
+
+To use this feature:
+
+1. Clone the repository:
+   git clone https://github.com/openSVM/idlhub.git
+   cd idlhub
+
+2. Install dependencies:
+   npm install
+
+3. Start the API server:
+   npm run api:start
+
+4. Open docs.html locally at http://localhost:3000
+
+The static site at https://idlhub.com does not include a backend API server.`;
+                    return;
+                }
+                
+                const apiBase = 'http://localhost:3000';
                 const url = `${apiBase}${path}`;
 
                 const options = {
@@ -1169,11 +1224,12 @@ curl -X POST https://idlhub.com/api/idl/upload \
 
                 output.textContent = JSON.stringify(data, null, 2);
             } catch (error) {
-                const apiEndpoint = (window.location.hostname === 'localhost' || 
-                                    window.location.hostname === '127.0.0.1') 
-                    ? 'http://localhost:3000' 
-                    : 'https://idlhub.com';
-                output.textContent = `Error: ${error.message}\n\nNote: Ensure the API server is running at ${apiEndpoint}`;
+                output.textContent = `Error: ${error.message}
+
+Make sure the API server is running locally:
+1. npm install
+2. npm run api:start
+3. Server should be at http://localhost:3000`;
             }
         }
 
