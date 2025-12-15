@@ -404,6 +404,149 @@
             }
         }
 
+        /* Enhanced Mobile & Tablet Optimizations */
+        @media (max-width: 768px) {
+            .header {
+                padding: 12px 16px;
+            }
+
+            .header-content {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .header h1 {
+                font-size: 14px;
+            }
+
+            .nav-links {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .nav-link, .theme-btn {
+                padding: 8px 16px;
+                font-size: 11px;
+                min-height: 44px; /* Touch-friendly tap target */
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .main-content {
+                padding: 24px 16px;
+            }
+
+            .doc-section {
+                margin-bottom: 40px;
+            }
+
+            .doc-section h2 {
+                font-size: 20px;
+            }
+
+            .doc-section h3 {
+                font-size: 16px;
+            }
+
+            .doc-section p, .doc-section li {
+                font-size: 13px;
+                line-height: 1.7;
+            }
+
+            pre {
+                padding: 12px;
+                font-size: 11px;
+                overflow-x: scroll;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .endpoint {
+                padding: 12px;
+            }
+
+            .playground {
+                padding: 16px;
+            }
+
+            .playground-controls {
+                flex-direction: column;
+            }
+
+            .playground-select {
+                width: 100%;
+                min-width: unset;
+                padding: 12px;
+                font-size: 13px;
+                min-height: 44px;
+            }
+
+            .playground-btn {
+                width: 100%;
+                padding: 12px 24px;
+                font-size: 13px;
+                min-height: 44px;
+            }
+
+            .playground-input, .playground-output {
+                font-size: 11px;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .toc {
+                padding: 12px;
+            }
+
+            code {
+                font-size: 11px;
+                word-break: break-word;
+            }
+        }
+
+        /* Tablet-specific optimizations */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .main-content {
+                padding: 32px 24px;
+            }
+
+            .feature-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .playground-controls {
+                flex-wrap: wrap;
+            }
+
+            .playground-select {
+                flex: 1;
+                min-width: 250px;
+            }
+        }
+
+        /* Improved touch interactions for all mobile devices */
+        @media (hover: none) and (pointer: coarse) {
+            .nav-link, .playground-btn, .sidebar a {
+                -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+            }
+
+            .playground-btn:active {
+                transform: scale(0.98);
+                transition: transform 0.1s;
+            }
+
+            /* Prevent text selection on tap controls */
+            .nav-link, .playground-btn, .theme-btn {
+                -webkit-touch-callout: none;
+                -webkit-user-select: none;
+                user-select: none;
+            }
+        }
+
         .toc h3 {
             font-size: 14px;
             margin: 0 0 12px 0;
@@ -545,6 +688,24 @@ git clone https://github.com/openSVM/idlhub.git
 cd idlhub
 npm install
 npm run mcp:start</code></pre>
+
+                <h3>REST API Server Setup</h3>
+                <p>To run the REST API server locally, follow these steps:</p>
+                <pre><code># Clone the repository
+git clone https://github.com/openSVM/idlhub.git
+cd idlhub
+
+# Install dependencies (REQUIRED)
+npm install
+
+# Start the API server
+npm run api:start
+
+# The server will be available at http://localhost:3000</code></pre>
+                <p style="font-size: 12px; color: var(--text-muted); margin-top: 8px;">
+                    <strong>Important:</strong> You must run <code>npm install</code> before starting the API server. 
+                    The server requires Express, Axios, CORS, and other dependencies to run.
+                </p>
             </div>
 
             <!-- REST API Section -->
@@ -557,12 +718,13 @@ npm run mcp:start</code></pre>
 
                 <h4>Base URL</h4>
                 <p>
-                    For local development: <code>http://localhost:3000</code><br>
-                    For production: <code>https://idlhub.com</code> (or your deployed domain)
+                    For local development: <code>http://localhost:3000</code>
                 </p>
-                <p style="font-size: 12px; color: var(--text-muted);">
-                    <strong>Note:</strong> All example commands below use <code>localhost:3000</code>. 
-                    Replace with your actual API endpoint URL when running in production.
+                <p style="font-size: 12px; color: var(--text-muted); background: var(--bg-tertiary); padding: 12px; border-left: 3px solid var(--accent-primary); margin: 16px 0;">
+                    <strong>⚠️ Important:</strong> The REST API server must be deployed separately. 
+                    The static site at <code>https://idlhub.com</code> does not include a backend API server.
+                    All example commands and "Try It Live" buttons require a running API server at <code>http://localhost:3000</code>.
+                    See the <a href="#quick-start" style="color: var(--accent-primary);">REST API Server Setup</a> section above for installation instructions.
                 </p>
 
                 <h3 id="rest-auth">Authentication</h3>
@@ -593,162 +755,123 @@ npm run mcp:start</code></pre>
                 <div class="endpoint">
                     <div>
                         <span class="endpoint-method get">GET</span>
-                        <span class="endpoint-path">/api/programs</span>
+                        <span class="endpoint-path">/api/all</span>
                     </div>
-                    <p style="margin-top: 12px;">Get a list of all programs/protocols in the registry.</p>
-                    <h4>Query Parameters:</h4>
-                    <ul>
-                        <li><code>category</code> (optional): Filter by category (e.g., dex, lending, liquid-staking)</li>
-                        <li><code>status</code> (optional): Filter by status (available or placeholder)</li>
-                        <li><code>search</code> (optional): Search by name or description</li>
-                    </ul>
+                    <p style="margin-top: 12px;">Get all IDLs in the registry.</p>
                     <h4>Example Request:</h4>
-                    <pre><code>curl http://localhost:3000/api/programs?category=dex&status=available</code></pre>
+                    <pre><code>curl http://localhost:3000/api/all</code></pre>
                     <h4>Example Response:</h4>
                     <pre><code>{
   "total": 15,
-  "protocols": [
+  "idls": [
     {
-      "id": "jupiter",
-      "name": "Jupiter",
+      "name": "jupiter",
+      "version": "0.1.0",
       "description": "Jupiter Aggregator - The key liquidity aggregator for Solana",
       "category": "dex-aggregator",
-      "status": "available",
-      "version": "0.1.0"
+      "idl": {...}
     }
   ]
 }</code></pre>
-                    <button class="playground-btn" onclick="testEndpoint('GET', '/api/programs', null)" style="margin-top: 12px;">🚀 Try It Live</button>
-                    <button class="playground-btn" onclick="testEndpoint('GET', '/api/programs?category=dex', null)" style="margin-top: 12px; background: var(--text-secondary);">🚀 Try with Filter (DEX)</button>
+                    <button class="playground-btn" onclick="testEndpoint('GET', '/api/all', null)" style="margin-top: 12px;">🚀 Try It Live</button>
                 </div>
 
                 <div class="endpoint">
                     <div>
                         <span class="endpoint-method get">GET</span>
-                        <span class="endpoint-path">/api/programs/:id</span>
+                        <span class="endpoint-path">/api/:name</span>
                     </div>
-                    <p style="margin-top: 12px;">Get details for a specific program by ID.</p>
-                    <h4>Example Request:</h4>
-                    <pre><code>curl http://localhost:3000/api/programs/jupiter</code></pre>
+                    <p style="margin-top: 12px;">Get a specific IDL by program name or Solana wallet address.</p>
+                    <h4>Path Parameters:</h4>
+                    <ul>
+                        <li><code>name</code>: Program name (e.g., "jupiter") or Solana wallet address</li>
+                    </ul>
+                    <h4>Example Requests:</h4>
+                    <pre><code># Get by program name
+curl http://localhost:3000/api/jupiter
+
+# Get by Solana wallet address
+curl http://localhost:3000/api/JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4</code></pre>
                     <h4>Example Response:</h4>
                     <pre><code>{
-  "id": "jupiter",
-  "name": "Jupiter",
+  "name": "jupiter",
+  "version": "0.1.0",
   "description": "Jupiter Aggregator - The key liquidity aggregator for Solana",
   "category": "dex-aggregator",
-  "idlPath": "IDLs/jupiterIDL.json",
-  "repo": "https://github.com/jup-ag/jupiter-core",
-  "status": "available",
-  "version": "0.1.0",
-  "lastUpdated": "2025-10-09"
-}</code></pre>
-                    <button class="playground-btn" onclick="testEndpoint('GET', '/api/programs/jupiter', null)" style="margin-top: 12px;">🚀 Try It Live (Jupiter)</button>
-                    <button class="playground-btn" onclick="testEndpoint('GET', '/api/programs/orca', null)" style="margin-top: 12px; background: var(--text-secondary);">🚀 Try It Live (Orca)</button>
-                </div>
-
-                <div class="endpoint">
-                    <div>
-                        <span class="endpoint-method get">GET</span>
-                        <span class="endpoint-path">/api/programs/:id/idl</span>
-                    </div>
-                    <p style="margin-top: 12px;">Get the full IDL JSON for a specific program. This returns the complete Anchor IDL including instructions, accounts, types, and errors.</p>
-                    <h4>Example Request:</h4>
-                    <pre><code>curl http://localhost:3000/api/programs/jupiter/idl</code></pre>
-                    <h4>Example Response:</h4>
-                    <pre><code>{
-  "version": "0.1.0",
-  "name": "jupiter",
-  "instructions": [
-    {
-      "name": "swap",
-      "accounts": [...],
-      "args": [...]
-    }
-  ],
-  "accounts": [...],
-  "types": [...],
-  "errors": [...]
-}</code></pre>
-                    <button class="playground-btn" onclick="testEndpoint('GET', '/api/programs/jupiter/idl', null)" style="margin-top: 12px;">🚀 Try It Live (Jupiter IDL)</button>
-                    <button class="playground-btn" onclick="testEndpoint('GET', '/api/programs/marinade/idl', null)" style="margin-top: 12px; background: var(--text-secondary);">🚀 Try It Live (Marinade IDL)</button>
-                </div>
-
-                <div class="endpoint">
-                    <div>
-                        <span class="endpoint-method post">POST</span>
-                        <span class="endpoint-path">/api/idl/load-from-github</span>
-                    </div>
-                    <p style="margin-top: 12px;">Dynamically load an IDL file from a GitHub repository.</p>
-                    <h4>Required Fields:</h4>
-                    <ul>
-                        <li><code>owner</code>: GitHub repository owner</li>
-                        <li><code>repo</code>: GitHub repository name</li>
-                        <li><code>path</code>: Path to IDL file in repository</li>
-                        <li><code>programId</code>: Unique identifier for the program</li>
-                        <li><code>name</code>: Program name</li>
-                        <li><code>category</code> (optional): Program category</li>
-                    </ul>
-                    <h4>Example Request:</h4>
-                    <pre><code>curl -X POST http://localhost:3000/api/idl/load-from-github \
-  -H "Content-Type: application/json" \
-  -d '{
-    "owner": "coral-xyz",
-    "repo": "anchor",
-    "path": "tests/example.json",
-    "programId": "example",
-    "name": "Example Program",
-    "category": "defi"
-  }'</code></pre>
-                    <h4>Example Response:</h4>
-                    <pre><code>{
-  "success": true,
-  "message": "IDL loaded successfully from GitHub",
-  "program": {
-    "programId": "example",
-    "name": "Example Program",
-    "idlPath": "IDLs/exampleIDL.json"
+  "address": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+  "idl": {
+    "version": "0.1.0",
+    "name": "jupiter",
+    "instructions": [
+      {
+        "name": "swap",
+        "accounts": [...],
+        "args": [...]
+      }
+    ],
+    "accounts": [...],
+    "types": [...],
+    "errors": [...]
   }
 }</code></pre>
-                    <button class="playground-btn" onclick="testEndpoint('POST', '/api/idl/load-from-github', {owner:'coral-xyz',repo:'anchor',path:'tests/example.json',programId:'test-example',name:'Test Example',category:'defi'})" style="margin-top: 12px;">🚀 Try It Live</button>
+                    <button class="playground-btn" onclick="testEndpoint('GET', '/api/jupiter', null)" style="margin-top: 12px;">🚀 Try It Live (Jupiter)</button>
+                    <button class="playground-btn" onclick="testEndpoint('GET', '/api/orca', null)" style="margin-top: 12px; background: var(--text-secondary);">🚀 Try It Live (Orca)</button>
                 </div>
 
                 <div class="endpoint">
                     <div>
                         <span class="endpoint-method post">POST</span>
-                        <span class="endpoint-path">/api/idl/upload</span>
+                        <span class="endpoint-path">/api/idl</span>
                     </div>
-                    <p style="margin-top: 12px;">Upload an IDL file directly to the registry.</p>
+                    <p style="margin-top: 12px;">Create a new IDL record in the registry.</p>
                     <h4>Required Fields:</h4>
                     <ul>
-                        <li><code>programId</code>: Unique identifier for the program</li>
-                        <li><code>name</code>: Program name</li>
-                        <li><code>idl</code>: Complete IDL JSON object with version, name, instructions, etc.</li>
+                        <li><code>name</code>: Program name (e.g., "jupiter")</li>
+                        <li><code>idl</code>: Complete IDL JSON object with version, name, instructions, accounts, types, etc.</li>
+                        <li><code>address</code> (optional): Solana wallet address for the program</li>
                         <li><code>category</code> (optional): Program category (defi, dex, lending, etc.)</li>
+                        <li><code>description</code> (optional): Program description</li>
                     </ul>
                     <h4>Example Request:</h4>
-                    <pre><code>curl -X POST http://localhost:3000/api/idl/upload \
+                    <pre><code>curl -X POST http://localhost:3000/api/idl \
   -H "Content-Type: application/json" \
   -d '{
-    "programId": "myprogram",
-    "name": "My Program",
+    "name": "myprogram",
+    "address": "MyProg11111111111111111111111111111111111",
+    "description": "My custom Solana program",
     "category": "defi",
     "idl": {
       "version": "0.1.0",
       "name": "my_program",
-      "instructions": []
+      "instructions": [
+        {
+          "name": "initialize",
+          "accounts": [
+            {
+              "name": "user",
+              "isMut": true,
+              "isSigner": true
+            }
+          ],
+          "args": []
+        }
+      ],
+      "accounts": [],
+      "types": [],
+      "errors": []
     }
   }'</code></pre>
                     <h4>Example Response:</h4>
                     <pre><code>{
   "success": true,
-  "message": "IDL uploaded successfully",
-  "program": {
-    "programId": "myprogram",
-    "name": "My Program",
-    "idlPath": "IDLs/myprogramIDL.json"
+  "message": "IDL created successfully",
+  "data": {
+    "name": "myprogram",
+    "address": "MyProg11111111111111111111111111111111111",
+    "version": "0.1.0"
   }
 }</code></pre>
-                    <button class="playground-btn" onclick="testEndpoint('POST', '/api/idl/upload', {programId:'test-program',name:'Test Program',category:'defi',idl:{version:'0.1.0',name:'test_program',instructions:[]}})" style="margin-top: 12px;">🚀 Try It Live</button>
+                    <button class="playground-btn" onclick="testEndpoint('POST', '/api/idl', {name:'test-program',address:'Test111111111111111111111111111111111111',description:'Test Program',category:'defi',idl:{version:'0.1.0',name:'test_program',instructions:[],accounts:[],types:[],errors:[]}})" style="margin-top: 12px;">🚀 Try It Live</button>
                 </div>
 
                 <div class="endpoint">
@@ -906,22 +1029,20 @@ ws.on('message', (data) => {
                 <h2>API Playground</h2>
                 <p>Test API endpoints interactively. Select an endpoint, customize the request, and see the response in
                     real-time. <strong>This makes actual HTTP requests to the API server.</strong></p>
-                <p style="font-size: 12px; color: var(--text-muted);">
-                    <strong>Note:</strong> Ensure the API server is running at <code>http://localhost:3000</code> 
-                    (for local testing) or the endpoint will default to the production URL.
+                <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">
+                    <strong>⚠️ Important:</strong> The API playground requires a running API server. 
+                    To use this feature, you must first <a href="#quick-start" style="color: var(--accent-primary);">set up and run the API server locally</a> 
+                    at <code>http://localhost:3000</code>. The static site at <code>https://idlhub.com</code> does not include a backend API server.
                 </p>
 
                 <div class="playground">
                     <h3>Try It Out</h3>
                     <div class="playground-controls">
                         <select id="endpointSelect" class="playground-select">
-                            <option value="GET:/api/programs">GET /api/programs - List all programs</option>
-                            <option value="GET:/api/programs/jupiter">GET /api/programs/jupiter - Get Jupiter IDL
-                            </option>
-                            <option value="GET:/api/programs/jupiter/idl">GET /api/programs/jupiter/idl - Get Jupiter
-                                full IDL</option>
+                            <option value="GET:/api/all">GET /api/all - Get all IDLs</option>
+                            <option value="GET:/api/jupiter">GET /api/jupiter - Get Jupiter IDL by name</option>
                             <option value="GET:/api/search">GET /api/search?q=dex - Search programs</option>
-                            <option value="POST:/api/idl/upload">POST /api/idl/upload - Upload IDL</option>
+                            <option value="POST:/api/idl">POST /api/idl - Create new IDL</option>
                         </select>
                         <button class="playground-btn" onclick="executeRequest()">Execute</button>
                         <button class="playground-btn" onclick="clearPlayground()"
@@ -955,29 +1076,30 @@ ws.on('message', (data) => {
                 <h2>Code Examples</h2>
 
                 <h3>JavaScript/TypeScript</h3>
-                <pre><code>// Fetch all available DEX protocols
-const response = await fetch('https://idlhub.com/api/programs?category=dex&status=available');
+                <pre><code>// Fetch all IDLs
+const response = await fetch('https://idlhub.com/api/all');
 const data = await response.json();
-console.log(data.protocols);
+console.log(data.idls);
 
-// Load Jupiter IDL
-const jupiterResponse = await fetch('https://idlhub.com/api/programs/jupiter/idl');
-const jupiterIdl = await jupiterResponse.json();
+// Get Jupiter IDL by name
+const jupiterResponse = await fetch('https://idlhub.com/api/jupiter');
+const jupiterData = await jupiterResponse.json();
 
 // Use with Anchor
 import { Program, AnchorProvider } from '@coral-xyz/anchor';
-const program = new Program(jupiterIdl, provider);</code></pre>
+const program = new Program(jupiterData.idl, provider);</code></pre>
 
                 <h3>Python</h3>
                 <pre><code>import requests
 
-# Fetch all protocols
-response = requests.get('https://idlhub.com/api/programs')
-protocols = response.json()['protocols']
+# Fetch all IDLs
+response = requests.get('https://idlhub.com/api/all')
+idls = response.json()['idls']
 
-# Load specific IDL
-jupiter_response = requests.get('https://idlhub.com/api/programs/jupiter/idl')
-jupiter_idl = jupiter_response.json()
+# Get specific IDL by name
+jupiter_response = requests.get('https://idlhub.com/api/jupiter')
+jupiter_data = jupiter_response.json()
+jupiter_idl = jupiter_data['idl']
 
 # Search for protocols
 search_response = requests.get('https://idlhub.com/api/search?q=lending&limit=5')
@@ -989,30 +1111,43 @@ use serde_json::Value;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    // Fetch Jupiter IDL
-    let response = reqwest::get("https://idlhub.com/api/programs/jupiter/idl")
+    // Fetch Jupiter IDL by name
+    let response = reqwest::get("https://idlhub.com/api/jupiter")
         .await?
         .json::<Value>()
         .await?;
     
-    println!("Jupiter IDL: {}", serde_json::to_string_pretty(&response)?);
+    println!("Jupiter data: {}", serde_json::to_string_pretty(&response)?);
     Ok(())
 }</code></pre>
 
                 <h3>cURL Examples</h3>
-                <pre><code># List all programs
-curl https://idlhub.com/api/programs
+                <pre><code># Get all IDLs
+curl https://idlhub.com/api/all
 
-# Get Jupiter program details
-curl https://idlhub.com/api/programs/jupiter
+# Get specific IDL by name
+curl https://idlhub.com/api/jupiter
+
+# Get IDL by Solana wallet address
+curl https://idlhub.com/api/JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4
 
 # Search for DEX protocols
 curl "https://idlhub.com/api/search?q=decentralized%20exchange&limit=10"
 
-# Upload a custom IDL
-curl -X POST https://idlhub.com/api/idl/upload \
+# Create a new IDL record
+curl -X POST https://idlhub.com/api/idl \
   -H "Content-Type: application/json" \
-  -d @my_idl.json</code></pre>
+  -d '{
+    "name": "myprogram",
+    "address": "MyProg11111111111111111111111111111111111",
+    "description": "My custom program",
+    "category": "defi",
+    "idl": {
+      "version": "0.1.0",
+      "name": "my_program",
+      "instructions": []
+    }
+  }'</code></pre>
             </div>
         </div>
 
@@ -1059,7 +1194,31 @@ curl -X POST https://idlhub.com/api/idl/upload \
                 // Determine API endpoint based on environment
                 const isLocalhost = window.location.hostname === 'localhost' || 
                                   window.location.hostname === '127.0.0.1';
-                const apiBase = isLocalhost ? 'http://localhost:3000' : 'https://idlhub.com';
+                
+                if (!isLocalhost) {
+                    output.textContent = `⚠️ API Playground Not Available
+
+The API playground requires a local API server to be running.
+
+To use this feature:
+
+1. Clone the repository:
+   git clone https://github.com/openSVM/idlhub.git
+   cd idlhub
+
+2. Install dependencies:
+   npm install
+
+3. Start the API server:
+   npm run api:start
+
+4. Open docs.html locally at http://localhost:3000
+
+The static site at https://idlhub.com does not include a backend API server.`;
+                    return;
+                }
+                
+                const apiBase = 'http://localhost:3000';
                 const url = `${apiBase}${path}`;
 
                 const options = {
@@ -1090,7 +1249,12 @@ curl -X POST https://idlhub.com/api/idl/upload \
                     output.textContent = text;
                 }
             } catch (error) {
-                output.textContent = `Error: ${error.message}\n\nMake sure the API server is running.`;
+                output.textContent = `Error: ${error.message}
+
+Make sure the API server is running locally:
+1. npm install
+2. npm run api:start
+3. Server should be at http://localhost:3000`;
             }
         }
 
@@ -1132,7 +1296,31 @@ curl -X POST https://idlhub.com/api/idl/upload \
                 // Determine API endpoint based on environment
                 const isLocalhost = window.location.hostname === 'localhost' || 
                                   window.location.hostname === '127.0.0.1';
-                const apiBase = isLocalhost ? 'http://localhost:3000' : 'https://idlhub.com';
+                
+                if (!isLocalhost) {
+                    output.textContent = `⚠️ API Playground Not Available
+
+The API playground requires a local API server to be running.
+
+To use this feature:
+
+1. Clone the repository:
+   git clone https://github.com/openSVM/idlhub.git
+   cd idlhub
+
+2. Install dependencies:
+   npm install
+
+3. Start the API server:
+   npm run api:start
+
+4. Open docs.html locally at http://localhost:3000
+
+The static site at https://idlhub.com does not include a backend API server.`;
+                    return;
+                }
+                
+                const apiBase = 'http://localhost:3000';
                 const url = `${apiBase}${path}`;
 
                 const options = {
@@ -1151,11 +1339,12 @@ curl -X POST https://idlhub.com/api/idl/upload \
 
                 output.textContent = JSON.stringify(data, null, 2);
             } catch (error) {
-                const apiEndpoint = (window.location.hostname === 'localhost' || 
-                                    window.location.hostname === '127.0.0.1') 
-                    ? 'http://localhost:3000' 
-                    : 'https://idlhub.com';
-                output.textContent = `Error: ${error.message}\n\nNote: Ensure the API server is running at ${apiEndpoint}`;
+                output.textContent = `Error: ${error.message}
+
+Make sure the API server is running locally:
+1. npm install
+2. npm run api:start
+3. Server should be at http://localhost:3000`;
             }
         }
 
