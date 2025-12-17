@@ -471,10 +471,10 @@
       "description": "Automated liquidity management and lending protocol",
       "category": "lending",
       "idlPath": "IDLs/kaminoIDL.json",
-      "repo": "https://github.com/Kamino-Finance",
+      "repo": "https://github.com/Kamino-Finance/klend-sdk",
       "status": "available",
-      "version": "0.1.0",
-      "lastUpdated": "2025-10-09"
+      "version": "1.12.6",
+      "lastUpdated": "2024-12-17"
     },
     {
       "id": "larix",
