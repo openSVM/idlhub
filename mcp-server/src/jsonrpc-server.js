@@ -726,8 +726,8 @@ class IDLHubJSONRPCServer {
       res.json(this.getMetrics());
     });
 
-    // JSON-RPC endpoint
-    app.post('/rpc', async (req, res) => {
+    // Main JSON-RPC endpoint at /api/mcp
+    app.post('/api/mcp', async (req, res) => {
       const body = req.body;
 
       // Handle batch requests
@@ -737,19 +737,6 @@ class IDLHubJSONRPCServer {
       }
 
       // Single request
-      const result = await this.handleRequest(body);
-      res.json(result);
-    });
-
-    // Also support /api/mcp/rpc for consistency
-    app.post('/api/mcp/rpc', async (req, res) => {
-      const body = req.body;
-
-      if (Array.isArray(body)) {
-        const results = await Promise.all(body.map(r => this.handleRequest(r)));
-        return res.json(results);
-      }
-
       const result = await this.handleRequest(body);
       res.json(result);
     });
@@ -765,7 +752,7 @@ class IDLHubJSONRPCServer {
         },
         servers: [{ url: `http://localhost:${port}` }],
         paths: {
-          '/rpc': {
+          '/api/mcp': {
             post: {
               summary: 'JSON-RPC 2.0 endpoint',
               requestBody: {
@@ -798,12 +785,12 @@ class IDLHubJSONRPCServer {
     app.listen(port, () => {
       console.log(`\n🚀 IDLHub JSON-RPC MCP Server`);
       console.log(`📍 Mode: ${this.mode}`);
-      console.log(`🔌 RPC: http://localhost:${port}/rpc`);
+      console.log(`🔌 MCP: http://localhost:${port}/api/mcp`);
       console.log(`📋 OpenAPI: http://localhost:${port}/openapi`);
       console.log(`❤️  Health: http://localhost:${port}/health`);
       console.log(`📊 Metrics: http://localhost:${port}/metrics\n`);
       console.log('Example request:');
-      console.log(`  curl -X POST http://localhost:${port}/rpc \\`);
+      console.log(`  curl -X POST http://localhost:${port}/api/mcp \\`);
       console.log(`    -H "Content-Type: application/json" \\`);
       console.log(`    -d '{"jsonrpc":"2.0","method":"tools/list","params":{},"id":1}'`);
       console.log('');
