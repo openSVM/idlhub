@@ -36,6 +36,21 @@
       "args": []
     },
     {
+      "name": "initialize_vaults",
+      "docs": ["Initialize stake and reward vaults - call once after initialize"],
+      "accounts": [
+        { "name": "state", "isMut": false, "isSigner": false },
+        { "name": "stake_vault", "isMut": true, "isSigner": false, "docs": ["PDA: seeds=[stake_vault]"] },
+        { "name": "reward_vault", "isMut": true, "isSigner": false, "docs": ["PDA: seeds=[reward_vault]"] },
+        { "name": "idl_mint", "isMut": false, "isSigner": false },
+        { "name": "authority", "isMut": true, "isSigner": true },
+        { "name": "system_program", "isMut": false, "isSigner": false },
+        { "name": "token_program", "isMut": false, "isSigner": false },
+        { "name": "rent", "isMut": false, "isSigner": false }
+      ],
+      "args": []
+    },
+    {
       "name": "deposit_rewards",
       "docs": ["Deposit IDL tokens into reward pool for stakers"],
       "accounts": [
@@ -132,6 +147,7 @@
       "name": "place_bet",
       "docs": ["Place a YES/NO bet on prediction market. Staking boosts effective amount."],
       "accounts": [
+        { "name": "state", "isMut": false, "isSigner": false },
         { "name": "market", "isMut": true, "isSigner": false },
         { "name": "bet", "isMut": true, "isSigner": false },
         { "name": "staker_account", "isMut": false, "isSigner": false },

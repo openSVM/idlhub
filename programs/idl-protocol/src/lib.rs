@@ -62,6 +62,12 @@ pub mod idl_protocol {
         Ok(())
     }
 
+    /// Initialize token vaults - call once after initialize
+    pub fn initialize_vaults(_ctx: Context<InitializeVaults>) -> Result<()> {
+        msg!("Stake and reward vaults initialized");
+        Ok(())
+    }
+
     /// Deposit fees into reward pool (anyone can add rewards)
     pub fn deposit_rewards(ctx: Context<DepositRewards>, amount: u64) -> Result<()> {
         require!(amount > 0, IdlError::InvalidAmount);
@@ -205,6 +211,7 @@ pub mod idl_protocol {
         ctx: Context<LockForVe>,
         lock_duration: i64,
     ) -> Result<()> {
+        require!(!ctx.accounts.state.paused, IdlError::ProtocolPaused);
         require!(
             lock_duration >= MIN_LOCK_DURATION && lock_duration <= MAX_LOCK_DURATION,
             IdlError::InvalidLockDuration
@@ -271,6 +278,7 @@ pub mod idl_protocol {
         resolution_timestamp: i64,
         description: String,
     ) -> Result<()> {
+        require!(!ctx.accounts.state.paused, IdlError::ProtocolPaused);
         require!(protocol_id.len() <= 32, IdlError::InvalidInput);
         require!(description.len() <= 200, IdlError::InvalidInput);
 
@@ -307,6 +315,7 @@ pub mod idl_protocol {
         amount: u64,
         bet_yes: bool,
     ) -> Result<()> {
+        require!(!ctx.accounts.state.paused, IdlError::ProtocolPaused);
         require!(amount > 0, IdlError::InvalidAmount);
 
         let market = &mut ctx.accounts.market;
@@ -689,6 +698,47 @@ pub struct Initialize<'info> {
 }
 
 #[derive(Accounts)]
+pub struct InitializeVaults<'info> {
+    #[account(seeds = [b"state"], bump = state.bump)]
+    pub state: Account<'info, ProtocolState>,
+
+    /// Stake vault - holds staked IDL tokens
+    #[account(
+        init,
+        payer = authority,
+        token::mint = idl_mint,
+        token::authority = state,
+        seeds = [b"stake_vault"],
+        bump
+    )]
+    pub stake_vault: Account<'info, TokenAccount>,
+
+    /// Reward vault - holds reward pool IDL tokens
+    #[account(
+        init,
+        payer = authority,
+        token::mint = idl_mint,
+        token::authority = state,
+        seeds = [b"reward_vault"],
+        bump
+    )]
+    pub reward_vault: Account<'info, TokenAccount>,
+
+    #[account(constraint = idl_mint.key() == state.idl_mint @ IdlError::InvalidMint)]
+    pub idl_mint: Account<'info, Mint>,
+
+    #[account(
+        mut,
+        constraint = authority.key() == state.authority @ IdlError::Unauthorized
+    )]
+    pub authority: Signer<'info>,
+
+    pub system_program: Program<'info, System>,
+    pub token_program: Program<'info, Token>,
+    pub rent: Sysvar<'info, Rent>,
+}
+
+#[derive(Accounts)]
 pub struct DepositRewards<'info> {
     #[account(mut, seeds = [b"state"], bump = state.bump)]
     pub state: Account<'info, ProtocolState>,
@@ -855,6 +905,9 @@ pub struct CreateMarket<'info> {
 
 #[derive(Accounts)]
 pub struct PlaceBet<'info> {
+    #[account(seeds = [b"state"], bump = state.bump)]
+    pub state: Account<'info, ProtocolState>,
+
     #[account(mut)]
     pub market: Account<'info, PredictionMarket>,
 
@@ -943,7 +996,11 @@ pub struct ClaimWinnings<'info> {
     )]
     pub treasury: Account<'info, TokenAccount>,
 
-    #[account(mut)]
+    /// IDL mint - must match state for burns
+    #[account(
+        mut,
+        constraint = idl_mint.key() == state.idl_mint @ IdlError::InvalidMint
+    )]
     pub idl_mint: Account<'info, Mint>,
 
     pub token_program: Program<'info, Token>,
