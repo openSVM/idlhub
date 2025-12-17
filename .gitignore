@@ -27,3 +27,7 @@ temp/
 .env
 .env.local
 .env.*.local
+
+# Build artifacts
+target/
+Cargo.lock
