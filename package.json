@@ -9,6 +9,7 @@
     "mcp:stdio": "node mcp-server/src/index.js",
     "mcp:websocket": "node mcp-server/src/websocket-server.js",
     "mcp:api": "node mcp-server/src/api-server.js",
+    "mcp:jsonrpc": "node mcp-server/src/jsonrpc-server.js",
     "mcp:start": "npm run mcp:stdio",
     "qdrant:init": "node scripts/init-qdrant.js",
     "api:start": "node api/server.js",
