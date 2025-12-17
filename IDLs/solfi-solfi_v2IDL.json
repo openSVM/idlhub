@@ -1,6 +1,6 @@
 {
-  "version": "0.1.0",
-  "name": "GoonFi",
+  "version": "0.2.0",
+  "name": "Solfi_v2",
   "instructions": [
     {
       "name": "swap",
@@ -11,17 +11,17 @@
           "isSigner": true
         },
         {
-          "name": "market",
+          "name": "pair",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "userTokenAccountA",
+          "name": "accountA",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "userTokenAccountB",
+          "name": "accountB",
           "isMut": true,
           "isSigner": false
         },
@@ -36,7 +36,32 @@
           "isSigner": false
         },
         {
-          "name": "account",
+          "name": "userTokenAccountA",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userTokenAccountB",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "mintA",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "mintB",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
           "isMut": false,
           "isSigner": false
         },
@@ -44,26 +69,22 @@
           "name": "sysvarInstructions",
           "isMut": false,
           "isSigner": false
-        },        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
         }
       ],
       "args": [
         {
-          "name": "isBid",
-          "type": "bool"
+          "name": "amountIn",
+          "type": "u64"
         }
       ],
       "discriminant": {
         "type": "u8",
-        "value": 2
+        "value": 7
       }
     }
   ],
   "metadata": {
 	"origin": "shank",
-    "address": "goonERTdGsjnkZqWuVjs73BZ3Pb9qoCUdBUL17BnS5j"
+    "address": "SV2EYYJyRz2YhfXwXnhNAevDEui5Q6yrfyo13WtupPF"
   }
 }

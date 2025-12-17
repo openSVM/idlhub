@@ -1,6 +1,6 @@
 {
   "version": "0.1.0",
-  "name": "GoonFi",
+  "name": "Solfi",
   "instructions": [
     {
       "name": "swap",
@@ -11,17 +11,7 @@
           "isSigner": true
         },
         {
-          "name": "market",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "userTokenAccountA",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "userTokenAccountB",
+          "name": "pair",
           "isMut": true,
           "isSigner": false
         },
@@ -36,7 +26,17 @@
           "isSigner": false
         },
         {
-          "name": "account",
+          "name": "userTokenAccountA",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userTokenAccountB",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
           "isMut": false,
           "isSigner": false
         },
@@ -44,26 +44,22 @@
           "name": "sysvarInstructions",
           "isMut": false,
           "isSigner": false
-        },        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
         }
       ],
       "args": [
         {
-          "name": "isBid",
-          "type": "bool"
+          "name": "amountIn",
+          "type": "u64"
         }
       ],
       "discriminant": {
         "type": "u8",
-        "value": 2
+        "value": 7
       }
     }
   ],
   "metadata": {
 	"origin": "shank",
-    "address": "goonERTdGsjnkZqWuVjs73BZ3Pb9qoCUdBUL17BnS5j"
+    "address": "SoLFiHG9TfgtdUXUjWAxi3LtvYuFyDLVhBWxdMZxyCe"
   }
 }
