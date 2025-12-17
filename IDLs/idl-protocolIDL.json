@@ -3,13 +3,24 @@
   "name": "idl_protocol",
   "constants": [
     { "name": "IDL_TOKEN_MINT", "type": "string", "value": "8zdhHxthCFoigAGw4QRxWfXUWLY1KkMZ1r7CTcmiBAGS" },
+    { "name": "BAGS_FM_POOL", "type": "string", "value": "HLnpSz9h2S4hiLQ43rnSD9XkcUThA7B8hQMKmDaiTLcC" },
     { "name": "MAX_LOCK_DURATION", "type": "i64", "value": "126144000" },
     { "name": "MIN_LOCK_DURATION", "type": "i64", "value": "604800" },
     { "name": "BET_FEE_BPS", "type": "u64", "value": "300" },
     { "name": "STAKER_FEE_SHARE_BPS", "type": "u64", "value": "5000" },
     { "name": "CREATOR_FEE_SHARE_BPS", "type": "u64", "value": "2500" },
     { "name": "TREASURY_FEE_SHARE_BPS", "type": "u64", "value": "1500" },
-    { "name": "BURN_FEE_SHARE_BPS", "type": "u64", "value": "1000" }
+    { "name": "BURN_FEE_SHARE_BPS", "type": "u64", "value": "1000" },
+    { "name": "BADGE_TIER_BRONZE", "type": "u64", "value": "1000" },
+    { "name": "BADGE_TIER_SILVER", "type": "u64", "value": "10000" },
+    { "name": "BADGE_TIER_GOLD", "type": "u64", "value": "100000" },
+    { "name": "BADGE_TIER_PLATINUM", "type": "u64", "value": "500000" },
+    { "name": "BADGE_TIER_DIAMOND", "type": "u64", "value": "1000000" },
+    { "name": "BADGE_VEIDL_BRONZE", "type": "u64", "value": "50000" },
+    { "name": "BADGE_VEIDL_SILVER", "type": "u64", "value": "250000" },
+    { "name": "BADGE_VEIDL_GOLD", "type": "u64", "value": "1000000" },
+    { "name": "BADGE_VEIDL_PLATINUM", "type": "u64", "value": "5000000" },
+    { "name": "BADGE_VEIDL_DIAMOND", "type": "u64", "value": "20000000" }
   ],
   "instructions": [
     {
@@ -56,10 +67,11 @@
     },
     {
       "name": "unstake",
-      "docs": ["Unstake IDL tokens + claim proportional rewards"],
+      "docs": ["Unstake IDL tokens + claim proportional rewards. Cannot unstake locked tokens."],
       "accounts": [
         { "name": "state", "isMut": true, "isSigner": false },
         { "name": "staker_account", "isMut": true, "isSigner": false },
+        { "name": "ve_position", "isMut": false, "isSigner": false, "isOptional": true, "docs": ["Optional - checked for active locks"] },
         { "name": "user", "isMut": true, "isSigner": true },
         { "name": "user_idl", "isMut": true, "isSigner": false },
         { "name": "stake_vault", "isMut": true, "isSigner": false },
@@ -98,10 +110,15 @@
       "name": "create_market",
       "docs": ["Create a prediction market for protocol metrics"],
       "accounts": [
+        { "name": "state", "isMut": false, "isSigner": false },
         { "name": "market", "isMut": true, "isSigner": false },
+        { "name": "market_pool", "isMut": true, "isSigner": false, "docs": ["PDA token account for market bets"] },
+        { "name": "idl_mint", "isMut": false, "isSigner": false },
         { "name": "creator", "isMut": true, "isSigner": true },
         { "name": "oracle", "isMut": false, "isSigner": false, "docs": ["Authorized oracle to resolve this market"] },
-        { "name": "system_program", "isMut": false, "isSigner": false }
+        { "name": "system_program", "isMut": false, "isSigner": false },
+        { "name": "token_program", "isMut": false, "isSigner": false },
+        { "name": "rent", "isMut": false, "isSigner": false }
       ],
       "args": [
         { "name": "protocol_id", "type": "string" },
@@ -120,7 +137,7 @@
         { "name": "staker_account", "isMut": false, "isSigner": false },
         { "name": "user", "isMut": true, "isSigner": true },
         { "name": "user_idl", "isMut": true, "isSigner": false },
-        { "name": "market_pool", "isMut": true, "isSigner": false },
+        { "name": "market_pool", "isMut": true, "isSigner": false, "docs": ["PDA: seeds=[market_pool, market]"] },
         { "name": "system_program", "isMut": false, "isSigner": false },
         { "name": "token_program", "isMut": false, "isSigner": false }
       ],
@@ -149,12 +166,37 @@
         { "name": "bet", "isMut": true, "isSigner": false },
         { "name": "user", "isMut": false, "isSigner": true },
         { "name": "user_idl", "isMut": true, "isSigner": false },
-        { "name": "market_pool", "isMut": true, "isSigner": false },
+        { "name": "market_pool", "isMut": true, "isSigner": false, "docs": ["PDA: seeds=[market_pool, market]"] },
         { "name": "reward_vault", "isMut": true, "isSigner": false },
         { "name": "creator_idl", "isMut": true, "isSigner": false },
-        { "name": "treasury", "isMut": true, "isSigner": false },
+        { "name": "treasury", "isMut": true, "isSigner": false, "docs": ["Must match state.treasury"] },
         { "name": "idl_mint", "isMut": true, "isSigner": false },
         { "name": "token_program", "isMut": false, "isSigner": false }
+      ],
+      "args": []
+    },
+    {
+      "name": "issue_badge",
+      "docs": ["Issue a volume badge to a trader (admin only). Badges grant veIDL without locking."],
+      "accounts": [
+        { "name": "state", "isMut": true, "isSigner": false },
+        { "name": "badge", "isMut": true, "isSigner": false },
+        { "name": "recipient", "isMut": false, "isSigner": false },
+        { "name": "authority", "isMut": true, "isSigner": true },
+        { "name": "system_program", "isMut": false, "isSigner": false }
+      ],
+      "args": [
+        { "name": "tier", "type": { "defined": "BadgeTier" } },
+        { "name": "volume_usd", "type": "u64" }
+      ]
+    },
+    {
+      "name": "revoke_badge",
+      "docs": ["Revoke a volume badge (admin only, for fraud/abuse)"],
+      "accounts": [
+        { "name": "state", "isMut": true, "isSigner": false },
+        { "name": "badge", "isMut": true, "isSigner": false },
+        { "name": "authority", "isMut": true, "isSigner": true }
       ],
       "args": []
     },
@@ -263,6 +305,20 @@
           { "name": "bump", "type": "u8" }
         ]
       }
+    },
+    {
+      "name": "VolumeBadge",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          { "name": "owner", "type": "publicKey" },
+          { "name": "tier", "type": { "defined": "BadgeTier" } },
+          { "name": "volume_usd", "type": "u64", "docs": ["Total volume traded in USD"] },
+          { "name": "ve_amount", "type": "u64", "docs": ["veIDL granted by this badge"] },
+          { "name": "issued_at", "type": "i64" },
+          { "name": "bump", "type": "u8" }
+        ]
+      }
     }
   ],
   "types": [
@@ -278,6 +334,20 @@
           { "name": "Price" },
           { "name": "MarketCap" },
           { "name": "Custom" }
+        ]
+      }
+    },
+    {
+      "name": "BadgeTier",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          { "name": "None" },
+          { "name": "Bronze" },
+          { "name": "Silver" },
+          { "name": "Gold" },
+          { "name": "Platinum" },
+          { "name": "Diamond" }
         ]
       }
     }
@@ -296,11 +366,14 @@
     { "code": 6010, "name": "AlreadyClaimed", "msg": "Already claimed" },
     { "code": 6011, "name": "Unauthorized", "msg": "Unauthorized" },
     { "code": 6012, "name": "InvalidMint", "msg": "Invalid mint - must use $IDL token" },
-    { "code": 6013, "name": "ProtocolPaused", "msg": "Protocol is paused" }
+    { "code": 6013, "name": "ProtocolPaused", "msg": "Protocol is paused" },
+    { "code": 6014, "name": "InsufficientVolume", "msg": "Insufficient trading volume for this badge tier" },
+    { "code": 6015, "name": "TokensLocked", "msg": "Tokens are locked for veIDL - cannot unstake until lock expires" }
   ],
   "metadata": {
     "address": "IDLStake11111111111111111111111111111111111",
     "origin": "bags.fm",
-    "token": "8zdhHxthCFoigAGw4QRxWfXUWLY1KkMZ1r7CTcmiBAGS"
+    "token": "8zdhHxthCFoigAGw4QRxWfXUWLY1KkMZ1r7CTcmiBAGS",
+    "pool": "HLnpSz9h2S4hiLQ43rnSD9XkcUThA7B8hQMKmDaiTLcC"
   }
 }

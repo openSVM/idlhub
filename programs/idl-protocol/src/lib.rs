@@ -1,5 +1,6 @@
 use anchor_lang::prelude::*;
 use anchor_spl::token::{self, Mint, Token, TokenAccount, Transfer, Burn};
+use anchor_lang::solana_program::sysvar::rent::Rent;
 
 // The actual $IDL token on bags.fm
 // CA: 8zdhHxthCFoigAGw4QRxWfXUWLY1KkMZ1r7CTcmiBAGS
@@ -123,6 +124,7 @@ pub mod idl_protocol {
     }
 
     /// Unstake IDL tokens + claim proportional rewards
+    /// Cannot unstake if tokens are locked for veIDL
     pub fn unstake(ctx: Context<Unstake>, amount: u64) -> Result<()> {
         require!(amount > 0, IdlError::InvalidAmount);
 
@@ -130,6 +132,16 @@ pub mod idl_protocol {
         let staker = &mut ctx.accounts.staker_account;
 
         require!(staker.staked_amount >= amount, IdlError::InsufficientStake);
+
+        // Check if user has an active veIDL lock - prevents unstaking locked tokens
+        if let Some(ve_position) = &ctx.accounts.ve_position {
+            let clock = Clock::get()?;
+            if clock.unix_timestamp < ve_position.lock_end {
+                // User has active lock - can only unstake unlocked portion
+                let unlocked_amount = staker.staked_amount.saturating_sub(ve_position.locked_stake);
+                require!(amount <= unlocked_amount, IdlError::TokensLocked);
+            }
+        }
 
         // Calculate user's share of rewards
         let user_reward = if state.total_staked > 0 && state.reward_pool > 0 {
@@ -733,6 +745,13 @@ pub struct Unstake<'info> {
     )]
     pub staker_account: Account<'info, StakerAccount>,
 
+    /// Optional veIDL position - if exists and active, restricts unstaking
+    #[account(
+        seeds = [b"ve_position", user.key().as_ref()],
+        bump
+    )]
+    pub ve_position: Option<Account<'info, VePosition>>,
+
     #[account(mut)]
     pub user: Signer<'info>,
 
@@ -796,6 +815,9 @@ pub struct UnlockVe<'info> {
 #[derive(Accounts)]
 #[instruction(protocol_id: String, metric_type: MetricType, target_value: u64, resolution_timestamp: i64)]
 pub struct CreateMarket<'info> {
+    #[account(seeds = [b"state"], bump = state.bump)]
+    pub state: Account<'info, ProtocolState>,
+
     #[account(
         init,
         payer = creator,
@@ -805,6 +827,21 @@ pub struct CreateMarket<'info> {
     )]
     pub market: Account<'info, PredictionMarket>,
 
+    /// Market pool token account for holding bets
+    #[account(
+        init,
+        payer = creator,
+        token::mint = idl_mint,
+        token::authority = market,
+        seeds = [b"market_pool", market.key().as_ref()],
+        bump
+    )]
+    pub market_pool: Account<'info, TokenAccount>,
+
+    /// The IDL token mint
+    #[account(constraint = idl_mint.key() == state.idl_mint @ IdlError::InvalidMint)]
+    pub idl_mint: Account<'info, Mint>,
+
     #[account(mut)]
     pub creator: Signer<'info>,
 
@@ -812,6 +849,8 @@ pub struct CreateMarket<'info> {
     pub oracle: UncheckedAccount<'info>,
 
     pub system_program: Program<'info, System>,
+    pub token_program: Program<'info, Token>,
+    pub rent: Sysvar<'info, Rent>,
 }
 
 #[derive(Accounts)]
@@ -840,7 +879,12 @@ pub struct PlaceBet<'info> {
     #[account(mut, constraint = user_idl.owner == user.key())]
     pub user_idl: Account<'info, TokenAccount>,
 
-    #[account(mut)]
+    /// Market pool - PDA owned by the market for holding bets
+    #[account(
+        mut,
+        seeds = [b"market_pool", market.key().as_ref()],
+        bump
+    )]
     pub market_pool: Account<'info, TokenAccount>,
 
     pub system_program: Program<'info, System>,
@@ -877,18 +921,26 @@ pub struct ClaimWinnings<'info> {
     #[account(mut, constraint = user_idl.owner == user.key())]
     pub user_idl: Account<'info, TokenAccount>,
 
-    #[account(mut)]
+    /// Market pool - PDA owned by the market for holding bets
+    #[account(
+        mut,
+        seeds = [b"market_pool", market.key().as_ref()],
+        bump
+    )]
     pub market_pool: Account<'info, TokenAccount>,
 
     #[account(mut, seeds = [b"reward_vault"], bump)]
     pub reward_vault: Account<'info, TokenAccount>,
 
-    /// CHECK: Market creator receives fees
+    /// Market creator receives fees
     #[account(mut, constraint = creator_idl.owner == market.creator)]
     pub creator_idl: Account<'info, TokenAccount>,
 
-    /// CHECK: Treasury receives fees
-    #[account(mut)]
+    /// Treasury receives fees - must match protocol state
+    #[account(
+        mut,
+        constraint = treasury.owner == state.treasury @ IdlError::Unauthorized
+    )]
     pub treasury: Account<'info, TokenAccount>,
 
     #[account(mut)]
@@ -1119,4 +1171,7 @@ pub enum IdlError {
 
     #[msg("Insufficient trading volume for this badge tier")]
     InsufficientVolume,
+
+    #[msg("Tokens are locked for veIDL - cannot unstake until lock expires")]
+    TokensLocked,
 }
