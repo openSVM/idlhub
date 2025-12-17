@@ -387,9 +387,10 @@
     { "code": 6015, "name": "TokensLocked", "msg": "Tokens are locked for veIDL - cannot unstake until lock expires" }
   ],
   "metadata": {
-    "address": "IDLStake11111111111111111111111111111111111",
+    "address": "BSn7neicVV2kEzgaZmd6tZEBm4tdgzBRyELov65Lq7dt",
     "origin": "bags.fm",
     "token": "8zdhHxthCFoigAGw4QRxWfXUWLY1KkMZ1r7CTcmiBAGS",
-    "pool": "HLnpSz9h2S4hiLQ43rnSD9XkcUThA7B8hQMKmDaiTLcC"
+    "pool": "HLnpSz9h2S4hiLQ43rnSD9XkcUThA7B8hQMKmDaiTLcC",
+    "network": "devnet"
   }
 }

@@ -18,7 +18,7 @@ import * as path from 'path';
 
 // Constants from the program
 const IDL_TOKEN_MINT = new PublicKey('8zdhHxthCFoigAGw4QRxWfXUWLY1KkMZ1r7CTcmiBAGS');
-const PROGRAM_ID = new PublicKey('IDLStake11111111111111111111111111111111111');
+const PROGRAM_ID = new PublicKey('BSn7neicVV2kEzgaZmd6tZEBm4tdgzBRyELov65Lq7dt');
 
 // Load IDL
 const idlPath = path.join(__dirname, '../IDLs/idl-protocolIDL.json');

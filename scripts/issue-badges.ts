@@ -19,7 +19,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as readline from 'readline';
 
-const PROGRAM_ID = new PublicKey('IDLStake11111111111111111111111111111111111');
+const PROGRAM_ID = new PublicKey('BSn7neicVV2kEzgaZmd6tZEBm4tdgzBRyELov65Lq7dt');
 
 // Badge tiers matching the smart contract
 enum BadgeTier {
