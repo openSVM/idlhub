@@ -1,11 +1,189 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>$IDL Token - The Native Token of IDLHub</title>
+    <title>$IDL Token - idlhub.com</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <style>
+        :root {
+            /* Light Theme (Default) */
+            --bg-primary: #f5f5f5;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f6f8fa;
+            --text-primary: #24292f;
+            --text-secondary: #57606a;
+            --text-muted: #8b949e;
+            --border-primary: #24292f;
+            --border-secondary: #d0d7de;
+            --accent-primary: #0969da;
+            --accent-hover: #24292f;
+            --error-color: #cf222e;
+            --selection-bg: #0969da;
+            --checkbox-bg: #ffffff;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-tertiary: #21262d;
+            --text-primary: #c9d1d9;
+            --text-secondary: #8b949e;
+            --text-muted: #6e7681;
+            --border-primary: #30363d;
+            --border-secondary: #21262d;
+            --accent-primary: #58a6ff;
+            --accent-hover: #1f6feb;
+            --error-color: #f85149;
+            --selection-bg: #1f6feb;
+            --checkbox-bg: #161b22;
+        }
+
+        [data-theme="night"] {
+            --bg-primary: #0f0f23;
+            --bg-secondary: #1a1a3e;
+            --bg-tertiary: #252550;
+            --text-primary: #ccccff;
+            --text-secondary: #9999ff;
+            --text-muted: #6666cc;
+            --border-primary: #9966ff;
+            --border-secondary: #252550;
+            --accent-primary: #ff6ec7;
+            --accent-hover: #ffcc00;
+            --error-color: #ff3366;
+            --selection-bg: #ff6ec7;
+            --checkbox-bg: #1a1a3e;
+        }
+
+        [data-theme="terminal"] {
+            --bg-primary: #000000;
+            --bg-secondary: #0a0a0a;
+            --bg-tertiary: #121212;
+            --text-primary: #00ff00;
+            --text-secondary: #00cc00;
+            --text-muted: #008800;
+            --border-primary: #00ff00;
+            --border-secondary: #003300;
+            --accent-primary: #00ff00;
+            --accent-hover: #00ff00;
+            --error-color: #ff0000;
+            --selection-bg: #00aa00;
+            --checkbox-bg: #0a0a0a;
+        }
+
+        [data-theme="solarized"] {
+            --bg-primary: #002b36;
+            --bg-secondary: #073642;
+            --bg-tertiary: #094251;
+            --text-primary: #93a1a1;
+            --text-secondary: #839496;
+            --text-muted: #657b83;
+            --border-primary: #b58900;
+            --border-secondary: #094251;
+            --accent-primary: #b58900;
+            --accent-hover: #cb4b16;
+            --error-color: #dc322f;
+            --selection-bg: #b58900;
+            --checkbox-bg: #073642;
+        }
+
+        [data-theme="solarized-light"] {
+            --bg-primary: #fdf6e3;
+            --bg-secondary: #eee8d5;
+            --bg-tertiary: #e8e2d0;
+            --text-primary: #657b83;
+            --text-secondary: #839496;
+            --text-muted: #93a1a1;
+            --border-primary: #b58900;
+            --border-secondary: #e8e2d0;
+            --accent-primary: #b58900;
+            --accent-hover: #cb4b16;
+            --error-color: #dc322f;
+            --selection-bg: #b58900;
+            --checkbox-bg: #eee8d5;
+        }
+
+        [data-theme="monokai-light"] {
+            --bg-primary: #fafafa;
+            --bg-secondary: #f5f5f5;
+            --bg-tertiary: #eeeeee;
+            --text-primary: #272822;
+            --text-secondary: #75715e;
+            --text-muted: #999988;
+            --border-primary: #f92672;
+            --border-secondary: #eeeeee;
+            --accent-primary: #f92672;
+            --accent-hover: #fd971f;
+            --error-color: #f92672;
+            --selection-bg: #a6e22e;
+            --checkbox-bg: #f5f5f5;
+        }
+
+        [data-theme="dos"] {
+            --bg-primary: #0000aa;
+            --bg-secondary: #0000bb;
+            --bg-tertiary: #1111cc;
+            --text-primary: #ffff55;
+            --text-secondary: #ffffff;
+            --text-muted: #aaaaaa;
+            --border-primary: #ffff55;
+            --border-secondary: #5555ff;
+            --accent-primary: #00ffff;
+            --accent-hover: #ffff00;
+            --error-color: #ff5555;
+            --selection-bg: #00ffff;
+            --checkbox-bg: #0000bb;
+        }
+
+        [data-theme="dracula"] {
+            --bg-primary: #282a36;
+            --bg-secondary: #21222c;
+            --bg-tertiary: #343746;
+            --text-primary: #f8f8f2;
+            --text-secondary: #6272a4;
+            --text-muted: #44475a;
+            --border-primary: #bd93f9;
+            --border-secondary: #44475a;
+            --accent-primary: #ff79c6;
+            --accent-hover: #bd93f9;
+            --error-color: #ff5555;
+            --selection-bg: #bd93f9;
+            --checkbox-bg: #21222c;
+        }
+
+        [data-theme="nord"] {
+            --bg-primary: #2e3440;
+            --bg-secondary: #3b4252;
+            --bg-tertiary: #434c5e;
+            --text-primary: #eceff4;
+            --text-secondary: #d8dee9;
+            --text-muted: #4c566a;
+            --border-primary: #88c0d0;
+            --border-secondary: #434c5e;
+            --accent-primary: #88c0d0;
+            --accent-hover: #8fbcbb;
+            --error-color: #bf616a;
+            --selection-bg: #5e81ac;
+            --checkbox-bg: #3b4252;
+        }
+
+        [data-theme="onedark"] {
+            --bg-primary: #21252b;
+            --bg-secondary: #282c34;
+            --bg-tertiary: #2c313a;
+            --text-primary: #abb2bf;
+            --text-secondary: #5c6370;
+            --text-muted: #4b5263;
+            --border-primary: #98c379;
+            --border-secondary: #2c313a;
+            --accent-primary: #e5c07b;
+            --accent-hover: #e06c75;
+            --error-color: #e06c75;
+            --selection-bg: #528bff;
+            --checkbox-bg: #282c34;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -13,461 +191,798 @@
         }
 
         body {
-            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            color: #e2e8f0;
-            line-height: 1.6;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 'Courier New', monospace;
+            background: var(--bg-primary);
+            min-height: 100vh;
+            padding: 0;
+            color: var(--text-primary);
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
+            background: var(--bg-secondary);
+            min-height: 100vh;
+            border-left: 1px solid var(--border-secondary);
+            border-right: 1px solid var(--border-secondary);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
         }
 
-        header {
+        .header {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            padding: 16px 24px;
+            border-bottom: 2px solid var(--border-primary);
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .header h1 {
+            font-size: 16px;
+            margin: 0;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
+        }
+
+        .header h1::before {
+            content: '> ';
+            color: var(--accent-primary);
+        }
+
+        .header p {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin: 4px 0 0 0;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .nav-btn {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-primary);
+            color: var(--text-primary);
+            padding: 4px 12px;
+            border-radius: 0;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.1s;
+            font-weight: 600;
+            font-family: inherit;
+            text-decoration: none;
+        }
+
+        .nav-btn:hover {
+            background: var(--accent-hover);
+            color: var(--bg-secondary);
+        }
+
+        .nav-btn::before {
+            content: '[';
+        }
+
+        .nav-btn::after {
+            content: ']';
+        }
+
+        .theme-selector {
+            position: relative;
+        }
+
+        .theme-btn {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-primary);
+            color: var(--text-primary);
+            padding: 4px 12px;
+            border-radius: 0;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.1s;
+            font-weight: 600;
+            font-family: inherit;
+        }
+
+        .theme-btn:hover {
+            background: var(--accent-hover);
+            color: var(--bg-secondary);
+        }
+
+        .theme-btn::before {
+            content: '[';
+        }
+
+        .theme-btn::after {
+            content: ']';
+        }
+
+        .theme-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-primary);
+            margin-top: 4px;
+            min-width: 180px;
+            z-index: 1000;
+        }
+
+        .theme-dropdown.active {
+            display: block;
+        }
+
+        .theme-option {
+            padding: 8px 16px;
+            cursor: pointer;
+            font-size: 11px;
+            text-transform: uppercase;
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-secondary);
+            transition: all 0.1s;
+            color: var(--text-primary);
+        }
+
+        .theme-option:last-child {
+            border-bottom: none;
+        }
+
+        .theme-option:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .theme-option.selected {
+            background: var(--bg-tertiary);
+            border-left: 3px solid var(--accent-primary);
+            padding-left: 13px;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 24px;
+        }
+
+        .ascii-logo {
             text-align: center;
-            padding: 60px 20px;
-            border-bottom: 2px solid #334155;
+            margin-bottom: 24px;
+            padding: 24px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-secondary);
         }
 
-        .logo-section {
-            margin-bottom: 30px;
-        }
-
-        .logo {
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            border: 4px solid #38bdf8;
-            box-shadow: 0 0 40px rgba(56, 189, 248, 0.4);
-            animation: glow 2s ease-in-out infinite;
-        }
-
-        @keyframes glow {
-            0%, 100% { box-shadow: 0 0 40px rgba(56, 189, 248, 0.4); }
-            50% { box-shadow: 0 0 60px rgba(56, 189, 248, 0.8); }
-        }
-
-        h1 {
-            font-size: 48px;
-            margin-bottom: 10px;
-            background: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .subtitle {
-            font-size: 20px;
-            color: #94a3b8;
-            margin-bottom: 20px;
-        }
-
-        .ca {
-            background: #1e293b;
-            border: 1px solid #334155;
-            border-radius: 12px;
-            padding: 15px 20px;
+        .ascii-logo pre {
+            font-size: 10px;
+            line-height: 1.2;
+            color: var(--accent-primary);
+            margin: 0;
             display: inline-block;
-            margin-top: 20px;
+            text-align: left;
+        }
+
+        .token-title {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .token-title h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .token-title p {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .ca-box {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-primary);
+            padding: 16px;
+            text-align: center;
+            margin-bottom: 32px;
         }
 
         .ca-label {
-            color: #64748b;
-            font-size: 12px;
-            margin-bottom: 5px;
+            font-size: 10px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            font-weight: 600;
         }
 
         .ca-address {
-            font-size: 14px;
-            color: #38bdf8;
+            font-size: 12px;
+            color: var(--accent-primary);
             word-break: break-all;
             cursor: pointer;
+            font-weight: 600;
         }
 
         .ca-address:hover {
-            color: #818cf8;
+            text-decoration: underline;
         }
 
-        .stats {
+        /* Stats Grid */
+        .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin: 40px 0;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
         }
 
-        .stat-card {
-            background: #1e293b;
-            border: 1px solid #334155;
-            border-radius: 12px;
-            padding: 30px;
+        .stat-box {
+            border: 1px solid var(--border-primary);
+            padding: 16px;
+            background: var(--bg-secondary);
             text-align: center;
-            transition: transform 0.3s, box-shadow 0.3s;
         }
 
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 40px rgba(56, 189, 248, 0.2);
+        .stat-box-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--accent-primary);
+            margin-bottom: 4px;
         }
 
-        .stat-value {
-            font-size: 32px;
-            font-weight: bold;
-            color: #38bdf8;
-            margin-bottom: 10px;
+        .stat-box-label {
+            font-size: 10px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            font-weight: 600;
         }
 
-        .stat-label {
-            font-size: 14px;
-            color: #94a3b8;
-        }
-
+        /* Section */
         .section {
-            margin: 60px 0;
+            margin-bottom: 32px;
         }
 
         .section-title {
-            font-size: 32px;
-            margin-bottom: 30px;
-            text-align: center;
-            color: #38bdf8;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--border-primary);
         }
 
-        .tokenomics-grid {
+        .section-title::before {
+            content: '## ';
+            color: var(--accent-primary);
+        }
+
+        /* Info Cards Grid */
+        .info-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-top: 40px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
         }
 
-        .tokenomics-card {
-            background: #1e293b;
-            border: 1px solid #334155;
-            border-radius: 12px;
-            padding: 30px;
+        .info-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-secondary);
+            padding: 16px;
         }
 
-        .tokenomics-card h3 {
-            color: #38bdf8;
-            margin-bottom: 15px;
-            font-size: 24px;
+        .info-card h3 {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--accent-primary);
+            margin-bottom: 12px;
         }
 
-        .tokenomics-card ul {
+        .info-card h3::before {
+            content: '> ';
+        }
+
+        .info-card ul {
             list-style: none;
             padding: 0;
         }
 
-        .tokenomics-card li {
-            padding: 10px 0;
-            border-bottom: 1px solid #334155;
-            color: #cbd5e1;
+        .info-card li {
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border-secondary);
+            color: var(--text-secondary);
+            font-size: 12px;
         }
 
-        .tokenomics-card li:last-child {
+        .info-card li:last-child {
             border-bottom: none;
         }
 
-        .tokenomics-card li strong {
-            color: #38bdf8;
+        .info-card li strong {
+            color: var(--text-primary);
         }
 
+        /* List Items */
+        .item-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 12px;
+        }
+
+        .item {
+            background: var(--bg-secondary);
+            border-left: 3px solid var(--accent-primary);
+            padding: 12px 16px;
+            border-top: 1px solid var(--border-secondary);
+            border-right: 1px solid var(--border-secondary);
+            border-bottom: 1px solid var(--border-secondary);
+        }
+
+        .item h4 {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .item p {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        /* CTA Section */
         .cta-section {
+            background: var(--bg-tertiary);
+            border: 2px solid var(--border-primary);
+            padding: 32px;
             text-align: center;
-            padding: 60px 20px;
-            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-            border-radius: 20px;
-            margin: 60px 0;
+            margin-bottom: 32px;
+        }
+
+        .cta-section h2 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+
+        .cta-section p {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .cta-buttons {
             display: flex;
-            gap: 20px;
+            gap: 12px;
             justify-content: center;
             flex-wrap: wrap;
-            margin-top: 30px;
         }
 
         .btn {
-            padding: 15px 30px;
-            border-radius: 8px;
+            padding: 8px 20px;
+            border-radius: 0;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 700;
+            transition: all 0.1s;
+            border: 1px solid var(--border-primary);
+            font-family: inherit;
+            text-transform: uppercase;
             text-decoration: none;
-            font-weight: bold;
-            font-size: 16px;
-            transition: all 0.3s;
-            border: 2px solid;
+            display: inline-block;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%);
-            border-color: #38bdf8;
-            color: #0f172a;
+            background: var(--accent-primary);
+            color: var(--bg-secondary);
+            border-color: var(--accent-primary);
         }
 
         .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(56, 189, 248, 0.4);
+            background: var(--accent-hover);
+            border-color: var(--accent-hover);
         }
 
         .btn-secondary {
-            background: transparent;
-            border-color: #38bdf8;
-            color: #38bdf8;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border-color: var(--border-primary);
         }
 
         .btn-secondary:hover {
-            background: #38bdf8;
-            color: #0f172a;
+            background: var(--accent-hover);
+            color: var(--bg-secondary);
         }
 
-        .utility-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
-            margin-top: 40px;
-        }
-
-        .utility-item {
-            background: #1e293b;
-            border-left: 4px solid #38bdf8;
-            padding: 25px;
-            border-radius: 8px;
-        }
-
-        .utility-item h4 {
-            color: #38bdf8;
-            margin-bottom: 10px;
-            font-size: 18px;
-        }
-
-        .utility-item p {
-            color: #cbd5e1;
-            font-size: 14px;
-        }
-
-        .roadmap {
-            margin: 60px 0;
-        }
-
+        /* Roadmap */
         .roadmap-item {
-            background: #1e293b;
-            border: 1px solid #334155;
-            border-radius: 12px;
-            padding: 30px;
-            margin-bottom: 20px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-secondary);
+            padding: 16px 16px 16px 48px;
+            margin-bottom: 12px;
             position: relative;
-            padding-left: 60px;
         }
 
         .roadmap-item::before {
-            content: "✓";
+            content: '[x]';
             position: absolute;
-            left: 20px;
-            top: 30px;
-            width: 30px;
-            height: 30px;
-            background: #38bdf8;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #0f172a;
-            font-weight: bold;
+            left: 16px;
+            top: 16px;
+            color: var(--accent-primary);
+            font-weight: 700;
+            font-size: 12px;
         }
 
         .roadmap-item.pending::before {
-            content: "○";
-            background: transparent;
-            border: 2px solid #38bdf8;
-            color: #38bdf8;
+            content: '[ ]';
+            color: var(--text-muted);
         }
 
         .roadmap-item h4 {
-            color: #38bdf8;
-            margin-bottom: 10px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
         }
 
-        footer {
+        .roadmap-item p {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        /* Footer */
+        .footer {
+            padding: 16px 24px;
+            background: var(--bg-secondary);
+            border-top: 2px solid var(--border-primary);
             text-align: center;
-            padding: 40px 20px;
-            border-top: 2px solid #334155;
-            margin-top: 60px;
-            color: #64748b;
+            color: var(--text-secondary);
+            font-size: 10px;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
         }
 
-        footer a {
-            color: #38bdf8;
+        .footer a {
+            color: var(--accent-primary);
             text-decoration: none;
+            font-weight: 600;
         }
 
-        footer a:hover {
+        .footer a::before {
+            content: '[';
+            color: var(--border-primary);
+        }
+
+        .footer a::after {
+            content: ']';
+            color: var(--border-primary);
+        }
+
+        .footer a:hover {
             text-decoration: underline;
+        }
+
+        .disclaimer {
+            margin-top: 16px;
+            padding: 12px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-secondary);
+            font-size: 10px;
+            color: var(--text-muted);
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .header-actions {
+                flex-wrap: wrap;
+            }
+
+            .ascii-logo pre {
+                font-size: 6px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .main-content {
+                padding: 16px;
+            }
         }
     </style>
 </head>
+
 <body>
     <div class="container">
-        <header>
-            <div class="logo-section">
-                <img src="/logo-idl.jpg" alt="$IDL Token Logo" class="logo">
-            </div>
-            <h1>$IDL TOKEN</h1>
-            <p class="subtitle">The IDLHub Memecoin - No Utility, Just Vibes</p>
-
-            <div class="ca">
-                <div class="ca-label">CONTRACT ADDRESS</div>
-                <div class="ca-address" onclick="copyCA()">8zdhHxthCFoigAGw4QRxWfXUWLY1KkMZ1r7CTcmiBAGS</div>
-            </div>
-        </header>
-
-        <div class="stats">
-            <div class="stat-card">
-                <div class="stat-value">1B</div>
-                <div class="stat-label">Total Supply</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value">164</div>
-                <div class="stat-label">IDLs in Registry</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value">5%</div>
-                <div class="stat-label">Dev Allocation</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value">$0</div>
-                <div class="stat-label">Actual Utility</div>
+        <div class="header">
+            <div class="header-content">
+                <div class="header-left">
+                    <div>
+                        <h1>$IDL Token - idlhub.com</h1>
+                        <p>The IDLHub Memecoin - No Utility, Just Vibes</p>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <a href="/" class="nav-btn">
+                        <span>Home</span>
+                    </a>
+                    <a href="docs.html" class="nav-btn">
+                        <span>API</span>
+                    </a>
+                    <div class="theme-selector">
+                        <button class="theme-btn" id="themeBtn">
+                            <span>Theme</span>
+                        </button>
+                        <div class="theme-dropdown" id="themeDropdown">
+                            <div class="theme-option" data-theme="light">Light</div>
+                            <div class="theme-option" data-theme="monokai-light">Monokai Light</div>
+                            <div class="theme-option" data-theme="solarized-light">Solarized Light</div>
+                            <div class="theme-option" data-theme="dark">Dark</div>
+                            <div class="theme-option" data-theme="solarized">Solarized Dark</div>
+                            <div class="theme-option" data-theme="night">Night</div>
+                            <div class="theme-option" data-theme="dracula">Dracula</div>
+                            <div class="theme-option" data-theme="nord">Nord</div>
+                            <div class="theme-option" data-theme="onedark">One Dark</div>
+                            <div class="theme-option" data-theme="terminal">Terminal</div>
+                            <div class="theme-option" data-theme="dos">DOS / Borland</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <section class="section">
-            <h2 class="section-title">Tokenomics</h2>
+        <div class="main-content">
+            <div class="ascii-logo">
+                <pre>
+     ___ ____  _
+    |_ _|  _ \| |
+     | || | | | |
+     | || |_| | |___
+    |___|____/|_____|
 
-            <div class="tokenomics-grid">
-                <div class="tokenomics-card">
-                    <h3>📊 Supply Distribution</h3>
-                    <ul>
-                        <li><strong>Total Supply:</strong> 1,000,000,000 $IDL</li>
-                        <li><strong>Circulating:</strong> 950,000,000 $IDL (95%)</li>
-                        <li><strong>Team:</strong> 50,000,000 $IDL (5%)</li>
-                        <li><strong>Liquidity:</strong> Locked on Pump.fun</li>
-                        <li><strong>Contract:</strong> Renounced ✓</li>
-                    </ul>
-                </div>
-
-                <div class="tokenomics-card">
-                    <h3>🎯 What You Get</h3>
-                    <ul>
-                        <li><strong>IDLHub:</strong> Free forever</li>
-                        <li><strong>API:</strong> Free forever</li>
-                        <li><strong>MCP Server:</strong> Free forever</li>
-                        <li><strong>Holding $IDL:</strong> Bragging rights</li>
-                        <li><strong>That's it:</strong> It's a memecoin</li>
-                    </ul>
-                </div>
-
-                <div class="tokenomics-card">
-                    <h3>💎 The Truth</h3>
-                    <ul>
-                        <li><strong>No utility:</strong> Just a fun token</li>
-                        <li><strong>No promises:</strong> Won't pretend otherwise</li>
-                        <li><strong>Free tools:</strong> IDLHub is free for everyone</li>
-                        <li><strong>Support project:</strong> Buy if you like what we do</li>
-                        <li><strong>DYOR:</strong> Seriously, it's a memecoin</li>
-                    </ul>
-                </div>
-            </div>
-        </section>
-
-        <section class="section">
-            <h2 class="section-title">Why Buy $IDL?</h2>
-
-            <div class="utility-grid">
-                <div class="utility-item">
-                    <h4>🚀 Support IDLHub</h4>
-                    <p>Like the free tools? Buy $IDL to support development. That's it. No fake promises.</p>
-                </div>
-
-                <div class="utility-item">
-                    <h4>📈 Speculation</h4>
-                    <p>Think IDLHub will grow? Speculate on the memecoin. Could go up, could go down, could rug.</p>
-                </div>
-
-                <div class="utility-item">
-                    <h4>🎭 Meme Value</h4>
-                    <p>Own the token for the largest Solana IDL registry. Show it off. That's the utility.</p>
-                </div>
-
-                <div class="utility-item">
-                    <h4>💎 Diamond Hands</h4>
-                    <p>Hold if you believe in open-source tooling for Solana devs. Or don't. Up to you.</p>
-                </div>
-
-                <div class="utility-item">
-                    <h4>🤝 Community</h4>
-                    <p>Join other degens who appreciate good dev tools. Maybe we'll build something cool together.</p>
-                </div>
-
-                <div class="utility-item">
-                    <h4>⚠️ Or Don't Buy</h4>
-                    <p>IDLHub is free. You don't need the token. Only buy if you want to support or speculate.</p>
-                </div>
-            </div>
-        </section>
-
-        <section class="cta-section">
-            <h2 style="font-size: 36px; margin-bottom: 20px;">Buy $IDL or Don't</h2>
-            <p style="font-size: 18px; color: #94a3b8; max-width: 600px; margin: 0 auto;">
-                It's a memecoin. IDLHub is free either way. Only buy if you want to support the project or speculate.
-            </p>
-
-            <div class="cta-buttons">
-                <a href="https://pump.fun/coin/8zdhHxthCFoigAGw4QRxWfXUWLY1KkMZ1r7CTcmiBAGS" class="btn btn-primary" target="_blank">
-                    🚀 Buy on Pump.fun
-                </a>
-                <a href="https://dexscreener.com/solana/8zdhHxthCFoigAGw4QRxWfXUWLY1KkMZ1r7CTcmiBAGS" class="btn btn-secondary" target="_blank">
-                    📊 View Chart
-                </a>
-                <a href="/" class="btn btn-secondary">
-                    🏠 Back to IDLHub
-                </a>
-            </div>
-        </section>
-
-        <section class="roadmap">
-            <h2 class="section-title">Roadmap</h2>
-
-            <div class="roadmap-item">
-                <h4>Now - Reality</h4>
-                <p>Token exists • 164 IDLs in registry • Free MCP API • Open source tools • That's it, that's the roadmap</p>
+    TOKEN
+                </pre>
             </div>
 
-            <div class="roadmap-item pending">
-                <h4>Future - Maybe</h4>
-                <p>Add more IDLs • Improve tools • Keep it free • No promises on token utility because there is none</p>
+            <div class="token-title">
+                <h2>$IDL TOKEN</h2>
+                <p>The native memecoin of IDLHub - Solana's largest IDL registry</p>
             </div>
-        </section>
 
-        <footer>
-            <p>&copy; 2024 IDLHub. Built on Solana. Community-driven.</p>
+            <div class="ca-box">
+                <div class="ca-label">Contract Address</div>
+                <div class="ca-address" onclick="copyCA()" title="Click to copy">
+                    8zdhHxthCFoigAGw4QRxWfXUWLY1KkMZ1r7CTcmiBAGS
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-box-value">1B</div>
+                    <div class="stat-box-label">Total Supply</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-box-value">164</div>
+                    <div class="stat-box-label">IDLs in Registry</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-box-value">5%</div>
+                    <div class="stat-box-label">Dev Allocation</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-box-value">$0</div>
+                    <div class="stat-box-label">Actual Utility</div>
+                </div>
+            </div>
+
+            <section class="section">
+                <h2 class="section-title">Tokenomics</h2>
+                <div class="info-grid">
+                    <div class="info-card">
+                        <h3>Supply Distribution</h3>
+                        <ul>
+                            <li><strong>Total Supply:</strong> 1,000,000,000 $IDL</li>
+                            <li><strong>Circulating:</strong> 950,000,000 $IDL (95%)</li>
+                            <li><strong>Team:</strong> 50,000,000 $IDL (5%)</li>
+                            <li><strong>Liquidity:</strong> Locked on Pump.fun</li>
+                            <li><strong>Contract:</strong> Renounced [x]</li>
+                        </ul>
+                    </div>
+                    <div class="info-card">
+                        <h3>What You Get</h3>
+                        <ul>
+                            <li><strong>IDLHub:</strong> Free forever</li>
+                            <li><strong>API:</strong> Free forever</li>
+                            <li><strong>MCP Server:</strong> Free forever</li>
+                            <li><strong>Holding $IDL:</strong> Bragging rights</li>
+                            <li><strong>That's it:</strong> It's a memecoin</li>
+                        </ul>
+                    </div>
+                    <div class="info-card">
+                        <h3>The Truth</h3>
+                        <ul>
+                            <li><strong>No utility:</strong> Just a fun token</li>
+                            <li><strong>No promises:</strong> Won't pretend otherwise</li>
+                            <li><strong>Free tools:</strong> IDLHub is free for everyone</li>
+                            <li><strong>Support project:</strong> Buy if you like what we do</li>
+                            <li><strong>DYOR:</strong> Seriously, it's a memecoin</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <h2 class="section-title">Why Buy $IDL?</h2>
+                <div class="item-list">
+                    <div class="item">
+                        <h4>> Support IDLHub</h4>
+                        <p>Like the free tools? Buy $IDL to support development. That's it. No fake promises.</p>
+                    </div>
+                    <div class="item">
+                        <h4>> Speculation</h4>
+                        <p>Think IDLHub will grow? Speculate on the memecoin. Could go up, could go down.</p>
+                    </div>
+                    <div class="item">
+                        <h4>> Meme Value</h4>
+                        <p>Own the token for the largest Solana IDL registry. Show it off. That's the utility.</p>
+                    </div>
+                    <div class="item">
+                        <h4>> Diamond Hands</h4>
+                        <p>Hold if you believe in open-source tooling for Solana devs. Or don't. Up to you.</p>
+                    </div>
+                    <div class="item">
+                        <h4>> Community</h4>
+                        <p>Join other degens who appreciate good dev tools. Maybe we'll build something cool.</p>
+                    </div>
+                    <div class="item">
+                        <h4>> Or Don't Buy</h4>
+                        <p>IDLHub is free. You don't need the token. Only buy if you want to support or speculate.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cta-section">
+                <h2>Buy $IDL or Don't</h2>
+                <p>It's a memecoin. IDLHub is free either way. Only buy if you want to support the project or speculate.</p>
+                <div class="cta-buttons">
+                    <a href="https://pump.fun/coin/8zdhHxthCFoigAGw4QRxWfXUWLY1KkMZ1r7CTcmiBAGS" class="btn btn-primary" target="_blank">
+                        Buy on Pump.fun
+                    </a>
+                    <a href="https://dexscreener.com/solana/8zdhHxthCFoigAGw4QRxWfXUWLY1KkMZ1r7CTcmiBAGS" class="btn btn-secondary" target="_blank">
+                        View Chart
+                    </a>
+                    <a href="/" class="btn btn-secondary">
+                        Back to IDLHub
+                    </a>
+                </div>
+            </section>
+
+            <section class="section">
+                <h2 class="section-title">Roadmap</h2>
+                <div class="roadmap-item">
+                    <h4>Now - Reality</h4>
+                    <p>Token exists | 164 IDLs in registry | Free MCP API | Open source tools | That's it, that's the roadmap</p>
+                </div>
+                <div class="roadmap-item pending">
+                    <h4>Future - Maybe</h4>
+                    <p>Add more IDLs | Improve tools | Keep it free | No promises on token utility because there is none</p>
+                </div>
+            </section>
+
+            <div class="disclaimer">
+                <strong>DISCLAIMER:</strong> $IDL is a memecoin with zero utility. Could go to zero. IDLHub is free regardless. DYOR. NFA. Not financial advice. Don't invest more than you can afford to lose.
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>(c) 2024 IDLHub. Built on Solana. Community-driven.</p>
             <p style="margin-top: 10px;">
-                <a href="/">Home</a> •
-                <a href="https://github.com/openSVM/idlhub" target="_blank">GitHub</a> •
-                <a href="https://twitter.com/idlhub" target="_blank">Twitter</a> •
+                <a href="/">Home</a> |
+                <a href="https://github.com/openSVM/idlhub" target="_blank">GitHub</a> |
+                <a href="https://twitter.com/idlhub" target="_blank">Twitter</a> |
                 <a href="/api/mcp">API</a>
             </p>
-            <p style="margin-top: 20px; font-size: 12px; color: #475569;">
-                Disclaimer: $IDL is a memecoin with zero utility. Could go to zero. IDLHub is free regardless. DYOR. NFA.
-            </p>
-        </footer>
+        </div>
     </div>
 
     <script>
+        let currentTheme = 'light';
+
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('idlhub-theme');
+            if (savedTheme) {
+                currentTheme = savedTheme;
+            }
+            applyTheme(currentTheme);
+        }
+
+        function applyTheme(theme) {
+            currentTheme = theme;
+            if (theme === 'light') {
+                document.documentElement.removeAttribute('data-theme');
+            } else {
+                document.documentElement.setAttribute('data-theme', theme);
+            }
+            updateThemeSelector();
+        }
+
+        function saveTheme(theme) {
+            localStorage.setItem('idlhub-theme', theme);
+            applyTheme(theme);
+        }
+
+        function updateThemeSelector() {
+            const options = document.querySelectorAll('.theme-option');
+            options.forEach(option => {
+                if (option.dataset.theme === currentTheme) {
+                    option.classList.add('selected');
+                } else {
+                    option.classList.remove('selected');
+                }
+            });
+        }
+
+        function toggleThemeDropdown() {
+            const dropdown = document.getElementById('themeDropdown');
+            dropdown.classList.toggle('active');
+        }
+
+        document.addEventListener('click', (e) => {
+            const themeSelector = document.querySelector('.theme-selector');
+            const dropdown = document.getElementById('themeDropdown');
+            if (themeSelector && !themeSelector.contains(e.target)) {
+                dropdown.classList.remove('active');
+            }
+        });
+
+        document.getElementById('themeBtn').addEventListener('click', toggleThemeDropdown);
+
+        document.querySelectorAll('.theme-option').forEach(option => {
+            option.addEventListener('click', (e) => {
+                const theme = e.target.dataset.theme;
+                saveTheme(theme);
+                document.getElementById('themeDropdown').classList.remove('active');
+            });
+        });
+
         function copyCA() {
             const ca = '8zdhHxthCFoigAGw4QRxWfXUWLY1KkMZ1r7CTcmiBAGS';
             navigator.clipboard.writeText(ca).then(() => {
-                alert('Contract address copied to clipboard!');
+                const el = document.querySelector('.ca-address');
+                const original = el.textContent;
+                el.textContent = 'Copied!';
+                setTimeout(() => {
+                    el.textContent = original;
+                }, 2000);
             });
         }
+
+        loadTheme();
     </script>
 </body>
+
 </html>

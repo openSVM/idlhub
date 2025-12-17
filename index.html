@@ -1273,17 +1273,17 @@
                     </div>
                 </div>
                 <div class="header-actions">
-                    <a href="tokenomics.html" class="bookmark-btn" style="text-decoration: none; display: inline-flex; align-items: center; gap: 6px; background: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%); color: #0f172a; font-weight: bold;">
-                        <span>💎 $IDL</span>
+                    <a href="tokenomics.html" class="bookmark-btn" style="text-decoration: none;">
+                        <span>$IDL</span>
                     </a>
                     <button class="bookmark-btn" id="addIdlBtn" title="Add new IDL to registry">
-                        <span>➕ Add IDL</span>
+                        <span>+ Add IDL</span>
                     </button>
                     <a href="docs.html" class="bookmark-btn" style="text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
                         <span>API</span>
                     </a>
                     <button class="bookmark-btn" id="copyRulesBtn" title="Copy instructions for AI agents">
-                        <span>📋 Copy Rules</span>
+                        <span>Copy Rules</span>
                     </button>
                     <div class="theme-selector">
                         <button class="theme-btn" id="themeBtn">
@@ -1371,7 +1371,7 @@
     <div class="modal-overlay" id="addIdlModal">
         <div class="modal">
             <div class="modal-header">
-                <h2>➕ Add New IDL</h2>
+                <h2>+ Add New IDL</h2>
                 <button class="modal-close" id="closeModal">×</button>
             </div>
             <div class="modal-body">
@@ -1839,7 +1839,6 @@
             if (filteredProtocols.length === 0) {
                 container.innerHTML = `
                     <div class="no-results">
-                        <div class="no-results-icon">🔍</div>
                         <h3>No protocols found</h3>
                         <p>Try adjusting your search or filters</p>
                     </div>
@@ -2102,7 +2101,7 @@ Use these instructions to help users interact with IDLHub effectively. The servi
                 await navigator.clipboard.writeText(rulesText);
                 const btn = document.getElementById('copyRulesBtn');
                 const originalText = btn.innerHTML;
-                btn.innerHTML = '<span>✅ Copied!</span>';
+                btn.innerHTML = '<span>[OK] Copied!</span>';
                 setTimeout(() => {
                     btn.innerHTML = originalText;
                 }, 2000);
