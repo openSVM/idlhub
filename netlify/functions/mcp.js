@@ -9,18 +9,43 @@ const METHOD_NOT_FOUND = -32601;
 const INVALID_PARAMS = -32602;
 const INTERNAL_ERROR = -32603;
 
-// Load index.json at cold start
+// Load index.json from GitHub
 let indexData = null;
 
-function loadIndex() {
+function fetchJSON(url) {
+  return new Promise((resolve, reject) => {
+    https.get(url, (res) => {
+      let data = '';
+      res.on('data', chunk => data += chunk);
+      res.on('end', () => {
+        try {
+          resolve(JSON.parse(data));
+        } catch (e) {
+          reject(new Error('Failed to parse JSON'));
+        }
+      });
+    }).on('error', reject);
+  });
+}
+
+async function loadIndex() {
   if (indexData) return indexData;
+
   try {
+    // Try to load from filesystem first (for local testing)
     const indexPath = path.join(__dirname, '..', '..', 'index.json');
     indexData = JSON.parse(fs.readFileSync(indexPath, 'utf-8'));
     return indexData;
   } catch (e) {
-    console.error('Failed to load index.json:', e);
-    return { protocols: [] };
+    // Fallback to GitHub
+    try {
+      const url = 'https://raw.githubusercontent.com/openSVM/idlhub/main/index.json';
+      indexData = await fetchJSON(url);
+      return indexData;
+    } catch (err) {
+      console.error('Failed to load index.json:', err);
+      return { protocols: [] };
+    }
   }
 }
 
@@ -148,7 +173,7 @@ function fetchIDL(idlPath) {
 
 // Tool handlers
 async function handleListSchemas(args) {
-  const index = loadIndex();
+  const index = await loadIndex();
   let protocols = index.protocols || [];
 
   if (args.category) {
@@ -178,7 +203,7 @@ async function handleListSchemas(args) {
 }
 
 async function handleGetSchema(args) {
-  const index = loadIndex();
+  const index = await loadIndex();
   const protocol = index.protocols?.find(p => p.id === args.protocol_id);
 
   if (!protocol) {
@@ -195,7 +220,7 @@ async function handleGetSchema(args) {
 }
 
 async function handleLookupSymbol(args) {
-  const index = loadIndex();
+  const index = await loadIndex();
   const protocol = index.protocols?.find(p => p.id === args.protocol_id);
 
   if (!protocol) {
@@ -235,7 +260,7 @@ async function handleLookupSymbol(args) {
 }
 
 async function handleGenerateCode(args) {
-  const index = loadIndex();
+  const index = await loadIndex();
   const protocol = index.protocols?.find(p => p.id === args.protocol_id);
 
   if (!protocol) {
@@ -342,7 +367,7 @@ function mapTypeToPython(type) {
 }
 
 async function handleValidateIdl(args) {
-  const index = loadIndex();
+  const index = await loadIndex();
   const protocol = index.protocols?.find(p => p.id === args.protocol_id);
 
   if (!protocol) {
@@ -484,7 +509,7 @@ async function handleRequest(request) {
         result = await handleToolsCall(params.name, params.arguments || {});
         break;
       case 'resources/list':
-        const index = loadIndex();
+        const index = await loadIndex();
         result = {
           resources: (index.protocols || [])
             .filter(p => p.status === 'available')
