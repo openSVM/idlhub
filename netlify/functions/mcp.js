@@ -33,22 +33,13 @@ async function loadIndex() {
   if (indexData) return indexData;
 
   try {
-    // Load from OpenSVM API
-    const url = `${OPENSVM_API_BASE}/programs`;
-    const data = await fetchJSON(url);
-    indexData = { protocols: data.protocols || [] };
+    // Load directly from GitHub (OpenSVM API not deployed yet)
+    const url = 'https://raw.githubusercontent.com/openSVM/idlhub/main/index.json';
+    indexData = await fetchJSON(url);
     return indexData;
   } catch (e) {
-    console.error('Failed to load from OpenSVM API:', e);
-    // Fallback to GitHub
-    try {
-      const url = 'https://raw.githubusercontent.com/openSVM/idlhub/main/index.json';
-      indexData = await fetchJSON(url);
-      return indexData;
-    } catch (err) {
-      console.error('Failed to load index.json:', err);
-      return { protocols: [] };
-    }
+    console.error('Failed to load index.json from GitHub:', e);
+    return { protocols: [] };
   }
 }
 
@@ -156,23 +147,15 @@ const tools = [
   },
 ];
 
-// Helper to fetch IDL from OpenSVM API or GitHub
+// Helper to fetch IDL from GitHub (OpenSVM API not deployed yet)
 async function fetchIDL(protocolId) {
-  try {
-    // Try OpenSVM API first
-    const url = `${OPENSVM_API_BASE}/programs/${protocolId}/idl`;
-    return await fetchJSON(url);
-  } catch (e) {
-    console.error(`Failed to load from OpenSVM API for ${protocolId}:`, e);
-    // Fallback to GitHub using protocol metadata
-    const index = await loadIndex();
-    const protocol = index.protocols.find(p => p.id === protocolId);
-    if (!protocol || !protocol.idlPath) {
-      throw new Error(`Protocol ${protocolId} not found or missing IDL path`);
-    }
-    const githubUrl = `https://raw.githubusercontent.com/openSVM/idlhub/main/${protocol.idlPath}`;
-    return await fetchJSON(githubUrl);
+  const index = await loadIndex();
+  const protocol = index.protocols.find(p => p.id === protocolId);
+  if (!protocol || !protocol.idlPath) {
+    throw new Error(`Protocol ${protocolId} not found or missing IDL path`);
   }
+  const githubUrl = `https://raw.githubusercontent.com/openSVM/idlhub/main/${protocol.idlPath}`;
+  return await fetchJSON(githubUrl);
 }
 
 // Tool handlers
