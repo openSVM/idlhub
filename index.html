@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>idlhub.com - Solana IDL Registry</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <style>
         :root {
             /* Light Theme (Default) */
@@ -1728,15 +1729,18 @@
 
         // Load index.json and initialize
         async function init() {
+            console.log('[IDLHub] Initializing...');
             loadTheme();
             loadBookmarks();
             try {
                 // Use MCP API to load schemas
+                console.log('[IDLHub] Fetching schemas from MCP API...');
                 const data = await listSchemas();
+                console.log('[IDLHub] Loaded', data.total, 'protocols');
                 allProtocols = data.protocols;
                 filteredProtocols = allProtocols;
 
-                // Build program address map
+                // Build program address map (disabled for performance)
                 await buildAddressMap();
 
                 updateStats();
@@ -1747,11 +1751,14 @@
 
                 // Only render protocols if on main view
                 if (!window.location.hash.startsWith('#/')) {
+                    console.log('[IDLHub] Rendering protocols...');
                     renderProtocols();
                 }
 
                 setupEventListeners();
+                console.log('[IDLHub] Initialization complete');
             } catch (error) {
+                console.error('[IDLHub] Init error:', error);
                 document.getElementById('protocolsList').innerHTML = `
                     <div class="no-results">
                         <h3>Failed to load protocols</h3>
