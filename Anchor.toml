@@ -3,19 +3,19 @@ seeds = false
 skip-lint = false
 
 [programs.localnet]
-idl_protocol = "IDLpro111111111111111111111111111111111111"
+idl_protocol = "BSn7neicVV2kEzgaZmd6tZEBm4tdgzBRyELov65Lq7dt"
 
 [programs.devnet]
-idl_protocol = "IDLpro111111111111111111111111111111111111"
+idl_protocol = "BSn7neicVV2kEzgaZmd6tZEBm4tdgzBRyELov65Lq7dt"
 
 [programs.mainnet]
-idl_protocol = "IDLpro111111111111111111111111111111111111"
+idl_protocol = "BSn7neicVV2kEzgaZmd6tZEBm4tdgzBRyELov65Lq7dt"
 
 [registry]
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "localnet"
+cluster = "devnet"
 wallet = "~/.config/solana/id.json"
 
 [scripts]

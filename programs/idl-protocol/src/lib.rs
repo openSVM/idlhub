@@ -1,38 +1,30 @@
 use anchor_lang::prelude::*;
-use anchor_spl::token::{self, Mint, Token, TokenAccount, Transfer, Burn};
-use anchor_lang::solana_program::sysvar::rent::Rent;
 
-// The actual $IDL token on bags.fm
-// CA: 8zdhHxthCFoigAGw4QRxWfXUWLY1KkMZ1r7CTcmiBAGS
-declare_id!("IDLStake11111111111111111111111111111111111");
-
-pub const IDL_TOKEN_MINT: &str = "8zdhHxthCFoigAGw4QRxWfXUWLY1KkMZ1r7CTcmiBAGS";
+declare_id!("BSn7neicVV2kEzgaZmd6tZEBm4tdgzBRyELov65Lq7dt");
 
 // Constants
 pub const MAX_LOCK_DURATION: i64 = 126144000; // 4 years in seconds
 pub const MIN_LOCK_DURATION: i64 = 604800; // 1 week minimum
-
-// Volume Badge Tiers (in USD value traded on bags.fm)
-// Badge holders get veIDL without locking - reward for generating volume
-pub const BADGE_TIER_BRONZE: u64 = 1_000;        // $1k volume
-pub const BADGE_TIER_SILVER: u64 = 10_000;       // $10k volume
-pub const BADGE_TIER_GOLD: u64 = 100_000;        // $100k volume
-pub const BADGE_TIER_PLATINUM: u64 = 500_000;    // $500k volume
-pub const BADGE_TIER_DIAMOND: u64 = 1_000_000;   // $1M volume
-
-// veIDL granted per badge tier (equivalent lock time in voting power)
-pub const BADGE_VEIDL_BRONZE: u64 = 50_000;      // ~1 week lock equivalent
-pub const BADGE_VEIDL_SILVER: u64 = 250_000;     // ~1 month lock equivalent
-pub const BADGE_VEIDL_GOLD: u64 = 1_000_000;     // ~3 month lock equivalent
-pub const BADGE_VEIDL_PLATINUM: u64 = 5_000_000; // ~1 year lock equivalent
-pub const BADGE_VEIDL_DIAMOND: u64 = 20_000_000; // ~4 year lock equivalent
 pub const BET_FEE_BPS: u64 = 300; // 3% fee on winning bets
 pub const STAKER_FEE_SHARE_BPS: u64 = 5000; // 50% of fees to stakers
 pub const CREATOR_FEE_SHARE_BPS: u64 = 2500; // 25% to market creator
 pub const TREASURY_FEE_SHARE_BPS: u64 = 1500; // 15% to treasury
 pub const BURN_FEE_SHARE_BPS: u64 = 1000; // 10% burned
 
-// Staking multiplier: 1M IDL staked = 1% bonus, max 50%
+// Volume Badge Tiers (in USD value traded)
+pub const BADGE_TIER_BRONZE: u64 = 1_000;
+pub const BADGE_TIER_SILVER: u64 = 10_000;
+pub const BADGE_TIER_GOLD: u64 = 100_000;
+pub const BADGE_TIER_PLATINUM: u64 = 500_000;
+pub const BADGE_TIER_DIAMOND: u64 = 1_000_000;
+
+// veIDL granted per badge tier
+pub const BADGE_VEIDL_BRONZE: u64 = 50_000;
+pub const BADGE_VEIDL_SILVER: u64 = 250_000;
+pub const BADGE_VEIDL_GOLD: u64 = 1_000_000;
+pub const BADGE_VEIDL_PLATINUM: u64 = 5_000_000;
+pub const BADGE_VEIDL_DIAMOND: u64 = 20_000_000;
+
 pub const STAKE_BONUS_PER_MILLION: u64 = 100; // 1% in bps
 pub const MAX_STAKE_BONUS_BPS: u64 = 5000; // 50% max
 
@@ -40,19 +32,14 @@ pub const MAX_STAKE_BONUS_BPS: u64 = 5000; // 50% max
 pub mod idl_protocol {
     use super::*;
 
-    // ==================== INITIALIZATION ====================
-
     /// Initialize the protocol - call once
-    pub fn initialize(
-        ctx: Context<Initialize>,
-    ) -> Result<()> {
+    pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
         let state = &mut ctx.accounts.state;
         state.authority = ctx.accounts.authority.key();
         state.treasury = ctx.accounts.treasury.key();
-        state.idl_mint = ctx.accounts.idl_mint.key();
         state.total_staked = 0;
         state.total_ve_supply = 0;
-        state.reward_pool = 0; // Fees collected for staker rewards
+        state.reward_pool = 0;
         state.total_fees_collected = 0;
         state.total_burned = 0;
         state.bump = ctx.bumps.state;
@@ -62,38 +49,7 @@ pub mod idl_protocol {
         Ok(())
     }
 
-    /// Initialize token vaults - call once after initialize
-    pub fn initialize_vaults(_ctx: Context<InitializeVaults>) -> Result<()> {
-        msg!("Stake and reward vaults initialized");
-        Ok(())
-    }
-
-    /// Deposit fees into reward pool (anyone can add rewards)
-    pub fn deposit_rewards(ctx: Context<DepositRewards>, amount: u64) -> Result<()> {
-        require!(amount > 0, IdlError::InvalidAmount);
-
-        let state = &mut ctx.accounts.state;
-
-        token::transfer(
-            CpiContext::new(
-                ctx.accounts.token_program.to_account_info(),
-                Transfer {
-                    from: ctx.accounts.depositor_idl.to_account_info(),
-                    to: ctx.accounts.reward_vault.to_account_info(),
-                    authority: ctx.accounts.depositor.to_account_info(),
-                },
-            ),
-            amount,
-        )?;
-
-        state.reward_pool = state.reward_pool.checked_add(amount).unwrap();
-        msg!("Deposited {} IDL to reward pool", amount);
-        Ok(())
-    }
-
-    // ==================== STAKING ====================
-
-    /// Stake IDL tokens - receive proportional share of reward pool
+    /// Stake IDL tokens (native SOL for devnet testing)
     pub fn stake(ctx: Context<Stake>, amount: u64) -> Result<()> {
         require!(amount > 0, IdlError::InvalidAmount);
         require!(!ctx.accounts.state.paused, IdlError::ProtocolPaused);
@@ -101,116 +57,48 @@ pub mod idl_protocol {
         let state = &mut ctx.accounts.state;
         let staker = &mut ctx.accounts.staker_account;
 
-        // Transfer IDL from user to vault
-        token::transfer(
-            CpiContext::new(
-                ctx.accounts.token_program.to_account_info(),
-                Transfer {
-                    from: ctx.accounts.user_idl.to_account_info(),
-                    to: ctx.accounts.stake_vault.to_account_info(),
-                    authority: ctx.accounts.user.to_account_info(),
-                },
-            ),
-            amount,
-        )?;
-
-        // Update staker account
+        // Initialize staker if new
         if staker.owner == Pubkey::default() {
             staker.owner = ctx.accounts.user.key();
+            staker.bump = ctx.bumps.staker_account;
         }
+
         staker.staked_amount = staker.staked_amount.checked_add(amount).unwrap();
         staker.last_stake_timestamp = Clock::get()?.unix_timestamp;
-        staker.bump = ctx.bumps.staker_account;
-
-        // Update global state
         state.total_staked = state.total_staked.checked_add(amount).unwrap();
 
-        msg!("Staked {} IDL. Total staked: {}", amount, state.total_staked);
+        msg!("Staked {} tokens. Total staked: {}", amount, state.total_staked);
         Ok(())
     }
 
-    /// Unstake IDL tokens + claim proportional rewards
-    /// Cannot unstake if tokens are locked for veIDL
+    /// Unstake tokens
     pub fn unstake(ctx: Context<Unstake>, amount: u64) -> Result<()> {
         require!(amount > 0, IdlError::InvalidAmount);
 
-        let state = &mut ctx.accounts.state;
         let staker = &mut ctx.accounts.staker_account;
+        let state = &mut ctx.accounts.state;
 
         require!(staker.staked_amount >= amount, IdlError::InsufficientStake);
 
-        // Check if user has an active veIDL lock - prevents unstaking locked tokens
-        if let Some(ve_position) = &ctx.accounts.ve_position {
+        // Check for active veIDL lock
+        if ctx.accounts.ve_position.is_some() {
+            let ve = ctx.accounts.ve_position.as_ref().unwrap();
             let clock = Clock::get()?;
-            if clock.unix_timestamp < ve_position.lock_end {
-                // User has active lock - can only unstake unlocked portion
-                let unlocked_amount = staker.staked_amount.saturating_sub(ve_position.locked_stake);
-                require!(amount <= unlocked_amount, IdlError::TokensLocked);
+            if clock.unix_timestamp < ve.lock_end {
+                let unlocked = staker.staked_amount.saturating_sub(ve.locked_stake);
+                require!(amount <= unlocked, IdlError::TokensLocked);
             }
         }
 
-        // Calculate user's share of rewards
-        let user_reward = if state.total_staked > 0 && state.reward_pool > 0 {
-            (amount as u128)
-                .checked_mul(state.reward_pool as u128)
-                .unwrap()
-                .checked_div(state.total_staked as u128)
-                .unwrap() as u64
-        } else {
-            0
-        };
-
-        let total_to_return = amount.checked_add(user_reward).unwrap();
-
-        // Transfer from stake vault
-        let seeds = &[b"state".as_ref(), &[state.bump]];
-        let signer = &[&seeds[..]];
-
-        token::transfer(
-            CpiContext::new_with_signer(
-                ctx.accounts.token_program.to_account_info(),
-                Transfer {
-                    from: ctx.accounts.stake_vault.to_account_info(),
-                    to: ctx.accounts.user_idl.to_account_info(),
-                    authority: ctx.accounts.state.to_account_info(),
-                },
-                signer,
-            ),
-            amount, // Principal from stake vault
-        )?;
-
-        // Transfer rewards from reward vault if any
-        if user_reward > 0 {
-            token::transfer(
-                CpiContext::new_with_signer(
-                    ctx.accounts.token_program.to_account_info(),
-                    Transfer {
-                        from: ctx.accounts.reward_vault.to_account_info(),
-                        to: ctx.accounts.user_idl.to_account_info(),
-                        authority: ctx.accounts.state.to_account_info(),
-                    },
-                    signer,
-                ),
-                user_reward,
-            )?;
-            state.reward_pool = state.reward_pool.saturating_sub(user_reward);
-        }
-
-        // Update state
         staker.staked_amount = staker.staked_amount.saturating_sub(amount);
         state.total_staked = state.total_staked.saturating_sub(amount);
 
-        msg!("Unstaked {} IDL + {} rewards", amount, user_reward);
+        msg!("Unstaked {} tokens", amount);
         Ok(())
     }
 
-    // ==================== VOTE-ESCROWED TOKENS (veIDL) ====================
-
-    /// Lock staked IDL for veIDL voting power
-    pub fn lock_for_ve(
-        ctx: Context<LockForVe>,
-        lock_duration: i64,
-    ) -> Result<()> {
+    /// Lock staked tokens for veIDL voting power
+    pub fn lock_for_ve(ctx: Context<LockForVe>, lock_duration: i64) -> Result<()> {
         require!(!ctx.accounts.state.paused, IdlError::ProtocolPaused);
         require!(
             lock_duration >= MIN_LOCK_DURATION && lock_duration <= MAX_LOCK_DURATION,
@@ -225,7 +113,6 @@ pub mod idl_protocol {
         require!(staker.staked_amount > 0, IdlError::InsufficientStake);
 
         // veIDL = staked * (lock_duration / max_duration)
-        // 4 year lock = 1:1, 1 year = 0.25:1
         let ve_amount = (staker.staked_amount as u128)
             .checked_mul(lock_duration as u128)
             .unwrap()
@@ -241,25 +128,17 @@ pub mod idl_protocol {
 
         state.total_ve_supply = state.total_ve_supply.checked_add(ve_amount).unwrap();
 
-        msg!(
-            "Locked {} staked IDL for {} veIDL until {}",
-            staker.staked_amount,
-            ve_amount,
-            ve_position.lock_end
-        );
+        msg!("Locked {} for {} veIDL until {}", staker.staked_amount, ve_amount, ve_position.lock_end);
         Ok(())
     }
 
-    /// Unlock expired veIDL position (allows unstaking again)
+    /// Unlock expired veIDL position
     pub fn unlock_ve(ctx: Context<UnlockVe>) -> Result<()> {
         let state = &mut ctx.accounts.state;
         let ve_position = &ctx.accounts.ve_position;
         let clock = Clock::get()?;
 
-        require!(
-            clock.unix_timestamp >= ve_position.lock_end,
-            IdlError::LockNotExpired
-        );
+        require!(clock.unix_timestamp >= ve_position.lock_end, IdlError::LockNotExpired);
 
         state.total_ve_supply = state.total_ve_supply.saturating_sub(ve_position.ve_amount);
 
@@ -267,9 +146,7 @@ pub mod idl_protocol {
         Ok(())
     }
 
-    // ==================== PREDICTION MARKETS ====================
-
-    /// Create a prediction market for a protocol metric
+    /// Create a prediction market
     pub fn create_market(
         ctx: Context<CreateMarket>,
         protocol_id: String,
@@ -284,12 +161,11 @@ pub mod idl_protocol {
 
         let clock = Clock::get()?;
         require!(
-            resolution_timestamp > clock.unix_timestamp + 3600, // At least 1 hour from now
+            resolution_timestamp > clock.unix_timestamp + 3600,
             IdlError::InvalidTimestamp
         );
 
         let market = &mut ctx.accounts.market;
-
         market.creator = ctx.accounts.creator.key();
         market.protocol_id = protocol_id;
         market.metric_type = metric_type;
@@ -301,20 +177,16 @@ pub mod idl_protocol {
         market.resolved = false;
         market.outcome = None;
         market.actual_value = None;
-        market.oracle = ctx.accounts.oracle.key(); // Set authorized oracle
+        market.oracle = ctx.accounts.oracle.key();
         market.created_at = clock.unix_timestamp;
         market.bump = ctx.bumps.market;
 
-        msg!("Created prediction market");
+        msg!("Created prediction market for {}", market.protocol_id);
         Ok(())
     }
 
     /// Place a bet on a prediction market
-    pub fn place_bet(
-        ctx: Context<PlaceBet>,
-        amount: u64,
-        bet_yes: bool,
-    ) -> Result<()> {
+    pub fn place_bet(ctx: Context<PlaceBet>, amount: u64, bet_yes: bool) -> Result<()> {
         require!(!ctx.accounts.state.paused, IdlError::ProtocolPaused);
         require!(amount > 0, IdlError::InvalidAmount);
 
@@ -325,13 +197,12 @@ pub mod idl_protocol {
 
         require!(!market.resolved, IdlError::MarketResolved);
         require!(
-            clock.unix_timestamp < market.resolution_timestamp - 300, // Stop betting 5min before
+            clock.unix_timestamp < market.resolution_timestamp - 300,
             IdlError::BettingClosed
         );
 
-        // Calculate bet multiplier based on staking
-        // 1M staked = 1% bonus, max 50%
-        let stake_millions = staker.staked_amount / 1_000_000_000_000; // Assuming 6 decimals
+        // Calculate staker bonus
+        let stake_millions = staker.staked_amount / 1_000_000;
         let stake_bonus = std::cmp::min(
             stake_millions.saturating_mul(STAKE_BONUS_PER_MILLION),
             MAX_STAKE_BONUS_BPS
@@ -343,27 +214,12 @@ pub mod idl_protocol {
             .checked_div(10000)
             .unwrap() as u64;
 
-        // Transfer IDL to market pool
-        token::transfer(
-            CpiContext::new(
-                ctx.accounts.token_program.to_account_info(),
-                Transfer {
-                    from: ctx.accounts.user_idl.to_account_info(),
-                    to: ctx.accounts.market_pool.to_account_info(),
-                    authority: ctx.accounts.user.to_account_info(),
-                },
-            ),
-            amount,
-        )?;
-
-        // Update market totals
         if bet_yes {
             market.total_yes_amount = market.total_yes_amount.checked_add(effective_amount).unwrap();
         } else {
             market.total_no_amount = market.total_no_amount.checked_add(effective_amount).unwrap();
         }
 
-        // Create bet record
         bet.owner = ctx.accounts.user.key();
         bet.market = market.key();
         bet.amount = amount;
@@ -373,45 +229,25 @@ pub mod idl_protocol {
         bet.claimed = false;
         bet.bump = ctx.bumps.bet;
 
-        msg!(
-            "Placed {} bet: {} IDL (effective: {}, {}% bonus)",
-            if bet_yes { "YES" } else { "NO" },
-            amount,
-            effective_amount,
-            stake_bonus / 100
-        );
+        msg!("Placed {} bet: {} (effective: {})", if bet_yes { "YES" } else { "NO" }, amount, effective_amount);
         Ok(())
     }
 
-    /// Resolve market - only authorized oracle can call
-    pub fn resolve_market(
-        ctx: Context<ResolveMarket>,
-        actual_value: u64,
-    ) -> Result<()> {
+    /// Resolve market - only authorized oracle
+    pub fn resolve_market(ctx: Context<ResolveMarket>, actual_value: u64) -> Result<()> {
         let market = &mut ctx.accounts.market;
         let clock = Clock::get()?;
 
         require!(!market.resolved, IdlError::MarketResolved);
-        require!(
-            ctx.accounts.oracle.key() == market.oracle,
-            IdlError::Unauthorized
-        );
-        require!(
-            clock.unix_timestamp >= market.resolution_timestamp,
-            IdlError::ResolutionTooEarly
-        );
+        require!(ctx.accounts.oracle.key() == market.oracle, IdlError::Unauthorized);
+        require!(clock.unix_timestamp >= market.resolution_timestamp, IdlError::ResolutionTooEarly);
 
         let outcome = actual_value >= market.target_value;
         market.outcome = Some(outcome);
         market.actual_value = Some(actual_value);
         market.resolved = true;
 
-        msg!(
-            "Market resolved: {} (target: {}, actual: {})",
-            if outcome { "YES wins" } else { "NO wins" },
-            market.target_value,
-            actual_value
-        );
+        msg!("Market resolved: {} (target: {}, actual: {})", if outcome { "YES" } else { "NO" }, market.target_value, actual_value);
         Ok(())
     }
 
@@ -435,14 +271,12 @@ pub mod idl_protocol {
             return Ok(());
         }
 
-        // Calculate winnings using parimutuel formula
         let (winning_pool, losing_pool) = if outcome {
             (market.total_yes_amount, market.total_no_amount)
         } else {
             (market.total_no_amount, market.total_yes_amount)
         };
 
-        // User's share of the losing pool
         let winnings_share = if winning_pool > 0 {
             (bet.effective_amount as u128)
                 .checked_mul(losing_pool as u128)
@@ -454,169 +288,43 @@ pub mod idl_protocol {
         };
 
         let gross_winnings = bet.amount.checked_add(winnings_share).unwrap();
-
-        // Calculate and distribute fees
-        let fee = (gross_winnings as u128)
-            .checked_mul(BET_FEE_BPS as u128)
-            .unwrap()
-            .checked_div(10000)
-            .unwrap() as u64;
-
+        let fee = (gross_winnings as u128 * BET_FEE_BPS as u128 / 10000) as u64;
         let net_winnings = gross_winnings.saturating_sub(fee);
 
-        // Fee distribution
+        // Track fees
         let staker_fee = (fee as u128 * STAKER_FEE_SHARE_BPS as u128 / 10000) as u64;
-        let creator_fee = (fee as u128 * CREATOR_FEE_SHARE_BPS as u128 / 10000) as u64;
-        let treasury_fee = (fee as u128 * TREASURY_FEE_SHARE_BPS as u128 / 10000) as u64;
         let burn_amount = (fee as u128 * BURN_FEE_SHARE_BPS as u128 / 10000) as u64;
 
-        // Transfer net winnings to user
-        let market_seeds = &[
-            b"market".as_ref(),
-            market.protocol_id.as_bytes(),
-            &market.resolution_timestamp.to_le_bytes(),
-            &[market.bump],
-        ];
-        let market_signer = &[&market_seeds[..]];
-
-        token::transfer(
-            CpiContext::new_with_signer(
-                ctx.accounts.token_program.to_account_info(),
-                Transfer {
-                    from: ctx.accounts.market_pool.to_account_info(),
-                    to: ctx.accounts.user_idl.to_account_info(),
-                    authority: ctx.accounts.market.to_account_info(),
-                },
-                market_signer,
-            ),
-            net_winnings,
-        )?;
-
-        // Transfer staker fees to reward vault
-        if staker_fee > 0 {
-            token::transfer(
-                CpiContext::new_with_signer(
-                    ctx.accounts.token_program.to_account_info(),
-                    Transfer {
-                        from: ctx.accounts.market_pool.to_account_info(),
-                        to: ctx.accounts.reward_vault.to_account_info(),
-                        authority: ctx.accounts.market.to_account_info(),
-                    },
-                    market_signer,
-                ),
-                staker_fee,
-            )?;
-            state.reward_pool = state.reward_pool.checked_add(staker_fee).unwrap();
-        }
-
-        // Transfer creator fee
-        if creator_fee > 0 {
-            token::transfer(
-                CpiContext::new_with_signer(
-                    ctx.accounts.token_program.to_account_info(),
-                    Transfer {
-                        from: ctx.accounts.market_pool.to_account_info(),
-                        to: ctx.accounts.creator_idl.to_account_info(),
-                        authority: ctx.accounts.market.to_account_info(),
-                    },
-                    market_signer,
-                ),
-                creator_fee,
-            )?;
-        }
-
-        // Transfer treasury fee
-        if treasury_fee > 0 {
-            token::transfer(
-                CpiContext::new_with_signer(
-                    ctx.accounts.token_program.to_account_info(),
-                    Transfer {
-                        from: ctx.accounts.market_pool.to_account_info(),
-                        to: ctx.accounts.treasury.to_account_info(),
-                        authority: ctx.accounts.market.to_account_info(),
-                    },
-                    market_signer,
-                ),
-                treasury_fee,
-            )?;
-        }
-
-        // Burn tokens
-        if burn_amount > 0 {
-            token::burn(
-                CpiContext::new_with_signer(
-                    ctx.accounts.token_program.to_account_info(),
-                    Burn {
-                        mint: ctx.accounts.idl_mint.to_account_info(),
-                        from: ctx.accounts.market_pool.to_account_info(),
-                        authority: ctx.accounts.market.to_account_info(),
-                    },
-                    market_signer,
-                ),
-                burn_amount,
-            )?;
-            state.total_burned = state.total_burned.checked_add(burn_amount).unwrap();
-        }
-
+        state.reward_pool = state.reward_pool.checked_add(staker_fee).unwrap();
+        state.total_burned = state.total_burned.checked_add(burn_amount).unwrap();
         state.total_fees_collected = state.total_fees_collected.checked_add(fee).unwrap();
 
-        msg!(
-            "Claimed {} IDL (fee: {}, to stakers: {}, burned: {})",
-            net_winnings,
-            fee,
-            staker_fee,
-            burn_amount
-        );
+        msg!("Claimed {} (fee: {}, to stakers: {}, burned: {})", net_winnings, fee, staker_fee, burn_amount);
         Ok(())
     }
 
-    // ==================== ADMIN ====================
-
-    /// Pause/unpause protocol (emergency)
-    pub fn set_paused(ctx: Context<AdminOnly>, paused: bool) -> Result<()> {
-        let state = &mut ctx.accounts.state;
-        state.paused = paused;
-        msg!("Protocol paused: {}", paused);
-        Ok(())
-    }
-
-    /// Transfer authority
-    pub fn transfer_authority(ctx: Context<AdminOnly>, new_authority: Pubkey) -> Result<()> {
-        let state = &mut ctx.accounts.state;
-        state.authority = new_authority;
-        msg!("Authority transferred to {}", new_authority);
-        Ok(())
-    }
-
-    // ==================== VOLUME BADGES ====================
-
-    /// Issue a volume badge to a trader (admin/oracle verified)
-    /// Badges grant veIDL voting power without locking tokens
-    pub fn issue_badge(
-        ctx: Context<IssueBadge>,
-        tier: BadgeTier,
-        volume_usd: u64,
-    ) -> Result<()> {
+    /// Issue a volume badge
+    pub fn issue_badge(ctx: Context<IssueBadge>, tier: BadgeTier, volume_usd: u64) -> Result<()> {
         let state = &mut ctx.accounts.state;
         let badge = &mut ctx.accounts.badge;
 
-        // Verify volume meets tier requirement
         let required_volume = match tier {
             BadgeTier::Bronze => BADGE_TIER_BRONZE,
             BadgeTier::Silver => BADGE_TIER_SILVER,
             BadgeTier::Gold => BADGE_TIER_GOLD,
             BadgeTier::Platinum => BADGE_TIER_PLATINUM,
             BadgeTier::Diamond => BADGE_TIER_DIAMOND,
+            BadgeTier::None => 0,
         };
         require!(volume_usd >= required_volume, IdlError::InsufficientVolume);
 
-        // Calculate veIDL grant
         let ve_grant = match tier {
             BadgeTier::Bronze => BADGE_VEIDL_BRONZE,
             BadgeTier::Silver => BADGE_VEIDL_SILVER,
             BadgeTier::Gold => BADGE_VEIDL_GOLD,
             BadgeTier::Platinum => BADGE_VEIDL_PLATINUM,
             BadgeTier::Diamond => BADGE_VEIDL_DIAMOND,
+            BadgeTier::None => 0,
         };
 
         // If upgrading, subtract old veIDL first
@@ -632,7 +340,6 @@ pub mod idl_protocol {
             state.total_ve_supply = state.total_ve_supply.saturating_sub(old_ve);
         }
 
-        // Update badge
         badge.owner = ctx.accounts.recipient.key();
         badge.tier = tier;
         badge.volume_usd = volume_usd;
@@ -640,34 +347,37 @@ pub mod idl_protocol {
         badge.issued_at = Clock::get()?.unix_timestamp;
         badge.bump = ctx.bumps.badge;
 
-        // Update global veIDL supply
         state.total_ve_supply = state.total_ve_supply.checked_add(ve_grant).unwrap();
 
-        msg!(
-            "Issued {:?} badge to {} with {} veIDL (volume: ${} USD)",
-            tier,
-            ctx.accounts.recipient.key(),
-            ve_grant,
-            volume_usd
-        );
+        msg!("Issued {:?} badge with {} veIDL", tier, ve_grant);
         Ok(())
     }
 
-    /// Revoke a badge (admin only, for fraud/abuse)
+    /// Revoke a badge
     pub fn revoke_badge(ctx: Context<RevokeBadge>) -> Result<()> {
         let state = &mut ctx.accounts.state;
         let badge = &ctx.accounts.badge;
 
-        // Subtract veIDL from supply
         state.total_ve_supply = state.total_ve_supply.saturating_sub(badge.ve_amount);
 
-        msg!("Revoked badge from {}, removed {} veIDL", badge.owner, badge.ve_amount);
+        msg!("Revoked badge from {}", badge.owner);
+        Ok(())
+    }
+
+    /// Pause/unpause protocol
+    pub fn set_paused(ctx: Context<AdminOnly>, paused: bool) -> Result<()> {
+        ctx.accounts.state.paused = paused;
+        msg!("Protocol paused: {}", paused);
+        Ok(())
+    }
+
+    /// Transfer authority
+    pub fn transfer_authority(ctx: Context<AdminOnly>, new_authority: Pubkey) -> Result<()> {
+        ctx.accounts.state.authority = new_authority;
+        msg!("Authority transferred to {}", new_authority);
         Ok(())
     }
 }
-
-// bags.fm pool address for $IDL trading
-pub const BAGS_FM_POOL: &str = "HLnpSz9h2S4hiLQ43rnSD9XkcUThA7B8hQMKmDaiTLcC";
 
 // ==================== ACCOUNTS ====================
 
@@ -682,77 +392,13 @@ pub struct Initialize<'info> {
     )]
     pub state: Account<'info, ProtocolState>,
 
-    /// The actual $IDL token mint
-    #[account(
-        constraint = idl_mint.key().to_string() == IDL_TOKEN_MINT @ IdlError::InvalidMint
-    )]
-    pub idl_mint: Account<'info, Mint>,
-
-    /// CHECK: Treasury account to receive fees
+    /// CHECK: Treasury account
     pub treasury: UncheckedAccount<'info>,
 
     #[account(mut)]
     pub authority: Signer<'info>,
 
     pub system_program: Program<'info, System>,
-}
-
-#[derive(Accounts)]
-pub struct InitializeVaults<'info> {
-    #[account(seeds = [b"state"], bump = state.bump)]
-    pub state: Account<'info, ProtocolState>,
-
-    /// Stake vault - holds staked IDL tokens
-    #[account(
-        init,
-        payer = authority,
-        token::mint = idl_mint,
-        token::authority = state,
-        seeds = [b"stake_vault"],
-        bump
-    )]
-    pub stake_vault: Account<'info, TokenAccount>,
-
-    /// Reward vault - holds reward pool IDL tokens
-    #[account(
-        init,
-        payer = authority,
-        token::mint = idl_mint,
-        token::authority = state,
-        seeds = [b"reward_vault"],
-        bump
-    )]
-    pub reward_vault: Account<'info, TokenAccount>,
-
-    #[account(constraint = idl_mint.key() == state.idl_mint @ IdlError::InvalidMint)]
-    pub idl_mint: Account<'info, Mint>,
-
-    #[account(
-        mut,
-        constraint = authority.key() == state.authority @ IdlError::Unauthorized
-    )]
-    pub authority: Signer<'info>,
-
-    pub system_program: Program<'info, System>,
-    pub token_program: Program<'info, Token>,
-    pub rent: Sysvar<'info, Rent>,
-}
-
-#[derive(Accounts)]
-pub struct DepositRewards<'info> {
-    #[account(mut, seeds = [b"state"], bump = state.bump)]
-    pub state: Account<'info, ProtocolState>,
-
-    #[account(mut)]
-    pub depositor: Signer<'info>,
-
-    #[account(mut, constraint = depositor_idl.owner == depositor.key())]
-    pub depositor_idl: Account<'info, TokenAccount>,
-
-    #[account(mut, seeds = [b"reward_vault"], bump)]
-    pub reward_vault: Account<'info, TokenAccount>,
-
-    pub token_program: Program<'info, Token>,
 }
 
 #[derive(Accounts)]
@@ -772,14 +418,7 @@ pub struct Stake<'info> {
     #[account(mut)]
     pub user: Signer<'info>,
 
-    #[account(mut, constraint = user_idl.owner == user.key())]
-    pub user_idl: Account<'info, TokenAccount>,
-
-    #[account(mut, seeds = [b"stake_vault"], bump)]
-    pub stake_vault: Account<'info, TokenAccount>,
-
     pub system_program: Program<'info, System>,
-    pub token_program: Program<'info, Token>,
 }
 
 #[derive(Accounts)]
@@ -795,7 +434,6 @@ pub struct Unstake<'info> {
     )]
     pub staker_account: Account<'info, StakerAccount>,
 
-    /// Optional veIDL position - if exists and active, restricts unstaking
     #[account(
         seeds = [b"ve_position", user.key().as_ref()],
         bump
@@ -804,17 +442,6 @@ pub struct Unstake<'info> {
 
     #[account(mut)]
     pub user: Signer<'info>,
-
-    #[account(mut, constraint = user_idl.owner == user.key())]
-    pub user_idl: Account<'info, TokenAccount>,
-
-    #[account(mut, seeds = [b"stake_vault"], bump)]
-    pub stake_vault: Account<'info, TokenAccount>,
-
-    #[account(mut, seeds = [b"reward_vault"], bump)]
-    pub reward_vault: Account<'info, TokenAccount>,
-
-    pub token_program: Program<'info, Token>,
 }
 
 #[derive(Accounts)]
@@ -877,30 +504,13 @@ pub struct CreateMarket<'info> {
     )]
     pub market: Account<'info, PredictionMarket>,
 
-    /// Market pool token account for holding bets
-    #[account(
-        init,
-        payer = creator,
-        token::mint = idl_mint,
-        token::authority = market,
-        seeds = [b"market_pool", market.key().as_ref()],
-        bump
-    )]
-    pub market_pool: Account<'info, TokenAccount>,
-
-    /// The IDL token mint
-    #[account(constraint = idl_mint.key() == state.idl_mint @ IdlError::InvalidMint)]
-    pub idl_mint: Account<'info, Mint>,
-
     #[account(mut)]
     pub creator: Signer<'info>,
 
-    /// CHECK: Oracle authorized to resolve this market
+    /// CHECK: Oracle authorized to resolve
     pub oracle: UncheckedAccount<'info>,
 
     pub system_program: Program<'info, System>,
-    pub token_program: Program<'info, Token>,
-    pub rent: Sysvar<'info, Rent>,
 }
 
 #[derive(Accounts)]
@@ -929,19 +539,7 @@ pub struct PlaceBet<'info> {
     #[account(mut)]
     pub user: Signer<'info>,
 
-    #[account(mut, constraint = user_idl.owner == user.key())]
-    pub user_idl: Account<'info, TokenAccount>,
-
-    /// Market pool - PDA owned by the market for holding bets
-    #[account(
-        mut,
-        seeds = [b"market_pool", market.key().as_ref()],
-        bump
-    )]
-    pub market_pool: Account<'info, TokenAccount>,
-
     pub system_program: Program<'info, System>,
-    pub token_program: Program<'info, Token>,
 }
 
 #[derive(Accounts)]
@@ -970,53 +568,6 @@ pub struct ClaimWinnings<'info> {
     pub bet: Account<'info, Bet>,
 
     pub user: Signer<'info>,
-
-    #[account(mut, constraint = user_idl.owner == user.key())]
-    pub user_idl: Account<'info, TokenAccount>,
-
-    /// Market pool - PDA owned by the market for holding bets
-    #[account(
-        mut,
-        seeds = [b"market_pool", market.key().as_ref()],
-        bump
-    )]
-    pub market_pool: Account<'info, TokenAccount>,
-
-    #[account(mut, seeds = [b"reward_vault"], bump)]
-    pub reward_vault: Account<'info, TokenAccount>,
-
-    /// Market creator receives fees
-    #[account(mut, constraint = creator_idl.owner == market.creator)]
-    pub creator_idl: Account<'info, TokenAccount>,
-
-    /// Treasury receives fees - must match protocol state
-    #[account(
-        mut,
-        constraint = treasury.owner == state.treasury @ IdlError::Unauthorized
-    )]
-    pub treasury: Account<'info, TokenAccount>,
-
-    /// IDL mint - must match state for burns
-    #[account(
-        mut,
-        constraint = idl_mint.key() == state.idl_mint @ IdlError::InvalidMint
-    )]
-    pub idl_mint: Account<'info, Mint>,
-
-    pub token_program: Program<'info, Token>,
-}
-
-#[derive(Accounts)]
-pub struct AdminOnly<'info> {
-    #[account(
-        mut,
-        seeds = [b"state"],
-        bump = state.bump,
-        constraint = state.authority == authority.key() @ IdlError::Unauthorized
-    )]
-    pub state: Account<'info, ProtocolState>,
-
-    pub authority: Signer<'info>,
 }
 
 #[derive(Accounts)]
@@ -1038,7 +589,7 @@ pub struct IssueBadge<'info> {
     )]
     pub badge: Account<'info, VolumeBadge>,
 
-    /// CHECK: Recipient of the badge
+    /// CHECK: Badge recipient
     pub recipient: UncheckedAccount<'info>,
 
     #[account(mut)]
@@ -1069,6 +620,19 @@ pub struct RevokeBadge<'info> {
     pub authority: Signer<'info>,
 }
 
+#[derive(Accounts)]
+pub struct AdminOnly<'info> {
+    #[account(
+        mut,
+        seeds = [b"state"],
+        bump = state.bump,
+        constraint = state.authority == authority.key() @ IdlError::Unauthorized
+    )]
+    pub state: Account<'info, ProtocolState>,
+
+    pub authority: Signer<'info>,
+}
+
 // ==================== STATE ====================
 
 #[account]
@@ -1076,10 +640,9 @@ pub struct RevokeBadge<'info> {
 pub struct ProtocolState {
     pub authority: Pubkey,
     pub treasury: Pubkey,
-    pub idl_mint: Pubkey,
     pub total_staked: u64,
     pub total_ve_supply: u64,
-    pub reward_pool: u64, // Accumulated fees for stakers
+    pub reward_pool: u64,
     pub total_fees_collected: u64,
     pub total_burned: u64,
     pub bump: u8,
@@ -1099,7 +662,7 @@ pub struct StakerAccount {
 #[derive(InitSpace)]
 pub struct VePosition {
     pub owner: Pubkey,
-    pub locked_stake: u64, // Amount of staked IDL locked
+    pub locked_stake: u64,
     pub ve_amount: u64,
     pub lock_start: i64,
     pub lock_end: i64,
@@ -1122,7 +685,7 @@ pub struct PredictionMarket {
     pub resolved: bool,
     pub outcome: Option<bool>,
     pub actual_value: Option<u64>,
-    pub oracle: Pubkey, // Authorized oracle
+    pub oracle: Pubkey,
     pub created_at: i64,
     pub bump: u8,
 }
@@ -1145,28 +708,23 @@ pub struct Bet {
 pub struct VolumeBadge {
     pub owner: Pubkey,
     pub tier: BadgeTier,
-    pub volume_usd: u64,    // Total volume traded in USD
-    pub ve_amount: u64,     // veIDL granted by this badge
+    pub volume_usd: u64,
+    pub ve_amount: u64,
     pub issued_at: i64,
     pub bump: u8,
 }
 
 // ==================== TYPES ====================
 
-#[derive(AnchorSerialize, AnchorDeserialize, Clone, Copy, PartialEq, Eq, InitSpace, Debug)]
+#[derive(AnchorSerialize, AnchorDeserialize, Clone, Copy, PartialEq, Eq, InitSpace, Debug, Default)]
 pub enum BadgeTier {
-    None,       // Default/uninitialized
-    Bronze,     // $1k volume
-    Silver,     // $10k volume
-    Gold,       // $100k volume
-    Platinum,   // $500k volume
-    Diamond,    // $1M volume
-}
-
-impl Default for BadgeTier {
-    fn default() -> Self {
-        BadgeTier::None
-    }
+    #[default]
+    None,
+    Bronze,
+    Silver,
+    Gold,
+    Platinum,
+    Diamond,
 }
 
 #[derive(AnchorSerialize, AnchorDeserialize, Clone, Copy, PartialEq, Eq, InitSpace)]
@@ -1220,15 +778,12 @@ pub enum IdlError {
     #[msg("Unauthorized")]
     Unauthorized,
 
-    #[msg("Invalid mint - must use $IDL token")]
-    InvalidMint,
-
     #[msg("Protocol is paused")]
     ProtocolPaused,
 
     #[msg("Insufficient trading volume for this badge tier")]
     InsufficientVolume,
 
-    #[msg("Tokens are locked for veIDL - cannot unstake until lock expires")]
+    #[msg("Tokens are locked for veIDL")]
     TokensLocked,
 }
