@@ -201,18 +201,19 @@ class IDLHubJSONRPCServer {
           required: ['programId', 'network', 'idl'],
         },
       },
-      {
-        name: 'delete_idl',
-        description: 'Delete an IDL from the registry',
-        inputSchema: {
-          type: 'object',
-          properties: {
-            programId: { type: 'string', description: 'Solana program address' },
-            network: { type: 'string', enum: ['mainnet', 'devnet', 'testnet'], default: 'mainnet' },
-          },
-          required: ['programId'],
-        },
-      },
+      // delete_idl tool disabled for safety
+      // {
+      //   name: 'delete_idl',
+      //   description: 'Delete an IDL from the registry',
+      //   inputSchema: {
+      //     type: 'object',
+      //     properties: {
+      //       programId: { type: 'string', description: 'Solana program address' },
+      //       network: { type: 'string', enum: ['mainnet', 'devnet', 'testnet'], default: 'mainnet' },
+      //     },
+      //     required: ['programId'],
+      //   },
+      // },
     ];
 
     // Return ALL tools - both local and API
@@ -317,7 +318,6 @@ class IDLHubJSONRPCServer {
         case 'upload_idl':
         case 'load_from_github':
         case 'create_or_update_idl':
-        case 'delete_idl':
           result = await this.handleToolsCall({ name: method, arguments: params || {} });
           break;
 
@@ -370,7 +370,7 @@ class IDLHubJSONRPCServer {
     // Local registry tools
     const localTools = ['list_schemas', 'get_schema', 'lookup_symbol', 'generate_code', 'validate_idl'];
     // API tools
-    const apiTools = ['list_idls', 'get_idl', 'search_idls', 'upload_idl', 'load_from_github', 'create_or_update_idl', 'delete_idl'];
+    const apiTools = ['list_idls', 'get_idl', 'search_idls', 'upload_idl', 'load_from_github', 'create_or_update_idl'];
 
     if (localTools.includes(name)) {
       return await this.handleLocalToolCall(name, args);
@@ -745,11 +745,7 @@ class IDLHubJSONRPCServer {
             metadata: args.metadata,
           };
           break;
-        case 'delete_idl':
-          endpoint = `/api/idl/${args.programId}`;
-          method = 'DELETE';
-          params = { network: args.network || 'mainnet' };
-          break;
+        // delete_idl disabled for safety
         default:
           throw new Error(`Unknown API tool: ${name}`);
       }
