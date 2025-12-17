@@ -22,12 +22,13 @@ $IDL is the native token of IDLHub, Solana's largest Interface Definition Langua
 2. [Token Overview](#2-token-overview)
 3. [Staking Mechanism](#3-staking-mechanism)
 4. [Vote-Escrowed IDL (veIDL)](#4-vote-escrowed-idl-veidl)
-5. [Prediction Markets](#5-prediction-markets)
-6. [Fee Structure](#6-fee-structure)
-7. [Economic Model](#7-economic-model)
-8. [Governance](#8-governance)
-9. [Security Considerations](#9-security-considerations)
-10. [Roadmap](#10-roadmap)
+5. [Volume Badges](#5-volume-badges)
+6. [Prediction Markets](#6-prediction-markets)
+7. [Fee Structure](#7-fee-structure)
+8. [Economic Model](#8-economic-model)
+9. [Governance](#9-governance)
+10. [Security Considerations](#10-security-considerations)
+11. [Roadmap](#11-roadmap)
 
 ---
 
@@ -263,13 +264,91 @@ Example: Lock 1000 IDL for 4 years
 
 ---
 
-## 5. Prediction Markets
+## 5. Volume Badges
 
 ### 5.1 Overview
 
+Traders who generate volume on the bags.fm $IDL pool earn badges that grant veIDL voting power WITHOUT locking tokens. This rewards early supporters and active traders.
+
+### 5.2 Pool Address
+
+```
+bags.fm Pool: HLnpSz9h2S4hiLQ43rnSD9XkcUThA7B8hQMKmDaiTLcC
+```
+
+### 5.3 Badge Tiers
+
+```
++===========+===============+================+====================+
+| Badge     | Volume (USD)  | veIDL Granted  | Lock Equivalent    |
++===========+===============+================+====================+
+| Bronze    | $1,000+       | 50,000 veIDL   | ~1 week lock       |
+| Silver    | $10,000+      | 250,000 veIDL  | ~1 month lock      |
+| Gold      | $100,000+     | 1,000,000 veIDL| ~3 month lock      |
+| Platinum  | $500,000+     | 5,000,000 veIDL| ~1 year lock       |
+| Diamond   | $1,000,000+   | 20,000,000 veIDL| ~4 year lock      |
++===========+===============+================+====================+
+```
+
+### 5.4 How It Works
+
+```
+TRADER                    PROTOCOL                  BADGE
+   |                          |                        |
+   |  Trade on bags.fm pool   |                        |
+   |------------------------->|                        |
+   |                          |                        |
+   |                    Track volume                   |
+   |                          |                        |
+   |                    Reach threshold                |
+   |                          |                        |
+   |                          |  issue_badge()         |
+   |                          |----------------------->|
+   |                          |                        |
+   |                          |    veIDL granted       |
+   |<-------------------------------------------------|
+   |                          |                        |
+   |  Vote in governance      |                        |
+   |  Boosted betting power   |                        |
+```
+
+### 5.5 Badge Benefits
+
+1. **Voting Power** - veIDL from badges counts toward governance votes
+2. **Betting Bonus** - Badges stack with staking for prediction markets
+3. **Status** - On-chain proof of trading activity
+4. **No Lock Required** - Unlike regular veIDL, no token lock needed
+
+### 5.6 Badge Upgrades
+
+Badges upgrade automatically as volume increases:
+
+```
+Example:
+- Trader has Bronze badge (50k veIDL) from $5k volume
+- Trader reaches $15k total volume
+- Admin issues Silver badge upgrade
+- Old Bronze veIDL removed, Silver veIDL added
+- Net change: +200k veIDL (250k - 50k)
+```
+
+### 5.7 Volume Tracking
+
+Volume is tracked off-chain via:
+1. Indexing pool transactions from bags.fm
+2. Calculating USD value at time of trade
+3. Aggregating per wallet
+4. Periodic badge issuance by admin
+
+---
+
+## 6. Prediction Markets
+
+### 6.1 Overview
+
 Users can create and bet on prediction markets for DeFi protocol metrics tracked in IDLHub's registry.
 
-### 5.2 Supported Metric Types
+### 6.2 Supported Metric Types
 
 | Type | Description | Example |
 |------|-------------|---------|
@@ -281,7 +360,7 @@ Users can create and bet on prediction markets for DeFi protocol metrics tracked
 | MarketCap | Market capitalization | "Marinade mcap > $100M?" |
 | Custom | Any verifiable metric | "Protocol ships v2?" |
 
-### 5.3 Market Lifecycle
+### 6.3 Market Lifecycle
 
 ```
     CREATE           BETTING            RESOLVE           CLAIM
@@ -298,7 +377,7 @@ Users can create and bet on prediction markets for DeFi protocol metrics tracked
                  (betting open)      (resolution)      (claims)
 ```
 
-### 5.4 Betting Mechanics
+### 6.4 Betting Mechanics
 
 **Parimutuel System:**
 - All bets pooled together
@@ -328,7 +407,7 @@ Users can create and bet on prediction markets for DeFi protocol metrics tracked
     +---------------+        +---------------+
 ```
 
-### 5.5 Staking Bonus
+### 6.5 Staking Bonus
 
 Stakers receive a betting power multiplier:
 
@@ -345,7 +424,7 @@ Examples:
 - 100M IDL staked:   1.50x (capped at 50%)
 ```
 
-### 5.6 Example Market
+### 6.6 Example Market
 
 ```
 MARKET: "Jupiter TVL > $3B by Jan 1, 2025?"
@@ -378,9 +457,9 @@ IF NO WINS:
 
 ---
 
-## 6. Fee Structure
+## 7. Fee Structure
 
-### 6.1 Prediction Market Fees
+### 7.1 Prediction Market Fees
 
 ```
 Fee Rate: 3% of winning claims
@@ -396,7 +475,7 @@ Fee Distribution:
 +===================+===========+=================================+
 ```
 
-### 6.2 Fee Flow Diagram
+### 7.2 Fee Flow Diagram
 
 ```
                     WINNER CLAIMS 1000 IDL
@@ -425,7 +504,7 @@ Fee Distribution:
                     +----------+ +----------+
 ```
 
-### 6.3 Burn Mechanics
+### 7.3 Burn Mechanics
 
 10% of all fees are permanently burned:
 
@@ -448,9 +527,9 @@ As markets resolve:
 
 ---
 
-## 7. Economic Model
+## 8. Economic Model
 
-### 7.1 Value Accrual
+### 8.1 Value Accrual
 
 ```
                          +------------------+
@@ -484,7 +563,7 @@ As markets resolve:
     +------------------+ +------------------+ +------------------+
 ```
 
-### 7.2 Flywheel Effect
+### 8.2 Flywheel Effect
 
 ```
                     +-> More Stakers
@@ -509,7 +588,7 @@ As markets resolve:
                     +-> More Attention
 ```
 
-### 7.3 Game Theory
+### 8.3 Game Theory
 
 **For Stakers:**
 - Stake to earn fees (passive income)
@@ -526,7 +605,7 @@ As markets resolve:
 - Network effects from IDLHub adoption
 - Speculative exposure to DeFi metrics
 
-### 7.4 Risk Factors
+### 8.4 Risk Factors
 
 | Risk | Description | Mitigation |
 |------|-------------|------------|
@@ -538,9 +617,9 @@ As markets resolve:
 
 ---
 
-## 8. Governance
+## 9. Governance
 
-### 8.1 veIDL Voting
+### 9.1 veIDL Voting
 
 veIDL holders can vote on:
 
@@ -558,7 +637,7 @@ veIDL holders can vote on:
    - Approved oracle list
    - Dispute resolution
 
-### 8.2 Voting Power
+### 9.2 Voting Power
 
 ```
 Voting Power = veIDL Balance
@@ -570,7 +649,7 @@ Example Proposal:
 - Threshold:          50% majority
 ```
 
-### 8.3 Governance Process
+### 9.3 Governance Process
 
 ```
 PHASE 1: Discussion (3 days)
@@ -589,9 +668,9 @@ PHASE 4: Execution
 
 ---
 
-## 9. Security Considerations
+## 10. Security Considerations
 
-### 9.1 Smart Contract Security
+### 10.1 Smart Contract Security
 
 | Measure | Status |
 |---------|--------|
@@ -601,13 +680,13 @@ PHASE 4: Execution
 | Timelock | 2 days on admin functions |
 | Multisig | Treasury controlled by 3/5 |
 
-### 9.2 Known Limitations
+### 10.2 Known Limitations
 
 1. **Oracle Trust** - Markets rely on honest oracle resolution
 2. **Liquidity Risk** - Low liquidity = high slippage on bets
 3. **Governance Attack** - Large veIDL holders control votes
 
-### 9.3 Emergency Procedures
+### 10.3 Emergency Procedures
 
 ```
 IF vulnerability detected:
@@ -625,7 +704,7 @@ IF admin key compromised:
 
 ---
 
-## 10. Roadmap
+## 11. Roadmap
 
 ### Phase 1: Launch (Current)
 

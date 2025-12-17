@@ -8,9 +8,23 @@ declare_id!("IDLStake11111111111111111111111111111111111");
 pub const IDL_TOKEN_MINT: &str = "8zdhHxthCFoigAGw4QRxWfXUWLY1KkMZ1r7CTcmiBAGS";
 
 // Constants
-pub const EPOCH_LENGTH: i64 = 28800; // ~8 hours in slots
 pub const MAX_LOCK_DURATION: i64 = 126144000; // 4 years in seconds
 pub const MIN_LOCK_DURATION: i64 = 604800; // 1 week minimum
+
+// Volume Badge Tiers (in USD value traded on bags.fm)
+// Badge holders get veIDL without locking - reward for generating volume
+pub const BADGE_TIER_BRONZE: u64 = 1_000;        // $1k volume
+pub const BADGE_TIER_SILVER: u64 = 10_000;       // $10k volume
+pub const BADGE_TIER_GOLD: u64 = 100_000;        // $100k volume
+pub const BADGE_TIER_PLATINUM: u64 = 500_000;    // $500k volume
+pub const BADGE_TIER_DIAMOND: u64 = 1_000_000;   // $1M volume
+
+// veIDL granted per badge tier (equivalent lock time in voting power)
+pub const BADGE_VEIDL_BRONZE: u64 = 50_000;      // ~1 week lock equivalent
+pub const BADGE_VEIDL_SILVER: u64 = 250_000;     // ~1 month lock equivalent
+pub const BADGE_VEIDL_GOLD: u64 = 1_000_000;     // ~3 month lock equivalent
+pub const BADGE_VEIDL_PLATINUM: u64 = 5_000_000; // ~1 year lock equivalent
+pub const BADGE_VEIDL_DIAMOND: u64 = 20_000_000; // ~4 year lock equivalent
 pub const BET_FEE_BPS: u64 = 300; // 3% fee on winning bets
 pub const STAKER_FEE_SHARE_BPS: u64 = 5000; // 50% of fees to stakers
 pub const CREATOR_FEE_SHARE_BPS: u64 = 2500; // 25% to market creator
@@ -552,7 +566,87 @@ pub mod idl_protocol {
         msg!("Authority transferred to {}", new_authority);
         Ok(())
     }
+
+    // ==================== VOLUME BADGES ====================
+
+    /// Issue a volume badge to a trader (admin/oracle verified)
+    /// Badges grant veIDL voting power without locking tokens
+    pub fn issue_badge(
+        ctx: Context<IssueBadge>,
+        tier: BadgeTier,
+        volume_usd: u64,
+    ) -> Result<()> {
+        let state = &mut ctx.accounts.state;
+        let badge = &mut ctx.accounts.badge;
+
+        // Verify volume meets tier requirement
+        let required_volume = match tier {
+            BadgeTier::Bronze => BADGE_TIER_BRONZE,
+            BadgeTier::Silver => BADGE_TIER_SILVER,
+            BadgeTier::Gold => BADGE_TIER_GOLD,
+            BadgeTier::Platinum => BADGE_TIER_PLATINUM,
+            BadgeTier::Diamond => BADGE_TIER_DIAMOND,
+        };
+        require!(volume_usd >= required_volume, IdlError::InsufficientVolume);
+
+        // Calculate veIDL grant
+        let ve_grant = match tier {
+            BadgeTier::Bronze => BADGE_VEIDL_BRONZE,
+            BadgeTier::Silver => BADGE_VEIDL_SILVER,
+            BadgeTier::Gold => BADGE_VEIDL_GOLD,
+            BadgeTier::Platinum => BADGE_VEIDL_PLATINUM,
+            BadgeTier::Diamond => BADGE_VEIDL_DIAMOND,
+        };
+
+        // If upgrading, subtract old veIDL first
+        if badge.tier != BadgeTier::None {
+            let old_ve = match badge.tier {
+                BadgeTier::Bronze => BADGE_VEIDL_BRONZE,
+                BadgeTier::Silver => BADGE_VEIDL_SILVER,
+                BadgeTier::Gold => BADGE_VEIDL_GOLD,
+                BadgeTier::Platinum => BADGE_VEIDL_PLATINUM,
+                BadgeTier::Diamond => BADGE_VEIDL_DIAMOND,
+                BadgeTier::None => 0,
+            };
+            state.total_ve_supply = state.total_ve_supply.saturating_sub(old_ve);
+        }
+
+        // Update badge
+        badge.owner = ctx.accounts.recipient.key();
+        badge.tier = tier;
+        badge.volume_usd = volume_usd;
+        badge.ve_amount = ve_grant;
+        badge.issued_at = Clock::get()?.unix_timestamp;
+        badge.bump = ctx.bumps.badge;
+
+        // Update global veIDL supply
+        state.total_ve_supply = state.total_ve_supply.checked_add(ve_grant).unwrap();
+
+        msg!(
+            "Issued {:?} badge to {} with {} veIDL (volume: ${} USD)",
+            tier,
+            ctx.accounts.recipient.key(),
+            ve_grant,
+            volume_usd
+        );
+        Ok(())
+    }
+
+    /// Revoke a badge (admin only, for fraud/abuse)
+    pub fn revoke_badge(ctx: Context<RevokeBadge>) -> Result<()> {
+        let state = &mut ctx.accounts.state;
+        let badge = &ctx.accounts.badge;
+
+        // Subtract veIDL from supply
+        state.total_ve_supply = state.total_ve_supply.saturating_sub(badge.ve_amount);
+
+        msg!("Revoked badge from {}, removed {} veIDL", badge.owner, badge.ve_amount);
+        Ok(())
+    }
 }
+
+// bags.fm pool address for $IDL trading
+pub const BAGS_FM_POOL: &str = "HLnpSz9h2S4hiLQ43rnSD9XkcUThA7B8hQMKmDaiTLcC";
 
 // ==================== ACCOUNTS ====================
 
@@ -816,6 +910,56 @@ pub struct AdminOnly<'info> {
     pub authority: Signer<'info>,
 }
 
+#[derive(Accounts)]
+pub struct IssueBadge<'info> {
+    #[account(
+        mut,
+        seeds = [b"state"],
+        bump = state.bump,
+        constraint = state.authority == authority.key() @ IdlError::Unauthorized
+    )]
+    pub state: Account<'info, ProtocolState>,
+
+    #[account(
+        init_if_needed,
+        payer = authority,
+        space = 8 + VolumeBadge::INIT_SPACE,
+        seeds = [b"badge", recipient.key().as_ref()],
+        bump
+    )]
+    pub badge: Account<'info, VolumeBadge>,
+
+    /// CHECK: Recipient of the badge
+    pub recipient: UncheckedAccount<'info>,
+
+    #[account(mut)]
+    pub authority: Signer<'info>,
+
+    pub system_program: Program<'info, System>,
+}
+
+#[derive(Accounts)]
+pub struct RevokeBadge<'info> {
+    #[account(
+        mut,
+        seeds = [b"state"],
+        bump = state.bump,
+        constraint = state.authority == authority.key() @ IdlError::Unauthorized
+    )]
+    pub state: Account<'info, ProtocolState>,
+
+    #[account(
+        mut,
+        close = authority,
+        seeds = [b"badge", badge.owner.as_ref()],
+        bump = badge.bump
+    )]
+    pub badge: Account<'info, VolumeBadge>,
+
+    #[account(mut)]
+    pub authority: Signer<'info>,
+}
+
 // ==================== STATE ====================
 
 #[account]
@@ -887,7 +1031,34 @@ pub struct Bet {
     pub bump: u8,
 }
 
+#[account]
+#[derive(InitSpace)]
+pub struct VolumeBadge {
+    pub owner: Pubkey,
+    pub tier: BadgeTier,
+    pub volume_usd: u64,    // Total volume traded in USD
+    pub ve_amount: u64,     // veIDL granted by this badge
+    pub issued_at: i64,
+    pub bump: u8,
+}
+
 // ==================== TYPES ====================
+
+#[derive(AnchorSerialize, AnchorDeserialize, Clone, Copy, PartialEq, Eq, InitSpace, Debug)]
+pub enum BadgeTier {
+    None,       // Default/uninitialized
+    Bronze,     // $1k volume
+    Silver,     // $10k volume
+    Gold,       // $100k volume
+    Platinum,   // $500k volume
+    Diamond,    // $1M volume
+}
+
+impl Default for BadgeTier {
+    fn default() -> Self {
+        BadgeTier::None
+    }
+}
 
 #[derive(AnchorSerialize, AnchorDeserialize, Clone, Copy, PartialEq, Eq, InitSpace)]
 pub enum MetricType {
@@ -945,4 +1116,7 @@ pub enum IdlError {
 
     #[msg("Protocol is paused")]
     ProtocolPaused,
+
+    #[msg("Insufficient trading volume for this badge tier")]
+    InsufficientVolume,
 }
