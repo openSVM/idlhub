@@ -13,7 +13,10 @@
     "mcp:start": "npm run mcp:stdio",
     "qdrant:init": "node scripts/init-qdrant.js",
     "api:start": "node api/server.js",
-    "api:dev": "node api/server.js"
+    "api:dev": "node api/server.js",
+    "protocol:deploy": "npx ts-node scripts/deploy-protocol.ts",
+    "protocol:track-volume": "npx ts-node scripts/track-volume.ts",
+    "protocol:issue-badges": "npx ts-node scripts/issue-badges.ts"
   },
   "bin": {
     "idlhub-mcp": "./mcp-server/src/index.js"
@@ -34,5 +37,13 @@
     "cors": "^2.8.5",
     "axios": "^1.6.2",
     "ws": "^8.18.3"
+  },
+  "devDependencies": {
+    "@coral-xyz/anchor": "^0.29.0",
+    "@solana/web3.js": "^1.87.6",
+    "@solana/spl-token": "^0.3.9",
+    "typescript": "^5.3.3",
+    "ts-node": "^10.9.2",
+    "@types/node": "^20.10.5"
   }
 }
