@@ -1761,18 +1761,11 @@
             }
         }
 
-        // Build map of program addresses to protocol IDs
+        // Build map of program addresses to protocol IDs (disabled for performance)
         async function buildAddressMap() {
-            for (const protocol of allProtocols) {
-                try {
-                    const idl = await getIDL(protocol.id);
-                    if (idl.metadata?.address) {
-                        protocolAddressMap[idl.metadata.address] = protocol.id;
-                    }
-                } catch (error) {
-                    // Silently skip protocols with missing/invalid IDLs
-                }
-            }
+            // Skip building address map - causes slow page loads
+            // If needed, build lazily when searching by address
+            return;
         }
 
         function updateStats() {
