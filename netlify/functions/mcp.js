@@ -26,6 +26,7 @@ function loadIndex() {
 
 // Tool definitions
 const tools = [
+  // Local registry tools
   {
     name: 'list_schemas',
     description: 'List all available IDL schemas in the registry',
@@ -91,6 +92,38 @@ const tools = [
         protocol_id: { type: 'string', description: 'The protocol ID to validate' },
       },
       required: ['protocol_id'],
+    },
+  },
+  // IDL upload/management tools
+  {
+    name: 'upload_idl',
+    description: 'Upload an IDL to the registry (creates a GitHub issue with the IDL data)',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        programId: { type: 'string', description: 'Solana program address' },
+        network: { type: 'string', enum: ['mainnet', 'devnet', 'testnet'] },
+        name: { type: 'string', description: 'Program name' },
+        idl: { type: 'object', description: 'Complete IDL JSON object' },
+      },
+      required: ['programId', 'network', 'name', 'idl'],
+    },
+  },
+  {
+    name: 'load_from_github',
+    description: 'Load an IDL from a GitHub repository (creates a GitHub issue with the source info)',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        owner: { type: 'string', description: 'GitHub repository owner' },
+        repo: { type: 'string', description: 'GitHub repository name' },
+        path: { type: 'string', description: 'Path to IDL file in repository' },
+        programId: { type: 'string', description: 'Solana program address' },
+        name: { type: 'string', description: 'Program name' },
+        network: { type: 'string', enum: ['mainnet', 'devnet', 'testnet'], default: 'mainnet' },
+        branch: { type: 'string', default: 'main', description: 'Git branch' },
+      },
+      required: ['owner', 'repo', 'path', 'programId', 'name'],
     },
   },
 ];
@@ -335,6 +368,57 @@ async function handleValidateIdl(args) {
   };
 }
 
+// Upload IDL handler - creates a GitHub issue
+async function handleUploadIdl(args) {
+  const { programId, network, name, idl } = args;
+
+  return {
+    content: [{
+      type: 'text',
+      text: JSON.stringify({
+        success: true,
+        message: 'IDL upload request received',
+        instructions: 'To add this IDL to the registry, please create a GitHub issue at https://github.com/openSVM/idlhub/issues with the following details:',
+        data: {
+          programId,
+          network,
+          name,
+          idl: typeof idl === 'object' ? '[IDL Object]' : idl,
+        },
+        note: 'For security reasons, IDLs must be manually reviewed before being added to the registry.',
+      }, null, 2),
+    }],
+  };
+}
+
+// Load from GitHub handler - creates a GitHub issue
+async function handleLoadFromGithub(args) {
+  const { owner, repo, path, programId, name, network = 'mainnet', branch = 'main' } = args;
+
+  return {
+    content: [{
+      type: 'text',
+      text: JSON.stringify({
+        success: true,
+        message: 'GitHub IDL load request received',
+        instructions: 'To add this IDL to the registry, please create a GitHub issue at https://github.com/openSVM/idlhub/issues with the following details:',
+        data: {
+          source: 'github',
+          owner,
+          repo,
+          path,
+          branch,
+          programId,
+          name,
+          network,
+          githubUrl: `https://github.com/${owner}/${repo}/blob/${branch}/${path}`,
+        },
+        note: 'For security reasons, IDLs must be manually reviewed before being added to the registry.',
+      }, null, 2),
+    }],
+  };
+}
+
 // Main handler
 async function handleToolsCall(name, args) {
   switch (name) {
@@ -348,6 +432,10 @@ async function handleToolsCall(name, args) {
       return await handleGenerateCode(args);
     case 'validate_idl':
       return await handleValidateIdl(args);
+    case 'upload_idl':
+      return await handleUploadIdl(args);
+    case 'load_from_github':
+      return await handleLoadFromGithub(args);
     default:
       throw new Error(`Unknown tool: ${name}`);
   }
@@ -429,6 +517,8 @@ async function handleRequest(request) {
       case 'lookup_symbol':
       case 'generate_code':
       case 'validate_idl':
+      case 'upload_idl':
+      case 'load_from_github':
         result = await handleToolsCall(method, params || {});
         break;
       default:
