@@ -9,7 +9,8 @@ const METHOD_NOT_FOUND = -32601;
 const INVALID_PARAMS = -32602;
 const INTERNAL_ERROR = -32603;
 
-// Load index.json from GitHub
+// OpenSVM API configuration
+const OPENSVM_API_BASE = process.env.OPENSVM_API_BASE || 'https://opensvm.com/api';
 let indexData = null;
 
 function fetchJSON(url) {
@@ -32,11 +33,13 @@ async function loadIndex() {
   if (indexData) return indexData;
 
   try {
-    // Try to load from filesystem first (for local testing)
-    const indexPath = path.join(__dirname, '..', '..', 'index.json');
-    indexData = JSON.parse(fs.readFileSync(indexPath, 'utf-8'));
+    // Load from OpenSVM API
+    const url = `${OPENSVM_API_BASE}/programs`;
+    const data = await fetchJSON(url);
+    indexData = { protocols: data.protocols || [] };
     return indexData;
   } catch (e) {
+    console.error('Failed to load from OpenSVM API:', e);
     // Fallback to GitHub
     try {
       const url = 'https://raw.githubusercontent.com/openSVM/idlhub/main/index.json';
@@ -153,22 +156,23 @@ const tools = [
   },
 ];
 
-// Helper to fetch IDL from GitHub raw
-function fetchIDL(idlPath) {
-  return new Promise((resolve, reject) => {
-    const url = `https://raw.githubusercontent.com/openSVM/idlhub/main/${idlPath}`;
-    https.get(url, (res) => {
-      let data = '';
-      res.on('data', chunk => data += chunk);
-      res.on('end', () => {
-        try {
-          resolve(JSON.parse(data));
-        } catch (e) {
-          reject(new Error('Failed to parse IDL'));
-        }
-      });
-    }).on('error', reject);
-  });
+// Helper to fetch IDL from OpenSVM API or GitHub
+async function fetchIDL(protocolId) {
+  try {
+    // Try OpenSVM API first
+    const url = `${OPENSVM_API_BASE}/programs/${protocolId}/idl`;
+    return await fetchJSON(url);
+  } catch (e) {
+    console.error(`Failed to load from OpenSVM API for ${protocolId}:`, e);
+    // Fallback to GitHub using protocol metadata
+    const index = await loadIndex();
+    const protocol = index.protocols.find(p => p.id === protocolId);
+    if (!protocol || !protocol.idlPath) {
+      throw new Error(`Protocol ${protocolId} not found or missing IDL path`);
+    }
+    const githubUrl = `https://raw.githubusercontent.com/openSVM/idlhub/main/${protocol.idlPath}`;
+    return await fetchJSON(githubUrl);
+  }
 }
 
 // Tool handlers
@@ -203,14 +207,7 @@ async function handleListSchemas(args) {
 }
 
 async function handleGetSchema(args) {
-  const index = await loadIndex();
-  const protocol = index.protocols?.find(p => p.id === args.protocol_id);
-
-  if (!protocol) {
-    throw new Error(`Protocol not found: ${args.protocol_id}`);
-  }
-
-  const idl = await fetchIDL(protocol.idlPath);
+  const idl = await fetchIDL(args.protocol_id);
   return {
     content: [{
       type: 'text',
@@ -220,14 +217,7 @@ async function handleGetSchema(args) {
 }
 
 async function handleLookupSymbol(args) {
-  const index = await loadIndex();
-  const protocol = index.protocols?.find(p => p.id === args.protocol_id);
-
-  if (!protocol) {
-    throw new Error(`Protocol not found: ${args.protocol_id}`);
-  }
-
-  const idl = await fetchIDL(protocol.idlPath);
+  const idl = await fetchIDL(args.protocol_id);
   const results = [];
 
   if (!args.symbol_type || args.symbol_type === 'instruction') {
@@ -260,14 +250,7 @@ async function handleLookupSymbol(args) {
 }
 
 async function handleGenerateCode(args) {
-  const index = await loadIndex();
-  const protocol = index.protocols?.find(p => p.id === args.protocol_id);
-
-  if (!protocol) {
-    throw new Error(`Protocol not found: ${args.protocol_id}`);
-  }
-
-  const idl = await fetchIDL(protocol.idlPath);
+  const idl = await fetchIDL(args.protocol_id);
   let code = '';
 
   const types = args.symbols ? idl.types?.filter(t => args.symbols.includes(t.name)) : idl.types;
@@ -367,14 +350,7 @@ function mapTypeToPython(type) {
 }
 
 async function handleValidateIdl(args) {
-  const index = await loadIndex();
-  const protocol = index.protocols?.find(p => p.id === args.protocol_id);
-
-  if (!protocol) {
-    throw new Error(`Protocol not found: ${args.protocol_id}`);
-  }
-
-  const idl = await fetchIDL(protocol.idlPath);
+  const idl = await fetchIDL(args.protocol_id);
   const diagnostics = { valid: true, errors: [], warnings: [], info: [] };
 
   if (!idl.version) { diagnostics.errors.push('Missing: version'); diagnostics.valid = false; }
@@ -524,10 +500,7 @@ async function handleRequest(request) {
       case 'resources/read':
         const match = params.uri?.match(/^idl:\/\/(.+)$/);
         if (!match) throw new Error('Invalid URI format');
-        const idx = loadIndex();
-        const proto = idx.protocols?.find(p => p.id === match[1]);
-        if (!proto) throw new Error(`Protocol not found: ${match[1]}`);
-        const idlContent = await fetchIDL(proto.idlPath);
+        const idlContent = await fetchIDL(match[1]);
         result = {
           contents: [{
             uri: params.uri,
