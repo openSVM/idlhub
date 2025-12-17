@@ -1,0 +1,360 @@
+{
+  "version": "0.1.0",
+  "name": "idl_protocol",
+  "instructions": [
+    {
+      "name": "initialize",
+      "accounts": [
+        { "name": "state", "isMut": true, "isSigner": false },
+        { "name": "idlMint", "isMut": true, "isSigner": false },
+        { "name": "sidlMint", "isMut": true, "isSigner": false },
+        { "name": "authority", "isMut": true, "isSigner": true },
+        { "name": "systemProgram", "isMut": false, "isSigner": false },
+        { "name": "tokenProgram", "isMut": false, "isSigner": false }
+      ],
+      "args": [
+        { "name": "treasury", "type": "publicKey" }
+      ]
+    },
+    {
+      "name": "stake",
+      "accounts": [
+        { "name": "state", "isMut": true, "isSigner": false },
+        { "name": "stakerAccount", "isMut": true, "isSigner": false },
+        { "name": "user", "isMut": true, "isSigner": true },
+        { "name": "userIdl", "isMut": true, "isSigner": false },
+        { "name": "userSidl", "isMut": true, "isSigner": false },
+        { "name": "vault", "isMut": true, "isSigner": false },
+        { "name": "sidlMint", "isMut": true, "isSigner": false },
+        { "name": "systemProgram", "isMut": false, "isSigner": false },
+        { "name": "tokenProgram", "isMut": false, "isSigner": false }
+      ],
+      "args": [
+        { "name": "amount", "type": "u64" }
+      ]
+    },
+    {
+      "name": "unstake",
+      "accounts": [
+        { "name": "state", "isMut": true, "isSigner": false },
+        { "name": "stakerAccount", "isMut": true, "isSigner": false },
+        { "name": "user", "isMut": true, "isSigner": true },
+        { "name": "userIdl", "isMut": true, "isSigner": false },
+        { "name": "userSidl", "isMut": true, "isSigner": false },
+        { "name": "vault", "isMut": true, "isSigner": false },
+        { "name": "sidlMint", "isMut": true, "isSigner": false },
+        { "name": "tokenProgram", "isMut": false, "isSigner": false }
+      ],
+      "args": [
+        { "name": "sidlAmount", "type": "u64" }
+      ]
+    },
+    {
+      "name": "rebase",
+      "accounts": [
+        { "name": "state", "isMut": true, "isSigner": false }
+      ],
+      "args": []
+    },
+    {
+      "name": "lockForVe",
+      "accounts": [
+        { "name": "state", "isMut": true, "isSigner": false },
+        { "name": "vePosition", "isMut": true, "isSigner": false },
+        { "name": "user", "isMut": true, "isSigner": true },
+        { "name": "userSidl", "isMut": true, "isSigner": false },
+        { "name": "veEscrow", "isMut": true, "isSigner": false },
+        { "name": "systemProgram", "isMut": false, "isSigner": false },
+        { "name": "tokenProgram", "isMut": false, "isSigner": false }
+      ],
+      "args": [
+        { "name": "amount", "type": "u64" },
+        { "name": "lockDuration", "type": "i64" }
+      ]
+    },
+    {
+      "name": "unlockVe",
+      "accounts": [
+        { "name": "state", "isMut": true, "isSigner": false },
+        { "name": "vePosition", "isMut": true, "isSigner": false },
+        { "name": "user", "isMut": true, "isSigner": true },
+        { "name": "userSidl", "isMut": true, "isSigner": false },
+        { "name": "veEscrow", "isMut": true, "isSigner": false },
+        { "name": "tokenProgram", "isMut": false, "isSigner": false }
+      ],
+      "args": []
+    },
+    {
+      "name": "bond",
+      "accounts": [
+        { "name": "state", "isMut": false, "isSigner": false },
+        { "name": "bondConfig", "isMut": false, "isSigner": false },
+        { "name": "userBond", "isMut": true, "isSigner": false },
+        { "name": "user", "isMut": true, "isSigner": true },
+        { "name": "userBondAsset", "isMut": true, "isSigner": false },
+        { "name": "bondTreasury", "isMut": true, "isSigner": false },
+        { "name": "systemProgram", "isMut": false, "isSigner": false },
+        { "name": "tokenProgram", "isMut": false, "isSigner": false }
+      ],
+      "args": [
+        { "name": "amount", "type": "u64" }
+      ]
+    },
+    {
+      "name": "claimBond",
+      "accounts": [
+        { "name": "state", "isMut": false, "isSigner": false },
+        { "name": "userBond", "isMut": true, "isSigner": false },
+        { "name": "user", "isMut": false, "isSigner": true },
+        { "name": "userIdl", "isMut": true, "isSigner": false },
+        { "name": "idlMint", "isMut": true, "isSigner": false },
+        { "name": "tokenProgram", "isMut": false, "isSigner": false }
+      ],
+      "args": []
+    },
+    {
+      "name": "createMarket",
+      "accounts": [
+        { "name": "market", "isMut": true, "isSigner": false },
+        { "name": "creator", "isMut": true, "isSigner": true },
+        { "name": "systemProgram", "isMut": false, "isSigner": false }
+      ],
+      "args": [
+        { "name": "protocolId", "type": "string" },
+        { "name": "metricType", "type": { "defined": "MetricType" } },
+        { "name": "targetValue", "type": "u64" },
+        { "name": "resolutionTimestamp", "type": "i64" },
+        { "name": "description", "type": "string" }
+      ]
+    },
+    {
+      "name": "placeBet",
+      "accounts": [
+        { "name": "market", "isMut": true, "isSigner": false },
+        { "name": "bet", "isMut": true, "isSigner": false },
+        { "name": "stakerAccount", "isMut": false, "isSigner": false },
+        { "name": "user", "isMut": true, "isSigner": true },
+        { "name": "userIdl", "isMut": true, "isSigner": false },
+        { "name": "marketPool", "isMut": true, "isSigner": false },
+        { "name": "systemProgram", "isMut": false, "isSigner": false },
+        { "name": "tokenProgram", "isMut": false, "isSigner": false }
+      ],
+      "args": [
+        { "name": "amount", "type": "u64" },
+        { "name": "betYes", "type": "bool" }
+      ]
+    },
+    {
+      "name": "resolveMarket",
+      "accounts": [
+        { "name": "market", "isMut": true, "isSigner": false },
+        { "name": "resolver", "isMut": false, "isSigner": true }
+      ],
+      "args": [
+        { "name": "actualValue", "type": "u64" }
+      ]
+    },
+    {
+      "name": "claimWinnings",
+      "accounts": [
+        { "name": "state", "isMut": true, "isSigner": false },
+        { "name": "market", "isMut": false, "isSigner": false },
+        { "name": "bet", "isMut": true, "isSigner": false },
+        { "name": "user", "isMut": false, "isSigner": true },
+        { "name": "userIdl", "isMut": true, "isSigner": false },
+        { "name": "marketPool", "isMut": true, "isSigner": false },
+        { "name": "tokenProgram", "isMut": false, "isSigner": false }
+      ],
+      "args": []
+    },
+    {
+      "name": "voteGauge",
+      "accounts": [
+        { "name": "gauge", "isMut": true, "isSigner": false },
+        { "name": "vePosition", "isMut": false, "isSigner": false },
+        { "name": "gaugeVote", "isMut": true, "isSigner": false },
+        { "name": "user", "isMut": true, "isSigner": true },
+        { "name": "systemProgram", "isMut": false, "isSigner": false }
+      ],
+      "args": [
+        { "name": "weight", "type": "u64" }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "ProtocolState",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          { "name": "authority", "type": "publicKey" },
+          { "name": "treasury", "type": "publicKey" },
+          { "name": "idlMint", "type": "publicKey" },
+          { "name": "sidlMint", "type": "publicKey" },
+          { "name": "totalStaked", "type": "u64" },
+          { "name": "totalVeSupply", "type": "u64" },
+          { "name": "lastRebaseEpoch", "type": "u64" },
+          { "name": "rebaseIndex", "type": "u64" },
+          { "name": "totalFeesCollected", "type": "u64" },
+          { "name": "totalBurned", "type": "u64" },
+          { "name": "bump", "type": "u8" }
+        ]
+      }
+    },
+    {
+      "name": "StakerAccount",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          { "name": "owner", "type": "publicKey" },
+          { "name": "stakedAmount", "type": "u64" },
+          { "name": "sidlBalance", "type": "u64" },
+          { "name": "lastStakeTimestamp", "type": "i64" }
+        ]
+      }
+    },
+    {
+      "name": "VePosition",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          { "name": "owner", "type": "publicKey" },
+          { "name": "lockedAmount", "type": "u64" },
+          { "name": "veAmount", "type": "u64" },
+          { "name": "lockStart", "type": "i64" },
+          { "name": "lockEnd", "type": "i64" },
+          { "name": "bump", "type": "u8" }
+        ]
+      }
+    },
+    {
+      "name": "BondConfig",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          { "name": "bondAsset", "type": "publicKey" },
+          { "name": "discountBps", "type": "u16" },
+          { "name": "vestingTerm", "type": "i64" },
+          { "name": "maxCapacity", "type": "u64" },
+          { "name": "totalBonded", "type": "u64" },
+          { "name": "isActive", "type": "bool" },
+          { "name": "bump", "type": "u8" }
+        ]
+      }
+    },
+    {
+      "name": "UserBond",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          { "name": "owner", "type": "publicKey" },
+          { "name": "bondConfig", "type": "publicKey" },
+          { "name": "amountBonded", "type": "u64" },
+          { "name": "idlToVest", "type": "u64" },
+          { "name": "vestingStart", "type": "i64" },
+          { "name": "vestingEnd", "type": "i64" },
+          { "name": "lastClaim", "type": "i64" }
+        ]
+      }
+    },
+    {
+      "name": "PredictionMarket",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          { "name": "creator", "type": "publicKey" },
+          { "name": "protocolId", "type": "string" },
+          { "name": "metricType", "type": { "defined": "MetricType" } },
+          { "name": "targetValue", "type": "u64" },
+          { "name": "resolutionTimestamp", "type": "i64" },
+          { "name": "description", "type": "string" },
+          { "name": "totalYesAmount", "type": "u64" },
+          { "name": "totalNoAmount", "type": "u64" },
+          { "name": "resolved", "type": "bool" },
+          { "name": "outcome", "type": { "option": "bool" } },
+          { "name": "actualValue", "type": { "option": "u64" } },
+          { "name": "createdAt", "type": "i64" },
+          { "name": "bump", "type": "u8" }
+        ]
+      }
+    },
+    {
+      "name": "Bet",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          { "name": "owner", "type": "publicKey" },
+          { "name": "market", "type": "publicKey" },
+          { "name": "amount", "type": "u64" },
+          { "name": "effectiveAmount", "type": "u64" },
+          { "name": "betYes", "type": "bool" },
+          { "name": "timestamp", "type": "i64" },
+          { "name": "claimed", "type": "bool" }
+        ]
+      }
+    },
+    {
+      "name": "Gauge",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          { "name": "protocolId", "type": "string" },
+          { "name": "totalVotes", "type": "u64" },
+          { "name": "rewardWeight", "type": "u64" },
+          { "name": "bump", "type": "u8" }
+        ]
+      }
+    },
+    {
+      "name": "GaugeVote",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          { "name": "voter", "type": "publicKey" },
+          { "name": "gauge", "type": "publicKey" },
+          { "name": "weight", "type": "u64" },
+          { "name": "votingPower", "type": "u64" },
+          { "name": "timestamp", "type": "i64" }
+        ]
+      }
+    }
+  ],
+  "types": [
+    {
+      "name": "MetricType",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          { "name": "Tvl" },
+          { "name": "Volume24h" },
+          { "name": "Users" },
+          { "name": "Transactions" },
+          { "name": "Price" },
+          { "name": "MarketCap" },
+          { "name": "Custom" }
+        ]
+      }
+    }
+  ],
+  "errors": [
+    { "code": 6000, "name": "InvalidAmount", "msg": "Invalid amount" },
+    { "code": 6001, "name": "RebaseTooEarly", "msg": "Rebase too early" },
+    { "code": 6002, "name": "InvalidLockDuration", "msg": "Invalid lock duration" },
+    { "code": 6003, "name": "LockNotExpired", "msg": "Lock not expired" },
+    { "code": 6004, "name": "BondNotActive", "msg": "Bond not active" },
+    { "code": 6005, "name": "BondCapacityExceeded", "msg": "Bond capacity exceeded" },
+    { "code": 6006, "name": "NothingToClaim", "msg": "Nothing to claim" },
+    { "code": 6007, "name": "InvalidInput", "msg": "Invalid input" },
+    { "code": 6008, "name": "InvalidTimestamp", "msg": "Invalid timestamp" },
+    { "code": 6009, "name": "MarketResolved", "msg": "Market already resolved" },
+    { "code": 6010, "name": "MarketNotResolved", "msg": "Market not resolved" },
+    { "code": 6011, "name": "BettingClosed", "msg": "Betting closed" },
+    { "code": 6012, "name": "ResolutionTooEarly", "msg": "Resolution too early" },
+    { "code": 6013, "name": "AlreadyClaimed", "msg": "Already claimed" },
+    { "code": 6014, "name": "VeExpired", "msg": "veIDL position expired" },
+    { "code": 6015, "name": "InvalidWeight", "msg": "Invalid weight" }
+  ],
+  "metadata": {
+    "address": "IDLpro111111111111111111111111111111111111"
+  }
+}
