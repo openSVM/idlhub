@@ -45,10 +45,11 @@ class IDLHubJSONRPCServer {
   }
 
   getToolDefinitions() {
+    // Local registry tools
     const localTools = [
       {
         name: 'list_schemas',
-        description: 'List all available IDL schemas in the registry',
+        description: 'List all available IDL schemas in the local registry',
         inputSchema: {
           type: 'object',
           properties: {
@@ -59,7 +60,7 @@ class IDLHubJSONRPCServer {
       },
       {
         name: 'get_schema',
-        description: 'Retrieve a specific IDL schema by protocol ID',
+        description: 'Retrieve a specific IDL schema by protocol ID from local registry',
         inputSchema: {
           type: 'object',
           properties: {
@@ -115,10 +116,11 @@ class IDLHubJSONRPCServer {
       },
     ];
 
+    // Remote API tools for IDL management
     const apiTools = [
       {
         name: 'list_idls',
-        description: 'List all IDLs with optional filtering by network',
+        description: 'List all IDLs from remote API with optional filtering by network',
         inputSchema: {
           type: 'object',
           properties: {
@@ -130,7 +132,7 @@ class IDLHubJSONRPCServer {
       },
       {
         name: 'get_idl',
-        description: 'Get a specific IDL by program ID',
+        description: 'Get a specific IDL by program ID from remote API',
         inputSchema: {
           type: 'object',
           properties: {
@@ -167,9 +169,54 @@ class IDLHubJSONRPCServer {
           required: ['programId', 'network', 'idl'],
         },
       },
+      {
+        name: 'load_from_github',
+        description: 'Load an IDL file from a GitHub repository',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            owner: { type: 'string', description: 'GitHub repository owner' },
+            repo: { type: 'string', description: 'GitHub repository name' },
+            path: { type: 'string', description: 'Path to IDL file in repository' },
+            programId: { type: 'string', description: 'Solana program address' },
+            name: { type: 'string', description: 'Program name' },
+            network: { type: 'string', enum: ['mainnet', 'devnet', 'testnet'], default: 'mainnet' },
+            branch: { type: 'string', default: 'main', description: 'Git branch' },
+          },
+          required: ['owner', 'repo', 'path', 'programId', 'name'],
+        },
+      },
+      {
+        name: 'create_or_update_idl',
+        description: 'Create or update an IDL in the registry',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            programId: { type: 'string', description: 'Solana program address' },
+            network: { type: 'string', enum: ['mainnet', 'devnet', 'testnet'] },
+            name: { type: 'string', description: 'Program name (optional)' },
+            idl: { type: 'object', description: 'Complete IDL JSON object' },
+            metadata: { type: 'object', description: 'Additional metadata (optional)' },
+          },
+          required: ['programId', 'network', 'idl'],
+        },
+      },
+      {
+        name: 'delete_idl',
+        description: 'Delete an IDL from the registry',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            programId: { type: 'string', description: 'Solana program address' },
+            network: { type: 'string', enum: ['mainnet', 'devnet', 'testnet'], default: 'mainnet' },
+          },
+          required: ['programId'],
+        },
+      },
     ];
 
-    return this.mode === 'api' ? apiTools : localTools;
+    // Return ALL tools - both local and API
+    return [...localTools, ...apiTools];
   }
 
   async initialize() {
@@ -257,16 +304,20 @@ class IDLHubJSONRPCServer {
           result = await this.handleResourcesRead(params);
           break;
 
-        // Direct tool methods (shorthand)
+        // Direct tool methods (shorthand) - Local tools
         case 'list_schemas':
         case 'get_schema':
         case 'lookup_symbol':
         case 'generate_code':
         case 'validate_idl':
+        // Direct tool methods (shorthand) - API tools
         case 'list_idls':
         case 'get_idl':
         case 'search_idls':
         case 'upload_idl':
+        case 'load_from_github':
+        case 'create_or_update_idl':
+        case 'delete_idl':
           result = await this.handleToolsCall({ name: method, arguments: params || {} });
           break;
 
@@ -316,10 +367,17 @@ class IDLHubJSONRPCServer {
   async handleToolsCall(params) {
     const { name, arguments: args = {} } = params;
 
-    if (this.mode === 'local') {
+    // Local registry tools
+    const localTools = ['list_schemas', 'get_schema', 'lookup_symbol', 'generate_code', 'validate_idl'];
+    // API tools
+    const apiTools = ['list_idls', 'get_idl', 'search_idls', 'upload_idl', 'load_from_github', 'create_or_update_idl', 'delete_idl'];
+
+    if (localTools.includes(name)) {
       return await this.handleLocalToolCall(name, args);
-    } else {
+    } else if (apiTools.includes(name)) {
       return await this.handleApiToolCall(name, args);
+    } else {
+      throw new Error(`Unknown tool: ${name}`);
     }
   }
 
@@ -662,6 +720,35 @@ class IDLHubJSONRPCServer {
           endpoint = '/api/idl/upload';
           method = 'POST';
           data = { programId: args.programId, network: args.network, name: args.name, idl: args.idl };
+          break;
+        case 'load_from_github':
+          endpoint = '/api/idl/load-from-github';
+          method = 'POST';
+          data = {
+            owner: args.owner,
+            repo: args.repo,
+            path: args.path,
+            programId: args.programId,
+            name: args.name,
+            network: args.network || 'mainnet',
+            branch: args.branch || 'main',
+          };
+          break;
+        case 'create_or_update_idl':
+          endpoint = '/api/idl';
+          method = 'POST';
+          data = {
+            programId: args.programId,
+            network: args.network,
+            name: args.name,
+            idl: args.idl,
+            metadata: args.metadata,
+          };
+          break;
+        case 'delete_idl':
+          endpoint = `/api/idl/${args.programId}`;
+          method = 'DELETE';
+          params = { network: args.network || 'mainnet' };
           break;
         default:
           throw new Error(`Unknown API tool: ${name}`);
