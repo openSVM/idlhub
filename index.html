@@ -1573,10 +1573,9 @@
                 return;
             }
 
-            // Load IDL
+            // Load IDL via MCP API
             try {
-                const response = await fetch('./' + protocol.idlPath);
-                const idl = await response.json();
+                const idl = await getIDL(protocol.id);
                 const programAddress = idl.metadata?.address || 'N/A';
 
                 // Count instructions and accounts
@@ -1698,13 +1697,42 @@
             renderProtocols();
         }
 
+        // MCP API helpers
+        async function mcpCall(method, params = {}) {
+            const response = await fetch('/api/mcp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    jsonrpc: '2.0',
+                    method: method,
+                    params: params,
+                    id: Date.now()
+                })
+            });
+            const result = await response.json();
+            if (result.error) {
+                throw new Error(result.error.message);
+            }
+            return result.result;
+        }
+
+        async function getIDL(protocolId) {
+            const result = await mcpCall('get_schema', { protocol_id: protocolId });
+            return JSON.parse(result.content[0].text);
+        }
+
+        async function listSchemas(filters = {}) {
+            const result = await mcpCall('list_schemas', filters);
+            return JSON.parse(result.content[0].text);
+        }
+
         // Load index.json and initialize
         async function init() {
             loadTheme();
             loadBookmarks();
             try {
-                const response = await fetch('./index.json');
-                const data = await response.json();
+                // Use MCP API to load schemas
+                const data = await listSchemas();
                 allProtocols = data.protocols;
                 filteredProtocols = allProtocols;
 
@@ -1737,8 +1765,7 @@
         async function buildAddressMap() {
             for (const protocol of allProtocols) {
                 try {
-                    const response = await fetch('./' + protocol.idlPath);
-                    const idl = await response.json();
+                    const idl = await getIDL(protocol.id);
                     if (idl.metadata?.address) {
                         protocolAddressMap[idl.metadata.address] = protocol.id;
                     }
@@ -2525,8 +2552,7 @@ Use these instructions to help users interact with IDLHub effectively. The servi
             if (!protocol) return;
 
             try {
-                const response = await fetch('./' + protocol.idlPath);
-                const idl = await response.json();
+                const idl = await getIDL(protocolId);
 
                 const newWindow = window.open('', '_blank');
                 newWindow.document.write(`
@@ -2554,8 +2580,7 @@ Use these instructions to help users interact with IDLHub effectively. The servi
             if (!protocol) return;
 
             try {
-                const response = await fetch('./' + protocol.idlPath);
-                const idl = await response.json();
+                const idl = await getIDL(protocolId);
 
                 const blob = new Blob([JSON.stringify(idl, null, 2)], { type: 'application/json' });
                 const url = URL.createObjectURL(blob);
@@ -2580,8 +2605,7 @@ Use these instructions to help users interact with IDLHub effectively. The servi
                 if (!protocol) continue;
 
                 try {
-                    const response = await fetch('./' + protocol.idlPath);
-                    const idl = await response.json();
+                    const idl = await getIDL(protocolId);
                     idls[protocolId] = idl;
                 } catch (error) {
                     errors.push(`${protocol.name}: ${error.message}`);
