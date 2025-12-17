@@ -1,7 +1,7 @@
 [build]
-  # No build command needed for static site
   publish = "."
   command = "echo 'No build required'"
+  functions = "netlify/functions"
 
 # Redirect /mcp to install.sh script
 [[redirects]]
@@ -28,6 +28,13 @@
 [[redirects]]
   from = "/docs"
   to = "/docs.html"
+  status = 200
+  force = true
+
+# API MCP endpoint -> Netlify Function
+[[redirects]]
+  from = "/api/mcp"
+  to = "/.netlify/functions/mcp"
   status = 200
   force = true
 
