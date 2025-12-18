@@ -26,6 +26,16 @@ $IDL is the native token of IDLHub, Solana's largest Interface Definition Langua
 6. [Prediction Markets](#6-prediction-markets)
 7. [Fee Structure](#7-fee-structure)
 8. [Economic Model](#8-economic-model)
+   - 8.1 Value Accrual Mechanics
+   - 8.2 Deflationary Tokenomics
+   - 8.3 Staking Economics
+   - 8.4 Prediction Market Economics
+   - 8.5 Flywheel Effect
+   - 8.6 Game Theory
+   - 8.7 Risk Factors
+   - 8.8 Token Utility Summary
+   - 8.9 Comparison to Other Models
+   - 8.10 Long-Term Value Proposition
 9. [Governance](#9-governance)
 10. [Security Considerations](#10-security-considerations)
 11. [Roadmap](#11-roadmap)
@@ -529,7 +539,9 @@ As markets resolve:
 
 ## 8. Economic Model
 
-### 8.1 Value Accrual
+### 8.1 Value Accrual Mechanics
+
+The $IDL token captures value through multiple interconnected mechanisms:
 
 ```
                          +------------------+
@@ -563,7 +575,144 @@ As markets resolve:
     +------------------+ +------------------+ +------------------+
 ```
 
-### 8.2 Flywheel Effect
+### 8.2 Deflationary Tokenomics
+
+Unlike inflationary models that dilute holders, $IDL has **pure deflationary mechanics**:
+
+```
+SUPPLY DYNAMICS
+===============
+
+Initial Supply:      1,000,000,000 IDL
+                            |
+                            v
+                    +--------------+
+                    |  BURN ONLY   |  No minting function
+                    +--------------+  No inflation
+                            |
+                            v
+                    +---------------+
+                    |  10% of fees  |
+                    |   BURNED      |
+                    +---------------+
+                            |
+                            v
+                    Final Supply < 1B (always decreasing)
+```
+
+**Burn Rate Projections:**
+
+| Scenario | Daily Volume | Annual Fees | Annual Burn | Supply After 5 Years |
+|----------|-------------|-------------|-------------|---------------------|
+| Bear | $10,000 | $109,500 | $10,950 | 999,945,250 IDL |
+| Base | $100,000 | $1,095,000 | $109,500 | 999,452,500 IDL |
+| Bull | $1,000,000 | $10,950,000 | $1,095,000 | 994,525,000 IDL |
+| Moon | $10,000,000 | $109,500,000 | $10,950,000 | 945,250,000 IDL |
+
+### 8.3 Staking Economics
+
+**Real Yield, Not Emissions:**
+
+$IDL staking generates yield from **actual protocol revenue**, not token emissions:
+
+```
+Traditional DeFi                    $IDL Staking
+===============                    ==============
+
+Print new tokens ────────>    ❌    No new tokens minted
+Distribute to stakers
+Inflation dilutes value
+
+                              ✓    Fees from prediction markets
+                                   ────> Distributed to stakers
+                                   Real economic activity = Real yield
+```
+
+**APY Calculation:**
+
+```
+Staking APY = (Annual Fees × 50%) / Total Staked Value
+
+Example:
+- Annual betting volume: $10,000,000
+- Fees (3%):             $300,000
+- Staker share (50%):    $150,000
+- Total staked:          $500,000 worth of IDL
+- Staking APY:           30%
+
+Note: APY varies with volume and staked amount
+```
+
+**Staking Lock-Up Incentives:**
+
+| Lock Duration | veIDL Multiplier | Effective APY Boost |
+|--------------|------------------|---------------------|
+| No lock | 0x | Base APY |
+| 1 week | 0.005x | +0.5% bonus |
+| 1 month | 0.02x | +2% bonus |
+| 6 months | 0.125x | +12.5% bonus |
+| 1 year | 0.25x | +25% bonus |
+| 4 years (max) | 1.0x | +100% bonus (2x base) |
+
+### 8.4 Prediction Market Economics
+
+**Parimutuel vs Order Book:**
+
+$IDL uses parimutuel markets, which are simpler and more fair:
+
+```
+ORDER BOOK (Polymarket-style)         PARIMUTUEL ($IDL)
+==========================         ===================
+
+Market makers set odds          All bets pooled together
+Spread = MM profit              No spread, no MM
+Complex liquidity               Simple: bet yes or no
+Can be manipulated              Natural price discovery
+
+Pro: More capital efficient     Pro: Fair to all bettors
+Con: Sophisticated users win    Con: Less flexible odds
+```
+
+**Winnings Calculation:**
+
+```
+Your Winnings = Your Bet × (Losing Pool / Winning Pool)
+
+Example Market Resolution:
+==========================
+YES Pool: 700,000 IDL (70%)
+NO Pool:  300,000 IDL (30%)
+Your Bet: 100,000 IDL on YES
+Result:   YES wins
+
+Your Share of YES Pool: 100,000 / 700,000 = 14.28%
+Your Share of NO Pool:  300,000 × 14.28% = 42,857 IDL
+
+Gross Return: 100,000 + 42,857 = 142,857 IDL
+Fee (3%):     142,857 × 0.03 = 4,286 IDL
+Net Return:   138,571 IDL
+Net Profit:   38,571 IDL (+38.6%)
+```
+
+**Betting Power with Staking:**
+
+```
+STAKER ADVANTAGE
+================
+
+Non-Staker:
+  Bet 100 IDL → Counted as 100 IDL
+
+Staker (10M IDL staked):
+  Bet 100 IDL → Counted as 110 IDL (10% bonus)
+
+Max Staker (50M+ IDL):
+  Bet 100 IDL → Counted as 150 IDL (50% bonus)
+
+This means stakers get proportionally MORE of the winning pool!
+```
+
+### 8.5 Flywheel Effect
 
 ```
                     +-> More Stakers
@@ -614,6 +763,81 @@ As markets resolve:
 | Smart Contract Bug | Fund loss | Audits, bug bounty |
 | Regulatory | Securities classification | Memecoin framing |
 | Competition | Other prediction markets | IDLHub integration |
+
+### 8.8 Token Utility Summary
+
+```
++==================+=================================================+
+|     UTILITY      |                  DESCRIPTION                    |
++==================+=================================================+
+| STAKE            | Deposit IDL to earn 50% of protocol fees        |
+|                  | Real yield from prediction market activity      |
++------------------+-------------------------------------------------+
+| LOCK (veIDL)     | Time-lock staked IDL for governance power       |
+|                  | Longer lock = more voting influence             |
++------------------+-------------------------------------------------+
+| BET              | Place predictions on DeFi protocol metrics      |
+|                  | Stakers get up to 50% bonus betting power       |
++------------------+-------------------------------------------------+
+| VOTE             | veIDL holders control protocol parameters       |
+|                  | Fee rates, oracle selection, treasury spend     |
++------------------+-------------------------------------------------+
+| BURN             | 10% of all fees permanently removed from supply |
+|                  | Deflationary pressure increases scarcity        |
++------------------+-------------------------------------------------+
+| BADGE            | Trade on bags.fm to earn permanent veIDL        |
+|                  | Volume tiers: Bronze → Diamond                  |
++==================+=================================================+
+```
+
+### 8.9 Comparison to Other Token Models
+
+```
+MODEL COMPARISON
+================
+
+PURE GOVERNANCE (UNI, AAVE)           $IDL HYBRID
+   - Vote on proposals                   - Vote on proposals ✓
+   - No staking yield                    - Real staking yield ✓
+   - No burning                          - Deflationary burns ✓
+   - Speculation only                    - Speculation + utility ✓
+
+REBASING/INFLATIONARY (OHM, SPELL)    $IDL HYBRID
+   - High APY (emissions)                - Lower APY (real yield) ✓
+   - Infinite inflation                  - Zero inflation ✓
+   - Ponzinomics risk                    - Sustainable model ✓
+   - Dilution over time                  - Appreciation over time ✓
+
+PURE UTILITY (LINK, GRT)              $IDL HYBRID
+   - Service payment only                - Prediction market betting ✓
+   - No staking                          - Staking with fees ✓
+   - Demand-driven value                 - Multi-source value ✓
+```
+
+### 8.10 Long-Term Value Proposition
+
+**For Stakers:**
+```
+YEAR 1: Stake IDL → Earn fees → Compound into more IDL
+YEAR 2: Lock for veIDL → Boost betting power → Earn more
+YEAR 3: Burns reduce supply → Your % of supply grows
+YEAR 4: Governance influence → Shape protocol direction
+```
+
+**For Traders:**
+```
+ACTIVITY: Trade IDL on bags.fm
+REWARD:   Volume badges grant permanent veIDL
+BENEFIT:  No lock required, voting power from activity
+SYNERGY:  Trade volume → fees generated → ecosystem grows
+```
+
+**For Bettors:**
+```
+ADVANTAGE: Stake + bet for maximum returns
+STRATEGY:  Research DeFi protocols via IDLHub → informed bets
+EDGE:      50% bonus betting power vs non-stakers
+```
 
 ---
 
@@ -669,6 +893,41 @@ PHASE 4: Execution
 ---
 
 ## 10. Security Considerations
+
+### 10.0 Protocol Constants
+
+The protocol enforces these hardcoded security parameters:
+
+```
+TIMING PARAMETERS
+=================
+MIN_RESOLUTION_DELAY      = 86,400 seconds (24 hours)
+BETTING_CLOSE_WINDOW      = 3,600 seconds (1 hour before resolution)
+CLAIM_DELAY_AFTER_RESOLVE = 300 seconds (5 minutes)
+MIN_LOCK_DURATION         = 604,800 seconds (1 week)
+MAX_LOCK_DURATION         = 126,144,000 seconds (4 years)
+
+ECONOMIC PARAMETERS
+===================
+MIN_BET_AMOUNT           = 1,000,000 units (0.001 IDL, prevents dust)
+STAKER_FEE_BPS           = 5,000 (50% of fees to stakers)
+CREATOR_FEE_BPS          = 2,500 (25% to market creator)
+TREASURY_FEE_BPS         = 1,500 (15% to treasury)
+BURN_RATE_BPS            = 1,000 (10% burned)
+MAX_STAKER_BONUS_BPS     = 5,000 (50% max betting bonus)
+STAKER_BONUS_DIVISOR     = 100,000,000 (scaling factor)
+```
+
+**Why These Values?**
+
+| Parameter | Rationale |
+|-----------|-----------|
+| 24h resolution delay | Prevents same-day oracle manipulation |
+| 1h betting close | Stops last-second information arbitrage |
+| 5 min claim delay | Allows dispute window |
+| 0.001 IDL minimum | Prevents bet account spam attacks |
+| 50% to stakers | Competitive yield attracts staking |
+| 10% burn | Meaningful deflation without being excessive |
 
 ### 10.1 Smart Contract Security
 
@@ -796,8 +1055,14 @@ DYOR. NFA. WAGMI (maybe).
 ---
 
 ```
-Document Version: 1.0.0
+Document Version: 1.1.0
 Last Updated:     December 2024
 Authors:          IDLHub Team
 License:          MIT
+
+Changelog:
+- v1.1.0: Expanded tokenomics section with deflationary mechanics,
+          staking economics, APY calculations, parimutuel details,
+          model comparisons, protocol constants, and value propositions
+- v1.0.0: Initial whitepaper release
 ```
