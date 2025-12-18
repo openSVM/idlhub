@@ -1,0 +1,108 @@
+{
+  "timestamp": "2025-12-18T01:50:29.969Z",
+  "results": [
+    {
+      "name": "Cross-Account Deserialization",
+      "category": "Account Conflation",
+      "vulnerable": false,
+      "description": "Anchor discriminators prevent cross-type deserialization",
+      "severity": "MEDIUM",
+      "mitigated": true,
+      "attackDetails": "Anchor adds 8-byte discriminator to each account type"
+    },
+    {
+      "name": "Protocol Re-initialization",
+      "category": "Re-initialization",
+      "vulnerable": false,
+      "description": "Anchor init prevents re-initialization",
+      "severity": "CRITICAL",
+      "mitigated": true
+    },
+    {
+      "name": "Staker Reset Attack",
+      "category": "Re-initialization",
+      "vulnerable": false,
+      "description": "init_if_needed does not reset existing accounts",
+      "severity": "HIGH",
+      "mitigated": true
+    },
+    {
+      "name": "Bet Front-Running",
+      "category": "Front-Running",
+      "vulnerable": true,
+      "description": "No commit-reveal scheme; bets visible in mempool",
+      "severity": "MEDIUM",
+      "mitigated": false,
+      "attackDetails": "Front-runner can shift odds before victim transaction"
+    },
+    {
+      "name": "Resolution Front-Running",
+      "category": "Front-Running",
+      "vulnerable": true,
+      "description": "5-minute window before resolution is too short",
+      "severity": "MEDIUM",
+      "mitigated": false,
+      "attackDetails": "Recommend: 1-hour betting close before resolution"
+    },
+    {
+      "name": "Oracle Self-Dealing",
+      "category": "Oracle Manipulation",
+      "vulnerable": true,
+      "description": "Oracle (creator) can bet on own market",
+      "severity": "HIGH",
+      "mitigated": false,
+      "attackDetails": "No check preventing oracle from betting"
+    },
+    {
+      "name": "Oracle Centralization",
+      "category": "Oracle Manipulation",
+      "vulnerable": true,
+      "description": "Single oracle without consensus mechanism",
+      "severity": "MEDIUM",
+      "mitigated": false,
+      "attackDetails": "Recommend: Multi-sig oracles or Chainlink/Pyth integration"
+    },
+    {
+      "name": "Claim Others Winnings",
+      "category": "Access Control",
+      "vulnerable": false,
+      "description": "bet.owner constraint prevents unauthorized claims",
+      "severity": "HIGH",
+      "mitigated": true,
+      "attackDetails": "ClaimWinnings checks bet.owner == user.key()"
+    },
+    {
+      "name": "Stake Overflow",
+      "category": "Integer Overflow",
+      "vulnerable": false,
+      "description": "Overflow prevented by checked_add or token limits",
+      "severity": "CRITICAL",
+      "mitigated": true
+    },
+    {
+      "name": "veIDL Calculation Overflow",
+      "category": "Integer Overflow",
+      "vulnerable": false,
+      "description": "u128 intermediate calculation prevents overflow",
+      "severity": "HIGH",
+      "mitigated": true,
+      "attackDetails": "Uses checked_mul/checked_div with u128"
+    },
+    {
+      "name": "Market PDA Collision",
+      "category": "PDA Security",
+      "vulnerable": false,
+      "description": "init prevents duplicate PDAs",
+      "severity": "HIGH",
+      "mitigated": true
+    },
+    {
+      "name": "Bet Nonce Prediction",
+      "category": "PDA Security",
+      "vulnerable": false,
+      "description": "User-controlled nonce prevents prediction",
+      "severity": "LOW",
+      "mitigated": true
+    }
+  ]
+}
