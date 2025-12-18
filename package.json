@@ -6,6 +6,9 @@
   "scripts": {
     "test": "node mcp-server/test/basic.test.js",
     "test:api-mcp": "node mcp-server/test/api-server.test.js",
+    "test:api": "node api/test/server.test.js",
+    "test:api:unit": "node api/test/server.unit.test.js",
+    "test:all": "npm run test:api:unit && npm run test && npm run test:api",
     "mcp:stdio": "node mcp-server/src/index.js",
     "mcp:websocket": "node mcp-server/src/websocket-server.js",
     "mcp:api": "node mcp-server/src/api-server.js",

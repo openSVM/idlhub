@@ -1,0 +1,71 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+# Set minimal permissions for security
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run MCP server tests
+        run: npm test
+
+      - name: Run API server unit tests
+        run: node api/test/server.unit.test.js
+
+      - name: Run API server integration tests
+        run: node api/test/server.test.js
+        timeout-minutes: 5
+
+      - name: Run MCP API server tests
+        run: npm run test:api-mcp
+        timeout-minutes: 5
+        continue-on-error: true
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check for syntax errors
+        run: |
+          node --check api/server.js
+          node --check mcp-server/src/index.js
+          node --check mcp-server/src/api-server.js
+          node --check mcp-server/src/websocket-server.js
