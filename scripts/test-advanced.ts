@@ -108,18 +108,20 @@ async function main() {
   console.log('TEST: Place YES Bet (100 tokens)');
   console.log('-'.repeat(60));
 
-  const currentTimestamp = Math.floor(Date.now() / 1000);
+  const nonce = Date.now(); // Use timestamp as nonce for uniqueness
   const [betPDA] = PublicKey.findProgramAddressSync(
-    [Buffer.from('bet'), marketPDA.toBuffer(), user.publicKey.toBuffer(), encodeI64(currentTimestamp)],
+    [Buffer.from('bet'), marketPDA.toBuffer(), user.publicKey.toBuffer(), encodeU64(nonce)],
     PROGRAM_ID
   );
   console.log(`Bet PDA: ${betPDA.toBase58()}`);
+  console.log(`Nonce: ${nonce}`);
 
   try {
     const betAmount = encodeU64(100);
     const betYes = Buffer.from([1]); // true = YES
+    const nonceBytes = encodeU64(nonce);
 
-    const betData = Buffer.concat([PLACE_BET_DISCRIMINATOR, betAmount, betYes]);
+    const betData = Buffer.concat([PLACE_BET_DISCRIMINATOR, betAmount, betYes, nonceBytes]);
 
     const betIx = {
       programId: PROGRAM_ID,

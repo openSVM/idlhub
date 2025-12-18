@@ -186,7 +186,7 @@ pub mod idl_protocol {
     }
 
     /// Place a bet on a prediction market
-    pub fn place_bet(ctx: Context<PlaceBet>, amount: u64, bet_yes: bool) -> Result<()> {
+    pub fn place_bet(ctx: Context<PlaceBet>, amount: u64, bet_yes: bool, _nonce: u64) -> Result<()> {
         require!(!ctx.accounts.state.paused, IdlError::ProtocolPaused);
         require!(amount > 0, IdlError::InvalidAmount);
 
@@ -514,6 +514,7 @@ pub struct CreateMarket<'info> {
 }
 
 #[derive(Accounts)]
+#[instruction(amount: u64, bet_yes: bool, nonce: u64)]
 pub struct PlaceBet<'info> {
     #[account(seeds = [b"state"], bump = state.bump)]
     pub state: Account<'info, ProtocolState>,
@@ -525,7 +526,7 @@ pub struct PlaceBet<'info> {
         init,
         payer = user,
         space = 8 + Bet::INIT_SPACE,
-        seeds = [b"bet", market.key().as_ref(), user.key().as_ref(), &Clock::get().unwrap().unix_timestamp.to_le_bytes()],
+        seeds = [b"bet", market.key().as_ref(), user.key().as_ref(), &nonce.to_le_bytes()],
         bump
     )]
     pub bet: Account<'info, Bet>,
