@@ -15,6 +15,7 @@ pub const BURN_FEE_SHARE_BPS: u64 = 1000; // 10% burned
 
 // SECURITY FIX: Add bet limits
 pub const MAX_BET_AMOUNT: u64 = 1_000_000_000_000_000; // 1M tokens (with 9 decimals)
+pub const MIN_BET_AMOUNT: u64 = 1_000_000; // 0.001 tokens minimum (prevent dust attacks)
 pub const MIN_RESOLUTION_DELAY: i64 = 86400; // 24 hours minimum (was 1 hour)
 pub const BETTING_CLOSE_WINDOW: i64 = 3600; // Close betting 1 hour before resolution (was 5 min)
 pub const CLAIM_DELAY_AFTER_RESOLUTION: i64 = 300; // 5 min delay after resolution to claim
@@ -236,8 +237,7 @@ pub mod idl_protocol {
     /// SECURITY FIX: Place a bet with token transfer and oracle check
     pub fn place_bet(ctx: Context<PlaceBet>, amount: u64, bet_yes: bool, nonce: u64) -> Result<()> {
         require!(!ctx.accounts.state.paused, IdlError::ProtocolPaused);
-        require!(amount > 0, IdlError::InvalidAmount);
-        // SECURITY FIX: Enforce bet size limits
+        require!(amount >= MIN_BET_AMOUNT, IdlError::BetTooSmall);
         require!(amount <= MAX_BET_AMOUNT, IdlError::BetTooLarge);
 
         let market = &mut ctx.accounts.market;
@@ -482,17 +482,22 @@ pub mod idl_protocol {
     }
 
     /// Claim staking rewards from reward pool
+    /// SECURITY FIX: Track claimed amounts to prevent double-claiming
     pub fn claim_staking_rewards(ctx: Context<ClaimStakingRewards>) -> Result<()> {
         let state = &ctx.accounts.state;
         let staker = &ctx.accounts.staker_account;
 
         require!(state.total_staked > 0, IdlError::InsufficientStake);
         require!(staker.staked_amount > 0, IdlError::InsufficientStake);
-        require!(state.reward_pool > 0, IdlError::NoRewardsToClaim);
 
-        // Calculate proportional share of reward pool
+        // Calculate new rewards since last claim
+        // New rewards = current_pool - pool_at_last_claim (proportional)
+        let new_rewards_in_pool = state.reward_pool.saturating_sub(staker.last_reward_claim_pool);
+        require!(new_rewards_in_pool > 0, IdlError::NoRewardsToClaim);
+
+        // User's share of NEW rewards only
         let share = (staker.staked_amount as u128)
-            .checked_mul(state.reward_pool as u128)
+            .checked_mul(new_rewards_in_pool as u128)
             .and_then(|v| v.checked_div(state.total_staked as u128))
             .and_then(|v| u64::try_from(v).ok())
             .ok_or(IdlError::MathOverflow)?;
@@ -516,11 +521,17 @@ pub mod idl_protocol {
             share
         )?;
 
-        // Update state after transfer
+        // Update staker and state after transfer
+        let staker = &mut ctx.accounts.staker_account;
         let state = &mut ctx.accounts.state;
+
+        staker.rewards_claimed = staker.rewards_claimed
+            .checked_add(share)
+            .ok_or(IdlError::MathOverflow)?;
+        staker.last_reward_claim_pool = state.reward_pool;
         state.reward_pool = state.reward_pool.saturating_sub(share);
 
-        msg!("Claimed {} staking rewards", share);
+        msg!("Claimed {} staking rewards (total claimed: {})", share, staker.rewards_claimed);
         Ok(())
     }
 
@@ -542,6 +553,11 @@ pub mod idl_protocol {
             BadgeTier::None => 0,
         };
         require!(volume_usd >= required_volume, IdlError::InsufficientVolume);
+
+        // SECURITY FIX: Prevent badge downgrades
+        if badge.owner != Pubkey::default() {
+            require!(tier as u8 > badge.tier as u8, IdlError::CannotDowngradeBadge);
+        }
 
         let ve_grant = match tier {
             BadgeTier::Bronze => BADGE_VEIDL_BRONZE,
@@ -857,13 +873,13 @@ pub struct ResolveMarket<'info> {
 #[derive(Accounts)]
 pub struct ClaimWinnings<'info> {
     #[account(mut, seeds = [b"state"], bump = state.bump)]
-    pub state: Account<'info, ProtocolState>,
+    pub state: Box<Account<'info, ProtocolState>>,
 
     #[account(
         seeds = [b"market", market.protocol_id.as_bytes(), &market.resolution_timestamp.to_le_bytes()],
         bump = market.bump
     )]
-    pub market: Account<'info, PredictionMarket>,
+    pub market: Box<Account<'info, PredictionMarket>>,
 
     #[account(
         mut,
@@ -871,36 +887,49 @@ pub struct ClaimWinnings<'info> {
         bump = bet.bump,
         constraint = bet.owner == user.key() @ IdlError::Unauthorized
     )]
-    pub bet: Account<'info, Bet>,
+    pub bet: Box<Account<'info, Bet>>,
 
     #[account(
         mut,
         seeds = [b"market_pool", market.key().as_ref()],
         bump
     )]
-    pub market_pool: Account<'info, TokenAccount>,
+    pub market_pool: Box<Account<'info, TokenAccount>>,
 
     #[account(
         mut,
         constraint = user_token_account.mint == state.idl_mint @ IdlError::InvalidMint
     )]
-    pub user_token_account: Account<'info, TokenAccount>,
+    pub user_token_account: Box<Account<'info, TokenAccount>>,
 
-    #[account(mut)]
-    pub creator_token_account: Account<'info, TokenAccount>,
+    /// SECURITY FIX: Validate creator token account belongs to market creator
+    #[account(
+        mut,
+        constraint = creator_token_account.owner == market.creator @ IdlError::InvalidCreatorAccount,
+        constraint = creator_token_account.mint == state.idl_mint @ IdlError::InvalidMint
+    )]
+    pub creator_token_account: Box<Account<'info, TokenAccount>>,
 
-    #[account(mut)]
-    pub treasury_token_account: Account<'info, TokenAccount>,
+    /// SECURITY FIX: Validate treasury token account matches state treasury
+    #[account(
+        mut,
+        constraint = treasury_token_account.owner == state.treasury @ IdlError::InvalidTreasuryAccount,
+        constraint = treasury_token_account.mint == state.idl_mint @ IdlError::InvalidMint
+    )]
+    pub treasury_token_account: Box<Account<'info, TokenAccount>>,
 
     #[account(
         mut,
         seeds = [b"vault"],
         bump = state.vault_bump
     )]
-    pub vault: Account<'info, TokenAccount>,
+    pub vault: Box<Account<'info, TokenAccount>>,
 
-    #[account(mut)]
-    pub idl_mint: Account<'info, Mint>,
+    #[account(
+        mut,
+        constraint = idl_mint.key() == state.idl_mint @ IdlError::InvalidMint
+    )]
+    pub idl_mint: Box<Account<'info, Mint>>,
 
     #[account(mut)]
     pub user: Signer<'info>,
@@ -914,6 +943,7 @@ pub struct ClaimStakingRewards<'info> {
     pub state: Account<'info, ProtocolState>,
 
     #[account(
+        mut,  // SECURITY FIX: Now mutable to track claimed amounts
         seeds = [b"staker", user.key().as_ref()],
         bump = staker_account.bump,
         constraint = staker_account.owner == user.key() @ IdlError::Unauthorized
@@ -1033,6 +1063,8 @@ pub struct StakerAccount {
     pub owner: Pubkey,
     pub staked_amount: u64,
     pub last_stake_timestamp: i64,
+    pub rewards_claimed: u64,         // Track total rewards claimed
+    pub last_reward_claim_pool: u64,  // Snapshot of reward_pool at last claim
     pub bump: u8,
 }
 
@@ -1196,4 +1228,16 @@ pub enum IdlError {
 
     #[msg("Must wait before claiming after resolution")]
     ClaimTooEarly,
+
+    #[msg("Bet amount too small")]
+    BetTooSmall,
+
+    #[msg("Invalid creator token account")]
+    InvalidCreatorAccount,
+
+    #[msg("Invalid treasury token account")]
+    InvalidTreasuryAccount,
+
+    #[msg("Cannot downgrade badge tier")]
+    CannotDowngradeBadge,
 }
