@@ -11,6 +11,7 @@ import {
   SimulationContext,
   MarketInfo,
   LLMResponse,
+  AgentMemory,
 } from '../types';
 import { OpenRouterClient } from '../utils/openrouter';
 import { Logger } from '../utils/logger';
@@ -29,6 +30,15 @@ export class BaseAgent {
   public totalBets: number = 0;
   public wonBets: number = 0;
   public totalBetAmount: bigint = 0n;
+
+  // Agent memory for learning
+  public memory: AgentMemory = {
+    recentActions: [],
+    marketHistory: [],
+    winningStrategies: [],
+    losingStrategies: [],
+    competitorPatterns: {},
+  };
 
   constructor(
     config: AgentConfig,
@@ -70,7 +80,8 @@ export class BaseAgent {
     const response = await this.llmClient.getAgentAction(
       this.config,
       context,
-      this.state
+      this.state,
+      this.memory
     );
 
     this.logger.agent(
@@ -79,6 +90,50 @@ export class BaseAgent {
     );
 
     return response;
+  }
+
+  /**
+   * Record action result in memory
+   */
+  recordAction(round: number, action: string, success: boolean, pnl: bigint): void {
+    this.memory.recentActions.push({ round, action, success, pnl });
+
+    // Keep only last 20 actions
+    if (this.memory.recentActions.length > 20) {
+      this.memory.recentActions.shift();
+    }
+
+    // Track winning/losing strategies
+    if (pnl > 0n) {
+      this.memory.winningStrategies.push(action);
+      if (this.memory.winningStrategies.length > 10) {
+        this.memory.winningStrategies.shift();
+      }
+    } else if (pnl < 0n) {
+      this.memory.losingStrategies.push(action);
+      if (this.memory.losingStrategies.length > 10) {
+        this.memory.losingStrategies.shift();
+      }
+    }
+  }
+
+  /**
+   * Record bet result in memory
+   */
+  recordBetResult(protocolId: string, betYes: boolean, won: boolean, pnl: bigint): void {
+    this.memory.marketHistory.push({ protocolId, betYes, won, pnl });
+
+    // Keep only last 30 bets
+    if (this.memory.marketHistory.length > 30) {
+      this.memory.marketHistory.shift();
+    }
+  }
+
+  /**
+   * Update observed patterns for competitors
+   */
+  updateCompetitorPattern(agentName: string, pattern: string): void {
+    this.memory.competitorPatterns[agentName] = pattern;
   }
 
   /**

@@ -1,0 +1,1302 @@
+{
+  "startTime": 1766075408171,
+  "endTime": 1766075440051,
+  "totalRounds": 12,
+  "roundResults": [
+    {
+      "round": 1,
+      "timestamp": 1766075410706,
+      "agentActions": [
+        {
+          "agentName": "Aggressive Alpha",
+          "action": {
+            "type": "STAKE",
+            "params": {
+              "amount": "7000000000000"
+            },
+            "reasoning": "Maximize staking bonus before betting",
+            "confidence": 0.9
+          },
+          "success": true,
+          "txSignature": "sim_stake_1766075408202"
+        },
+        {
+          "agentName": "Conservative Carl",
+          "action": {
+            "type": "STAKE",
+            "params": {
+              "amount": "8000000000000"
+            },
+            "reasoning": "Maximize staking rewards",
+            "confidence": 0.95
+          },
+          "success": true,
+          "txSignature": "sim_stake_1766075408703"
+        },
+        {
+          "agentName": "Contrarian Cathy",
+          "action": {
+            "type": "STAKE",
+            "params": {
+              "amount": "5000000000000"
+            },
+            "reasoning": "Moderate staking for flexibility",
+            "confidence": 0.8
+          },
+          "success": true,
+          "txSignature": "sim_stake_1766075409203"
+        },
+        {
+          "agentName": "Momentum Mike",
+          "action": {
+            "type": "STAKE",
+            "params": {
+              "amount": "3000000000000"
+            },
+            "reasoning": "Keep capital liquid for momentum plays",
+            "confidence": 0.75
+          },
+          "success": true,
+          "txSignature": "sim_stake_1766075409704"
+        },
+        {
+          "agentName": "Value Victor",
+          "action": {
+            "type": "STAKE",
+            "params": {
+              "amount": "5000000000000"
+            },
+            "reasoning": "Balanced staking for bonus + liquidity",
+            "confidence": 0.85
+          },
+          "success": true,
+          "txSignature": "sim_stake_1766075410205"
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "Conservative Carl",
+          "totalPnL": "4000000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Aggressive Alpha",
+          "totalPnL": "3500000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Contrarian Cathy",
+          "totalPnL": "2500000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Value Victor",
+          "totalPnL": "2500000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Momentum Mike",
+          "totalPnL": "1500000000",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 2,
+      "timestamp": 1766075413362,
+      "agentActions": [
+        {
+          "agentName": "Aggressive Alpha",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "7WgdKDAVSnSfWrmHJfSknpx46VQ2KVEF5Y9bkHB7kj7k",
+              "amount": "1111295000000",
+              "betYes": true
+            },
+            "reasoning": "High conviction contrarian play",
+            "confidence": 0.85
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766075410857"
+        },
+        {
+          "agentName": "Conservative Carl",
+          "action": {
+            "type": "STAKE",
+            "params": {
+              "amount": "1603200000000"
+            },
+            "reasoning": "Maximize staking rewards",
+            "confidence": 0.95
+          },
+          "success": true,
+          "txSignature": "sim_stake_1766075411357"
+        },
+        {
+          "agentName": "Contrarian Cathy",
+          "action": {
+            "type": "ANALYZE",
+            "params": {},
+            "reasoning": "Patience for right opportunity",
+            "confidence": 0.7
+          },
+          "success": true
+        },
+        {
+          "agentName": "Momentum Mike",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "9RGStRqWo3xArjCtZr7L3feiqYwzp6eLq5txKajcfaGw",
+              "amount": "1680360000000",
+              "betYes": true
+            },
+            "reasoning": "Trend is your friend",
+            "confidence": 0.7
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766075412360"
+        },
+        {
+          "agentName": "Value Victor",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "7WgdKDAVSnSfWrmHJfSknpx46VQ2KVEF5Y9bkHB7kj7k",
+              "amount": "1000500000000",
+              "betYes": true
+            },
+            "reasoning": "+EV play based on fundamentals",
+            "confidence": 0.75
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766075412860"
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "Conservative Carl",
+          "totalPnL": "8801600000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Aggressive Alpha",
+          "totalPnL": "7000000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Contrarian Cathy",
+          "totalPnL": "5000000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Value Victor",
+          "totalPnL": "5000000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Momentum Mike",
+          "totalPnL": "3000000000",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 3,
+      "timestamp": 1766075416016,
+      "agentActions": [
+        {
+          "agentName": "Aggressive Alpha",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "Dq6R81WhYLDADCmoUrJ5CwPVHvyyj9vCkhYWGxEswvXf",
+              "amount": "492883300000",
+              "betYes": false
+            },
+            "reasoning": "High conviction contrarian play",
+            "confidence": 0.85
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766075413512"
+        },
+        {
+          "agentName": "Conservative Carl",
+          "action": {
+            "type": "LOCK_VE",
+            "params": {
+              "duration": 2592000
+            },
+            "reasoning": "Secure long-term staking benefits",
+            "confidence": 0.9
+          },
+          "success": true,
+          "txSignature": "sim_lock_1766075414013"
+        },
+        {
+          "agentName": "Contrarian Cathy",
+          "action": {
+            "type": "ANALYZE",
+            "params": {},
+            "reasoning": "Patience for right opportunity",
+            "confidence": 0.7
+          },
+          "success": true
+        },
+        {
+          "agentName": "Momentum Mike",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "Dq6R81WhYLDADCmoUrJ5CwPVHvyyj9vCkhYWGxEswvXf",
+              "amount": "585490400000",
+              "betYes": true
+            },
+            "reasoning": "Trend is your friend",
+            "confidence": 0.7
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766075415014"
+        },
+        {
+          "agentName": "Value Victor",
+          "action": {
+            "type": "ANALYZE",
+            "params": {},
+            "reasoning": "Waiting for mispriced markets",
+            "confidence": 0.6
+          },
+          "success": true
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "Aggressive Alpha",
+          "totalPnL": "1056210386495",
+          "roundPnL": "1045710386495"
+        },
+        {
+          "rank": 2,
+          "agentName": "Value Victor",
+          "totalPnL": "948954106865",
+          "roundPnL": "941454106865"
+        },
+        {
+          "rank": 3,
+          "agentName": "Conservative Carl",
+          "totalPnL": "13603200000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Contrarian Cathy",
+          "totalPnL": "7500000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Momentum Mike",
+          "totalPnL": "4500000000",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 4,
+      "timestamp": 1766075418671,
+      "agentActions": [
+        {
+          "agentName": "Aggressive Alpha",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "Dq6R81WhYLDADCmoUrJ5CwPVHvyyj9vCkhYWGxEswvXf",
+              "amount": "748298688163",
+              "betYes": false
+            },
+            "reasoning": "High conviction contrarian play",
+            "confidence": 0.85
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766075416167"
+        },
+        {
+          "agentName": "Conservative Carl",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "Dq6R81WhYLDADCmoUrJ5CwPVHvyyj9vCkhYWGxEswvXf",
+              "amount": "41040320000",
+              "betYes": true
+            },
+            "reasoning": "Conservative YES bet on stable protocol",
+            "confidence": 0.7
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766075416668"
+        },
+        {
+          "agentName": "Contrarian Cathy",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "7oKHSCA1g1wiL5Fi1hTL2SBd2JWaSUGuaR8xhoLsriw",
+              "amount": "1051575000000",
+              "betYes": false
+            },
+            "reasoning": "Extreme sentiment = fade opportunity",
+            "confidence": 0.85
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766075417168"
+        },
+        {
+          "agentName": "Momentum Mike",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "Dq6R81WhYLDADCmoUrJ5CwPVHvyyj9vCkhYWGxEswvXf",
+              "amount": "616024448000",
+              "betYes": true
+            },
+            "reasoning": "Trend is your friend",
+            "confidence": 0.7
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766075417669"
+        },
+        {
+          "agentName": "Value Victor",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "Dq6R81WhYLDADCmoUrJ5CwPVHvyyj9vCkhYWGxEswvXf",
+              "amount": "1011322198167",
+              "betYes": true
+            },
+            "reasoning": "+EV play based on fundamentals",
+            "confidence": 0.75
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766075418170"
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "Aggressive Alpha",
+          "totalPnL": "1059710386495",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Value Victor",
+          "totalPnL": "951454106865",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Conservative Carl",
+          "totalPnL": "18404800000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Contrarian Cathy",
+          "totalPnL": "10000000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Momentum Mike",
+          "totalPnL": "6000000000",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 5,
+      "timestamp": 1766075421324,
+      "agentActions": [
+        {
+          "agentName": "Aggressive Alpha",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "9RGStRqWo3xArjCtZr7L3feiqYwzp6eLq5txKajcfaGw",
+              "amount": "1042855507382",
+              "betYes": false
+            },
+            "reasoning": "High conviction contrarian play",
+            "confidence": 0.85
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766075418821"
+        },
+        {
+          "agentName": "Conservative Carl",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "Dq6R81WhYLDADCmoUrJ5CwPVHvyyj9vCkhYWGxEswvXf",
+              "amount": "37416448000",
+              "betYes": true
+            },
+            "reasoning": "Conservative YES bet on stable protocol",
+            "confidence": 0.7
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766075419322"
+        },
+        {
+          "agentName": "Contrarian Cathy",
+          "action": {
+            "type": "ANALYZE",
+            "params": {},
+            "reasoning": "Patience for right opportunity",
+            "confidence": 0.7
+          },
+          "success": true
+        },
+        {
+          "agentName": "Momentum Mike",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "7oKHSCA1g1wiL5Fi1hTL2SBd2JWaSUGuaR8xhoLsriw",
+              "amount": "948548784960",
+              "betYes": true
+            },
+            "reasoning": "Trend is your friend",
+            "confidence": 0.7
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766075420323"
+        },
+        {
+          "agentName": "Value Victor",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "9RGStRqWo3xArjCtZr7L3feiqYwzp6eLq5txKajcfaGw",
+              "amount": "790421105391",
+              "betYes": false
+            },
+            "reasoning": "+EV play based on fundamentals",
+            "confidence": 0.75
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766075420824"
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "Aggressive Alpha",
+          "totalPnL": "1063210386495",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Value Victor",
+          "totalPnL": "953954106865",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Conservative Carl",
+          "totalPnL": "23206400000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Contrarian Cathy",
+          "totalPnL": "12500000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Momentum Mike",
+          "totalPnL": "7500000000",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 6,
+      "timestamp": 1766075423979,
+      "agentActions": [
+        {
+          "agentName": "Aggressive Alpha",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "9RGStRqWo3xArjCtZr7L3feiqYwzp6eLq5txKajcfaGw",
+              "amount": "533751867285",
+              "betYes": false
+            },
+            "reasoning": "High conviction contrarian play",
+            "confidence": 0.85
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766075421475"
+        },
+        {
+          "agentName": "Conservative Carl",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "Dq6R81WhYLDADCmoUrJ5CwPVHvyyj9vCkhYWGxEswvXf",
+              "amount": "34154963200",
+              "betYes": true
+            },
+            "reasoning": "Conservative YES bet on stable protocol",
+            "confidence": 0.7
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766075421975"
+        },
+        {
+          "agentName": "Contrarian Cathy",
+          "action": {
+            "type": "ANALYZE",
+            "params": {},
+            "reasoning": "Patience for right opportunity",
+            "confidence": 0.7
+          },
+          "success": true
+        },
+        {
+          "agentName": "Momentum Mike",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "9RGStRqWo3xArjCtZr7L3feiqYwzp6eLq5txKajcfaGw",
+              "amount": "540102982396",
+              "betYes": false
+            },
+            "reasoning": "Trend is your friend",
+            "confidence": 0.7
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766075422976"
+        },
+        {
+          "agentName": "Value Victor",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "9RGStRqWo3xArjCtZr7L3feiqYwzp6eLq5txKajcfaGw",
+              "amount": "705875836562",
+              "betYes": true
+            },
+            "reasoning": "+EV play based on fundamentals",
+            "confidence": 0.75
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766075423477"
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "Aggressive Alpha",
+          "totalPnL": "3271983733717",
+          "roundPnL": "2116071116481"
+        },
+        {
+          "rank": 2,
+          "agentName": "Contrarian Cathy",
+          "totalPnL": "15000000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Value Victor",
+          "totalPnL": "-54868091302",
+          "roundPnL": "-1011322198167"
+        },
+        {
+          "rank": 4,
+          "agentName": "Conservative Carl",
+          "totalPnL": "-84603731200",
+          "roundPnL": "-112611731200"
+        },
+        {
+          "rank": 5,
+          "agentName": "Momentum Mike",
+          "totalPnL": "-1192514848000",
+          "roundPnL": "-1201514848000"
+        }
+      ]
+    },
+    {
+      "round": 7,
+      "timestamp": 1766075426631,
+      "agentActions": [
+        {
+          "agentName": "Aggressive Alpha",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "44mxUeVFFVWnUrmo9xpaGce6Hqqx6xsnmVwJSZ1zUoNt",
+              "amount": "2019011834391",
+              "betYes": true
+            },
+            "reasoning": "High conviction contrarian play",
+            "confidence": 0.85
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766075424129"
+        },
+        {
+          "agentName": "Conservative Carl",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "Patience is key",
+            "confidence": 0.8
+          },
+          "success": true
+        },
+        {
+          "agentName": "Contrarian Cathy",
+          "action": {
+            "type": "ANALYZE",
+            "params": {},
+            "reasoning": "Patience for right opportunity",
+            "confidence": 0.7
+          },
+          "success": true
+        },
+        {
+          "agentName": "Momentum Mike",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "9RGStRqWo3xArjCtZr7L3feiqYwzp6eLq5txKajcfaGw",
+              "amount": "290232072310",
+              "betYes": false
+            },
+            "reasoning": "Trend is your friend",
+            "confidence": 0.7
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766075425630"
+        },
+        {
+          "agentName": "Value Victor",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "9RGStRqWo3xArjCtZr7L3feiqYwzp6eLq5txKajcfaGw",
+              "amount": "758743692683",
+              "betYes": true
+            },
+            "reasoning": "+EV play based on fundamentals",
+            "confidence": 0.75
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766075426131"
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "Aggressive Alpha",
+          "totalPnL": "3275483733717",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Contrarian Cathy",
+          "totalPnL": "17500000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Value Victor",
+          "totalPnL": "-52368091302",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Conservative Carl",
+          "totalPnL": "-79802131200",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Momentum Mike",
+          "totalPnL": "-1191014848000",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 8,
+      "timestamp": 1766075429285,
+      "agentActions": [
+        {
+          "agentName": "Aggressive Alpha",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "44mxUeVFFVWnUrmo9xpaGce6Hqqx6xsnmVwJSZ1zUoNt",
+              "amount": "1259536326589",
+              "betYes": false
+            },
+            "reasoning": "High conviction contrarian play",
+            "confidence": 0.85
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766075426782"
+        },
+        {
+          "agentName": "Conservative Carl",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "9RGStRqWo3xArjCtZr7L3feiqYwzp6eLq5txKajcfaGw",
+              "amount": "31699786880",
+              "betYes": true
+            },
+            "reasoning": "Conservative YES bet on stable protocol",
+            "confidence": 0.7
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766075427282"
+        },
+        {
+          "agentName": "Contrarian Cathy",
+          "action": {
+            "type": "ANALYZE",
+            "params": {},
+            "reasoning": "Patience for right opportunity",
+            "confidence": 0.7
+          },
+          "success": true
+        },
+        {
+          "agentName": "Momentum Mike",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "9RGStRqWo3xArjCtZr7L3feiqYwzp6eLq5txKajcfaGw",
+              "amount": "328963783726",
+              "betYes": false
+            },
+            "reasoning": "Trend is your friend",
+            "confidence": 0.7
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766075428284"
+        },
+        {
+          "agentName": "Value Victor",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "9RGStRqWo3xArjCtZr7L3feiqYwzp6eLq5txKajcfaGw",
+              "amount": "430814603849",
+              "betYes": false
+            },
+            "reasoning": "+EV play based on fundamentals",
+            "confidence": 0.75
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766075428785"
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "Aggressive Alpha",
+          "totalPnL": "3278983733717",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Contrarian Cathy",
+          "totalPnL": "20000000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Value Victor",
+          "totalPnL": "-49868091302",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Conservative Carl",
+          "totalPnL": "-75000531200",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Momentum Mike",
+          "totalPnL": "-1189514848000",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 9,
+      "timestamp": 1766075431940,
+      "agentActions": [
+        {
+          "agentName": "Aggressive Alpha",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "44mxUeVFFVWnUrmo9xpaGce6Hqqx6xsnmVwJSZ1zUoNt",
+              "amount": "612246125170",
+              "betYes": true
+            },
+            "reasoning": "High conviction contrarian play",
+            "confidence": 0.85
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766075429436"
+        },
+        {
+          "agentName": "Conservative Carl",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "Patience is key",
+            "confidence": 0.8
+          },
+          "success": true
+        },
+        {
+          "agentName": "Contrarian Cathy",
+          "action": {
+            "type": "ANALYZE",
+            "params": {},
+            "reasoning": "Patience for right opportunity",
+            "confidence": 0.7
+          },
+          "success": true
+        },
+        {
+          "agentName": "Momentum Mike",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "7oKHSCA1g1wiL5Fi1hTL2SBd2JWaSUGuaR8xhoLsriw",
+              "amount": "323564404577",
+              "betYes": true
+            },
+            "reasoning": "Trend is your friend",
+            "confidence": 0.7
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766075430938"
+        },
+        {
+          "agentName": "Value Victor",
+          "action": {
+            "type": "ANALYZE",
+            "params": {},
+            "reasoning": "Waiting for mispriced markets",
+            "confidence": 0.6
+          },
+          "success": true
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "Aggressive Alpha",
+          "totalPnL": "3282483733717",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Value Victor",
+          "totalPnL": "-47368091302",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Conservative Carl",
+          "totalPnL": "-70198931200",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Momentum Mike",
+          "totalPnL": "-758799589556",
+          "roundPnL": "429215258444"
+        },
+        {
+          "rank": 5,
+          "agentName": "Contrarian Cathy",
+          "totalPnL": "-1029075000000",
+          "roundPnL": "-1051575000000"
+        }
+      ]
+    },
+    {
+      "round": 10,
+      "timestamp": 1766075434595,
+      "agentActions": [
+        {
+          "agentName": "Aggressive Alpha",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "EtUoNSTXG92yLiCtbj3uW4XU2m1ojPH15kDYy8SEF5g8",
+              "amount": "326032829160",
+              "betYes": true
+            },
+            "reasoning": "High conviction contrarian play",
+            "confidence": 0.85
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766075432091"
+        },
+        {
+          "agentName": "Conservative Carl",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "9RGStRqWo3xArjCtZr7L3feiqYwzp6eLq5txKajcfaGw",
+              "amount": "29490128192",
+              "betYes": true
+            },
+            "reasoning": "Conservative YES bet on stable protocol",
+            "confidence": 0.7
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766075432591"
+        },
+        {
+          "agentName": "Contrarian Cathy",
+          "action": {
+            "type": "ANALYZE",
+            "params": {},
+            "reasoning": "Patience for right opportunity",
+            "confidence": 0.7
+          },
+          "success": true
+        },
+        {
+          "agentName": "Momentum Mike",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "44mxUeVFFVWnUrmo9xpaGce6Hqqx6xsnmVwJSZ1zUoNt",
+              "amount": "578262067242",
+              "betYes": true
+            },
+            "reasoning": "Trend is your friend",
+            "confidence": 0.7
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766075433593"
+        },
+        {
+          "agentName": "Value Victor",
+          "action": {
+            "type": "ANALYZE",
+            "params": {},
+            "reasoning": "Waiting for mispriced markets",
+            "confidence": 0.6
+          },
+          "success": true
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "Aggressive Alpha",
+          "totalPnL": "3285983733717",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Value Victor",
+          "totalPnL": "-44868091302",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Conservative Carl",
+          "totalPnL": "-65397331200",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Momentum Mike",
+          "totalPnL": "-757299589556",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Contrarian Cathy",
+          "totalPnL": "-1026575000000",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 11,
+      "timestamp": 1766075437248,
+      "agentActions": [
+        {
+          "agentName": "Aggressive Alpha",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "EtUoNSTXG92yLiCtbj3uW4XU2m1ojPH15kDYy8SEF5g8",
+              "amount": "211796174808",
+              "betYes": true
+            },
+            "reasoning": "High conviction contrarian play",
+            "confidence": 0.85
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766075434745"
+        },
+        {
+          "agentName": "Conservative Carl",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "Patience is key",
+            "confidence": 0.8
+          },
+          "success": true
+        },
+        {
+          "agentName": "Contrarian Cathy",
+          "action": {
+            "type": "ANALYZE",
+            "params": {},
+            "reasoning": "Patience for right opportunity",
+            "confidence": 0.7
+          },
+          "success": true
+        },
+        {
+          "agentName": "Momentum Mike",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "EtUoNSTXG92yLiCtbj3uW4XU2m1ojPH15kDYy8SEF5g8",
+              "amount": "649699286097",
+              "betYes": false
+            },
+            "reasoning": "Trend is your friend",
+            "confidence": 0.7
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766075436247"
+        },
+        {
+          "agentName": "Value Victor",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "9RGStRqWo3xArjCtZr7L3feiqYwzp6eLq5txKajcfaGw",
+              "amount": "544626400851",
+              "betYes": true
+            },
+            "reasoning": "+EV play based on fundamentals",
+            "confidence": 0.75
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766075436748"
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "Aggressive Alpha",
+          "totalPnL": "3289483733717",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Value Victor",
+          "totalPnL": "-42368091302",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Conservative Carl",
+          "totalPnL": "-60595731200",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Momentum Mike",
+          "totalPnL": "-755799589556",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Contrarian Cathy",
+          "totalPnL": "-1024075000000",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 12,
+      "timestamp": 1766075439902,
+      "agentActions": [
+        {
+          "agentName": "Aggressive Alpha",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "44mxUeVFFVWnUrmo9xpaGce6Hqqx6xsnmVwJSZ1zUoNt",
+              "amount": "88118451368",
+              "betYes": false
+            },
+            "reasoning": "High conviction contrarian play",
+            "confidence": 0.85
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766075437399"
+        },
+        {
+          "agentName": "Conservative Carl",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "Patience is key",
+            "confidence": 0.8
+          },
+          "success": true
+        },
+        {
+          "agentName": "Contrarian Cathy",
+          "action": {
+            "type": "ANALYZE",
+            "params": {},
+            "reasoning": "Patience for right opportunity",
+            "confidence": 0.7
+          },
+          "success": true
+        },
+        {
+          "agentName": "Momentum Mike",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "44mxUeVFFVWnUrmo9xpaGce6Hqqx6xsnmVwJSZ1zUoNt",
+              "amount": "348252834987",
+              "betYes": true
+            },
+            "reasoning": "Trend is your friend",
+            "confidence": 0.7
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766075438900"
+        },
+        {
+          "agentName": "Value Victor",
+          "action": {
+            "type": "ANALYZE",
+            "params": {},
+            "reasoning": "Waiting for mispriced markets",
+            "confidence": 0.6
+          },
+          "success": true
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "Aggressive Alpha",
+          "totalPnL": "4470123018971",
+          "roundPnL": "1177139285254"
+        },
+        {
+          "rank": 2,
+          "agentName": "Value Victor",
+          "totalPnL": "-39868091302",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Conservative Carl",
+          "totalPnL": "-55794131200",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Contrarian Cathy",
+          "totalPnL": "-1021575000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Momentum Mike",
+          "totalPnL": "-1403998875653",
+          "roundPnL": "-649699286097"
+        }
+      ]
+    }
+  ],
+  "finalLeaderboard": [
+    {
+      "rank": 1,
+      "agentName": "Aggressive Alpha",
+      "totalPnL": "4470123018971",
+      "winRate": 0.45454545454545453,
+      "totalBets": 11,
+      "avgBetSize": "767802373119"
+    },
+    {
+      "rank": 2,
+      "agentName": "Value Victor",
+      "totalPnL": "-39868091302",
+      "winRate": 0.14285714285714285,
+      "totalBets": 7,
+      "avgBetSize": "748900548214"
+    },
+    {
+      "rank": 3,
+      "agentName": "Conservative Carl",
+      "totalPnL": "-55794131200",
+      "winRate": 0,
+      "totalBets": 5,
+      "avgBetSize": "34760329254"
+    },
+    {
+      "rank": 4,
+      "agentName": "Contrarian Cathy",
+      "totalPnL": "-1021575000000",
+      "winRate": 0,
+      "totalBets": 1,
+      "avgBetSize": "1051575000000"
+    },
+    {
+      "rank": 5,
+      "agentName": "Momentum Mike",
+      "totalPnL": "-1403998875653",
+      "winRate": 0.18181818181818182,
+      "totalBets": 11,
+      "avgBetSize": "626318278572"
+    }
+  ],
+  "winner": "Aggressive Alpha"
+}

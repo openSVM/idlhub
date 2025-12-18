@@ -1,0 +1,933 @@
+{
+  "startTime": 1766083409480,
+  "endTime": 1766083671797,
+  "totalRounds": 10,
+  "roundResults": [
+    {
+      "round": 1,
+      "timestamp": 1766083431759,
+      "agentActions": [
+        {
+          "agentName": "Aggressive Alpha",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Conservative Carl",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Contrarian Cathy",
+          "action": {
+            "type": "STAKE",
+            "params": {
+              "amount": 50000000000
+            },
+            "reasoning": "Staking 50% of my balance to maximize the 50% bonus for my contrarian bet. This gives me effective leverage while keeping risk moderate.",
+            "confidence": 0.8
+          },
+          "success": true,
+          "txSignature": "sim_stake_1766083423188"
+        },
+        {
+          "agentName": "Momentum Mike",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Value Victor",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "Contrarian Cathy",
+          "totalPnL": "25000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Aggressive Alpha",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Conservative Carl",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Momentum Mike",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Value Victor",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 2,
+      "timestamp": 1766083456654,
+      "agentActions": [
+        {
+          "agentName": "Aggressive Alpha",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Conservative Carl",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Contrarian Cathy",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Momentum Mike",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Value Victor",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "Contrarian Cathy",
+          "totalPnL": "50000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Aggressive Alpha",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Conservative Carl",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Momentum Mike",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Value Victor",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 3,
+      "timestamp": 1766083481030,
+      "agentActions": [
+        {
+          "agentName": "Aggressive Alpha",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Conservative Carl",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Contrarian Cathy",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Momentum Mike",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Value Victor",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "Contrarian Cathy",
+          "totalPnL": "75000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Aggressive Alpha",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Conservative Carl",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Momentum Mike",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Value Victor",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 4,
+      "timestamp": 1766083510056,
+      "agentActions": [
+        {
+          "agentName": "Aggressive Alpha",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Conservative Carl",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Contrarian Cathy",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Momentum Mike",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Value Victor",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "Contrarian Cathy",
+          "totalPnL": "100000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Aggressive Alpha",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Conservative Carl",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Momentum Mike",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Value Victor",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 5,
+      "timestamp": 1766083534216,
+      "agentActions": [
+        {
+          "agentName": "Aggressive Alpha",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Conservative Carl",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Contrarian Cathy",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Momentum Mike",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Value Victor",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "Contrarian Cathy",
+          "totalPnL": "125000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Aggressive Alpha",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Conservative Carl",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Momentum Mike",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Value Victor",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 6,
+      "timestamp": 1766083562120,
+      "agentActions": [
+        {
+          "agentName": "Aggressive Alpha",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Conservative Carl",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Contrarian Cathy",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Momentum Mike",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Value Victor",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "Contrarian Cathy",
+          "totalPnL": "150000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Aggressive Alpha",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Conservative Carl",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Momentum Mike",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Value Victor",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 7,
+      "timestamp": 1766083590089,
+      "agentActions": [
+        {
+          "agentName": "Aggressive Alpha",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Conservative Carl",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Contrarian Cathy",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Momentum Mike",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Value Victor",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "Contrarian Cathy",
+          "totalPnL": "175000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Aggressive Alpha",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Conservative Carl",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Momentum Mike",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Value Victor",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 8,
+      "timestamp": 1766083617119,
+      "agentActions": [
+        {
+          "agentName": "Aggressive Alpha",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Conservative Carl",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Contrarian Cathy",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Momentum Mike",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Value Victor",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "Contrarian Cathy",
+          "totalPnL": "200000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Aggressive Alpha",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Conservative Carl",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Momentum Mike",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Value Victor",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 9,
+      "timestamp": 1766083644571,
+      "agentActions": [
+        {
+          "agentName": "Aggressive Alpha",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Conservative Carl",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Contrarian Cathy",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Momentum Mike",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Value Victor",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "Aggressive Alpha",
+          "totalPnL": "63255000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Contrarian Cathy",
+          "totalPnL": "225000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Conservative Carl",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Momentum Mike",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Value Victor",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 10,
+      "timestamp": 1766083669796,
+      "agentActions": [
+        {
+          "agentName": "Aggressive Alpha",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Conservative Carl",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Contrarian Cathy",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Momentum Mike",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Value Victor",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "Aggressive Alpha",
+          "totalPnL": "63255000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Contrarian Cathy",
+          "totalPnL": "250000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Conservative Carl",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Momentum Mike",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Value Victor",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        }
+      ]
+    }
+  ],
+  "finalLeaderboard": [
+    {
+      "rank": 1,
+      "agentName": "Aggressive Alpha",
+      "totalPnL": "63255000000",
+      "winRate": 0,
+      "totalBets": 0,
+      "avgBetSize": "0"
+    },
+    {
+      "rank": 2,
+      "agentName": "Contrarian Cathy",
+      "totalPnL": "250000000",
+      "winRate": 0,
+      "totalBets": 0,
+      "avgBetSize": "0"
+    },
+    {
+      "rank": 3,
+      "agentName": "Conservative Carl",
+      "totalPnL": "0",
+      "winRate": 0,
+      "totalBets": 0,
+      "avgBetSize": "0"
+    },
+    {
+      "rank": 4,
+      "agentName": "Momentum Mike",
+      "totalPnL": "0",
+      "winRate": 0,
+      "totalBets": 0,
+      "avgBetSize": "0"
+    },
+    {
+      "rank": 5,
+      "agentName": "Value Victor",
+      "totalPnL": "0",
+      "winRate": 0,
+      "totalBets": 0,
+      "avgBetSize": "0"
+    }
+  ],
+  "winner": "Aggressive Alpha"
+}

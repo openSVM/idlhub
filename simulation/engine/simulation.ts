@@ -185,6 +185,14 @@ export class SimulationEngine {
           txSignature: result.txSignature,
         });
 
+        // Record action in memory
+        agent.recordAction(
+          this.currentRound,
+          response.action.type,
+          result.success,
+          agent.state.roundPnL
+        );
+
         // Small delay between agents to prevent rate limiting
         await this.sleep(500);
       } catch (error) {
@@ -208,6 +216,9 @@ export class SimulationEngine {
     if (this.currentRound % 3 === 0 && this.markets.some(m => !m.resolved)) {
       await this.resolveRandomMarket();
     }
+
+    // Distribute staking rewards (50% of fees go to stakers proportionally)
+    this.distributeStakingRewards();
 
     // Calculate leaderboard
     const leaderboard = this.calculateLeaderboard();
@@ -471,6 +482,9 @@ export class SimulationEngine {
           agent.state.roundPnL += profit;
           agent.wonBets++;
 
+          // Record in memory
+          agent.recordBetResult(market.protocolId, bet.betYes, true, profit);
+
           this.logger.agent(
             agent.config.name,
             `WON on ${market.protocolId}! +${profit} IDL (bet: ${bet.amount}, won: ${net})`
@@ -479,6 +493,10 @@ export class SimulationEngine {
           // Losing bet - update PnL
           agent.state.totalPnL -= bet.amount;
           agent.state.roundPnL -= bet.amount;
+
+          // Record in memory
+          agent.recordBetResult(market.protocolId, bet.betYes, false, -bet.amount);
+
           this.logger.agent(agent.config.name, `LOST on ${market.protocolId}: -${bet.amount} IDL`);
         }
 
@@ -514,6 +532,34 @@ export class SimulationEngine {
       actualValue: null,
       creator: '',
     });
+  }
+
+  /**
+   * Distribute staking rewards to stakers proportionally
+   */
+  private distributeStakingRewards(): void {
+    const totalStaked = this.agents.reduce((sum, a) => sum + a.state.stakedAmount, 0n);
+    if (totalStaked === 0n) return;
+
+    // Simulate some protocol revenue (0.1% of total staked per round)
+    const roundRevenue = totalStaked / 1000n;
+    const stakerShare = (roundRevenue * 50n) / 100n; // 50% to stakers
+
+    if (stakerShare === 0n) return;
+
+    for (const agent of this.agents) {
+      if (agent.state.stakedAmount > 0n) {
+        const share = (stakerShare * agent.state.stakedAmount) / totalStaked;
+        if (share > 0n) {
+          agent.state.idlBalance += share;
+          agent.state.totalPnL += share;
+          // Don't log every round to reduce noise, only significant amounts
+          if (share > BigInt(1e9)) {
+            this.logger.agent(agent.config.name, `Staking reward: +${share} IDL`);
+          }
+        }
+      }
+    }
   }
 
   /**

@@ -5,7 +5,7 @@
 | Program | Address | Status |
 |---------|---------|--------|
 | IDL Protocol | `BSn7neicVV2kEzgaZmd6tZEBm4tdgzBRyELov65Lq7dt` | Deployed |
-| IDL StableSwap | `8jBZhdvBM1MBM22ZwBBe6Mq5MRpPAVwoLWi58CyeatzZ` | Pending |
+| IDL StableSwap | `EFsgmpbKifyA75ZY5NPHQxrtuAHHB6sYnoGkLi6xoTte` | Deployed |
 
 ## Building
 

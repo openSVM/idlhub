@@ -113,16 +113,23 @@ function printAgentIntro(): void {
 }
 
 function printFinalResults(result: SimulationResult): void {
-  console.log('\n' + '='.repeat(60));
+  console.log('\n' + '='.repeat(70));
   console.log('  FINAL RESULTS');
-  console.log('='.repeat(60));
+  console.log('='.repeat(70));
 
   const duration = (result.endTime - result.startTime) / 1000;
   console.log(`\n  Duration: ${duration.toFixed(1)}s`);
   console.log(`  Total Rounds: ${result.totalRounds}`);
 
+  // Calculate aggregate stats
+  const totalBetsAllAgents = result.finalLeaderboard.reduce((sum, e) => sum + e.totalBets, 0);
+  const totalVolume = result.finalLeaderboard.reduce((sum, e) => sum + e.avgBetSize * BigInt(e.totalBets), 0n);
+
+  console.log(`  Total Bets Placed: ${totalBetsAllAgents}`);
+  console.log(`  Total Betting Volume: ${totalVolume} IDL`);
+
   console.log('\n  FINAL STANDINGS:');
-  console.log('-'.repeat(60));
+  console.log('-'.repeat(70));
 
   for (const entry of result.finalLeaderboard) {
     const pnlStr = entry.totalPnL >= 0n
@@ -131,17 +138,52 @@ function printFinalResults(result: SimulationResult): void {
 
     const medal = entry.rank === 1 ? ' [WINNER]' : entry.rank === 2 ? ' [2nd]' : entry.rank === 3 ? ' [3rd]' : '';
 
+    // Calculate ROI
+    const initialBalance = 10000n * BigInt(1e9);
+    const roi = initialBalance > 0n
+      ? Number(entry.totalPnL * 10000n / initialBalance) / 100
+      : 0;
+    const roiStr = roi >= 0 ? `\x1b[32m+${roi.toFixed(2)}%\x1b[0m` : `\x1b[31m${roi.toFixed(2)}%\x1b[0m`;
+
+    // Strategy assessment
+    let strategyGrade = '';
+    if (entry.winRate >= 0.6 && entry.totalPnL > 0n) strategyGrade = '\x1b[32mExcellent\x1b[0m';
+    else if (entry.winRate >= 0.5 && entry.totalPnL >= 0n) strategyGrade = '\x1b[33mGood\x1b[0m';
+    else if (entry.totalPnL >= 0n) strategyGrade = '\x1b[36mSafe\x1b[0m';
+    else strategyGrade = '\x1b[31mPoor\x1b[0m';
+
     console.log(`
   #${entry.rank} ${entry.agentName}${medal}
-     PnL: ${pnlStr} IDL
-     Win Rate: ${(entry.winRate * 100).toFixed(1)}%
-     Total Bets: ${entry.totalBets}
-     Avg Bet Size: ${entry.avgBetSize} IDL`);
+     PnL: ${pnlStr} IDL | ROI: ${roiStr}
+     Win Rate: ${(entry.winRate * 100).toFixed(1)}% (${Math.round(entry.winRate * entry.totalBets)}/${entry.totalBets} bets)
+     Avg Bet Size: ${entry.avgBetSize} IDL
+     Strategy Grade: ${strategyGrade}`);
   }
 
-  console.log('\n' + '='.repeat(60));
-  console.log(`\n  WINNER: ${result.winner}`);
-  console.log('='.repeat(60) + '\n');
+  // Strategy insights
+  console.log('\n' + '-'.repeat(70));
+  console.log('  STRATEGY INSIGHTS:');
+
+  const winner = result.finalLeaderboard[0];
+  const loser = result.finalLeaderboard[result.finalLeaderboard.length - 1];
+
+  if (winner.totalPnL > 0n) {
+    console.log(`\n  Winner's Edge: ${winner.agentName} succeeded with`);
+    if (winner.winRate > 0.5) console.log(`    - High win rate (${(winner.winRate * 100).toFixed(0)}%)`);
+    if (winner.totalBets < 5) console.log(`    - Selective betting (${winner.totalBets} bets only)`);
+    if (winner.avgBetSize < 500n * BigInt(1e9)) console.log(`    - Conservative bet sizing`);
+  }
+
+  if (loser.totalPnL < 0n) {
+    console.log(`\n  Loser's Mistakes: ${loser.agentName} struggled with`);
+    if (loser.winRate < 0.4) console.log(`    - Low win rate (${(loser.winRate * 100).toFixed(0)}%)`);
+    if (loser.totalBets > 8) console.log(`    - Overtrading (${loser.totalBets} bets)`);
+    if (loser.avgBetSize > 800n * BigInt(1e9)) console.log(`    - Oversized bets`);
+  }
+
+  console.log('\n' + '='.repeat(70));
+  console.log(`  WINNER: ${result.winner}`);
+  console.log('='.repeat(70) + '\n');
 }
 
 async function main(): Promise<void> {

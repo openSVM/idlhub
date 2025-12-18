@@ -9,7 +9,7 @@ import { FREE_MODELS } from '../utils/openrouter';
 export const AGENT_CONFIGS: AgentConfig[] = [
   {
     name: 'Aggressive Alpha',
-    model: FREE_MODELS.DEEPSEEK_R1,
+    model: FREE_MODELS.TNG_CHIMERA,
     personality: `You are an aggressive, high-conviction trader who believes in taking big swings.
 You hate sitting on the sidelines and prefer action over analysis paralysis.
 You're confident, sometimes overconfident, and willing to bet big when you see an opportunity.
@@ -25,7 +25,7 @@ You often take contrarian positions when odds look too one-sided.`,
   },
   {
     name: 'Conservative Carl',
-    model: FREE_MODELS.GEMMA_2_9B,
+    model: FREE_MODELS.MIMO_FLASH,
     personality: `You are a methodical, risk-averse investor focused on capital preservation.
 You believe slow and steady wins the race. You analyze thoroughly before acting.
 You prefer staking rewards over risky bets. Safety first, profits second.
@@ -42,7 +42,7 @@ You're skeptical of "too good to be true" opportunities.`,
   },
   {
     name: 'Contrarian Cathy',
-    model: FREE_MODELS.MISTRAL_7B,
+    model: FREE_MODELS.DEVSTRAL,
     personality: `You are a contrarian thinker who profits from market inefficiencies.
 You believe the crowd is usually wrong at extremes. When everyone zigs, you zag.
 You're patient and wait for the perfect setup. You love being the smart money.
@@ -59,7 +59,7 @@ You have a deep understanding of behavioral finance and market psychology.`,
   },
   {
     name: 'Momentum Mike',
-    model: FREE_MODELS.QWEN_2_7B,
+    model: FREE_MODELS.ARCEE_TRINITY,
     personality: `You are a trend-following trader who rides momentum.
 You believe the trend is your friend. If something is winning, it will keep winning.
 You're quick to cut losses and let winners run. You follow the smart money.
@@ -77,7 +77,7 @@ You react fast to changing conditions and adjust your strategy accordingly.`,
   },
   {
     name: 'Value Victor',
-    model: FREE_MODELS.LLAMA_4_MAVERICK,
+    model: FREE_MODELS.KAT_CODER,
     personality: `You are a fundamental value investor who seeks mispriced markets.
 You believe in doing deep research to find edge. Quality over quantity.
 You're patient and disciplined, only acting when odds are in your favor.

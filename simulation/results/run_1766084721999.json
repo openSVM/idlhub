@@ -1,0 +1,560 @@
+{
+  "startTime": 1766084454391,
+  "endTime": 1766084721998,
+  "totalRounds": 5,
+  "roundResults": [
+    {
+      "round": 1,
+      "timestamp": 1766084517055,
+      "agentActions": [
+        {
+          "agentName": "Aggressive Alpha",
+          "action": {
+            "type": "STAKE",
+            "params": {
+              "amount": 5000000000000
+            },
+            "reasoning": "Stake 5B IDL to get max 50% betting bonus (1M threshold hit instantly)",
+            "confidence": 0.95
+          },
+          "success": true,
+          "txSignature": "sim_stake_1766084486245"
+        },
+        {
+          "agentName": "Conservative Carl",
+          "action": {
+            "type": "STAKE",
+            "params": {
+              "amount": 800000000000
+            },
+            "reasoning": "Staking 80% of my balance secures passive fee income and unlocks the maximum staking bonus (50%) for future bets. This aligns with my capital preservation strategy.",
+            "confidence": 1
+          },
+          "success": true,
+          "txSignature": "sim_stake_1766084489475"
+        },
+        {
+          "agentName": "Contrarian Cathy",
+          "action": {
+            "type": "STAKE",
+            "params": {
+              "amount": 500000000000
+            },
+            "reasoning": "Stake 50% of balance to maximize betting bonus (50% effective bet increase) while keeping liquidity for bets. This positions for future contrarian opportunities.",
+            "confidence": 0.9
+          },
+          "success": true,
+          "txSignature": "sim_stake_1766084493213"
+        },
+        {
+          "agentName": "Momentum Mike",
+          "action": {
+            "type": "STAKE",
+            "params": {
+              "amount": 3000000000000
+            },
+            "reasoning": "Staking 30% of capital (3 trillion IDL) to earn fees and get 50% effective bet bonus, aligning with high-risk tolerance and momentum strategy.",
+            "confidence": 0.9
+          },
+          "success": true,
+          "txSignature": "sim_stake_1766084511648"
+        },
+        {
+          "agentName": "Value Victor",
+          "action": {
+            "type": "STAKE",
+            "params": {
+              "amount": 100000000000
+            },
+            "reasoning": "Stake to earn protocol fees and get betting bonus. 10% bonus provides immediate edge while keeping capital available for market opportunities.",
+            "confidence": 0.8
+          },
+          "success": true,
+          "txSignature": "sim_stake_1766084516553"
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "Aggressive Alpha",
+          "totalPnL": "2500000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Momentum Mike",
+          "totalPnL": "1500000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Conservative Carl",
+          "totalPnL": "400000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Contrarian Cathy",
+          "totalPnL": "250000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Value Victor",
+          "totalPnL": "50000000",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 2,
+      "timestamp": 1766084546328,
+      "agentActions": [
+        {
+          "agentName": "Aggressive Alpha",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Conservative Carl",
+          "action": {
+            "type": "ANALYZE",
+            "params": {},
+            "reasoning": "I need to gather more information on the fundamental value of Jupiter, Raydium, and Marinade protocols to identify safe betting opportunities. I will not bet blindly on market sentiment.",
+            "confidence": 0.9
+          },
+          "success": true
+        },
+        {
+          "agentName": "Contrarian Cathy",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "No markets meet the >75% skew threshold for a contrarian bet. Waiting preserves capital for better opportunities while keeping the staking bonus active.",
+            "confidence": 0.9
+          },
+          "success": true
+        },
+        {
+          "agentName": "Momentum Mike",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "4YFFFeze...",
+              "amount": 1000000,
+              "betYes": true
+            },
+            "reasoning": "Capitalize on Jupiter's 61% YES momentum with a 1M bet to maximize returns from trending protocol activity.",
+            "confidence": 0.9
+          },
+          "success": false,
+          "error": "Invalid or resolved market"
+        },
+        {
+          "agentName": "Value Victor",
+          "action": {
+            "type": "STAKE",
+            "params": {
+              "amount": 1000000000000
+            },
+            "reasoning": "Stake 1M IDL to get 50% betting bonus for future bets",
+            "confidence": 0.9
+          },
+          "success": true,
+          "txSignature": "sim_stake_1766084545828"
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "Aggressive Alpha",
+          "totalPnL": "5000000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Momentum Mike",
+          "totalPnL": "3000000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Conservative Carl",
+          "totalPnL": "800000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Value Victor",
+          "totalPnL": "600000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Contrarian Cathy",
+          "totalPnL": "500000000",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 3,
+      "timestamp": 1766084612443,
+      "agentActions": [
+        {
+          "agentName": "Aggressive Alpha",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "E25HbRHW...",
+              "amount": 2000000000,
+              "betYes": true
+            },
+            "reasoning": "Aggressive contrarian bet against majority NO position with 40% of available balance + 50% stake bonus multiplier",
+            "confidence": 0.85
+          },
+          "success": false,
+          "error": "Invalid or resolved market"
+        },
+        {
+          "agentName": "Conservative Carl",
+          "action": {
+            "type": "ANALYZE",
+            "params": {},
+            "reasoning": "Skipping betting this round to analyze markets for clear fundamentals, as per strategy to wait when uncertain. This preserves capital and allows better decisions in future rounds.",
+            "confidence": 0.9
+          },
+          "success": true
+        },
+        {
+          "agentName": "Contrarian Cathy",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "No markets meet the >75% skew threshold for a high-confidence contrarian bet. Waiting preserves capital for better opportunities while keeping the staking bonus active.",
+            "confidence": 0.8
+          },
+          "success": true
+        },
+        {
+          "agentName": "Momentum Mike",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "4YFFFeze...",
+              "amount": 100000000000,
+              "betYes": true
+            },
+            "reasoning": "Placing a bet on Jupiter's YES side to capture momentum. 61% YES suggests strong trend continuation, and staking bonus will enhance returns.",
+            "confidence": 0.85
+          },
+          "success": false,
+          "error": "Invalid or resolved market"
+        },
+        {
+          "agentName": "Value Victor",
+          "action": {
+            "type": "ANALYZE",
+            "params": {},
+            "reasoning": "Before placing bets, I need to analyze protocol fundamentals to identify mispriced markets. Researching TVL trends, user growth, and protocol health will reveal edge opportunities.",
+            "confidence": 0.8
+          },
+          "success": true
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "Aggressive Alpha",
+          "totalPnL": "68790000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Momentum Mike",
+          "totalPnL": "4500000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Conservative Carl",
+          "totalPnL": "1200000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Value Victor",
+          "totalPnL": "1150000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Contrarian Cathy",
+          "totalPnL": "750000000",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 4,
+      "timestamp": 1766084637019,
+      "agentActions": [
+        {
+          "agentName": "Aggressive Alpha",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Conservative Carl",
+          "action": {
+            "type": "STAKE",
+            "params": {
+              "amount": 8000000000000
+            },
+            "reasoning": "Staking 8T IDL from my 9.2T liquid balance increases my staked amount to 8.8T, boosting my betting bonus to ~88% (capped at 50% per rules, but actually min(staked/1M, 50%) means with 8.8T staked, bonus is 50% max). This maximizes passive fee income and future bet bonuses while preserving capital. No bet this round to avoid risk.",
+            "confidence": 0.95
+          },
+          "success": true,
+          "txSignature": "sim_stake_1766084622158"
+        },
+        {
+          "agentName": "Contrarian Cathy",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "E25HbRHW...",
+              "amount": 1800000000000,
+              "betYes": true
+            },
+            "reasoning": "Betting YES on raydium to capitalize on the market's extreme skew toward NO. This is a classic contrarian setup where the crowd may be overreacting.",
+            "confidence": 0.85
+          },
+          "success": false,
+          "error": "Invalid or resolved market"
+        },
+        {
+          "agentName": "Momentum Mike",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "FzuNmZTW...",
+              "amount": 1000000,
+              "betYes": true
+            },
+            "reasoning": "Marinade's 51% YES shows early momentum I can capitalize on with a small, calculated bet.",
+            "confidence": 0.7
+          },
+          "success": false,
+          "error": "Invalid or resolved market"
+        },
+        {
+          "agentName": "Value Victor",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "E25HbRHW...",
+              "amount": 100000000000,
+              "betYes": true
+            },
+            "reasoning": "Raydium TVL is likely to exceed $500M given current DeFi growth trends and the platform's position in the Solana ecosystem.",
+            "confidence": 0.75
+          },
+          "success": false,
+          "error": "Invalid or resolved market"
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "Aggressive Alpha",
+          "totalPnL": "71290000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Momentum Mike",
+          "totalPnL": "6000000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Conservative Carl",
+          "totalPnL": "5600000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Value Victor",
+          "totalPnL": "1700000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Contrarian Cathy",
+          "totalPnL": "1000000000",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 5,
+      "timestamp": 1766084720998,
+      "agentActions": [
+        {
+          "agentName": "Aggressive Alpha",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "E25HbRHW...",
+              "amount": 10000000000,
+              "betYes": false
+            },
+            "reasoning": "Aggressive NO bet capitalizes on overpriced YES side, using 20% of liquid balance with 50% staking bonus for maximum leverage",
+            "confidence": 0.85
+          },
+          "success": false,
+          "error": "Invalid or resolved market"
+        },
+        {
+          "agentName": "Conservative Carl",
+          "action": {
+            "type": "LOCK_VE",
+            "params": {
+              "amount": "500000000000",
+              "duration": "15768000"
+            },
+            "reasoning": "Locking 500M IDL for 6 months (15768000 seconds) will generate veIDL, maximizing my staking rewards and betting bonus. This is a safe, long-term capital preservation strategy that compounds my passive income while keeping liquid reserves for future opportunities.",
+            "confidence": 0.95
+          },
+          "success": true,
+          "txSignature": "sim_lock_1766084687341"
+        },
+        {
+          "agentName": "Contrarian Cathy",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "E25HbRHW",
+              "amount": 180000000000,
+              "betYes": true
+            },
+            "reasoning": "Betting YES on the raydium market to exploit the skewed odds (67% NO). The bet size is moderate (18% of balance) to capitalize on the inefficiency without excessive risk.",
+            "confidence": 0.8
+          },
+          "success": false,
+          "error": "Invalid or resolved market"
+        },
+        {
+          "agentName": "Momentum Mike",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Value Victor",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "FzuNmZTW...",
+              "amount": 100000000000,
+              "betYes": false
+            },
+            "reasoning": "Marinade users target (100k) is very low for established protocol. Market odds (52% YES) suggest uncertainty, but actual probability likely much higher than 52%. Betting NO on 100k users gives strong edge.",
+            "confidence": 0.75
+          },
+          "success": false,
+          "error": "Invalid or resolved market"
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "Aggressive Alpha",
+          "totalPnL": "73790000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Conservative Carl",
+          "totalPnL": "10000000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Momentum Mike",
+          "totalPnL": "7500000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Value Victor",
+          "totalPnL": "2250000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Contrarian Cathy",
+          "totalPnL": "1250000000",
+          "roundPnL": "0"
+        }
+      ]
+    }
+  ],
+  "finalLeaderboard": [
+    {
+      "rank": 1,
+      "agentName": "Aggressive Alpha",
+      "totalPnL": "73790000000",
+      "winRate": 0,
+      "totalBets": 0,
+      "avgBetSize": "0"
+    },
+    {
+      "rank": 2,
+      "agentName": "Conservative Carl",
+      "totalPnL": "10000000000",
+      "winRate": 0,
+      "totalBets": 0,
+      "avgBetSize": "0"
+    },
+    {
+      "rank": 3,
+      "agentName": "Momentum Mike",
+      "totalPnL": "7500000000",
+      "winRate": 0,
+      "totalBets": 0,
+      "avgBetSize": "0"
+    },
+    {
+      "rank": 4,
+      "agentName": "Value Victor",
+      "totalPnL": "2250000000",
+      "winRate": 0,
+      "totalBets": 0,
+      "avgBetSize": "0"
+    },
+    {
+      "rank": 5,
+      "agentName": "Contrarian Cathy",
+      "totalPnL": "1250000000",
+      "winRate": 0,
+      "totalBets": 0,
+      "avgBetSize": "0"
+    }
+  ],
+  "winner": "Aggressive Alpha"
+}

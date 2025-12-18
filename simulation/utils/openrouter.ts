@@ -6,22 +6,22 @@ import { LLMResponse, Action, SimulationContext, AgentState, AgentConfig, AgentM
 
 const OPENROUTER_API_URL = 'https://openrouter.ai/api/v1/chat/completions';
 
-// Free models on OpenRouter (as of 2025)
+// Free models on OpenRouter (December 2025)
 export const FREE_MODELS = {
-  // DeepSeek models - excellent for reasoning
-  DEEPSEEK_R1: 'deepseek/deepseek-r1:free',
+  // TNG Chimera - strong reasoning from DeepSeek lineage
+  TNG_CHIMERA: 'tngtech/tng-r1t-chimera:free',
 
-  // Meta Llama 4 - powerful open model
-  LLAMA_4_MAVERICK: 'meta-llama/llama-4-maverick:free',
+  // Xiaomi MiMo - excellent for reasoning and coding
+  MIMO_FLASH: 'xiaomi/mimo-v2-flash:free',
 
-  // Google Gemma - efficient and capable
-  GEMMA_2_9B: 'google/gemma-2-9b-it:free',
+  // Mistral Devstral - specialized for agentic coding
+  DEVSTRAL: 'mistralai/devstral-2512:free',
 
-  // Mistral models - good balance of speed and quality
-  MISTRAL_7B: 'mistralai/mistral-7b-instruct:free',
+  // Arcee Trinity Mini - compact but capable
+  ARCEE_TRINITY: 'arcee-ai/trinity-mini:free',
 
-  // Qwen - strong multilingual reasoning
-  QWEN_2_7B: 'qwen/qwen-2-7b-instruct:free',
+  // KwaiPilot Kat Coder - coding specialist
+  KAT_CODER: 'kwaipilot/kat-coder-pro:free',
 };
 
 export interface OpenRouterConfig {
@@ -39,7 +39,7 @@ export class OpenRouterClient {
 
   constructor(config: OpenRouterConfig) {
     this.apiKey = config.apiKey;
-    this.defaultModel = config.defaultModel || FREE_MODELS.DEEPSEEK_R1;
+    this.defaultModel = config.defaultModel || FREE_MODELS.TNG_CHIMERA;
     this.maxRetries = config.maxRetries || 3;
     this.retryDelayMs = config.retryDelayMs || 1000;
   }
