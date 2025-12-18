@@ -19,7 +19,13 @@
     "api:dev": "node api/server.js",
     "protocol:deploy": "npx ts-node scripts/deploy-protocol.ts",
     "protocol:track-volume": "npx ts-node scripts/track-volume.ts",
-    "protocol:issue-badges": "npx ts-node scripts/issue-badges.ts"
+    "protocol:issue-badges": "npx ts-node scripts/issue-badges.ts",
+    "protocol:init": "npx ts-node scripts/init-protocol.ts",
+    "protocol:test": "npx ts-node scripts/test-protocol.ts",
+    "protocol:test:advanced": "npx ts-node scripts/test-advanced.ts",
+    "protocol:test:lifecycle": "npx ts-node scripts/test-market-lifecycle.ts",
+    "protocol:test:sdk": "npx ts-node scripts/test-sdk.ts",
+    "sdk:build": "cd sdk && npm run build"
   },
   "bin": {
     "idlhub-mcp": "./mcp-server/src/index.js"
