@@ -1,5 +1,5 @@
 use anchor_lang::prelude::*;
-use anchor_spl::token::{self, Mint, Token, TokenAccount, Transfer, Burn};
+use anchor_spl::token::{self, Mint, Token, TokenAccount, Transfer};
 
 declare_id!("BSn7neicVV2kEzgaZmd6tZEBm4tdgzBRyELov65Lq7dt");
 
@@ -41,6 +41,12 @@ pub const MAX_STAKE_BONUS_BPS: u64 = 5000; // 50% max
 pub const MARKET_STATUS_ACTIVE: u8 = 0;
 pub const MARKET_STATUS_RESOLVED: u8 = 1;
 pub const MARKET_STATUS_CANCELLED: u8 = 2;
+
+// Authority timelock
+pub const AUTHORITY_TIMELOCK: i64 = 172800; // 48 hours
+
+// Minimum target value to prevent trivial markets
+pub const MIN_TARGET_VALUE: u64 = 1;
 
 #[program]
 pub mod idl_protocol {
@@ -116,6 +122,8 @@ pub mod idl_protocol {
     /// SECURITY FIX: Unstake tokens with actual SPL token transfer
     pub fn unstake(ctx: Context<Unstake>, amount: u64) -> Result<()> {
         require!(amount > 0, IdlError::InvalidAmount);
+        // RICK FIX: Add pause check (was missing!)
+        require!(!ctx.accounts.state.paused, IdlError::ProtocolPaused);
 
         let staker = &ctx.accounts.staker_account;
         require!(staker.staked_amount >= amount, IdlError::InsufficientStake);
@@ -221,6 +229,8 @@ pub mod idl_protocol {
         require!(!ctx.accounts.state.paused, IdlError::ProtocolPaused);
         require!(protocol_id.len() <= 32, IdlError::InvalidInput);
         require!(description.len() <= 200, IdlError::InvalidInput);
+        // RICK FIX: Prevent trivial markets like "Will TVL be > $0?"
+        require!(target_value >= MIN_TARGET_VALUE, IdlError::InvalidTargetValue);
 
         let clock = Clock::get()?;
         // SECURITY FIX: Increase minimum resolution delay to 24 hours
@@ -550,13 +560,14 @@ pub mod idl_protocol {
             staker_fee
         )?;
 
-        // Burn tokens
-        let cpi_accounts_burn = Burn {
-            mint: ctx.accounts.idl_mint.to_account_info(),
+        // RICK FIX: Send "burn" to burn_vault instead of actual burn
+        // (Actual SPL burn requires mint authority which market_pool doesn't have)
+        let cpi_accounts_burn = Transfer {
             from: ctx.accounts.market_pool.to_account_info(),
+            to: ctx.accounts.burn_vault.to_account_info(),
             authority: ctx.accounts.market_pool.to_account_info(),
         };
-        token::burn(
+        token::transfer(
             CpiContext::new_with_signer(cpi_program, cpi_accounts_burn, signer_seeds),
             burn_amount
         )?;
@@ -705,10 +716,44 @@ pub mod idl_protocol {
         Ok(())
     }
 
-    /// Transfer authority
-    pub fn transfer_authority(ctx: Context<AdminOnly>, new_authority: Pubkey) -> Result<()> {
-        ctx.accounts.state.authority = new_authority;
+    /// RICK FIX: Initiate authority transfer with timelock
+    pub fn initiate_authority_transfer(ctx: Context<AdminOnly>, new_authority: Pubkey) -> Result<()> {
+        let state = &mut ctx.accounts.state;
+        state.pending_authority = Some(new_authority);
+        state.authority_transfer_time = Some(Clock::get()?.unix_timestamp);
+        msg!("Authority transfer initiated to {}. Must wait {} seconds.", new_authority, AUTHORITY_TIMELOCK);
+        Ok(())
+    }
+
+    /// RICK FIX: Complete authority transfer after timelock expires
+    pub fn complete_authority_transfer(ctx: Context<AdminOnly>) -> Result<()> {
+        let state = &mut ctx.accounts.state;
+        let transfer_time = state.authority_transfer_time.ok_or(IdlError::NoTransferPending)?;
+        let clock = Clock::get()?;
+
+        require!(
+            clock.unix_timestamp >= transfer_time + AUTHORITY_TIMELOCK,
+            IdlError::TimelockNotExpired
+        );
+
+        let new_authority = state.pending_authority.ok_or(IdlError::NoTransferPending)?;
+        state.authority = new_authority;
+        state.pending_authority = None;
+        state.authority_transfer_time = None;
+
         msg!("Authority transferred to {}", new_authority);
+        Ok(())
+    }
+
+    /// RICK FIX: Cancel pending authority transfer
+    pub fn cancel_authority_transfer(ctx: Context<AdminOnly>) -> Result<()> {
+        let state = &mut ctx.accounts.state;
+        require!(state.pending_authority.is_some(), IdlError::NoTransferPending);
+
+        state.pending_authority = None;
+        state.authority_transfer_time = None;
+
+        msg!("Authority transfer cancelled");
         Ok(())
     }
 }
@@ -766,6 +811,17 @@ pub struct Initialize<'info> {
         token::authority = state,
     )]
     pub vault: Account<'info, TokenAccount>,
+
+    /// RICK FIX: Burn vault holds "burned" tokens (locked forever, effectively burned)
+    #[account(
+        init,
+        payer = authority,
+        seeds = [b"burn_vault"],
+        bump,
+        token::mint = idl_mint,
+        token::authority = state,  // State owns it but will never transfer out
+    )]
+    pub burn_vault: Account<'info, TokenAccount>,
 
     /// CHECK: Treasury account
     pub treasury: UncheckedAccount<'info>,
@@ -1112,6 +1168,14 @@ pub struct ClaimWinnings<'info> {
     )]
     pub idl_mint: Box<Account<'info, Mint>>,
 
+    /// RICK FIX: Burn vault to hold "burned" tokens (since we can't actually burn without mint authority)
+    #[account(
+        mut,
+        seeds = [b"burn_vault"],
+        bump
+    )]
+    pub burn_vault: Box<Account<'info, TokenAccount>>,
+
     #[account(mut)]
     pub user: Signer<'info>,
 
@@ -1239,6 +1303,9 @@ pub struct ProtocolState {
     // SECURITY FIX: Reward checkpoint for proper distribution
     pub reward_per_token_stored: u128,  // Scaled by 1e18 for precision
     pub last_reward_update: i64,
+    // RICK FIX: Authority timelock
+    pub pending_authority: Option<Pubkey>,
+    pub authority_transfer_time: Option<i64>,
 }
 
 #[account]
@@ -1437,4 +1504,13 @@ pub enum IdlError {
 
     #[msg("Insufficient pool balance")]
     InsufficientPoolBalance,
+
+    #[msg("No authority transfer pending")]
+    NoTransferPending,
+
+    #[msg("Authority timelock not expired (48 hours required)")]
+    TimelockNotExpired,
+
+    #[msg("Target value must be greater than 0")]
+    InvalidTargetValue,
 }
