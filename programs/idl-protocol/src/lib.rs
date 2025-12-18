@@ -360,149 +360,20 @@ pub mod idl_protocol {
         Ok(())
     }
 
-    /// SECURITY FIX: Place a bet with token transfer and oracle check
+    /// DEPRECATED: Use commit_bet + reveal_bet instead
+    /// HACK FIX: Direct betting disabled to prevent front-running
+    #[allow(unused_variables)]
     pub fn place_bet(ctx: Context<PlaceBet>, amount: u64, bet_yes: bool, nonce: u64) -> Result<()> {
-        require!(!ctx.accounts.state.paused, IdlError::ProtocolPaused);
-        require!(amount >= MIN_BET_AMOUNT, IdlError::BetTooSmall);
-        require!(amount <= MAX_BET_AMOUNT, IdlError::BetTooLarge);
-
-        let market = &mut ctx.accounts.market;
-        let bet = &mut ctx.accounts.bet;
-        let clock = Clock::get()?;
-
-        // Get staker bonus (0 if no staker account)
-        let staked_amount = ctx.accounts.staker_account
-            .as_ref()
-            .map(|s| s.staked_amount)
-            .unwrap_or(0);
-
-        require!(!market.resolved, IdlError::MarketResolved);
-
-        // SECURITY FIX: Increase betting close window to 1 hour before resolution
-        require!(
-            clock.unix_timestamp < market.resolution_timestamp - BETTING_CLOSE_WINDOW,
-            IdlError::BettingClosed
-        );
-
-        // SECURITY FIX: Prevent oracle/creator from betting on their own market
-        require!(
-            ctx.accounts.user.key() != market.oracle,
-            IdlError::OracleCannotBet
-        );
-        require!(
-            ctx.accounts.user.key() != market.creator,
-            IdlError::CreatorCannotBet
-        );
-
-        // RICK FIX: Prevent dust bet attacks with imbalance check
-        // If there's already liquidity on the other side, enforce ratio limits
-        let opposite_liquidity = if bet_yes { market.total_no_actual } else { market.total_yes_actual };
-        let same_side_liquidity = if bet_yes { market.total_yes_actual } else { market.total_no_actual };
-
-        // If opposite side has liquidity, check imbalance ratio
-        if opposite_liquidity > 0 {
-            let new_same_side = same_side_liquidity.saturating_add(amount);
-            // Can't bet more than 100x the opposite side
-            require!(
-                new_same_side <= opposite_liquidity.saturating_mul(MAX_BET_IMBALANCE_RATIO),
-                IdlError::BetImbalanceTooHigh
-            );
-        }
-
-        // CRITICAL FIX: Transfer tokens from user to market pool
-        let cpi_accounts = Transfer {
-            from: ctx.accounts.user_token_account.to_account_info(),
-            to: ctx.accounts.market_pool.to_account_info(),
-            authority: ctx.accounts.user.to_account_info(),
-        };
-        let cpi_program = ctx.accounts.token_program.to_account_info();
-        token::transfer(CpiContext::new(cpi_program, cpi_accounts), amount)?;
-
-        // Calculate staker bonus with SECURITY FIX: Safe overflow handling
-        let stake_millions = staked_amount / 1_000_000;
-        let stake_bonus = std::cmp::min(
-            stake_millions.saturating_mul(STAKE_BONUS_PER_MILLION),
-            MAX_STAKE_BONUS_BPS
-        );
-        let multiplier = 10000u64
-            .checked_add(stake_bonus)
-            .ok_or(IdlError::MathOverflow)?;
-
-        // SECURITY FIX: Safe calculation with proper overflow handling
-        let effective_amount = (amount as u128)
-            .checked_mul(multiplier as u128)
-            .and_then(|v| v.checked_div(10000))
-            .and_then(|v| u64::try_from(v).ok())
-            .ok_or(IdlError::MathOverflow)?;
-
-        // SECURITY FIX: Track both actual and effective amounts
-        if bet_yes {
-            market.total_yes_actual = market.total_yes_actual
-                .checked_add(amount)
-                .ok_or(IdlError::MathOverflow)?;
-            market.total_yes_amount = market.total_yes_amount
-                .checked_add(effective_amount)
-                .ok_or(IdlError::MathOverflow)?;
-        } else {
-            market.total_no_actual = market.total_no_actual
-                .checked_add(amount)
-                .ok_or(IdlError::MathOverflow)?;
-            market.total_no_amount = market.total_no_amount
-                .checked_add(effective_amount)
-                .ok_or(IdlError::MathOverflow)?;
-        }
-
-        bet.owner = ctx.accounts.user.key();
-        bet.market = market.key();
-        bet.amount = amount;
-        bet.effective_amount = effective_amount;
-        bet.bet_yes = bet_yes;
-        bet.timestamp = clock.unix_timestamp;
-        bet.claimed = false;
-        bet.nonce = nonce;
-        bet.bump = ctx.bumps.bet;
-
-        // SECURITY FIX: Update user volume for badge tracking
-        let user_volume = &mut ctx.accounts.user_volume;
-        if user_volume.user == Pubkey::default() {
-            user_volume.user = ctx.accounts.user.key();
-            user_volume.bump = ctx.bumps.user_volume;
-        }
-        user_volume.total_volume_usd = user_volume.total_volume_usd
-            .checked_add(amount)
-            .ok_or(IdlError::MathOverflow)?;
-        user_volume.last_updated = clock.unix_timestamp;
-
-        msg!("Placed {} bet: {} (effective: {})", if bet_yes { "YES" } else { "NO" }, amount, effective_amount);
-        Ok(())
+        // HACK FIX: Force users through commit-reveal to prevent front-running
+        Err(IdlError::UseCommitReveal.into())
     }
 
-    /// Resolve market - only authorized oracle WITH bond
-    /// AUDIT FIX: Now requires oracle bond to prevent unaccountable resolutions
+    /// DEPRECATED: Use commit_resolution + reveal_resolution instead
+    /// HACK FIX: Direct resolution disabled to prevent front-running
+    #[allow(unused_variables)]
     pub fn resolve_market(ctx: Context<ResolveMarket>, actual_value: u64) -> Result<()> {
-        let market = &mut ctx.accounts.market;
-        let oracle_bond = &ctx.accounts.oracle_bond;
-        let clock = Clock::get()?;
-
-        require!(market.status == MARKET_STATUS_ACTIVE, IdlError::MarketResolved);
-        require!(!market.resolved, IdlError::MarketResolved);
-        require!(ctx.accounts.oracle.key() == market.oracle, IdlError::Unauthorized);
-        require!(clock.unix_timestamp >= market.resolution_timestamp, IdlError::ResolutionTooEarly);
-
-        // AUDIT FIX: Require oracle to have deposited bond
-        require!(oracle_bond.bond_amount >= ORACLE_BOND_AMOUNT, IdlError::InsufficientOracleBond);
-        require!(!oracle_bond.slashed, IdlError::OracleSlashed);
-
-        let outcome = actual_value >= market.target_value;
-        market.outcome = Some(outcome);
-        market.actual_value = Some(actual_value);
-        market.resolved = true;
-        market.resolved_at = Some(clock.unix_timestamp);
-        market.status = MARKET_STATUS_RESOLVED;
-
-        msg!("Market resolved: {} (target: {}, actual: {})",
-            if outcome { "YES" } else { "NO" }, market.target_value, actual_value);
-        Ok(())
+        // HACK FIX: Force oracles through commit-reveal to prevent front-running
+        Err(IdlError::UseCommitReveal.into())
     }
 
     /// SECURITY FIX: Cancel market and allow refunds (admin only, for emergencies)
@@ -2488,4 +2359,7 @@ pub enum IdlError {
 
     #[msg("No bond to withdraw")]
     NoBondToWithdraw,
+
+    #[msg("Direct betting/resolution disabled - use commit-reveal")]
+    UseCommitReveal,
 }
