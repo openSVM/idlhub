@@ -328,16 +328,13 @@ pub mod idl_protocol {
 
         let market = &mut ctx.accounts.market;
         let bet = &mut ctx.accounts.bet;
-        let staker = &mut ctx.accounts.staker_account;
         let clock = Clock::get()?;
 
-        // RICK FIX: Initialize staker account if new (allows betting without staking first)
-        if staker.owner == Pubkey::default() {
-            staker.owner = ctx.accounts.user.key();
-            staker.bump = ctx.bumps.staker_account;
-            staker.staked_amount = 0;
-            staker.reward_per_token_paid = ctx.accounts.state.reward_per_token_stored;
-        }
+        // Get staker bonus (0 if no staker account)
+        let staked_amount = ctx.accounts.staker_account
+            .as_ref()
+            .map(|s| s.staked_amount)
+            .unwrap_or(0);
 
         require!(!market.resolved, IdlError::MarketResolved);
 
@@ -382,7 +379,7 @@ pub mod idl_protocol {
         token::transfer(CpiContext::new(cpi_program, cpi_accounts), amount)?;
 
         // Calculate staker bonus with SECURITY FIX: Safe overflow handling
-        let stake_millions = staker.staked_amount / 1_000_000;
+        let stake_millions = staked_amount / 1_000_000;
         let stake_bonus = std::cmp::min(
             stake_millions.saturating_mul(STAKE_BONUS_PER_MILLION),
             MAX_STAKE_BONUS_BPS
@@ -894,6 +891,7 @@ pub fn get_voting_power(
 
 // ==================== ACCOUNTS ====================
 
+/// Stack-optimized with Box for large accounts
 #[derive(Accounts)]
 pub struct Initialize<'info> {
     #[account(
@@ -903,9 +901,9 @@ pub struct Initialize<'info> {
         seeds = [b"state"],
         bump
     )]
-    pub state: Account<'info, ProtocolState>,
+    pub state: Box<Account<'info, ProtocolState>>,
 
-    pub idl_mint: Account<'info, Mint>,
+    pub idl_mint: Box<Account<'info, Mint>>,
 
     #[account(
         init,
@@ -915,7 +913,7 @@ pub struct Initialize<'info> {
         token::mint = idl_mint,
         token::authority = state,
     )]
-    pub vault: Account<'info, TokenAccount>,
+    pub vault: Box<Account<'info, TokenAccount>>,
 
     /// RICK FIX: Burn vault holds "burned" tokens (locked forever, effectively burned)
     #[account(
@@ -926,7 +924,7 @@ pub struct Initialize<'info> {
         token::mint = idl_mint,
         token::authority = state,  // State owns it but will never transfer out
     )]
-    pub burn_vault: Account<'info, TokenAccount>,
+    pub burn_vault: Box<Account<'info, TokenAccount>>,
 
     /// CHECK: Treasury account
     pub treasury: UncheckedAccount<'info>,
@@ -1132,15 +1130,13 @@ pub struct PlaceBet<'info> {
     )]
     pub bet: Box<Account<'info, Bet>>,
 
-    /// RICK FIX: Use init_if_needed so users can bet without staking first
+    /// Staker account - optional, if missing user gets no bonus
+    /// (To save stack space, we don't init_if_needed here)
     #[account(
-        init_if_needed,
-        payer = user,
-        space = 8 + StakerAccount::INIT_SPACE,
         seeds = [b"staker", user.key().as_ref()],
         bump
     )]
-    pub staker_account: Box<Account<'info, StakerAccount>>,
+    pub staker_account: Option<Box<Account<'info, StakerAccount>>>,
 
     #[account(
         init_if_needed,
