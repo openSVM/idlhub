@@ -37,6 +37,11 @@ pub const BADGE_VEIDL_DIAMOND: u64 = 20_000_000;
 pub const STAKE_BONUS_PER_MILLION: u64 = 100; // 1% in bps
 pub const MAX_STAKE_BONUS_BPS: u64 = 5000; // 50% max
 
+// Market status for cancellation
+pub const MARKET_STATUS_ACTIVE: u8 = 0;
+pub const MARKET_STATUS_RESOLVED: u8 = 1;
+pub const MARKET_STATUS_CANCELLED: u8 = 2;
+
 #[program]
 pub mod idl_protocol {
     use super::*;
@@ -56,6 +61,9 @@ pub mod idl_protocol {
         state.bump = ctx.bumps.state;
         state.vault_bump = ctx.bumps.vault;
         state.paused = false;
+        // SECURITY FIX: Initialize checkpoint system
+        state.reward_per_token_stored = 0;
+        state.last_reward_update = Clock::get()?.unix_timestamp;
 
         msg!("IDL Protocol initialized. Vault: {}", state.vault);
         Ok(())
@@ -82,6 +90,14 @@ pub mod idl_protocol {
         if staker.owner == Pubkey::default() {
             staker.owner = ctx.accounts.user.key();
             staker.bump = ctx.bumps.staker_account;
+            staker.reward_per_token_paid = state.reward_per_token_stored;
+        } else {
+            // SECURITY FIX: Update pending rewards before changing stake
+            let earned = calculate_earned(staker, state);
+            staker.pending_rewards = staker.pending_rewards
+                .checked_add(earned)
+                .ok_or(IdlError::MathOverflow)?;
+            staker.reward_per_token_paid = state.reward_per_token_stored;
         }
 
         // SECURITY FIX: Use checked arithmetic
@@ -220,6 +236,9 @@ pub mod idl_protocol {
         market.target_value = target_value;
         market.resolution_timestamp = resolution_timestamp;
         market.description = description;
+        // SECURITY FIX: Track both actual and effective amounts
+        market.total_yes_actual = 0;
+        market.total_no_actual = 0;
         market.total_yes_amount = 0;
         market.total_no_amount = 0;
         market.resolved = false;
@@ -229,6 +248,7 @@ pub mod idl_protocol {
         market.oracle = ctx.accounts.oracle.key();
         market.created_at = clock.unix_timestamp;
         market.bump = ctx.bumps.market;
+        market.status = MARKET_STATUS_ACTIVE;
 
         msg!("Created prediction market for {}", market.protocol_id);
         Ok(())
@@ -289,11 +309,18 @@ pub mod idl_protocol {
             .and_then(|v| u64::try_from(v).ok())
             .ok_or(IdlError::MathOverflow)?;
 
+        // SECURITY FIX: Track both actual and effective amounts
         if bet_yes {
+            market.total_yes_actual = market.total_yes_actual
+                .checked_add(amount)
+                .ok_or(IdlError::MathOverflow)?;
             market.total_yes_amount = market.total_yes_amount
                 .checked_add(effective_amount)
                 .ok_or(IdlError::MathOverflow)?;
         } else {
+            market.total_no_actual = market.total_no_actual
+                .checked_add(amount)
+                .ok_or(IdlError::MathOverflow)?;
             market.total_no_amount = market.total_no_amount
                 .checked_add(effective_amount)
                 .ok_or(IdlError::MathOverflow)?;
@@ -329,6 +356,7 @@ pub mod idl_protocol {
         let market = &mut ctx.accounts.market;
         let clock = Clock::get()?;
 
+        require!(market.status == MARKET_STATUS_ACTIVE, IdlError::MarketResolved);
         require!(!market.resolved, IdlError::MarketResolved);
         require!(ctx.accounts.oracle.key() == market.oracle, IdlError::Unauthorized);
         require!(clock.unix_timestamp >= market.resolution_timestamp, IdlError::ResolutionTooEarly);
@@ -338,9 +366,62 @@ pub mod idl_protocol {
         market.actual_value = Some(actual_value);
         market.resolved = true;
         market.resolved_at = Some(clock.unix_timestamp);
+        market.status = MARKET_STATUS_RESOLVED;
 
         msg!("Market resolved: {} (target: {}, actual: {})",
             if outcome { "YES" } else { "NO" }, market.target_value, actual_value);
+        Ok(())
+    }
+
+    /// SECURITY FIX: Cancel market and allow refunds (admin only, for emergencies)
+    pub fn cancel_market(ctx: Context<CancelMarket>) -> Result<()> {
+        let market = &mut ctx.accounts.market;
+
+        require!(market.status == MARKET_STATUS_ACTIVE, IdlError::MarketResolved);
+        require!(!market.resolved, IdlError::MarketResolved);
+
+        market.status = MARKET_STATUS_CANCELLED;
+
+        msg!("Market cancelled: {}", market.protocol_id);
+        Ok(())
+    }
+
+    /// SECURITY FIX: Claim refund from cancelled market
+    pub fn claim_refund(ctx: Context<ClaimRefund>) -> Result<()> {
+        let market = &ctx.accounts.market;
+        let bet = &mut ctx.accounts.bet;
+
+        require!(market.status == MARKET_STATUS_CANCELLED, IdlError::MarketNotCancelled);
+        require!(!bet.claimed, IdlError::AlreadyClaimed);
+        require!(bet.owner == ctx.accounts.user.key(), IdlError::Unauthorized);
+
+        bet.claimed = true;
+
+        // Refund the original bet amount (not effective amount)
+        let refund_amount = bet.amount;
+
+        // PDA signer seeds for market pool
+        let market_key = market.key();
+        let market_pool_bump = ctx.bumps.market_pool;
+        let market_seeds = &[
+            b"market_pool".as_ref(),
+            market_key.as_ref(),
+            &[market_pool_bump],
+        ];
+        let signer_seeds = &[&market_seeds[..]];
+
+        let cpi_accounts = Transfer {
+            from: ctx.accounts.market_pool.to_account_info(),
+            to: ctx.accounts.user_token_account.to_account_info(),
+            authority: ctx.accounts.market_pool.to_account_info(),
+        };
+        let cpi_program = ctx.accounts.token_program.to_account_info();
+        token::transfer(
+            CpiContext::new_with_signer(cpi_program, cpi_accounts, signer_seeds),
+            refund_amount
+        )?;
+
+        msg!("Refunded {} from cancelled market", refund_amount);
         Ok(())
     }
 
@@ -351,9 +432,15 @@ pub mod idl_protocol {
         let bet = &mut ctx.accounts.bet;
         let clock = Clock::get()?;
 
+        // SECURITY FIX: Check market status
+        require!(market.status == MARKET_STATUS_RESOLVED, IdlError::MarketNotResolved);
         require!(market.resolved, IdlError::MarketNotResolved);
         require!(!bet.claimed, IdlError::AlreadyClaimed);
         require!(bet.owner == ctx.accounts.user.key(), IdlError::Unauthorized);
+
+        // SECURITY FIX: Validate market_pool has correct mint and seeds
+        let market_pool = &ctx.accounts.market_pool;
+        require!(market_pool.mint == state.idl_mint, IdlError::InvalidMint);
 
         // SECURITY FIX: Add delay after resolution before claiming
         let resolved_at = market.resolved_at.ok_or(IdlError::MarketNotResolved)?;
@@ -372,25 +459,33 @@ pub mod idl_protocol {
             return Ok(());
         }
 
-        let (winning_pool, losing_pool) = if outcome {
-            (market.total_yes_amount, market.total_no_amount)
+        // SECURITY FIX: Use effective_amount for share calculation, actual pool for funds
+        let (winning_pool_effective, losing_pool_actual) = if outcome {
+            (market.total_yes_amount, market.total_no_actual)
         } else {
-            (market.total_no_amount, market.total_yes_amount)
+            (market.total_no_amount, market.total_yes_actual)
         };
 
-        let winnings_share = if winning_pool > 0 {
+        // Calculate winnings share based on effective amounts (includes staker bonus)
+        let winnings_share = if winning_pool_effective > 0 {
             (bet.effective_amount as u128)
-                .checked_mul(losing_pool as u128)
-                .and_then(|v| v.checked_div(winning_pool as u128))
+                .checked_mul(losing_pool_actual as u128)
+                .and_then(|v| v.checked_div(winning_pool_effective as u128))
                 .and_then(|v| u64::try_from(v).ok())
                 .unwrap_or(0)
         } else {
             0
         };
 
+        // SECURITY FIX: Verify pool has enough balance before transfer
+        let pool_balance = ctx.accounts.market_pool.amount;
         let gross_winnings = bet.amount
             .checked_add(winnings_share)
             .ok_or(IdlError::MathOverflow)?;
+
+        // Cap gross_winnings to available pool balance pro-rata
+        let gross_winnings = std::cmp::min(gross_winnings, pool_balance);
+
         let fee = (gross_winnings as u128 * BET_FEE_BPS as u128 / 10000) as u64;
         let net_winnings = gross_winnings.saturating_sub(fee);
 
@@ -466,6 +561,9 @@ pub mod idl_protocol {
             burn_amount
         )?;
 
+        // SECURITY FIX: Update reward checkpoint before adding to pool
+        update_reward_per_token(state, staker_fee);
+
         // Update state tracking
         state.reward_pool = state.reward_pool
             .checked_add(staker_fee)
@@ -482,7 +580,7 @@ pub mod idl_protocol {
     }
 
     /// Claim staking rewards from reward pool
-    /// SECURITY FIX: Track claimed amounts to prevent double-claiming
+    /// SECURITY FIX: Use checkpoint system to prevent race conditions
     pub fn claim_staking_rewards(ctx: Context<ClaimStakingRewards>) -> Result<()> {
         let state = &ctx.accounts.state;
         let staker = &ctx.accounts.staker_account;
@@ -490,19 +588,19 @@ pub mod idl_protocol {
         require!(state.total_staked > 0, IdlError::InsufficientStake);
         require!(staker.staked_amount > 0, IdlError::InsufficientStake);
 
-        // Calculate new rewards since last claim
-        // New rewards = current_pool - pool_at_last_claim (proportional)
-        let new_rewards_in_pool = state.reward_pool.saturating_sub(staker.last_reward_claim_pool);
-        require!(new_rewards_in_pool > 0, IdlError::NoRewardsToClaim);
-
-        // User's share of NEW rewards only
-        let share = (staker.staked_amount as u128)
-            .checked_mul(new_rewards_in_pool as u128)
-            .and_then(|v| v.checked_div(state.total_staked as u128))
-            .and_then(|v| u64::try_from(v).ok())
+        // SECURITY FIX: Calculate rewards using checkpoint system
+        let earned = calculate_earned(staker, state);
+        let total_rewards = earned
+            .checked_add(staker.pending_rewards)
             .ok_or(IdlError::MathOverflow)?;
 
-        require!(share > 0, IdlError::NoRewardsToClaim);
+        require!(total_rewards > 0, IdlError::NoRewardsToClaim);
+
+        // Verify vault has enough balance
+        require!(
+            ctx.accounts.vault.amount >= total_rewards,
+            IdlError::InsufficientPoolBalance
+        );
 
         let state_bump = ctx.accounts.state.bump;
 
@@ -518,20 +616,21 @@ pub mod idl_protocol {
         let cpi_program = ctx.accounts.token_program.to_account_info();
         token::transfer(
             CpiContext::new_with_signer(cpi_program, cpi_accounts, signer_seeds),
-            share
+            total_rewards
         )?;
 
-        // Update staker and state after transfer
+        // Update staker checkpoint after transfer
         let staker = &mut ctx.accounts.staker_account;
         let state = &mut ctx.accounts.state;
 
         staker.rewards_claimed = staker.rewards_claimed
-            .checked_add(share)
+            .checked_add(total_rewards)
             .ok_or(IdlError::MathOverflow)?;
-        staker.last_reward_claim_pool = state.reward_pool;
-        state.reward_pool = state.reward_pool.saturating_sub(share);
+        staker.reward_per_token_paid = state.reward_per_token_stored;
+        staker.pending_rewards = 0;
+        state.reward_pool = state.reward_pool.saturating_sub(total_rewards);
 
-        msg!("Claimed {} staking rewards (total claimed: {})", share, staker.rewards_claimed);
+        msg!("Claimed {} staking rewards (total claimed: {})", total_rewards, staker.rewards_claimed);
         Ok(())
     }
 
@@ -611,6 +710,35 @@ pub mod idl_protocol {
         ctx.accounts.state.authority = new_authority;
         msg!("Authority transferred to {}", new_authority);
         Ok(())
+    }
+}
+
+// ==================== HELPER FUNCTIONS ====================
+
+/// Calculate earned rewards for a staker using checkpoint system
+fn calculate_earned(staker: &StakerAccount, state: &ProtocolState) -> u64 {
+    if staker.staked_amount == 0 {
+        return 0;
+    }
+
+    let reward_delta = state.reward_per_token_stored
+        .saturating_sub(staker.reward_per_token_paid);
+
+    // Scale down from 1e18 precision
+    ((staker.staked_amount as u128)
+        .saturating_mul(reward_delta)
+        / 1_000_000_000_000_000_000u128) as u64
+}
+
+/// Update reward_per_token when new rewards are added
+fn update_reward_per_token(state: &mut ProtocolState, new_rewards: u64) {
+    if state.total_staked > 0 {
+        // Scale up by 1e18 for precision
+        let reward_increase = (new_rewards as u128)
+            .saturating_mul(1_000_000_000_000_000_000u128)
+            / (state.total_staked as u128);
+        state.reward_per_token_stored = state.reward_per_token_stored
+            .saturating_add(reward_increase);
     }
 }
 
@@ -871,6 +999,59 @@ pub struct ResolveMarket<'info> {
 }
 
 #[derive(Accounts)]
+pub struct CancelMarket<'info> {
+    #[account(
+        seeds = [b"state"],
+        bump = state.bump,
+        constraint = state.authority == authority.key() @ IdlError::Unauthorized
+    )]
+    pub state: Account<'info, ProtocolState>,
+
+    #[account(mut)]
+    pub market: Account<'info, PredictionMarket>,
+
+    pub authority: Signer<'info>,
+}
+
+#[derive(Accounts)]
+pub struct ClaimRefund<'info> {
+    #[account(seeds = [b"state"], bump = state.bump)]
+    pub state: Box<Account<'info, ProtocolState>>,
+
+    #[account(
+        seeds = [b"market", market.protocol_id.as_bytes(), &market.resolution_timestamp.to_le_bytes()],
+        bump = market.bump
+    )]
+    pub market: Box<Account<'info, PredictionMarket>>,
+
+    #[account(
+        mut,
+        seeds = [b"bet", market.key().as_ref(), bet.owner.as_ref(), &bet.nonce.to_le_bytes()],
+        bump = bet.bump,
+        constraint = bet.owner == user.key() @ IdlError::Unauthorized
+    )]
+    pub bet: Box<Account<'info, Bet>>,
+
+    #[account(
+        mut,
+        seeds = [b"market_pool", market.key().as_ref()],
+        bump
+    )]
+    pub market_pool: Box<Account<'info, TokenAccount>>,
+
+    #[account(
+        mut,
+        constraint = user_token_account.mint == state.idl_mint @ IdlError::InvalidMint
+    )]
+    pub user_token_account: Box<Account<'info, TokenAccount>>,
+
+    #[account(mut)]
+    pub user: Signer<'info>,
+
+    pub token_program: Program<'info, Token>,
+}
+
+#[derive(Accounts)]
 pub struct ClaimWinnings<'info> {
     #[account(mut, seeds = [b"state"], bump = state.bump)]
     pub state: Box<Account<'info, ProtocolState>>,
@@ -1055,6 +1236,9 @@ pub struct ProtocolState {
     pub bump: u8,
     pub vault_bump: u8,
     pub paused: bool,
+    // SECURITY FIX: Reward checkpoint for proper distribution
+    pub reward_per_token_stored: u128,  // Scaled by 1e18 for precision
+    pub last_reward_update: i64,
 }
 
 #[account]
@@ -1063,8 +1247,9 @@ pub struct StakerAccount {
     pub owner: Pubkey,
     pub staked_amount: u64,
     pub last_stake_timestamp: i64,
-    pub rewards_claimed: u64,         // Track total rewards claimed
-    pub last_reward_claim_pool: u64,  // Snapshot of reward_pool at last claim
+    pub rewards_claimed: u64,               // Track total rewards claimed
+    pub reward_per_token_paid: u128,        // SECURITY FIX: Checkpoint per staker
+    pub pending_rewards: u64,               // Unclaimed rewards
     pub bump: u8,
 }
 
@@ -1090,8 +1275,12 @@ pub struct PredictionMarket {
     pub resolution_timestamp: i64,
     #[max_len(200)]
     pub description: String,
-    pub total_yes_amount: u64,
-    pub total_no_amount: u64,
+    // SECURITY FIX: Track ACTUAL tokens deposited (not effective amounts)
+    pub total_yes_actual: u64,      // Real tokens deposited on YES
+    pub total_no_actual: u64,       // Real tokens deposited on NO
+    // Effective amounts for payout calculation only
+    pub total_yes_amount: u64,      // Weighted YES (with staker bonus)
+    pub total_no_amount: u64,       // Weighted NO (with staker bonus)
     pub resolved: bool,
     pub resolved_at: Option<i64>,
     pub outcome: Option<bool>,
@@ -1099,6 +1288,8 @@ pub struct PredictionMarket {
     pub oracle: Pubkey,
     pub created_at: i64,
     pub bump: u8,
+    // SECURITY FIX: Market status for cancellation
+    pub status: u8,                 // 0=active, 1=resolved, 2=cancelled
 }
 
 #[account]
@@ -1240,4 +1431,10 @@ pub enum IdlError {
 
     #[msg("Cannot downgrade badge tier")]
     CannotDowngradeBadge,
+
+    #[msg("Market not cancelled")]
+    MarketNotCancelled,
+
+    #[msg("Insufficient pool balance")]
+    InsufficientPoolBalance,
 }
