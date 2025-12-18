@@ -48,6 +48,13 @@ pub const AUTHORITY_TIMELOCK: i64 = 172800; // 48 hours
 // Minimum target value to prevent trivial markets
 pub const MIN_TARGET_VALUE: u64 = 1;
 
+// RICK FIX: Prevent dust bet attacks and imbalanced markets
+pub const MIN_OPPOSITE_LIQUIDITY: u64 = 1_000_000; // 0.001 tokens min on other side
+pub const MAX_BET_IMBALANCE_RATIO: u64 = 100; // Can't bet more than 100x the other side
+
+// RICK FIX: Claim cooldown to prevent rapid draining
+pub const REWARD_CLAIM_COOLDOWN: i64 = 3600; // 1 hour between claims
+
 #[program]
 pub mod idl_protocol {
     use super::*;
@@ -223,6 +230,49 @@ pub mod idl_protocol {
         Ok(())
     }
 
+    /// RICK FIX: Extend existing lock duration
+    pub fn extend_lock(ctx: Context<ExtendLock>, additional_duration: i64) -> Result<()> {
+        require!(!ctx.accounts.state.paused, IdlError::ProtocolPaused);
+        require!(additional_duration > 0, IdlError::InvalidLockDuration);
+
+        let state = &mut ctx.accounts.state;
+        let ve_position = &mut ctx.accounts.ve_position;
+        let clock = Clock::get()?;
+
+        // Can only extend if lock hasn't expired
+        require!(clock.unix_timestamp < ve_position.lock_end, IdlError::LockExpired);
+
+        // Calculate new end time
+        let new_end = ve_position.lock_end
+            .checked_add(additional_duration)
+            .ok_or(IdlError::MathOverflow)?;
+
+        // Ensure total lock doesn't exceed max
+        let total_lock_from_now = new_end.saturating_sub(clock.unix_timestamp);
+        require!(total_lock_from_now <= MAX_LOCK_DURATION, IdlError::LockTooLong);
+
+        // Calculate new veIDL based on remaining time
+        let new_total_duration = new_end.saturating_sub(ve_position.lock_start);
+        let new_initial_ve = (ve_position.locked_stake as u128)
+            .checked_mul(new_total_duration as u128)
+            .and_then(|v| v.checked_div(MAX_LOCK_DURATION as u128))
+            .and_then(|v| u64::try_from(v).ok())
+            .ok_or(IdlError::MathOverflow)?;
+
+        // Adjust total supply
+        state.total_ve_supply = state.total_ve_supply
+            .saturating_sub(ve_position.initial_ve_amount)
+            .checked_add(new_initial_ve)
+            .ok_or(IdlError::MathOverflow)?;
+
+        ve_position.initial_ve_amount = new_initial_ve;
+        ve_position.lock_end = new_end;
+        ve_position.lock_duration = new_total_duration;
+
+        msg!("Extended lock to {} with {} veIDL", new_end, new_initial_ve);
+        Ok(())
+    }
+
     /// Create a prediction market
     pub fn create_market(
         ctx: Context<CreateMarket>,
@@ -278,8 +328,16 @@ pub mod idl_protocol {
 
         let market = &mut ctx.accounts.market;
         let bet = &mut ctx.accounts.bet;
-        let staker = &ctx.accounts.staker_account;
+        let staker = &mut ctx.accounts.staker_account;
         let clock = Clock::get()?;
+
+        // RICK FIX: Initialize staker account if new (allows betting without staking first)
+        if staker.owner == Pubkey::default() {
+            staker.owner = ctx.accounts.user.key();
+            staker.bump = ctx.bumps.staker_account;
+            staker.staked_amount = 0;
+            staker.reward_per_token_paid = ctx.accounts.state.reward_per_token_stored;
+        }
 
         require!(!market.resolved, IdlError::MarketResolved);
 
@@ -298,6 +356,21 @@ pub mod idl_protocol {
             ctx.accounts.user.key() != market.creator,
             IdlError::CreatorCannotBet
         );
+
+        // RICK FIX: Prevent dust bet attacks with imbalance check
+        // If there's already liquidity on the other side, enforce ratio limits
+        let opposite_liquidity = if bet_yes { market.total_no_actual } else { market.total_yes_actual };
+        let same_side_liquidity = if bet_yes { market.total_yes_actual } else { market.total_no_actual };
+
+        // If opposite side has liquidity, check imbalance ratio
+        if opposite_liquidity > 0 {
+            let new_same_side = same_side_liquidity.saturating_add(amount);
+            // Can't bet more than 100x the opposite side
+            require!(
+                new_same_side <= opposite_liquidity.saturating_mul(MAX_BET_IMBALANCE_RATIO),
+                IdlError::BetImbalanceTooHigh
+            );
+        }
 
         // CRITICAL FIX: Transfer tokens from user to market pool
         let cpi_accounts = Transfer {
@@ -605,6 +678,13 @@ pub mod idl_protocol {
         require!(state.total_staked > 0, IdlError::InsufficientStake);
         require!(staker.staked_amount > 0, IdlError::InsufficientStake);
 
+        // RICK FIX: Enforce claim cooldown (1 hour between claims)
+        let clock = Clock::get()?;
+        require!(
+            clock.unix_timestamp >= staker.last_reward_claim + REWARD_CLAIM_COOLDOWN,
+            IdlError::ClaimCooldown
+        );
+
         // SECURITY FIX: Calculate rewards using checkpoint system
         let earned = calculate_earned(staker, state);
         let total_rewards = earned
@@ -645,6 +725,7 @@ pub mod idl_protocol {
             .ok_or(IdlError::MathOverflow)?;
         staker.reward_per_token_paid = state.reward_per_token_stored;
         staker.pending_rewards = 0;
+        staker.last_reward_claim = Clock::get()?.unix_timestamp;  // RICK FIX: Update cooldown
         state.reward_pool = state.reward_pool.saturating_sub(total_rewards);
 
         msg!("Claimed {} staking rewards (total claimed: {})", total_rewards, staker.rewards_claimed);
@@ -977,6 +1058,24 @@ pub struct UnlockVe<'info> {
     pub user: Signer<'info>,
 }
 
+/// RICK FIX: ExtendLock accounts
+#[derive(Accounts)]
+pub struct ExtendLock<'info> {
+    #[account(mut, seeds = [b"state"], bump = state.bump)]
+    pub state: Account<'info, ProtocolState>,
+
+    #[account(
+        mut,
+        seeds = [b"ve_position", user.key().as_ref()],
+        bump = ve_position.bump,
+        constraint = ve_position.owner == user.key() @ IdlError::Unauthorized
+    )]
+    pub ve_position: Account<'info, VePosition>,
+
+    #[account(mut)]
+    pub user: Signer<'info>,
+}
+
 #[derive(Accounts)]
 #[instruction(protocol_id: String, metric_type: MetricType, target_value: u64, resolution_timestamp: i64)]
 pub struct CreateMarket<'info> {
@@ -1033,10 +1132,13 @@ pub struct PlaceBet<'info> {
     )]
     pub bet: Box<Account<'info, Bet>>,
 
+    /// RICK FIX: Use init_if_needed so users can bet without staking first
     #[account(
+        init_if_needed,
+        payer = user,
+        space = 8 + StakerAccount::INIT_SPACE,
         seeds = [b"staker", user.key().as_ref()],
-        bump = staker_account.bump,
-        constraint = staker_account.owner == user.key() @ IdlError::Unauthorized
+        bump
     )]
     pub staker_account: Box<Account<'info, StakerAccount>>,
 
@@ -1341,6 +1443,7 @@ pub struct StakerAccount {
     pub rewards_claimed: u64,               // Track total rewards claimed
     pub reward_per_token_paid: u128,        // SECURITY FIX: Checkpoint per staker
     pub pending_rewards: u64,               // Unclaimed rewards
+    pub last_reward_claim: i64,             // RICK FIX: Cooldown timestamp
     pub bump: u8,
 }
 
@@ -1560,4 +1663,16 @@ pub enum IdlError {
 
     #[msg("Target value must be greater than 0")]
     InvalidTargetValue,
+
+    #[msg("Bet would create too much imbalance (max 100x opposite side)")]
+    BetImbalanceTooHigh,
+
+    #[msg("Must wait 1 hour between reward claims")]
+    ClaimCooldown,
+
+    #[msg("Lock has already expired")]
+    LockExpired,
+
+    #[msg("Extended lock would exceed 4 year maximum")]
+    LockTooLong,
 }
