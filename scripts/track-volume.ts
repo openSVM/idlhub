@@ -13,7 +13,7 @@ import { Connection, PublicKey } from '@solana/web3.js';
 
 // Constants
 const BAGS_FM_POOL = 'HLnpSz9h2S4hiLQ43rnSD9XkcUThA7B8hQMKmDaiTLcC';
-const IDL_TOKEN_MINT = '8zdhHxthCFoigAGw4QRxWfXUWLY1KkMZ1r7CTcmiBAGS';
+const IDL_TOKEN_MINT = '4GihJrYJGQ9pjqDySTjd57y1h3nNkEZNbzJxCbispump';
 const RPC_URL = process.env.RPC_URL || 'https://api.mainnet-beta.solana.com';
 
 // Badge tiers in USD

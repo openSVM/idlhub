@@ -254,7 +254,9 @@ pub mod idl_protocol {
     }
 
     /// Unlock expired veIDL position
+    /// AUDIT FIX: Users should always be able to unlock expired positions even when paused
     pub fn unlock_ve(ctx: Context<UnlockVe>) -> Result<()> {
+        // NOTE: Intentionally NO pause check - users must always be able to withdraw expired locks
         let state = &mut ctx.accounts.state;
         let ve_position = &ctx.accounts.ve_position;
         let clock = Clock::get()?;
@@ -475,15 +477,21 @@ pub mod idl_protocol {
         Ok(())
     }
 
-    /// Resolve market - only authorized oracle
+    /// Resolve market - only authorized oracle WITH bond
+    /// AUDIT FIX: Now requires oracle bond to prevent unaccountable resolutions
     pub fn resolve_market(ctx: Context<ResolveMarket>, actual_value: u64) -> Result<()> {
         let market = &mut ctx.accounts.market;
+        let oracle_bond = &ctx.accounts.oracle_bond;
         let clock = Clock::get()?;
 
         require!(market.status == MARKET_STATUS_ACTIVE, IdlError::MarketResolved);
         require!(!market.resolved, IdlError::MarketResolved);
         require!(ctx.accounts.oracle.key() == market.oracle, IdlError::Unauthorized);
         require!(clock.unix_timestamp >= market.resolution_timestamp, IdlError::ResolutionTooEarly);
+
+        // AUDIT FIX: Require oracle to have deposited bond
+        require!(oracle_bond.bond_amount >= ORACLE_BOND_AMOUNT, IdlError::InsufficientOracleBond);
+        require!(!oracle_bond.slashed, IdlError::OracleSlashed);
 
         let outcome = actual_value >= market.target_value;
         market.outcome = Some(outcome);
@@ -571,6 +579,13 @@ pub mod idl_protocol {
         require!(
             clock.unix_timestamp >= resolved_at + CLAIM_DELAY_AFTER_RESOLUTION,
             IdlError::ClaimTooEarly
+        );
+
+        // SELF-REVIEW FIX: Claims must wait until AFTER dispute window closes
+        // Otherwise someone could claim winnings, then market gets disputed
+        require!(
+            clock.unix_timestamp >= resolved_at + ORACLE_DISPUTE_WINDOW,
+            IdlError::DisputeWindowOpen
         );
 
         let outcome = market.outcome.unwrap();
@@ -923,8 +938,18 @@ pub mod idl_protocol {
     }
 
     /// TIER 3: Withdraw from insurance fund (emergency only)
+    /// AUDIT FIX: Ensure withdrawal doesn't affect staker rewards or staked tokens
     pub fn withdraw_insurance(ctx: Context<WithdrawInsurance>, amount: u64) -> Result<()> {
         require!(amount <= ctx.accounts.state.insurance_fund, IdlError::InsufficientInsuranceFund);
+
+        // AUDIT FIX: Calculate minimum vault balance needed for stakers and staked tokens
+        let min_vault_balance = ctx.accounts.state.total_staked
+            .checked_add(ctx.accounts.state.reward_pool)
+            .ok_or(IdlError::MathOverflow)?;
+
+        // Ensure vault has enough after withdrawal
+        let vault_after = ctx.accounts.vault.amount.saturating_sub(amount);
+        require!(vault_after >= min_vault_balance, IdlError::InsufficientPoolBalance);
 
         // Transfer from vault to recipient
         let state_bump = ctx.accounts.state.bump;
@@ -1074,6 +1099,17 @@ pub mod idl_protocol {
         bet.nonce = nonce;
         bet.bump = ctx.bumps.bet;
 
+        // AUDIT FIX: Update user volume for badge tracking (was missing in commit-reveal path)
+        let user_volume = &mut ctx.accounts.user_volume;
+        if user_volume.user == Pubkey::default() {
+            user_volume.user = ctx.accounts.user.key();
+            user_volume.bump = ctx.bumps.user_volume;
+        }
+        user_volume.total_volume_usd = user_volume.total_volume_usd
+            .checked_add(amount)
+            .ok_or(IdlError::MathOverflow)?;
+        user_volume.last_updated = clock.unix_timestamp;
+
         msg!("Bet revealed: {} on {}", amount, if bet_yes { "YES" } else { "NO" });
         Ok(())
     }
@@ -1171,9 +1207,11 @@ pub mod idl_protocol {
     }
 
     /// 10/10 FIX: Dispute a resolution (slashes oracle if authority agrees)
+    /// AUDIT FIX: Now also cancels market (safer than re-resolution since claims may have happened)
     pub fn dispute_resolution(ctx: Context<DisputeResolution>) -> Result<()> {
         let res_commit = &mut ctx.accounts.resolution_commitment;
         let oracle_bond = &mut ctx.accounts.oracle_bond;
+        let market = &mut ctx.accounts.market;
         let clock = Clock::get()?;
 
         require!(res_commit.revealed, IdlError::NotRevealed);
@@ -1187,12 +1225,74 @@ pub mod idl_protocol {
 
         res_commit.disputed = true;
 
-        // Slash oracle bond
+        // SELF-REVIEW FIX: Cancel market instead of reset
+        // Re-resolution is dangerous because:
+        // 1. Some bets may have already been claimed
+        // 2. Old resolution commitment exists and is "disputed"
+        // 3. New oracle would need fresh commitment but old one blocks re-use
+        // Cancellation allows refunds which is safer
+        market.resolved = false;
+        market.resolved_at = None;
+        market.outcome = None;
+        market.actual_value = None;
+        market.status = MARKET_STATUS_CANCELLED;  // Cancel, don't reset to active
+
+        // Slash oracle bond - slashed tokens remain in vault as protocol reserves
+        // Oracle can only withdraw remaining bond_amount after this
         let slash_amount = (oracle_bond.bond_amount * ORACLE_SLASH_PERCENT) / 100;
         oracle_bond.bond_amount = oracle_bond.bond_amount.saturating_sub(slash_amount);
         oracle_bond.slashed = true;
 
-        msg!("Oracle disputed and slashed: {}", slash_amount);
+        // Add slashed amount to insurance fund (protocol reserves)
+        ctx.accounts.state.insurance_fund = ctx.accounts.state.insurance_fund
+            .saturating_add(slash_amount);
+
+        msg!("Oracle disputed and slashed: {}. Market CANCELLED for refunds.", slash_amount);
+        Ok(())
+    }
+
+    /// AUDIT FIX: Allow oracle to withdraw bond after successful undisputed resolution
+    pub fn withdraw_oracle_bond(ctx: Context<WithdrawOracleBond>) -> Result<()> {
+        let oracle_bond = &ctx.accounts.oracle_bond;
+        let res_commit = &ctx.accounts.resolution_commitment;
+        let clock = Clock::get()?;
+
+        // Must be after dispute window
+        require!(
+            clock.unix_timestamp > res_commit.commit_time + ORACLE_DISPUTE_WINDOW,
+            IdlError::DisputeWindowOpen
+        );
+
+        // Must not have been disputed
+        require!(!res_commit.disputed, IdlError::ResolutionDisputed);
+        require!(!oracle_bond.slashed, IdlError::OracleSlashed);
+
+        let bond_amount = oracle_bond.bond_amount;
+        require!(bond_amount > 0, IdlError::NoBondToWithdraw);
+
+        // Transfer bond back to oracle
+        let state_bump = ctx.accounts.state.bump;
+        let seeds = &[b"state".as_ref(), &[state_bump]];
+        let signer_seeds = &[&seeds[..]];
+
+        let cpi_accounts = Transfer {
+            from: ctx.accounts.vault.to_account_info(),
+            to: ctx.accounts.oracle_token_account.to_account_info(),
+            authority: ctx.accounts.state.to_account_info(),
+        };
+        token::transfer(
+            CpiContext::new_with_signer(
+                ctx.accounts.token_program.to_account_info(),
+                cpi_accounts,
+                signer_seeds
+            ),
+            bond_amount
+        )?;
+
+        // Zero out bond
+        ctx.accounts.oracle_bond.bond_amount = 0;
+
+        msg!("Oracle bond withdrawn: {}", bond_amount);
         Ok(())
     }
 }
@@ -1485,6 +1585,16 @@ pub struct RevealBet<'info> {
     )]
     pub staker_account: Option<Box<Account<'info, StakerAccount>>>,
 
+    // AUDIT FIX: Add user_volume to track volume for badges
+    #[account(
+        init_if_needed,
+        payer = user,
+        space = 8 + UserVolume::INIT_SPACE,
+        seeds = [b"user_volume", user.key().as_ref()],
+        bump
+    )]
+    pub user_volume: Box<Account<'info, UserVolume>>,
+
     #[account(
         mut,
         constraint = user_token_account.mint == state.idl_mint @ IdlError::InvalidMint
@@ -1583,7 +1693,9 @@ pub struct RevealResolution<'info> {
 
 #[derive(Accounts)]
 pub struct DisputeResolution<'info> {
+    // SELF-REVIEW FIX: Make state mutable to update insurance_fund
     #[account(
+        mut,
         seeds = [b"state"],
         bump = state.bump,
         constraint = state.authority == authority.key() @ IdlError::Unauthorized
@@ -1604,9 +1716,52 @@ pub struct DisputeResolution<'info> {
     )]
     pub oracle_bond: Account<'info, OracleBond>,
 
+    // AUDIT FIX: Make market mutable so we can cancel it
+    #[account(mut)]
     pub market: Account<'info, PredictionMarket>,
 
     pub authority: Signer<'info>,
+}
+
+// AUDIT FIX: Allow oracle to withdraw bond after successful resolution
+#[derive(Accounts)]
+pub struct WithdrawOracleBond<'info> {
+    #[account(
+        seeds = [b"state"],
+        bump = state.bump
+    )]
+    pub state: Account<'info, ProtocolState>,
+
+    #[account(
+        mut,
+        seeds = [b"vault"],
+        bump = state.vault_bump
+    )]
+    pub vault: Account<'info, TokenAccount>,
+
+    #[account(
+        mut,
+        seeds = [b"oracle_bond", oracle.key().as_ref()],
+        bump = oracle_bond.bump,
+        constraint = oracle_bond.oracle == oracle.key() @ IdlError::Unauthorized
+    )]
+    pub oracle_bond: Account<'info, OracleBond>,
+
+    #[account(
+        seeds = [b"res_commit", market.key().as_ref()],
+        bump = resolution_commitment.bump,
+        constraint = resolution_commitment.oracle == oracle.key() @ IdlError::Unauthorized
+    )]
+    pub resolution_commitment: Account<'info, ResolutionCommitment>,
+
+    pub market: Account<'info, PredictionMarket>,
+
+    #[account(mut)]
+    pub oracle_token_account: Account<'info, TokenAccount>,
+
+    pub oracle: Signer<'info>,
+
+    pub token_program: Program<'info, Token>,
 }
 
 #[derive(Accounts)]
@@ -1707,6 +1862,14 @@ pub struct PlaceBet<'info> {
 pub struct ResolveMarket<'info> {
     #[account(mut)]
     pub market: Account<'info, PredictionMarket>,
+
+    // AUDIT FIX: Require oracle bond to be present
+    #[account(
+        seeds = [b"oracle_bond", oracle.key().as_ref()],
+        bump = oracle_bond.bump,
+        constraint = oracle_bond.oracle == oracle.key() @ IdlError::Unauthorized
+    )]
+    pub oracle_bond: Account<'info, OracleBond>,
 
     pub oracle: Signer<'info>,
 }
@@ -2318,4 +2481,11 @@ pub enum IdlError {
 
     #[msg("Insufficient insurance fund balance")]
     InsufficientInsuranceFund,
+
+    // AUDIT FIX: New error codes
+    #[msg("Dispute window is still open")]
+    DisputeWindowOpen,
+
+    #[msg("No bond to withdraw")]
+    NoBondToWithdraw,
 }

@@ -142,6 +142,16 @@ pub mod idl_stableswap {
             );
         }
 
+        // AUDIT FIX: Validate vault balances match tracked balances (prevents donation attack)
+        require!(
+            ctx.accounts.bags_vault.amount >= ctx.accounts.pool.bags_balance,
+            StableSwapError::VaultBalanceMismatch
+        );
+        require!(
+            ctx.accounts.pump_vault.amount >= ctx.accounts.pool.pump_balance,
+            StableSwapError::VaultBalanceMismatch
+        );
+
         // Get current amplification (with ramping support)
         let current_amp = get_current_amplification(&ctx.accounts.pool)?;
 
@@ -293,8 +303,15 @@ pub mod idl_stableswap {
         min_bags_amount: u64,
         min_pump_amount: u64,
     ) -> Result<()> {
+        // NOTE: Intentionally no pause check - users must always be able to withdraw
         require!(lp_amount > 0, StableSwapError::ZeroAmount);
         require!(ctx.accounts.pool.lp_supply > lp_amount, StableSwapError::InsufficientLiquidity);
+
+        // AUDIT FIX: Ensure minimum liquidity remains (prevent pool drain)
+        require!(
+            ctx.accounts.pool.lp_supply.saturating_sub(lp_amount) >= MINIMUM_LIQUIDITY,
+            StableSwapError::InsufficientLiquidity
+        );
 
         // Calculate proportional amounts
         let bags_amount = (ctx.accounts.pool.bags_balance as u128)
@@ -391,6 +408,16 @@ pub mod idl_stableswap {
         let clock = Clock::get()?;
         require!(clock.unix_timestamp <= deadline, StableSwapError::TransactionExpired);
 
+        // AUDIT FIX: Validate vault balances match tracked balances (prevents donation attack)
+        require!(
+            ctx.accounts.bags_vault.amount >= ctx.accounts.pool.bags_balance,
+            StableSwapError::VaultBalanceMismatch
+        );
+        require!(
+            ctx.accounts.pump_vault.amount >= ctx.accounts.pool.pump_balance,
+            StableSwapError::VaultBalanceMismatch
+        );
+
         // Get current amplification (with ramping support)
         let current_amp = get_current_amplification(&ctx.accounts.pool)?;
 
@@ -447,11 +474,14 @@ pub mod idl_stableswap {
         ctx.accounts.pool.bags_balance = ctx.accounts.pool.bags_balance
             .checked_add(amount_in)
             .ok_or(StableSwapError::MathOverflow)?;
+        // SELF-REVIEW FIX: Reduce by amount_out (not amount_out_after_fee)
+        // This way vault - tracked_balance = fee, which can be claimed
+        // Fee breakdown: (fee - admin_fee) goes to LPs, admin_fee to admin
         ctx.accounts.pool.pump_balance = ctx.accounts.pool.pump_balance
-            .checked_sub(amount_out_after_fee)
+            .checked_sub(amount_out)
             .ok_or(StableSwapError::MathOverflow)?;
 
-        // Track fees and volume
+        // Track admin's portion of fees
         ctx.accounts.pool.admin_fees_pump = ctx.accounts.pool.admin_fees_pump
             .checked_add(admin_fee as u64)
             .ok_or(StableSwapError::MathOverflow)?;
@@ -477,6 +507,16 @@ pub mod idl_stableswap {
         // SECURITY: Check deadline to prevent stale transactions
         let clock = Clock::get()?;
         require!(clock.unix_timestamp <= deadline, StableSwapError::TransactionExpired);
+
+        // AUDIT FIX: Validate vault balances match tracked balances (prevents donation attack)
+        require!(
+            ctx.accounts.bags_vault.amount >= ctx.accounts.pool.bags_balance,
+            StableSwapError::VaultBalanceMismatch
+        );
+        require!(
+            ctx.accounts.pump_vault.amount >= ctx.accounts.pool.pump_balance,
+            StableSwapError::VaultBalanceMismatch
+        );
 
         // Get current amplification (with ramping support)
         let current_amp = get_current_amplification(&ctx.accounts.pool)?;
@@ -534,11 +574,13 @@ pub mod idl_stableswap {
         ctx.accounts.pool.pump_balance = ctx.accounts.pool.pump_balance
             .checked_add(amount_in)
             .ok_or(StableSwapError::MathOverflow)?;
+        // SELF-REVIEW FIX: Reduce by amount_out (not amount_out_after_fee)
+        // This way vault - tracked_balance = fee, which can be claimed
         ctx.accounts.pool.bags_balance = ctx.accounts.pool.bags_balance
-            .checked_sub(amount_out_after_fee)
+            .checked_sub(amount_out)
             .ok_or(StableSwapError::MathOverflow)?;
 
-        // Track fees and volume
+        // Track admin's portion of fees
         ctx.accounts.pool.admin_fees_bags = ctx.accounts.pool.admin_fees_bags
             .checked_add(admin_fee as u64)
             .ok_or(StableSwapError::MathOverflow)?;
@@ -639,6 +681,7 @@ pub mod idl_stableswap {
     }
 
     /// Withdraw accumulated admin fees (admin only)
+    /// AUDIT FIX: Ensure admin fees don't drain LP deposits
     pub fn withdraw_admin_fees(ctx: Context<WithdrawAdminFees>) -> Result<()> {
         let bags_fees = ctx.accounts.pool.admin_fees_bags;
         let pump_fees = ctx.accounts.pool.admin_fees_pump;
@@ -651,12 +694,21 @@ pub mod idl_stableswap {
         require!(bags_fees <= bags_vault_balance, StableSwapError::InsufficientLiquidity);
         require!(pump_fees <= pump_vault_balance, StableSwapError::InsufficientLiquidity);
 
+        // AUDIT FIX: Admin fees must not exceed the difference between vault and tracked balance
+        // This ensures we don't withdraw LP deposits
+        let bags_available = bags_vault_balance.saturating_sub(ctx.accounts.pool.bags_balance);
+        let pump_available = pump_vault_balance.saturating_sub(ctx.accounts.pool.pump_balance);
+        let bags_to_withdraw = std::cmp::min(bags_fees, bags_available);
+        let pump_to_withdraw = std::cmp::min(pump_fees, pump_available);
+
+        require!(bags_to_withdraw > 0 || pump_to_withdraw > 0, StableSwapError::NoFeesToWithdraw);
+
         let pool_bump = ctx.accounts.pool.bump;
         let pool_seeds = &[b"pool".as_ref(), &[pool_bump]];
         let signer_seeds = &[&pool_seeds[..]];
 
-        // Withdraw BAGS fees
-        if bags_fees > 0 {
+        // AUDIT FIX: Withdraw only safe amounts (capped to available)
+        if bags_to_withdraw > 0 {
             token::transfer(
                 CpiContext::new_with_signer(
                     ctx.accounts.token_program.to_account_info(),
@@ -667,12 +719,12 @@ pub mod idl_stableswap {
                     },
                     signer_seeds,
                 ),
-                bags_fees,
+                bags_to_withdraw,
             )?;
         }
 
-        // Withdraw PUMP fees
-        if pump_fees > 0 {
+        // AUDIT FIX: Withdraw only safe amounts (capped to available)
+        if pump_to_withdraw > 0 {
             token::transfer(
                 CpiContext::new_with_signer(
                     ctx.accounts.token_program.to_account_info(),
@@ -683,17 +735,15 @@ pub mod idl_stableswap {
                     },
                     signer_seeds,
                 ),
-                pump_fees,
+                pump_to_withdraw,
             )?;
         }
 
-        // FIXED: Admin fees are tracked SEPARATELY from pool balances
-        // They are deducted from swap output, NOT from pool balance
-        // So we only reset the fee counters, don't touch pool balance!
-        ctx.accounts.pool.admin_fees_bags = 0;
-        ctx.accounts.pool.admin_fees_pump = 0;
+        // AUDIT FIX: Only subtract what was actually withdrawn
+        ctx.accounts.pool.admin_fees_bags = ctx.accounts.pool.admin_fees_bags.saturating_sub(bags_to_withdraw);
+        ctx.accounts.pool.admin_fees_pump = ctx.accounts.pool.admin_fees_pump.saturating_sub(pump_to_withdraw);
 
-        msg!("Admin fees withdrawn: {} BAGS, {} PUMP", bags_fees, pump_fees);
+        msg!("Admin fees withdrawn: {} BAGS, {} PUMP", bags_to_withdraw, pump_to_withdraw);
         Ok(())
     }
 
@@ -1270,4 +1320,8 @@ pub enum StableSwapError {
 
     #[msg("Amplification change too large (max 10x per ramp)")]
     AmpChangeTooLarge,
+
+    // AUDIT FIX: New error codes
+    #[msg("Vault balance does not match tracked balance (possible donation attack)")]
+    VaultBalanceMismatch,
 }

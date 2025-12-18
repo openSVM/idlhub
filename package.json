@@ -25,7 +25,11 @@
     "protocol:test:advanced": "npx ts-node scripts/test-advanced.ts",
     "protocol:test:lifecycle": "npx ts-node scripts/test-market-lifecycle.ts",
     "protocol:test:sdk": "npx ts-node scripts/test-sdk.ts",
-    "sdk:build": "cd sdk && npm run build"
+    "sdk:build": "cd sdk && npm run build",
+    "sim:run": "npx ts-node simulation/index.ts",
+    "sim:quick": "npx ts-node simulation/index.ts --rounds=5 --delay=1000",
+    "sim:long": "npx ts-node simulation/index.ts --rounds=30 --delay=2000",
+    "sim:debug": "npx ts-node simulation/index.ts --debug"
   },
   "bin": {
     "idlhub-mcp": "./mcp-server/src/index.js"

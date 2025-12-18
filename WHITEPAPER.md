@@ -85,7 +85,7 @@ Name:           $IDL
 Network:        Solana
 Standard:       SPL Token
 Decimals:       6
-Contract:       8zdhHxthCFoigAGw4QRxWfXUWLY1KkMZ1r7CTcmiBAGS
+Contract:       4GihJrYJGQ9pjqDySTjd57y1h3nNkEZNbzJxCbispump
 Launch:         bags.fm
 ```
 
@@ -172,7 +172,7 @@ $IDL exists across two launch platforms with two distinct SPL token mints, unifi
 ```
 TOKEN 1: BAGS-IDL (Original)
 ═══════════════════════════════════════════════════════════════
-Mint:       8zdhHxthCFoigAGw4QRxWfXUWLY1KkMZ1r7CTcmiBAGS
+Mint:       4GihJrYJGQ9pjqDySTjd57y1h3nNkEZNbzJxCbispump
 Platform:   bags.fm
 Supply:     1,000,000,000 (1B)
 Decimals:   6
@@ -1220,8 +1220,8 @@ IF admin key compromised:
 ```
 TOKENS
 ══════
-$IDL (BAGS):    8zdhHxthCFoigAGw4QRxWfXUWLY1KkMZ1r7CTcmiBAGS  (bags.fm)
-$IDL (PUMP):    4GihJrYJGQ9pjqDySTjd57y1h3nNkEZNbzJxCbispump  (pump.fun)
+$IDL (PUMP):    4GihJrYJGQ9pjqDySTjd57y1h3nNkEZNbzJxCbispump  (pump.fun) [CURRENT]
+$IDL (BAGS):    8zdhHxthCFoigAGw4QRxWfXUWLY1KkMZ1r7CTcmiBAGS  (bags.fm)  [DEPRECATED]
 
 PROGRAMS
 ════════
@@ -1245,8 +1245,8 @@ Treasury:       [TBD - multisig]
 Website:        https://idlhub.com
 Token Page:     https://idlhub.com/tokenomics.html
 GitHub:         https://github.com/openSVM/idlhub
-bags.fm:        https://bags.fm/b/8zdhHxthCFoigAGw4QRxWfXUWLY1KkMZ1r7CTcmiBAGS
-DexScreener:    https://dexscreener.com/solana/8zdhHxthCFoigAGw4QRxWfXUWLY1KkMZ1r7CTcmiBAGS
+pump.fun:       https://pump.fun/coin/4GihJrYJGQ9pjqDySTjd57y1h3nNkEZNbzJxCbispump
+DexScreener:    https://dexscreener.com/solana/4GihJrYJGQ9pjqDySTjd57y1h3nNkEZNbzJxCbispump
 ```
 
 ## Appendix C: Glossary

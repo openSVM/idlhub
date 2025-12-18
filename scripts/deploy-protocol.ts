@@ -17,7 +17,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 // Constants from the program
-const IDL_TOKEN_MINT = new PublicKey('8zdhHxthCFoigAGw4QRxWfXUWLY1KkMZ1r7CTcmiBAGS');
+const IDL_TOKEN_MINT = new PublicKey('4GihJrYJGQ9pjqDySTjd57y1h3nNkEZNbzJxCbispump');
 const PROGRAM_ID = new PublicKey('BSn7neicVV2kEzgaZmd6tZEBm4tdgzBRyELov65Lq7dt');
 
 // Load IDL
