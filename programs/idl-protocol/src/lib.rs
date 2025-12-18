@@ -67,6 +67,9 @@ pub const ORACLE_SLASH_PERCENT: u64 = 50; // 50% slash for bad resolution
 // 10/10 FIX: Badge anti-gaming
 pub const BADGE_HOLD_TIME: i64 = 604800; // 7 days minimum between volume updates for badge
 
+// TIER 1 FIX: Anti-flash-loan - minimum stake duration before unstake
+pub const MIN_STAKE_DURATION: i64 = 86400; // 24 hours minimum stake
+
 #[program]
 pub mod idl_protocol {
     use super::*;
@@ -145,6 +148,14 @@ pub mod idl_protocol {
         require!(!ctx.accounts.state.paused, IdlError::ProtocolPaused);
 
         let staker = &ctx.accounts.staker_account;
+        let clock = Clock::get()?;
+
+        // TIER 1 FIX: Anti-flash-loan - enforce minimum stake duration
+        require!(
+            clock.unix_timestamp >= staker.last_stake_timestamp + MIN_STAKE_DURATION,
+            IdlError::StakeTooRecent
+        );
+
         require!(staker.staked_amount >= amount, IdlError::InsufficientStake);
 
         // Check for active veIDL lock
@@ -2183,4 +2194,7 @@ pub enum IdlError {
 
     #[msg("Must wait 7 days after last trade to claim badge")]
     BadgeHoldTimeNotMet,
+
+    #[msg("Must wait 24 hours after staking before unstaking (anti-flash-loan)")]
+    StakeTooRecent,
 }
