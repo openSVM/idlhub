@@ -70,6 +70,14 @@ pub const BADGE_HOLD_TIME: i64 = 604800; // 7 days minimum between volume update
 // TIER 1 FIX: Anti-flash-loan - minimum stake duration before unstake
 pub const MIN_STAKE_DURATION: i64 = 86400; // 24 hours minimum stake
 
+// TIER 3: TVL caps (gradual rollout)
+pub const INITIAL_TVL_CAP: u64 = 100_000_000_000; // 100 tokens initial cap
+pub const MAX_TVL_CAP: u64 = 10_000_000_000_000_000; // 10M tokens max cap
+pub const TVL_CAP_INCREMENT: u64 = 100_000_000_000; // 100 tokens per increment
+
+// TIER 3: Insurance fund
+pub const INSURANCE_FEE_BPS: u64 = 100; // 1% of fees go to insurance fund
+
 #[program]
 pub mod idl_protocol {
     use super::*;
@@ -92,8 +100,11 @@ pub mod idl_protocol {
         // SECURITY FIX: Initialize checkpoint system
         state.reward_per_token_stored = 0;
         state.last_reward_update = Clock::get()?.unix_timestamp;
+        // TIER 3: Initialize TVL cap and insurance fund
+        state.tvl_cap = INITIAL_TVL_CAP;
+        state.insurance_fund = 0;
 
-        msg!("IDL Protocol initialized. Vault: {}", state.vault);
+        msg!("IDL Protocol initialized. Vault: {}, TVL Cap: {}", state.vault, state.tvl_cap);
         Ok(())
     }
 
@@ -101,6 +112,10 @@ pub mod idl_protocol {
     pub fn stake(ctx: Context<Stake>, amount: u64) -> Result<()> {
         require!(amount > 0, IdlError::InvalidAmount);
         require!(!ctx.accounts.state.paused, IdlError::ProtocolPaused);
+
+        // TIER 3: Check TVL cap
+        let new_total = ctx.accounts.state.total_staked.saturating_add(amount);
+        require!(new_total <= ctx.accounts.state.tvl_cap, IdlError::TvlCapExceeded);
 
         // CRITICAL FIX: Transfer tokens from user to vault
         let cpi_accounts = Transfer {
@@ -598,11 +613,15 @@ pub mod idl_protocol {
         let fee = (gross_winnings as u128 * BET_FEE_BPS as u128 / 10000) as u64;
         let net_winnings = gross_winnings.saturating_sub(fee);
 
-        // Calculate fee distribution
-        let staker_fee = (fee as u128 * STAKER_FEE_SHARE_BPS as u128 / 10000) as u64;
-        let creator_fee = (fee as u128 * CREATOR_FEE_SHARE_BPS as u128 / 10000) as u64;
-        let treasury_fee = (fee as u128 * TREASURY_FEE_SHARE_BPS as u128 / 10000) as u64;
-        let burn_amount = (fee as u128 * BURN_FEE_SHARE_BPS as u128 / 10000) as u64;
+        // TIER 3: Insurance fund takes 1% of total fee first
+        let insurance_fee = (fee as u128 * INSURANCE_FEE_BPS as u128 / 10000) as u64;
+        let distributable_fee = fee.saturating_sub(insurance_fee);
+
+        // Calculate fee distribution (from remaining after insurance)
+        let staker_fee = (distributable_fee as u128 * STAKER_FEE_SHARE_BPS as u128 / 10000) as u64;
+        let creator_fee = (distributable_fee as u128 * CREATOR_FEE_SHARE_BPS as u128 / 10000) as u64;
+        let treasury_fee = (distributable_fee as u128 * TREASURY_FEE_SHARE_BPS as u128 / 10000) as u64;
+        let burn_amount = (distributable_fee as u128 * BURN_FEE_SHARE_BPS as u128 / 10000) as u64;
 
         // PDA signer seeds for market pool
         let market_key = market.key();
@@ -667,9 +686,22 @@ pub mod idl_protocol {
             authority: ctx.accounts.market_pool.to_account_info(),
         };
         token::transfer(
-            CpiContext::new_with_signer(cpi_program, cpi_accounts_burn, signer_seeds),
+            CpiContext::new_with_signer(cpi_program.clone(), cpi_accounts_burn, signer_seeds),
             burn_amount
         )?;
+
+        // TIER 3: Transfer insurance fee to vault (tracked separately in state)
+        if insurance_fee > 0 {
+            let cpi_accounts_insurance = Transfer {
+                from: ctx.accounts.market_pool.to_account_info(),
+                to: ctx.accounts.vault.to_account_info(),
+                authority: ctx.accounts.market_pool.to_account_info(),
+            };
+            token::transfer(
+                CpiContext::new_with_signer(cpi_program, cpi_accounts_insurance, signer_seeds),
+                insurance_fee
+            )?;
+        }
 
         // SECURITY FIX: Update reward checkpoint before adding to pool
         update_reward_per_token(state, staker_fee);
@@ -684,8 +716,12 @@ pub mod idl_protocol {
         state.total_fees_collected = state.total_fees_collected
             .checked_add(fee)
             .ok_or(IdlError::MathOverflow)?;
+        // TIER 3: Track insurance fund
+        state.insurance_fund = state.insurance_fund
+            .checked_add(insurance_fee)
+            .ok_or(IdlError::MathOverflow)?;
 
-        msg!("Claimed {} (fee: {}, to stakers: {}, burned: {})", net_winnings, fee, staker_fee, burn_amount);
+        msg!("Claimed {} (fee: {}, stakers: {}, burned: {}, insurance: {})", net_winnings, fee, staker_fee, burn_amount, insurance_fee);
         Ok(())
     }
 
@@ -868,6 +904,50 @@ pub mod idl_protocol {
         state.authority_transfer_time = None;
 
         msg!("Authority transfer cancelled");
+        Ok(())
+    }
+
+    /// TIER 3: Raise TVL cap (gradual rollout)
+    pub fn raise_tvl_cap(ctx: Context<AdminOnly>) -> Result<()> {
+        let state = &mut ctx.accounts.state;
+
+        let new_cap = state.tvl_cap
+            .checked_add(TVL_CAP_INCREMENT)
+            .ok_or(IdlError::MathOverflow)?;
+
+        require!(new_cap <= MAX_TVL_CAP, IdlError::MaxTvlCapReached);
+
+        state.tvl_cap = new_cap;
+        msg!("TVL cap raised to {}", new_cap);
+        Ok(())
+    }
+
+    /// TIER 3: Withdraw from insurance fund (emergency only)
+    pub fn withdraw_insurance(ctx: Context<WithdrawInsurance>, amount: u64) -> Result<()> {
+        require!(amount <= ctx.accounts.state.insurance_fund, IdlError::InsufficientInsuranceFund);
+
+        // Transfer from vault to recipient
+        let state_bump = ctx.accounts.state.bump;
+        let seeds = &[b"state".as_ref(), &[state_bump]];
+        let signer_seeds = &[&seeds[..]];
+
+        let cpi_accounts = Transfer {
+            from: ctx.accounts.vault.to_account_info(),
+            to: ctx.accounts.recipient.to_account_info(),
+            authority: ctx.accounts.state.to_account_info(),
+        };
+        token::transfer(
+            CpiContext::new_with_signer(
+                ctx.accounts.token_program.to_account_info(),
+                cpi_accounts,
+                signer_seeds
+            ),
+            amount
+        )?;
+
+        // Update state after transfer
+        ctx.accounts.state.insurance_fund = ctx.accounts.state.insurance_fund.saturating_sub(amount);
+        msg!("Withdrew {} from insurance fund", amount);
         Ok(())
     }
 
@@ -1860,6 +1940,33 @@ pub struct AdminOnly<'info> {
     pub authority: Signer<'info>,
 }
 
+// TIER 3: Withdraw from insurance fund
+#[derive(Accounts)]
+pub struct WithdrawInsurance<'info> {
+    #[account(
+        mut,
+        seeds = [b"state"],
+        bump = state.bump,
+        constraint = state.authority == authority.key() @ IdlError::Unauthorized
+    )]
+    pub state: Account<'info, ProtocolState>,
+
+    #[account(
+        mut,
+        seeds = [b"vault"],
+        bump = state.vault_bump
+    )]
+    pub vault: Account<'info, TokenAccount>,
+
+    /// Recipient token account for insurance withdrawal
+    #[account(mut)]
+    pub recipient: Account<'info, TokenAccount>,
+
+    pub authority: Signer<'info>,
+
+    pub token_program: Program<'info, Token>,
+}
+
 // ==================== STATE ====================
 
 #[account]
@@ -1883,6 +1990,10 @@ pub struct ProtocolState {
     // RICK FIX: Authority timelock
     pub pending_authority: Option<Pubkey>,
     pub authority_transfer_time: Option<i64>,
+    // TIER 3: TVL cap (gradual rollout)
+    pub tvl_cap: u64,
+    // TIER 3: Insurance fund
+    pub insurance_fund: u64,
 }
 
 #[account]
@@ -2197,4 +2308,14 @@ pub enum IdlError {
 
     #[msg("Must wait 24 hours after staking before unstaking (anti-flash-loan)")]
     StakeTooRecent,
+
+    // TIER 3: TVL cap errors
+    #[msg("TVL cap exceeded - protocol at capacity")]
+    TvlCapExceeded,
+
+    #[msg("Maximum TVL cap reached - cannot raise further")]
+    MaxTvlCapReached,
+
+    #[msg("Insufficient insurance fund balance")]
+    InsufficientInsuranceFund,
 }

@@ -12,7 +12,7 @@
 
 ## Abstract
 
-$IDL is the native token of IDLHub, Solana's largest Interface Definition Language registry. The protocol enables staking, vote-escrow mechanics, and prediction markets for betting on DeFi protocol metrics. This paper describes the tokenomics, mechanisms, and economic design.
+$IDL is the native token of IDLHub, Solana's largest Interface Definition Language registry. The protocol enables staking, vote-escrow mechanics, prediction markets for betting on DeFi protocol metrics, and a StableSwap AMM for unified token liquidity across multiple launch platforms. This paper describes the tokenomics, mechanisms, and economic design.
 
 ---
 
@@ -20,25 +20,26 @@ $IDL is the native token of IDLHub, Solana's largest Interface Definition Langua
 
 1. [Introduction](#1-introduction)
 2. [Token Overview](#2-token-overview)
-3. [Staking Mechanism](#3-staking-mechanism)
-4. [Vote-Escrowed IDL (veIDL)](#4-vote-escrowed-idl-veidl)
-5. [Volume Badges](#5-volume-badges)
-6. [Prediction Markets](#6-prediction-markets)
-7. [Fee Structure](#7-fee-structure)
-8. [Economic Model](#8-economic-model)
-   - 8.1 Value Accrual Mechanics
-   - 8.2 Deflationary Tokenomics
-   - 8.3 Staking Economics
-   - 8.4 Prediction Market Economics
-   - 8.5 Flywheel Effect
-   - 8.6 Game Theory
-   - 8.7 Risk Factors
-   - 8.8 Token Utility Summary
-   - 8.9 Comparison to Other Models
-   - 8.10 Long-Term Value Proposition
-9. [Governance](#9-governance)
-10. [Security Considerations](#10-security-considerations)
-11. [Roadmap](#11-roadmap)
+3. [Dual Token System & StableSwap](#3-dual-token-system--stableswap)
+4. [Staking Mechanism](#4-staking-mechanism)
+5. [Vote-Escrowed IDL (veIDL)](#5-vote-escrowed-idl-veidl)
+6. [Volume Badges](#6-volume-badges)
+7. [Prediction Markets](#7-prediction-markets)
+8. [Fee Structure](#8-fee-structure)
+9. [Economic Model](#9-economic-model)
+   - 9.1 Value Accrual Mechanics
+   - 9.2 Deflationary Tokenomics
+   - 9.3 Staking Economics
+   - 9.4 Prediction Market Economics
+   - 9.5 Flywheel Effect
+   - 9.6 Game Theory
+   - 9.7 Risk Factors
+   - 9.8 Token Utility Summary
+   - 9.9 Comparison to Other Models
+   - 9.10 Long-Term Value Proposition
+10. [Governance](#10-governance)
+11. [Security Considerations](#11-security-considerations)
+12. [Roadmap](#12-roadmap)
 
 ---
 
@@ -160,16 +161,227 @@ Team Allocation:     50,000,000 $IDL    (5.0%)
 
 ---
 
-## 3. Staking Mechanism
+## 3. Dual Token System & StableSwap
 
 ### 3.1 Overview
+
+$IDL exists across two launch platforms with two distinct SPL token mints, unified by a StableSwap AMM that enables 1:1 swaps between them.
+
+### 3.2 Token Mints
+
+```
+TOKEN 1: BAGS-IDL (Original)
+═══════════════════════════════════════════════════════════════
+Mint:       8zdhHxthCFoigAGw4QRxWfXUWLY1KkMZ1r7CTcmiBAGS
+Platform:   bags.fm
+Supply:     1,000,000,000 (1B)
+Decimals:   6
+Status:     ORIGINAL MINT
+
+
+TOKEN 2: PUMP-IDL (Expansion)
+═══════════════════════════════════════════════════════════════
+Mint:       4GihJrYJGQ9pjqDySTjd57y1h3nNkEZNbzJxCbispump
+Platform:   pump.fun
+Supply:     1,000,000,000 (1B)
+Decimals:   6
+Status:     EXPANSION MINT
+
+
+COMBINED TOTAL: 2,000,000,000 (2B) IDL tokens
+```
+
+### 3.3 Token Equivalence
+
+Both tokens represent **equal ownership** in the IDL Protocol ecosystem:
+
+```
+╔════════════════════════════════════════════════════════════════╗
+║                                                                ║
+║           1 BAGS-IDL  ≡  1 PUMP-IDL  (via StableSwap)         ║
+║                                                                ║
+╚════════════════════════════════════════════════════════════════╝
+
+Users can freely swap between tokens with:
+  • Near-zero slippage (Curve-style StableSwap math)
+  • 0.04% swap fee (4 basis points)
+  • No impermanent loss for LPs (tokens maintain 1:1 peg)
+```
+
+### 3.4 StableSwap AMM Architecture
+
+```
+                         ┌─────────────────────────────────────┐
+                         │         IDL STABLESWAP POOL         │
+                         │                                     │
+    BAGS-IDL             │    ┌───────────┬───────────┐       │             PUMP-IDL
+    Holders              │    │  BAGS     │   PUMP    │       │             Holders
+       │                 │    │  Vault    │   Vault   │       │                │
+       │   deposit       │    │           │           │       │    deposit     │
+       └────────────────►│    │  500M     │   500M    │       │◄───────────────┘
+                         │    │           │           │       │
+       ┌────────────────◄│    └───────────┴───────────┘       │►───────────────┐
+       │   withdraw      │                                     │    withdraw    │
+       │                 │         LP Token Holders            │                │
+       ▼                 │               earn                  │                ▼
+   BAGS-IDL              │          swap fees (50%)            │           PUMP-IDL
+                         │                                     │
+                         └─────────────────────────────────────┘
+
+SWAP FLOW:
+  User wants PUMP-IDL, has BAGS-IDL:
+  1. User sends BAGS-IDL to pool
+  2. Pool calculates output using StableSwap invariant
+  3. Pool sends PUMP-IDL to user (minus 0.04% fee)
+  4. Pool remains balanced for future swaps
+```
+
+### 3.5 StableSwap Math (Curve Invariant)
+
+The pool uses Curve Finance's StableSwap formula optimized for 1:1 pegged assets:
+
+```
+StableSwap Invariant:
+═════════════════════
+
+A·n^n·Σx + D = A·D·n^n + D^(n+1) / (n^n·Πx)
+
+Where:
+  A = Amplification coefficient (1000 for tight peg)
+  n = Number of tokens (2)
+  x = Token balances [BAGS, PUMP]
+  D = Invariant (total value)
+
+Properties:
+  • A → ∞: Constant sum (x + y = k), perfect 1:1 but can drain
+  • A → 0: Constant product (x·y = k), high slippage
+  • A = 1000: Balanced - tight peg with graceful degradation
+```
+
+**Slippage Example:**
+
+```
+Pool State: 100M BAGS / 100M PUMP (balanced)
+Swap: 1M BAGS → PUMP
+
+With Constant Product (A=0):   Output = 990,099 PUMP (0.99% slippage)
+With StableSwap (A=1000):      Output = 999,960 PUMP (0.004% slippage)
+With Constant Sum (A=∞):       Output = 1,000,000 PUMP (0% slippage)
+
+StableSwap provides 250x better execution than traditional AMMs!
+```
+
+### 3.6 LP Token Economics
+
+Liquidity providers deposit both tokens and receive LP tokens:
+
+```
+ADD LIQUIDITY
+═════════════
+Deposit: 1000 BAGS + 1000 PUMP
+Receive: ~2000 IDL-LP tokens (proportional to pool share)
+
+LP REWARDS
+══════════
+• 50% of swap fees auto-compound to LPs
+• 50% of swap fees go to protocol treasury
+• Fee rate: 0.04% per swap
+
+PROJECTED LP APY (at various volumes)
+═════════════════════════════════════
+Daily Volume    │  LP Fees/Day  │  APY (on $1M TVL)
+────────────────┼───────────────┼──────────────────
+$100,000        │  $20          │  0.73%
+$1,000,000      │  $200         │  7.3%
+$10,000,000     │  $2,000       │  73%
+$100,000,000    │  $20,000      │  730%
+
+Note: APY = (Daily LP Fees × 365) / TVL × 100
+```
+
+### 3.7 Protocol Integration
+
+The IDL Protocol accepts **EITHER** token for all operations:
+
+```
+STAKING
+═══════
+stake_bags(amount)  →  Stakes BAGS-IDL, earns same rewards
+stake_pump(amount)  →  Stakes PUMP-IDL, earns same rewards
+
+Total Stake = bags_staked + pump_staked
+veIDL calculated on combined total
+
+PREDICTION MARKETS
+══════════════════
+place_bet_bags(market, amount, yes/no)  →  Bet with BAGS-IDL
+place_bet_pump(market, amount, yes/no)  →  Bet with PUMP-IDL
+
+Both count toward same market pools
+Winners can claim in either token
+
+VOLUME BADGES
+═════════════
+Volume tracked across BOTH tokens + swap volume
+Swap volume on StableSwap counts toward badges at 2x rate!
+```
+
+### 3.8 Why Dual Tokens?
+
+```
+BENEFITS
+════════
+
+1. BROADER DISTRIBUTION
+   • bags.fm community (original supporters)
+   • pump.fun community (expansion audience)
+   • Different user demographics reached
+
+2. ARBITRAGE STABILITY
+   • Price differences between platforms → Arb opportunity
+   • Arbitrageurs keep prices aligned
+   • More efficient price discovery
+
+3. LIQUIDITY DEPTH
+   • Combined liquidity from two platforms
+   • StableSwap unifies fragmented liquidity
+   • Better execution for large trades
+
+4. PLATFORM REDUNDANCY
+   • Not dependent on single platform
+   • If one platform has issues, other remains
+   • Decentralized token availability
+```
+
+### 3.9 Supply Distribution (Combined)
+
+```
+BAGS-IDL (1B):
+├─ Public (bags.fm):     950,000,000  (95%)
+└─ Team:                  50,000,000  (5%)
+
+PUMP-IDL (1B):
+├─ Bonding Curve:        800,000,000  (80%)
+└─ Raydium Migration:    200,000,000  (20%)
+
+COMBINED (2B):
+[████████████████████████████████████████████████████████████] 100%
+[██████████████████████████████████████████████████████████  ] 97.5% Public
+[██                                                          ] 2.5%  Team
+```
+
+---
+
+## 4. Staking Mechanism
+
+### 4.1 Overview
 
 Staking allows $IDL holders to:
 - Earn share of protocol fees
 - Gain betting power multiplier
 - Participate in governance (via veIDL)
 
-### 3.2 How It Works
+### 4.2 How It Works
 
 ```
 +----------+     stake()      +------------+
@@ -187,7 +399,7 @@ Staking allows $IDL holders to:
 +----------+                  +------------+
 ```
 
-### 3.3 Reward Distribution
+### 4.3 Reward Distribution
 
 Stakers earn 50% of all prediction market fees, distributed proportionally:
 
@@ -201,7 +413,7 @@ Example:
 - Your Reward:        5,000 IDL (1% of pool)
 ```
 
-### 3.4 Staking Parameters
+### 4.4 Staking Parameters
 
 | Parameter | Value |
 |-----------|-------|
@@ -1006,10 +1218,24 @@ IF admin key compromised:
 ## Appendix A: Contract Addresses
 
 ```
-$IDL Token:     8zdhHxthCFoigAGw4QRxWfXUWLY1KkMZ1r7CTcmiBAGS
-Protocol:       [TBD - pending deployment]
-Staking Vault:  [TBD - PDA]
-Reward Vault:   [TBD - PDA]
+TOKENS
+══════
+$IDL (BAGS):    8zdhHxthCFoigAGw4QRxWfXUWLY1KkMZ1r7CTcmiBAGS  (bags.fm)
+$IDL (PUMP):    4GihJrYJGQ9pjqDySTjd57y1h3nNkEZNbzJxCbispump  (pump.fun)
+
+PROGRAMS
+════════
+IDL Protocol:   BSn7neicVV2kEzgaZmd6tZEBm4tdgzBRyELov65Lq7dt  (devnet)
+IDL StableSwap: STABLESwap1111111111111111111111111111111111  (pending deployment)
+
+PDAs
+════
+Protocol State: [Derived from "state" seed]
+Staking Vault:  [Derived from "vault" seed]
+StableSwap Pool:[Derived from "pool" seed]
+BAGS Vault:     [Derived from "vault", "bags" seeds]
+PUMP Vault:     [Derived from "vault", "pump" seeds]
+LP Mint:        [Derived from "lp_mint" seed]
 Treasury:       [TBD - multisig]
 ```
 
@@ -1055,12 +1281,15 @@ DYOR. NFA. WAGMI (maybe).
 ---
 
 ```
-Document Version: 1.1.0
+Document Version: 2.0.0
 Last Updated:     December 2024
 Authors:          IDLHub Team
 License:          MIT
 
 Changelog:
+- v2.0.0: Added dual token system (BAGS-IDL + PUMP-IDL),
+          StableSwap AMM documentation, updated supply to 2B total,
+          added LP token economics, protocol integration details
 - v1.1.0: Expanded tokenomics section with deflationary mechanics,
           staking economics, APY calculations, parimutuel details,
           model comparisons, protocol constants, and value propositions
