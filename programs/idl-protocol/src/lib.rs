@@ -180,7 +180,8 @@ pub mod idl_protocol {
         require!(staker.staked_amount > 0, IdlError::InsufficientStake);
 
         // SECURITY FIX: Safe overflow handling with checked ops
-        let ve_amount = (staker.staked_amount as u128)
+        // Initial veIDL = stake * (duration / max_duration)
+        let initial_ve_amount = (staker.staked_amount as u128)
             .checked_mul(lock_duration as u128)
             .and_then(|v| v.checked_div(MAX_LOCK_DURATION as u128))
             .and_then(|v| u64::try_from(v).ok())
@@ -188,18 +189,22 @@ pub mod idl_protocol {
 
         ve_position.owner = ctx.accounts.user.key();
         ve_position.locked_stake = staker.staked_amount;
-        ve_position.ve_amount = ve_amount;
+        ve_position.initial_ve_amount = initial_ve_amount;
         ve_position.lock_start = clock.unix_timestamp;
         ve_position.lock_end = clock.unix_timestamp
             .checked_add(lock_duration)
             .ok_or(IdlError::MathOverflow)?;
+        ve_position.lock_duration = lock_duration;  // RICK FIX: Store for decay calc
         ve_position.bump = ctx.bumps.ve_position;
 
+        // Note: total_ve_supply tracks INITIAL amounts.
+        // For accurate governance, query current_ve_amount() at vote time.
         state.total_ve_supply = state.total_ve_supply
-            .checked_add(ve_amount)
+            .checked_add(initial_ve_amount)
             .ok_or(IdlError::MathOverflow)?;
 
-        msg!("Locked {} for {} veIDL until {}", staker.staked_amount, ve_amount, ve_position.lock_end);
+        msg!("Locked {} for {} initial veIDL (decays linearly) until {}",
+            staker.staked_amount, initial_ve_amount, ve_position.lock_end);
         Ok(())
     }
 
@@ -211,7 +216,8 @@ pub mod idl_protocol {
 
         require!(clock.unix_timestamp >= ve_position.lock_end, IdlError::LockNotExpired);
 
-        state.total_ve_supply = state.total_ve_supply.saturating_sub(ve_position.ve_amount);
+        // Remove from total supply (tracks initial amounts)
+        state.total_ve_supply = state.total_ve_supply.saturating_sub(ve_position.initial_ve_amount);
 
         msg!("Unlocked veIDL position");
         Ok(())
@@ -787,6 +793,24 @@ fn update_reward_per_token(state: &mut ProtocolState, new_rewards: u64) {
     }
 }
 
+/// RICK FIX: Get total voting power for a user (veIDL from lock + badge)
+/// This accounts for veIDL decay over time
+pub fn get_voting_power(
+    ve_position: Option<&VePosition>,
+    badge: Option<&VolumeBadge>,
+    current_time: i64
+) -> u64 {
+    let ve_power = ve_position
+        .map(|vp| vp.current_ve_amount(current_time))
+        .unwrap_or(0);
+
+    let badge_power = badge
+        .map(|b| b.ve_amount)
+        .unwrap_or(0);
+
+    ve_power.saturating_add(badge_power)
+}
+
 // ==================== ACCOUNTS ====================
 
 #[derive(Accounts)]
@@ -1325,10 +1349,33 @@ pub struct StakerAccount {
 pub struct VePosition {
     pub owner: Pubkey,
     pub locked_stake: u64,
-    pub ve_amount: u64,
+    pub initial_ve_amount: u64,  // RICK FIX: Renamed - this is veIDL at lock time
     pub lock_start: i64,
     pub lock_end: i64,
+    pub lock_duration: i64,      // RICK FIX: Store original duration for decay calc
     pub bump: u8,
+}
+
+impl VePosition {
+    /// RICK FIX: Calculate current veIDL with linear decay
+    /// Whitepaper: "Current veIDL = Initial veIDL * (Time Remaining / Lock Duration)"
+    pub fn current_ve_amount(&self, current_time: i64) -> u64 {
+        if current_time >= self.lock_end {
+            return 0;
+        }
+        if current_time <= self.lock_start {
+            return self.initial_ve_amount;
+        }
+
+        let time_remaining = self.lock_end.saturating_sub(current_time);
+
+        // current = initial * (remaining / duration)
+        (self.initial_ve_amount as u128)
+            .saturating_mul(time_remaining as u128)
+            .checked_div(self.lock_duration as u128)
+            .map(|v| v as u64)
+            .unwrap_or(0)
+    }
 }
 
 #[account]
