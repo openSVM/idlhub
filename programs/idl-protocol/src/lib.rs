@@ -55,6 +55,18 @@ pub const MAX_BET_IMBALANCE_RATIO: u64 = 100; // Can't bet more than 100x the ot
 // RICK FIX: Claim cooldown to prevent rapid draining
 pub const REWARD_CLAIM_COOLDOWN: i64 = 3600; // 1 hour between claims
 
+// 10/10 FIX: Commit-reveal for bets (prevents front-running)
+pub const BET_COMMIT_WINDOW: i64 = 300; // 5 minutes to reveal after commit
+pub const BET_REVEAL_WINDOW: i64 = 3600; // 1 hour max to reveal
+
+// 10/10 FIX: Oracle bonding (prevents malicious resolution)
+pub const ORACLE_BOND_AMOUNT: u64 = 10_000_000_000; // 10 tokens required bond
+pub const ORACLE_DISPUTE_WINDOW: i64 = 3600; // 1 hour to dispute resolution
+pub const ORACLE_SLASH_PERCENT: u64 = 50; // 50% slash for bad resolution
+
+// 10/10 FIX: Badge anti-gaming
+pub const BADGE_HOLD_TIME: i64 = 604800; // 7 days minimum between volume updates for badge
+
 #[program]
 pub mod idl_protocol {
     use super::*;
@@ -734,9 +746,16 @@ pub mod idl_protocol {
         let state = &mut ctx.accounts.state;
         let badge = &mut ctx.accounts.badge;
         let user_volume = &ctx.accounts.user_volume;
+        let clock = Clock::get()?;
 
         // CRITICAL FIX: Read volume from on-chain account, NOT from parameter
         let volume_usd = user_volume.total_volume_usd;
+
+        // 10/10 FIX: Require 7 days since last volume update (prevents rapid wash trading)
+        require!(
+            clock.unix_timestamp >= user_volume.last_updated + BADGE_HOLD_TIME,
+            IdlError::BadgeHoldTimeNotMet
+        );
 
         let required_volume = match tier {
             BadgeTier::Bronze => BADGE_TIER_BRONZE,
@@ -838,6 +857,251 @@ pub mod idl_protocol {
         state.authority_transfer_time = None;
 
         msg!("Authority transfer cancelled");
+        Ok(())
+    }
+
+    // ==================== 10/10 FIXES ====================
+
+    /// 10/10 FIX: Commit a bet (step 1 of commit-reveal)
+    pub fn commit_bet(ctx: Context<CommitBet>, commitment: [u8; 32]) -> Result<()> {
+        require!(!ctx.accounts.state.paused, IdlError::ProtocolPaused);
+
+        let market = &ctx.accounts.market;
+        let clock = Clock::get()?;
+
+        require!(!market.resolved, IdlError::MarketResolved);
+        require!(market.status == MARKET_STATUS_ACTIVE, IdlError::MarketResolved);
+
+        // Must commit before betting closes
+        require!(
+            clock.unix_timestamp < market.resolution_timestamp - BETTING_CLOSE_WINDOW,
+            IdlError::BettingClosed
+        );
+
+        let bet_commitment = &mut ctx.accounts.bet_commitment;
+        bet_commitment.owner = ctx.accounts.user.key();
+        bet_commitment.market = market.key();
+        bet_commitment.commitment = commitment;
+        bet_commitment.commit_time = clock.unix_timestamp;
+        bet_commitment.revealed = false;
+        bet_commitment.bump = ctx.bumps.bet_commitment;
+
+        msg!("Bet committed, must reveal within {} seconds", BET_REVEAL_WINDOW);
+        Ok(())
+    }
+
+    /// 10/10 FIX: Reveal a committed bet (step 2 of commit-reveal)
+    pub fn reveal_bet(
+        ctx: Context<RevealBet>,
+        amount: u64,
+        bet_yes: bool,
+        nonce: u64,
+        salt: [u8; 32]
+    ) -> Result<()> {
+        require!(!ctx.accounts.state.paused, IdlError::ProtocolPaused);
+        require!(amount >= MIN_BET_AMOUNT, IdlError::BetTooSmall);
+        require!(amount <= MAX_BET_AMOUNT, IdlError::BetTooLarge);
+
+        let commitment = &mut ctx.accounts.bet_commitment;
+        let market = &mut ctx.accounts.market;
+        let clock = Clock::get()?;
+
+        require!(!commitment.revealed, IdlError::AlreadyRevealed);
+        require!(!market.resolved, IdlError::MarketResolved);
+
+        // Check reveal window
+        require!(
+            clock.unix_timestamp >= commitment.commit_time + BET_COMMIT_WINDOW,
+            IdlError::RevealTooEarly
+        );
+        require!(
+            clock.unix_timestamp <= commitment.commit_time + BET_REVEAL_WINDOW,
+            IdlError::RevealTooLate
+        );
+
+        // Verify commitment hash
+        let mut hasher_input = Vec::new();
+        hasher_input.extend_from_slice(&amount.to_le_bytes());
+        hasher_input.push(if bet_yes { 1 } else { 0 });
+        hasher_input.extend_from_slice(&nonce.to_le_bytes());
+        hasher_input.extend_from_slice(&salt);
+
+        let computed_hash = anchor_lang::solana_program::hash::hash(&hasher_input);
+        require!(
+            computed_hash.to_bytes() == commitment.commitment,
+            IdlError::InvalidCommitment
+        );
+
+        commitment.revealed = true;
+
+        // Transfer tokens
+        let cpi_accounts = Transfer {
+            from: ctx.accounts.user_token_account.to_account_info(),
+            to: ctx.accounts.market_pool.to_account_info(),
+            authority: ctx.accounts.user.to_account_info(),
+        };
+        token::transfer(
+            CpiContext::new(ctx.accounts.token_program.to_account_info(), cpi_accounts),
+            amount
+        )?;
+
+        // Get staker bonus
+        let staked_amount = ctx.accounts.staker_account
+            .as_ref()
+            .map(|s| s.staked_amount)
+            .unwrap_or(0);
+
+        let stake_millions = staked_amount / 1_000_000;
+        let stake_bonus = std::cmp::min(
+            stake_millions.saturating_mul(STAKE_BONUS_PER_MILLION),
+            MAX_STAKE_BONUS_BPS
+        );
+        let multiplier = 10000u64.saturating_add(stake_bonus);
+        let effective_amount = (amount as u128)
+            .saturating_mul(multiplier as u128)
+            / 10000;
+        let effective_amount = effective_amount as u64;
+
+        // Update market
+        if bet_yes {
+            market.total_yes_actual = market.total_yes_actual.saturating_add(amount);
+            market.total_yes_amount = market.total_yes_amount.saturating_add(effective_amount);
+        } else {
+            market.total_no_actual = market.total_no_actual.saturating_add(amount);
+            market.total_no_amount = market.total_no_amount.saturating_add(effective_amount);
+        }
+
+        // Create bet record
+        let bet = &mut ctx.accounts.bet;
+        bet.owner = ctx.accounts.user.key();
+        bet.market = market.key();
+        bet.amount = amount;
+        bet.effective_amount = effective_amount;
+        bet.bet_yes = bet_yes;
+        bet.timestamp = clock.unix_timestamp;
+        bet.claimed = false;
+        bet.nonce = nonce;
+        bet.bump = ctx.bumps.bet;
+
+        msg!("Bet revealed: {} on {}", amount, if bet_yes { "YES" } else { "NO" });
+        Ok(())
+    }
+
+    /// 10/10 FIX: Oracle deposits bond before they can resolve markets
+    pub fn deposit_oracle_bond(ctx: Context<DepositOracleBond>) -> Result<()> {
+        // Transfer bond from oracle to vault
+        let cpi_accounts = Transfer {
+            from: ctx.accounts.oracle_token_account.to_account_info(),
+            to: ctx.accounts.vault.to_account_info(),
+            authority: ctx.accounts.oracle.to_account_info(),
+        };
+        token::transfer(
+            CpiContext::new(ctx.accounts.token_program.to_account_info(), cpi_accounts),
+            ORACLE_BOND_AMOUNT
+        )?;
+
+        let bond = &mut ctx.accounts.oracle_bond;
+        bond.oracle = ctx.accounts.oracle.key();
+        bond.bond_amount = ORACLE_BOND_AMOUNT;
+        bond.bonded_at = Clock::get()?.unix_timestamp;
+        bond.slashed = false;
+        bond.bump = ctx.bumps.oracle_bond;
+
+        msg!("Oracle bond deposited: {}", ORACLE_BOND_AMOUNT);
+        Ok(())
+    }
+
+    /// 10/10 FIX: Oracle commits resolution (step 1)
+    pub fn commit_resolution(ctx: Context<CommitResolution>, commitment: [u8; 32]) -> Result<()> {
+        let market = &ctx.accounts.market;
+        let oracle_bond = &ctx.accounts.oracle_bond;
+        let clock = Clock::get()?;
+
+        require!(oracle_bond.bond_amount >= ORACLE_BOND_AMOUNT, IdlError::InsufficientOracleBond);
+        require!(!oracle_bond.slashed, IdlError::OracleSlashed);
+        require!(!market.resolved, IdlError::MarketResolved);
+        require!(clock.unix_timestamp >= market.resolution_timestamp, IdlError::ResolutionTooEarly);
+
+        let res_commit = &mut ctx.accounts.resolution_commitment;
+        res_commit.market = market.key();
+        res_commit.oracle = ctx.accounts.oracle.key();
+        res_commit.commitment = commitment;
+        res_commit.commit_time = clock.unix_timestamp;
+        res_commit.revealed = false;
+        res_commit.disputed = false;
+        res_commit.bump = ctx.bumps.resolution_commitment;
+
+        msg!("Resolution committed");
+        Ok(())
+    }
+
+    /// 10/10 FIX: Oracle reveals resolution (step 2)
+    pub fn reveal_resolution(
+        ctx: Context<RevealResolution>,
+        actual_value: u64,
+        nonce: u64
+    ) -> Result<()> {
+        let res_commit = &mut ctx.accounts.resolution_commitment;
+        let market = &mut ctx.accounts.market;
+        let clock = Clock::get()?;
+
+        require!(!res_commit.revealed, IdlError::AlreadyRevealed);
+        require!(!res_commit.disputed, IdlError::ResolutionDisputed);
+
+        // Must wait minimum time after commit
+        require!(
+            clock.unix_timestamp >= res_commit.commit_time + BET_COMMIT_WINDOW,
+            IdlError::RevealTooEarly
+        );
+
+        // Verify commitment
+        let mut hasher_input = Vec::new();
+        hasher_input.extend_from_slice(&actual_value.to_le_bytes());
+        hasher_input.extend_from_slice(&nonce.to_le_bytes());
+
+        let computed_hash = anchor_lang::solana_program::hash::hash(&hasher_input);
+        require!(
+            computed_hash.to_bytes() == res_commit.commitment,
+            IdlError::InvalidCommitment
+        );
+
+        res_commit.revealed = true;
+
+        // Resolve market
+        let outcome = actual_value >= market.target_value;
+        market.outcome = Some(outcome);
+        market.actual_value = Some(actual_value);
+        market.resolved = true;
+        market.resolved_at = Some(clock.unix_timestamp);
+        market.status = MARKET_STATUS_RESOLVED;
+
+        msg!("Market resolved via commit-reveal: {}", if outcome { "YES" } else { "NO" });
+        Ok(())
+    }
+
+    /// 10/10 FIX: Dispute a resolution (slashes oracle if authority agrees)
+    pub fn dispute_resolution(ctx: Context<DisputeResolution>) -> Result<()> {
+        let res_commit = &mut ctx.accounts.resolution_commitment;
+        let oracle_bond = &mut ctx.accounts.oracle_bond;
+        let clock = Clock::get()?;
+
+        require!(res_commit.revealed, IdlError::NotRevealed);
+        require!(!res_commit.disputed, IdlError::ResolutionDisputed);
+
+        // Must be within dispute window
+        require!(
+            clock.unix_timestamp <= res_commit.commit_time + ORACLE_DISPUTE_WINDOW,
+            IdlError::DisputeWindowClosed
+        );
+
+        res_commit.disputed = true;
+
+        // Slash oracle bond
+        let slash_amount = (oracle_bond.bond_amount * ORACLE_SLASH_PERCENT) / 100;
+        oracle_bond.bond_amount = oracle_bond.bond_amount.saturating_sub(slash_amount);
+        oracle_bond.slashed = true;
+
+        msg!("Oracle disputed and slashed: {}", slash_amount);
         Ok(())
     }
 }
@@ -1072,6 +1336,186 @@ pub struct ExtendLock<'info> {
 
     #[account(mut)]
     pub user: Signer<'info>,
+}
+
+// ==================== 10/10 ACCOUNT STRUCTS ====================
+
+#[derive(Accounts)]
+pub struct CommitBet<'info> {
+    #[account(seeds = [b"state"], bump = state.bump)]
+    pub state: Account<'info, ProtocolState>,
+
+    pub market: Account<'info, PredictionMarket>,
+
+    #[account(
+        init,
+        payer = user,
+        space = 8 + BetCommitment::INIT_SPACE,
+        seeds = [b"bet_commit", market.key().as_ref(), user.key().as_ref()],
+        bump
+    )]
+    pub bet_commitment: Account<'info, BetCommitment>,
+
+    #[account(mut)]
+    pub user: Signer<'info>,
+
+    pub system_program: Program<'info, System>,
+}
+
+#[derive(Accounts)]
+#[instruction(amount: u64, bet_yes: bool, nonce: u64, salt: [u8; 32])]
+pub struct RevealBet<'info> {
+    #[account(seeds = [b"state"], bump = state.bump)]
+    pub state: Box<Account<'info, ProtocolState>>,
+
+    #[account(mut)]
+    pub market: Box<Account<'info, PredictionMarket>>,
+
+    #[account(
+        mut,
+        seeds = [b"bet_commit", market.key().as_ref(), user.key().as_ref()],
+        bump = bet_commitment.bump,
+        constraint = bet_commitment.owner == user.key() @ IdlError::Unauthorized
+    )]
+    pub bet_commitment: Box<Account<'info, BetCommitment>>,
+
+    #[account(
+        init,
+        payer = user,
+        space = 8 + Bet::INIT_SPACE,
+        seeds = [b"bet", market.key().as_ref(), user.key().as_ref(), &nonce.to_le_bytes()],
+        bump
+    )]
+    pub bet: Box<Account<'info, Bet>>,
+
+    #[account(
+        seeds = [b"staker", user.key().as_ref()],
+        bump
+    )]
+    pub staker_account: Option<Box<Account<'info, StakerAccount>>>,
+
+    #[account(
+        mut,
+        constraint = user_token_account.mint == state.idl_mint @ IdlError::InvalidMint
+    )]
+    pub user_token_account: Box<Account<'info, TokenAccount>>,
+
+    #[account(
+        mut,
+        seeds = [b"market_pool", market.key().as_ref()],
+        bump
+    )]
+    pub market_pool: Box<Account<'info, TokenAccount>>,
+
+    #[account(mut)]
+    pub user: Signer<'info>,
+
+    pub token_program: Program<'info, Token>,
+    pub system_program: Program<'info, System>,
+}
+
+#[derive(Accounts)]
+pub struct DepositOracleBond<'info> {
+    #[account(seeds = [b"state"], bump = state.bump)]
+    pub state: Account<'info, ProtocolState>,
+
+    #[account(
+        init,
+        payer = oracle,
+        space = 8 + OracleBond::INIT_SPACE,
+        seeds = [b"oracle_bond", oracle.key().as_ref()],
+        bump
+    )]
+    pub oracle_bond: Account<'info, OracleBond>,
+
+    #[account(
+        mut,
+        constraint = oracle_token_account.mint == state.idl_mint @ IdlError::InvalidMint
+    )]
+    pub oracle_token_account: Account<'info, TokenAccount>,
+
+    #[account(
+        mut,
+        seeds = [b"vault"],
+        bump = state.vault_bump
+    )]
+    pub vault: Account<'info, TokenAccount>,
+
+    #[account(mut)]
+    pub oracle: Signer<'info>,
+
+    pub token_program: Program<'info, Token>,
+    pub system_program: Program<'info, System>,
+}
+
+#[derive(Accounts)]
+pub struct CommitResolution<'info> {
+    pub market: Account<'info, PredictionMarket>,
+
+    #[account(
+        seeds = [b"oracle_bond", oracle.key().as_ref()],
+        bump = oracle_bond.bump,
+        constraint = oracle_bond.oracle == oracle.key() @ IdlError::Unauthorized
+    )]
+    pub oracle_bond: Account<'info, OracleBond>,
+
+    #[account(
+        init,
+        payer = oracle,
+        space = 8 + ResolutionCommitment::INIT_SPACE,
+        seeds = [b"res_commit", market.key().as_ref()],
+        bump
+    )]
+    pub resolution_commitment: Account<'info, ResolutionCommitment>,
+
+    #[account(mut)]
+    pub oracle: Signer<'info>,
+
+    pub system_program: Program<'info, System>,
+}
+
+#[derive(Accounts)]
+pub struct RevealResolution<'info> {
+    #[account(mut)]
+    pub market: Account<'info, PredictionMarket>,
+
+    #[account(
+        mut,
+        seeds = [b"res_commit", market.key().as_ref()],
+        bump = resolution_commitment.bump,
+        constraint = resolution_commitment.oracle == oracle.key() @ IdlError::Unauthorized
+    )]
+    pub resolution_commitment: Account<'info, ResolutionCommitment>,
+
+    pub oracle: Signer<'info>,
+}
+
+#[derive(Accounts)]
+pub struct DisputeResolution<'info> {
+    #[account(
+        seeds = [b"state"],
+        bump = state.bump,
+        constraint = state.authority == authority.key() @ IdlError::Unauthorized
+    )]
+    pub state: Account<'info, ProtocolState>,
+
+    #[account(
+        mut,
+        seeds = [b"res_commit", market.key().as_ref()],
+        bump = resolution_commitment.bump
+    )]
+    pub resolution_commitment: Account<'info, ResolutionCommitment>,
+
+    #[account(
+        mut,
+        seeds = [b"oracle_bond", resolution_commitment.oracle.as_ref()],
+        bump = oracle_bond.bump
+    )]
+    pub oracle_bond: Account<'info, OracleBond>,
+
+    pub market: Account<'info, PredictionMarket>,
+
+    pub authority: Signer<'info>,
 }
 
 #[derive(Accounts)]
@@ -1539,6 +1983,42 @@ pub struct UserVolume {
     pub bump: u8,
 }
 
+// 10/10 FIX: Commit-reveal bet to prevent front-running
+#[account]
+#[derive(InitSpace)]
+pub struct BetCommitment {
+    pub owner: Pubkey,
+    pub market: Pubkey,
+    pub commitment: [u8; 32],  // hash(amount, bet_yes, nonce, salt)
+    pub commit_time: i64,
+    pub revealed: bool,
+    pub bump: u8,
+}
+
+// 10/10 FIX: Oracle bond for accountability
+#[account]
+#[derive(InitSpace)]
+pub struct OracleBond {
+    pub oracle: Pubkey,
+    pub bond_amount: u64,
+    pub bonded_at: i64,
+    pub slashed: bool,
+    pub bump: u8,
+}
+
+// 10/10 FIX: Resolution commitment for oracle commit-reveal
+#[account]
+#[derive(InitSpace)]
+pub struct ResolutionCommitment {
+    pub market: Pubkey,
+    pub oracle: Pubkey,
+    pub commitment: [u8; 32],  // hash(actual_value, nonce)
+    pub commit_time: i64,
+    pub revealed: bool,
+    pub disputed: bool,
+    pub bump: u8,
+}
+
 // ==================== TYPES ====================
 
 #[derive(AnchorSerialize, AnchorDeserialize, Clone, Copy, PartialEq, Eq, InitSpace, Debug, Default)]
@@ -1671,4 +2151,36 @@ pub enum IdlError {
 
     #[msg("Extended lock would exceed 4 year maximum")]
     LockTooLong,
+
+    // 10/10 FIX: Commit-reveal errors
+    #[msg("Bet commitment already revealed")]
+    AlreadyRevealed,
+
+    #[msg("Must wait before revealing")]
+    RevealTooEarly,
+
+    #[msg("Reveal window expired")]
+    RevealTooLate,
+
+    #[msg("Commitment hash does not match revealed values")]
+    InvalidCommitment,
+
+    #[msg("Resolution not yet revealed")]
+    NotRevealed,
+
+    #[msg("Resolution has been disputed")]
+    ResolutionDisputed,
+
+    #[msg("Dispute window has closed")]
+    DisputeWindowClosed,
+
+    // 10/10 FIX: Oracle bond errors
+    #[msg("Insufficient oracle bond")]
+    InsufficientOracleBond,
+
+    #[msg("Oracle has been slashed")]
+    OracleSlashed,
+
+    #[msg("Must wait 7 days after last trade to claim badge")]
+    BadgeHoldTimeNotMet,
 }
