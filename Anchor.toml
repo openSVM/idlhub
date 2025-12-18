@@ -4,15 +4,15 @@ skip-lint = false
 
 [programs.localnet]
 idl_protocol = "BSn7neicVV2kEzgaZmd6tZEBm4tdgzBRyELov65Lq7dt"
-idl_stableswap = "i9uqh8UNGfNxVsb91E1omZqaiRiwTUJSUigFp4jmzMS"
+idl_stableswap = "8jBZhdvBM1MBM22ZwBBe6Mq5MRpPAVwoLWi58CyeatzZ"
 
 [programs.devnet]
 idl_protocol = "BSn7neicVV2kEzgaZmd6tZEBm4tdgzBRyELov65Lq7dt"
-idl_stableswap = "i9uqh8UNGfNxVsb91E1omZqaiRiwTUJSUigFp4jmzMS"
+idl_stableswap = "8jBZhdvBM1MBM22ZwBBe6Mq5MRpPAVwoLWi58CyeatzZ"
 
 [programs.mainnet]
 idl_protocol = "BSn7neicVV2kEzgaZmd6tZEBm4tdgzBRyELov65Lq7dt"
-idl_stableswap = "i9uqh8UNGfNxVsb91E1omZqaiRiwTUJSUigFp4jmzMS"
+idl_stableswap = "8jBZhdvBM1MBM22ZwBBe6Mq5MRpPAVwoLWi58CyeatzZ"
 
 [registry]
 url = "https://api.apr.dev"

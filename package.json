@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "node mcp-server/test/basic.test.js",
+    "test:anchor": "anchor test",
     "test:api-mcp": "node mcp-server/test/api-server.test.js",
     "test:api": "node api/test/server.test.js",
     "test:api:unit": "node api/test/server.unit.test.js",

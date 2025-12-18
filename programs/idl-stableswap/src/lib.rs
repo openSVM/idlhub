@@ -14,7 +14,7 @@
 use anchor_lang::prelude::*;
 use anchor_spl::token::{self, Mint, Token, TokenAccount, Transfer, MintTo, Burn};
 
-declare_id!("i9uqh8UNGfNxVsb91E1omZqaiRiwTUJSUigFp4jmzMS");
+declare_id!("8jBZhdvBM1MBM22ZwBBe6Mq5MRpPAVwoLWi58CyeatzZ");
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // CONSTANTS
