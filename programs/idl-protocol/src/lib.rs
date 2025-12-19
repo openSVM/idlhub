@@ -78,6 +78,47 @@ pub const TVL_CAP_INCREMENT: u64 = 100_000_000_000; // 100 tokens per increment
 // TIER 3: Insurance fund
 pub const INSURANCE_FEE_BPS: u64 = 100; // 1% of fees go to insurance fund
 
+// ═══════════════════════════════════════════════════════════════════════════════
+// PUMP MECHANICS - Missing tokenomics features
+// ═══════════════════════════════════════════════════════════════════════════════
+
+// REFERRAL SYSTEM - 5% of referred user's fees forever
+pub const REFERRAL_FEE_BPS: u64 = 500; // 5% of fees to referrer
+
+// PREDICTION MINING - Market creators earn from their market's volume
+pub const CREATOR_VOLUME_FEE_BPS: u64 = 50; // 0.5% of market volume to creator
+
+// ACCURACY LEADERBOARD - Bonus for accurate predictors
+pub const ACCURACY_BONUS_THRESHOLD: u64 = 60; // 60% accuracy required
+pub const ACCURACY_BONUS_BPS: u64 = 1000; // 10% bonus for accurate predictors
+
+// STREAK BONUSES - Consecutive wins
+pub const STREAK_BONUS_PER_WIN: u64 = 100; // 1% bonus per consecutive win
+pub const MAX_STREAK_BONUS_BPS: u64 = 2000; // 20% max streak bonus
+
+// VIP TIERS - Whale incentives based on stake
+pub const VIP_TIER_1_STAKE: u64 = 100_000_000_000; // 100 tokens = Bronze VIP
+pub const VIP_TIER_2_STAKE: u64 = 1_000_000_000_000; // 1k tokens = Silver VIP
+pub const VIP_TIER_3_STAKE: u64 = 10_000_000_000_000; // 10k tokens = Gold VIP
+pub const VIP_TIER_4_STAKE: u64 = 100_000_000_000_000; // 100k tokens = Platinum VIP
+pub const VIP_FEE_DISCOUNT_BPS: u64 = 50; // 0.5% fee discount per tier
+
+// AUTO-COMPOUND - Reinvest rewards automatically
+pub const AUTO_COMPOUND_BONUS_BPS: u64 = 200; // 2% bonus for auto-compounding
+
+// SEASON REWARDS - Time-limited bonus periods
+pub const SEASON_DURATION: i64 = 2592000; // 30 days per season
+pub const SEASON_BONUS_BPS: u64 = 2500; // 25% bonus during active season
+
+// EARLY BIRD - Bonus for early bettors
+pub const EARLY_BIRD_WINDOW: i64 = 3600; // First hour after market creation
+pub const EARLY_BIRD_BONUS_BPS: u64 = 500; // 5% bonus for early bets
+
+// CONVICTION BETTING - Longer lock = higher payout
+pub const CONVICTION_LOCK_MIN: i64 = 86400; // 1 day minimum
+pub const CONVICTION_LOCK_MAX: i64 = 2592000; // 30 days maximum
+pub const CONVICTION_BONUS_PER_DAY: u64 = 50; // 0.5% per day locked
+
 #[program]
 pub mod idl_protocol {
     use super::*;
@@ -1178,6 +1219,222 @@ pub mod idl_protocol {
         msg!("Oracle bond withdrawn: {}", bond_amount);
         Ok(())
     }
+
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // PUMP MECHANICS - New tokenomics instructions
+    // ═══════════════════════════════════════════════════════════════════════════════
+
+    /// Register a referral relationship
+    /// User is referred by referrer, referrer earns 5% of user's fees forever
+    pub fn register_referral(ctx: Context<RegisterReferral>) -> Result<()> {
+        let referral = &mut ctx.accounts.referral_account;
+        let clock = Clock::get()?;
+
+        referral.user = ctx.accounts.user.key();
+        referral.referrer = ctx.accounts.referrer.key();
+        referral.total_fees_earned = 0;
+        referral.registered_at = clock.unix_timestamp;
+        referral.bump = ctx.bumps.referral_account;
+
+        msg!("Referral registered: {} referred by {}", referral.user, referral.referrer);
+        Ok(())
+    }
+
+    /// Initialize predictor stats for a user
+    pub fn init_predictor_stats(ctx: Context<InitPredictorStats>) -> Result<()> {
+        let stats = &mut ctx.accounts.predictor_stats;
+
+        stats.owner = ctx.accounts.user.key();
+        stats.total_predictions = 0;
+        stats.correct_predictions = 0;
+        stats.current_streak = 0;
+        stats.best_streak = 0;
+        stats.total_winnings = 0;
+        stats.total_losses = 0;
+        stats.last_prediction = 0;
+        stats.auto_compound = false;
+        stats.vip_tier = 0;
+        stats.bump = ctx.bumps.predictor_stats;
+
+        msg!("Predictor stats initialized for {}", stats.owner);
+        Ok(())
+    }
+
+    /// Enable/disable auto-compound for a user
+    pub fn set_auto_compound(ctx: Context<SetAutoCompound>, enabled: bool) -> Result<()> {
+        ctx.accounts.predictor_stats.auto_compound = enabled;
+        msg!("Auto-compound set to {} for {}", enabled, ctx.accounts.user.key());
+        Ok(())
+    }
+
+    /// Update VIP tier based on current stake
+    pub fn update_vip_tier(ctx: Context<UpdateVipTier>) -> Result<()> {
+        let staker = &ctx.accounts.staker_account;
+        let stats = &mut ctx.accounts.predictor_stats;
+
+        let new_tier = PredictorStats::calculate_vip_tier(staker.staked_amount);
+        stats.vip_tier = new_tier;
+
+        msg!("VIP tier updated to {} for {}", new_tier, stats.owner);
+        Ok(())
+    }
+
+    /// Create a new season (admin only)
+    pub fn create_season(
+        ctx: Context<CreateSeason>,
+        season_number: u64,
+        prize_pool: u64,
+    ) -> Result<()> {
+        let clock = Clock::get()?;
+        let season = &mut ctx.accounts.season;
+
+        season.season_number = season_number;
+        season.start_time = clock.unix_timestamp;
+        season.end_time = clock.unix_timestamp + SEASON_DURATION;
+        season.total_rewards = 0;
+        season.distributed_rewards = 0;
+        season.active = true;
+        season.prize_pool = prize_pool;
+        season.bump = ctx.bumps.season;
+
+        // Transfer prize pool to vault if provided
+        if prize_pool > 0 {
+            let cpi_accounts = Transfer {
+                from: ctx.accounts.authority_token_account.to_account_info(),
+                to: ctx.accounts.vault.to_account_info(),
+                authority: ctx.accounts.authority.to_account_info(),
+            };
+            token::transfer(
+                CpiContext::new(ctx.accounts.token_program.to_account_info(), cpi_accounts),
+                prize_pool
+            )?;
+        }
+
+        msg!("Season {} created with {} prize pool", season_number, prize_pool);
+        Ok(())
+    }
+
+    /// End the current season (admin only)
+    pub fn end_season(ctx: Context<EndSeason>) -> Result<()> {
+        let season = &mut ctx.accounts.season;
+        season.active = false;
+
+        msg!("Season {} ended", season.season_number);
+        Ok(())
+    }
+
+    /// Initialize creator stats for prediction mining
+    pub fn init_creator_stats(ctx: Context<InitCreatorStats>) -> Result<()> {
+        let stats = &mut ctx.accounts.creator_stats;
+
+        stats.creator = ctx.accounts.creator.key();
+        stats.markets_created = 0;
+        stats.total_volume = 0;
+        stats.total_fees_earned = 0;
+        stats.pending_fees = 0;
+        stats.last_claim = 0;
+        stats.bump = ctx.bumps.creator_stats;
+
+        msg!("Creator stats initialized for {}", stats.creator);
+        Ok(())
+    }
+
+    /// Claim creator fees (prediction mining)
+    pub fn claim_creator_fees(ctx: Context<ClaimCreatorFees>) -> Result<()> {
+        let stats = &mut ctx.accounts.creator_stats;
+        let pending = stats.pending_fees;
+
+        require!(pending > 0, IdlError::NoRewardsToClaim);
+
+        let state_bump = ctx.accounts.state.bump;
+        let seeds = &[b"state".as_ref(), &[state_bump]];
+        let signer_seeds = &[&seeds[..]];
+
+        let cpi_accounts = Transfer {
+            from: ctx.accounts.vault.to_account_info(),
+            to: ctx.accounts.creator_token_account.to_account_info(),
+            authority: ctx.accounts.state.to_account_info(),
+        };
+        token::transfer(
+            CpiContext::new_with_signer(
+                ctx.accounts.token_program.to_account_info(),
+                cpi_accounts,
+                signer_seeds
+            ),
+            pending
+        )?;
+
+        stats.total_fees_earned = stats.total_fees_earned.saturating_add(pending);
+        stats.pending_fees = 0;
+        stats.last_claim = Clock::get()?.unix_timestamp;
+
+        msg!("Claimed {} creator fees", pending);
+        Ok(())
+    }
+
+    /// Place a conviction bet with lock bonus
+    pub fn place_conviction_bet(
+        ctx: Context<PlaceConvictionBet>,
+        lock_duration: i64,
+    ) -> Result<()> {
+        require!(
+            lock_duration >= CONVICTION_LOCK_MIN && lock_duration <= CONVICTION_LOCK_MAX,
+            IdlError::InvalidLockDuration
+        );
+
+        let clock = Clock::get()?;
+        let days_locked = lock_duration / 86400;
+        let bonus_bps = (days_locked as u64) * CONVICTION_BONUS_PER_DAY;
+
+        let conviction = &mut ctx.accounts.conviction_bet;
+        conviction.owner = ctx.accounts.user.key();
+        conviction.bet = ctx.accounts.bet.key();
+        conviction.market = ctx.accounts.bet.market;
+        conviction.lock_duration = lock_duration;
+        conviction.lock_end = clock.unix_timestamp + lock_duration;
+        conviction.bonus_bps = bonus_bps;
+        conviction.claimed = false;
+        conviction.bump = ctx.bumps.conviction_bet;
+
+        msg!(
+            "Conviction bet placed: {} days lock, {}bps bonus",
+            days_locked,
+            bonus_bps
+        );
+        Ok(())
+    }
+
+    /// Claim referral fees earned
+    pub fn claim_referral_fees(ctx: Context<ClaimReferralFees>, amount: u64) -> Result<()> {
+        // This would be called with accumulated referral fees
+        // For now, just update the tracking
+        let referral = &mut ctx.accounts.referral_account;
+
+        require!(amount > 0, IdlError::NoRewardsToClaim);
+
+        let state_bump = ctx.accounts.state.bump;
+        let seeds = &[b"state".as_ref(), &[state_bump]];
+        let signer_seeds = &[&seeds[..]];
+
+        let cpi_accounts = Transfer {
+            from: ctx.accounts.vault.to_account_info(),
+            to: ctx.accounts.referrer_token_account.to_account_info(),
+            authority: ctx.accounts.state.to_account_info(),
+        };
+        token::transfer(
+            CpiContext::new_with_signer(
+                ctx.accounts.token_program.to_account_info(),
+                cpi_accounts,
+                signer_seeds
+            ),
+            amount
+        )?;
+
+        referral.total_fees_earned = referral.total_fees_earned.saturating_add(amount);
+
+        msg!("Claimed {} referral fees", amount);
+        Ok(())
+    }
 }
 
 // ==================== HELPER FUNCTIONS ====================
@@ -2016,6 +2273,214 @@ pub struct WithdrawInsurance<'info> {
     pub token_program: Program<'info, Token>,
 }
 
+// ═══════════════════════════════════════════════════════════════════════════════
+// PUMP MECHANICS ACCOUNTS
+// ═══════════════════════════════════════════════════════════════════════════════
+
+#[derive(Accounts)]
+pub struct RegisterReferral<'info> {
+    #[account(
+        init,
+        payer = user,
+        space = 8 + ReferralAccount::INIT_SPACE,
+        seeds = [b"referral", user.key().as_ref()],
+        bump
+    )]
+    pub referral_account: Account<'info, ReferralAccount>,
+
+    /// CHECK: Referrer just needs to be a valid pubkey
+    pub referrer: AccountInfo<'info>,
+
+    #[account(mut)]
+    pub user: Signer<'info>,
+
+    pub system_program: Program<'info, System>,
+}
+
+#[derive(Accounts)]
+pub struct InitPredictorStats<'info> {
+    #[account(
+        init,
+        payer = user,
+        space = 8 + PredictorStats::INIT_SPACE,
+        seeds = [b"predictor_stats", user.key().as_ref()],
+        bump
+    )]
+    pub predictor_stats: Account<'info, PredictorStats>,
+
+    #[account(mut)]
+    pub user: Signer<'info>,
+
+    pub system_program: Program<'info, System>,
+}
+
+#[derive(Accounts)]
+pub struct SetAutoCompound<'info> {
+    #[account(
+        mut,
+        seeds = [b"predictor_stats", user.key().as_ref()],
+        bump = predictor_stats.bump,
+        constraint = predictor_stats.owner == user.key() @ IdlError::Unauthorized
+    )]
+    pub predictor_stats: Account<'info, PredictorStats>,
+
+    pub user: Signer<'info>,
+}
+
+#[derive(Accounts)]
+pub struct UpdateVipTier<'info> {
+    #[account(
+        seeds = [b"staker", user.key().as_ref()],
+        bump = staker_account.bump
+    )]
+    pub staker_account: Account<'info, StakerAccount>,
+
+    #[account(
+        mut,
+        seeds = [b"predictor_stats", user.key().as_ref()],
+        bump = predictor_stats.bump,
+        constraint = predictor_stats.owner == user.key() @ IdlError::Unauthorized
+    )]
+    pub predictor_stats: Account<'info, PredictorStats>,
+
+    pub user: Signer<'info>,
+}
+
+#[derive(Accounts)]
+#[instruction(season_number: u64)]
+pub struct CreateSeason<'info> {
+    #[account(
+        seeds = [b"state"],
+        bump = state.bump,
+        constraint = state.authority == authority.key() @ IdlError::Unauthorized
+    )]
+    pub state: Account<'info, ProtocolState>,
+
+    #[account(
+        init,
+        payer = authority,
+        space = 8 + Season::INIT_SPACE,
+        seeds = [b"season", season_number.to_le_bytes().as_ref()],
+        bump
+    )]
+    pub season: Account<'info, Season>,
+
+    #[account(mut, seeds = [b"vault"], bump = state.vault_bump)]
+    pub vault: Account<'info, TokenAccount>,
+
+    #[account(mut)]
+    pub authority_token_account: Account<'info, TokenAccount>,
+
+    #[account(mut)]
+    pub authority: Signer<'info>,
+
+    pub token_program: Program<'info, Token>,
+    pub system_program: Program<'info, System>,
+}
+
+#[derive(Accounts)]
+pub struct EndSeason<'info> {
+    #[account(
+        seeds = [b"state"],
+        bump = state.bump,
+        constraint = state.authority == authority.key() @ IdlError::Unauthorized
+    )]
+    pub state: Account<'info, ProtocolState>,
+
+    #[account(mut)]
+    pub season: Account<'info, Season>,
+
+    pub authority: Signer<'info>,
+}
+
+#[derive(Accounts)]
+pub struct InitCreatorStats<'info> {
+    #[account(
+        init,
+        payer = creator,
+        space = 8 + CreatorStats::INIT_SPACE,
+        seeds = [b"creator_stats", creator.key().as_ref()],
+        bump
+    )]
+    pub creator_stats: Account<'info, CreatorStats>,
+
+    #[account(mut)]
+    pub creator: Signer<'info>,
+
+    pub system_program: Program<'info, System>,
+}
+
+#[derive(Accounts)]
+pub struct ClaimCreatorFees<'info> {
+    #[account(seeds = [b"state"], bump = state.bump)]
+    pub state: Account<'info, ProtocolState>,
+
+    #[account(
+        mut,
+        seeds = [b"creator_stats", creator.key().as_ref()],
+        bump = creator_stats.bump,
+        constraint = creator_stats.creator == creator.key() @ IdlError::Unauthorized
+    )]
+    pub creator_stats: Account<'info, CreatorStats>,
+
+    #[account(mut, seeds = [b"vault"], bump = state.vault_bump)]
+    pub vault: Account<'info, TokenAccount>,
+
+    #[account(mut)]
+    pub creator_token_account: Account<'info, TokenAccount>,
+
+    pub creator: Signer<'info>,
+
+    pub token_program: Program<'info, Token>,
+}
+
+#[derive(Accounts)]
+pub struct PlaceConvictionBet<'info> {
+    #[account(
+        seeds = [b"bet", bet.market.as_ref(), user.key().as_ref(), &bet.nonce.to_le_bytes()],
+        bump = bet.bump
+    )]
+    pub bet: Account<'info, Bet>,
+
+    #[account(
+        init,
+        payer = user,
+        space = 8 + ConvictionBet::INIT_SPACE,
+        seeds = [b"conviction", bet.key().as_ref()],
+        bump
+    )]
+    pub conviction_bet: Account<'info, ConvictionBet>,
+
+    #[account(mut)]
+    pub user: Signer<'info>,
+
+    pub system_program: Program<'info, System>,
+}
+
+#[derive(Accounts)]
+pub struct ClaimReferralFees<'info> {
+    #[account(seeds = [b"state"], bump = state.bump)]
+    pub state: Account<'info, ProtocolState>,
+
+    #[account(
+        mut,
+        seeds = [b"referral", referral_account.user.as_ref()],
+        bump = referral_account.bump,
+        constraint = referral_account.referrer == referrer.key() @ IdlError::Unauthorized
+    )]
+    pub referral_account: Account<'info, ReferralAccount>,
+
+    #[account(mut, seeds = [b"vault"], bump = state.vault_bump)]
+    pub vault: Account<'info, TokenAccount>,
+
+    #[account(mut)]
+    pub referrer_token_account: Account<'info, TokenAccount>,
+
+    pub referrer: Signer<'info>,
+
+    pub token_program: Program<'info, Token>,
+}
+
 // ==================== STATE ====================
 
 #[account]
@@ -2190,6 +2655,161 @@ pub struct ResolutionCommitment {
     pub commit_time: i64,
     pub revealed: bool,
     pub disputed: bool,
+    pub bump: u8,
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// PUMP MECHANICS STATE - New tokenomics structures
+// ═══════════════════════════════════════════════════════════════════════════════
+
+/// Referral relationship - who referred who
+#[account]
+#[derive(InitSpace)]
+pub struct ReferralAccount {
+    /// The user who was referred
+    pub user: Pubkey,
+    /// The referrer who gets fees
+    pub referrer: Pubkey,
+    /// Total fees earned by referrer from this user
+    pub total_fees_earned: u64,
+    /// Timestamp of referral registration
+    pub registered_at: i64,
+    pub bump: u8,
+}
+
+/// User prediction statistics for accuracy tracking
+#[account]
+#[derive(InitSpace)]
+pub struct PredictorStats {
+    pub owner: Pubkey,
+    /// Total predictions made
+    pub total_predictions: u64,
+    /// Correct predictions
+    pub correct_predictions: u64,
+    /// Current win streak
+    pub current_streak: u64,
+    /// Best ever streak
+    pub best_streak: u64,
+    /// Total winnings
+    pub total_winnings: u64,
+    /// Total losses
+    pub total_losses: u64,
+    /// Last prediction timestamp
+    pub last_prediction: i64,
+    /// Auto-compound enabled
+    pub auto_compound: bool,
+    /// VIP tier based on stake
+    pub vip_tier: u8,
+    pub bump: u8,
+}
+
+impl PredictorStats {
+    /// Calculate accuracy percentage (0-100)
+    pub fn accuracy(&self) -> u64 {
+        if self.total_predictions == 0 {
+            return 0;
+        }
+        (self.correct_predictions * 100) / self.total_predictions
+    }
+
+    /// Calculate streak bonus in basis points
+    pub fn streak_bonus_bps(&self) -> u64 {
+        std::cmp::min(
+            self.current_streak * STREAK_BONUS_PER_WIN,
+            MAX_STREAK_BONUS_BPS
+        )
+    }
+
+    /// Calculate VIP tier from stake amount
+    pub fn calculate_vip_tier(stake: u64) -> u8 {
+        if stake >= VIP_TIER_4_STAKE {
+            4
+        } else if stake >= VIP_TIER_3_STAKE {
+            3
+        } else if stake >= VIP_TIER_2_STAKE {
+            2
+        } else if stake >= VIP_TIER_1_STAKE {
+            1
+        } else {
+            0
+        }
+    }
+
+    /// Calculate fee discount based on VIP tier
+    pub fn vip_fee_discount_bps(&self) -> u64 {
+        (self.vip_tier as u64) * VIP_FEE_DISCOUNT_BPS
+    }
+}
+
+/// Season state for time-limited reward boosts
+#[account]
+#[derive(InitSpace)]
+pub struct Season {
+    /// Season number (1, 2, 3, ...)
+    pub season_number: u64,
+    /// Start timestamp
+    pub start_time: i64,
+    /// End timestamp
+    pub end_time: i64,
+    /// Total rewards allocated for this season
+    pub total_rewards: u64,
+    /// Rewards already distributed
+    pub distributed_rewards: u64,
+    /// Is season currently active
+    pub active: bool,
+    /// Prize pool for top predictors
+    pub prize_pool: u64,
+    pub bump: u8,
+}
+
+/// Leaderboard entry for top predictors
+#[account]
+#[derive(InitSpace)]
+pub struct LeaderboardEntry {
+    /// Season this entry is for
+    pub season: Pubkey,
+    /// User address
+    pub user: Pubkey,
+    /// Season accuracy (locked at season end)
+    pub accuracy: u64,
+    /// Season winnings
+    pub winnings: u64,
+    /// Rank (1 = first place)
+    pub rank: u64,
+    /// Has claimed prize
+    pub prize_claimed: bool,
+    pub bump: u8,
+}
+
+/// Conviction bet - locked bet with bonus
+#[account]
+#[derive(InitSpace)]
+pub struct ConvictionBet {
+    pub owner: Pubkey,
+    pub bet: Pubkey,           // Reference to underlying Bet
+    pub market: Pubkey,
+    pub lock_duration: i64,    // How long bet is locked
+    pub lock_end: i64,         // When lock expires
+    pub bonus_bps: u64,        // Bonus percentage earned
+    pub claimed: bool,
+    pub bump: u8,
+}
+
+/// Market creator stats - for prediction mining
+#[account]
+#[derive(InitSpace)]
+pub struct CreatorStats {
+    pub creator: Pubkey,
+    /// Number of markets created
+    pub markets_created: u64,
+    /// Total volume on their markets
+    pub total_volume: u64,
+    /// Total fees earned from markets
+    pub total_fees_earned: u64,
+    /// Pending unclaimed fees
+    pub pending_fees: u64,
+    /// Last claim timestamp
+    pub last_claim: i64,
     pub bump: u8,
 }
 
