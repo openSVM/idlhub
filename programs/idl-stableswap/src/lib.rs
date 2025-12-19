@@ -67,6 +67,23 @@ pub const MIN_RAMP_DURATION: i64 = 86400;
 pub const MAX_AMP_CHANGE: u64 = 10;
 
 // ═══════════════════════════════════════════════════════════════════════════════
+// MIGRATION POOL CONSTANTS
+// ═══════════════════════════════════════════════════════════════════════════════
+
+/// Migration swap fee in milli-basis-points (0.1337% = 1337 milli-bps)
+/// Fee calculation: amount * 1337 / 1_000_000
+pub const MIGRATION_FEE_MILLI_BPS: u64 = 1337;
+
+/// Maximum farming periods that can be active simultaneously
+pub const MAX_FARMING_PERIODS: usize = 5;
+
+/// Minimum farming period duration (1 day)
+pub const MIN_FARMING_DURATION: i64 = 86400;
+
+/// Precision for reward calculations
+pub const REWARD_PRECISION: u128 = 1_000_000_000_000; // 1e12
+
+// ═══════════════════════════════════════════════════════════════════════════════
 // PROGRAM
 // ═══════════════════════════════════════════════════════════════════════════════
 
@@ -390,6 +407,488 @@ pub mod idl_stableswap {
             .ok_or(StableSwapError::MathOverflow)?;
 
         msg!("Removed liquidity: {} LP = {} BAGS + {} PUMP", lp_amount, bags_amount, pump_amount);
+
+        Ok(())
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // MIGRATION POOL FUNCTIONS - 1:1 Constant Price with 0.1337% Fee
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    /// Add single-sided liquidity (BAGS only OR PUMP only)
+    /// For migration pool - no imbalance fee, LP tokens = 1:1 with deposit
+    pub fn add_liquidity_single_sided(
+        ctx: Context<AddLiquiditySingleSided>,
+        amount: u64,
+        is_bags: bool,
+        min_lp_amount: u64,
+    ) -> Result<()> {
+        require!(!ctx.accounts.pool.paused, StableSwapError::PoolPaused);
+        require!(amount > 0, StableSwapError::ZeroAmount);
+
+        let pool_bump = ctx.accounts.pool.bump;
+
+        // For migration pool: LP tokens = deposit amount (1:1)
+        let lp_amount = amount;
+        require!(lp_amount >= min_lp_amount, StableSwapError::SlippageExceeded);
+
+        // Transfer tokens to appropriate vault
+        if is_bags {
+            token::transfer(
+                CpiContext::new(
+                    ctx.accounts.token_program.to_account_info(),
+                    Transfer {
+                        from: ctx.accounts.user_token.to_account_info(),
+                        to: ctx.accounts.bags_vault.to_account_info(),
+                        authority: ctx.accounts.user.to_account_info(),
+                    },
+                ),
+                amount,
+            )?;
+        } else {
+            token::transfer(
+                CpiContext::new(
+                    ctx.accounts.token_program.to_account_info(),
+                    Transfer {
+                        from: ctx.accounts.user_token.to_account_info(),
+                        to: ctx.accounts.pump_vault.to_account_info(),
+                        authority: ctx.accounts.user.to_account_info(),
+                    },
+                ),
+                amount,
+            )?;
+        }
+
+        // Mint LP tokens
+        let pool_seeds = &[b"pool".as_ref(), &[pool_bump]];
+        let signer_seeds = &[&pool_seeds[..]];
+
+        token::mint_to(
+            CpiContext::new_with_signer(
+                ctx.accounts.token_program.to_account_info(),
+                MintTo {
+                    mint: ctx.accounts.lp_mint.to_account_info(),
+                    to: ctx.accounts.user_lp.to_account_info(),
+                    authority: ctx.accounts.pool.to_account_info(),
+                },
+                signer_seeds,
+            ),
+            lp_amount,
+        )?;
+
+        // Update state after CPIs
+        if is_bags {
+            ctx.accounts.pool.bags_balance = ctx.accounts.pool.bags_balance
+                .checked_add(amount)
+                .ok_or(StableSwapError::MathOverflow)?;
+        } else {
+            ctx.accounts.pool.pump_balance = ctx.accounts.pool.pump_balance
+                .checked_add(amount)
+                .ok_or(StableSwapError::MathOverflow)?;
+        }
+        ctx.accounts.pool.lp_supply = ctx.accounts.pool.lp_supply
+            .checked_add(lp_amount)
+            .ok_or(StableSwapError::MathOverflow)?;
+
+        msg!("Added single-sided liquidity: {} {} = {} LP",
+            amount,
+            if is_bags { "BAGS" } else { "PUMP" },
+            lp_amount
+        );
+
+        Ok(())
+    }
+
+    /// Migrate BAGS to PUMP at 1:1 rate with 0.1337% fee
+    /// Simplified swap - no curve math, constant price
+    pub fn migrate_bags_to_pump(
+        ctx: Context<Swap>,
+        amount_in: u64,
+        min_amount_out: u64,
+        deadline: i64,
+    ) -> Result<()> {
+        require!(!ctx.accounts.pool.paused, StableSwapError::PoolPaused);
+        require!(amount_in >= MIN_SWAP_AMOUNT, StableSwapError::AmountTooSmall);
+
+        let clock = Clock::get()?;
+        require!(clock.unix_timestamp <= deadline, StableSwapError::TransactionExpired);
+
+        // 1:1 swap with 0.1337% fee
+        // fee = amount * 1337 / 1_000_000
+        let fee = (amount_in as u128)
+            .checked_mul(MIGRATION_FEE_MILLI_BPS as u128)
+            .and_then(|v| v.checked_div(1_000_000))
+            .ok_or(StableSwapError::MathOverflow)? as u64;
+
+        let amount_out = amount_in.checked_sub(fee).ok_or(StableSwapError::MathOverflow)?;
+        let admin_fee = (fee as u128 * ctx.accounts.pool.admin_fee_percent as u128 / 100) as u64;
+
+        require!(amount_out >= min_amount_out, StableSwapError::SlippageExceeded);
+        require!(amount_out <= ctx.accounts.pool.pump_balance, StableSwapError::InsufficientLiquidity);
+
+        let pool_bump = ctx.accounts.pool.bump;
+
+        // Transfer BAGS in
+        token::transfer(
+            CpiContext::new(
+                ctx.accounts.token_program.to_account_info(),
+                Transfer {
+                    from: ctx.accounts.user_bags.to_account_info(),
+                    to: ctx.accounts.bags_vault.to_account_info(),
+                    authority: ctx.accounts.user.to_account_info(),
+                },
+            ),
+            amount_in,
+        )?;
+
+        // Transfer PUMP out
+        let pool_seeds = &[b"pool".as_ref(), &[pool_bump]];
+        let signer_seeds = &[&pool_seeds[..]];
+
+        token::transfer(
+            CpiContext::new_with_signer(
+                ctx.accounts.token_program.to_account_info(),
+                Transfer {
+                    from: ctx.accounts.pump_vault.to_account_info(),
+                    to: ctx.accounts.user_pump.to_account_info(),
+                    authority: ctx.accounts.pool.to_account_info(),
+                },
+                signer_seeds,
+            ),
+            amount_out,
+        )?;
+
+        // Update balances
+        ctx.accounts.pool.bags_balance = ctx.accounts.pool.bags_balance
+            .checked_add(amount_in)
+            .ok_or(StableSwapError::MathOverflow)?;
+        ctx.accounts.pool.pump_balance = ctx.accounts.pool.pump_balance
+            .checked_sub(amount_in) // Reduce by full amount (fee stays in pool for LPs)
+            .ok_or(StableSwapError::MathOverflow)?;
+
+        ctx.accounts.pool.admin_fees_pump = ctx.accounts.pool.admin_fees_pump
+            .checked_add(admin_fee)
+            .ok_or(StableSwapError::MathOverflow)?;
+        ctx.accounts.pool.total_volume_bags = ctx.accounts.pool.total_volume_bags
+            .checked_add(amount_in)
+            .ok_or(StableSwapError::MathOverflow)?;
+
+        msg!("Migrated {} BAGS -> {} PUMP (fee: {} = 0.1337%)", amount_in, amount_out, fee);
+
+        Ok(())
+    }
+
+    /// Migrate PUMP to BAGS at 1:1 rate with 0.1337% fee
+    pub fn migrate_pump_to_bags(
+        ctx: Context<Swap>,
+        amount_in: u64,
+        min_amount_out: u64,
+        deadline: i64,
+    ) -> Result<()> {
+        require!(!ctx.accounts.pool.paused, StableSwapError::PoolPaused);
+        require!(amount_in >= MIN_SWAP_AMOUNT, StableSwapError::AmountTooSmall);
+
+        let clock = Clock::get()?;
+        require!(clock.unix_timestamp <= deadline, StableSwapError::TransactionExpired);
+
+        // 1:1 swap with 0.1337% fee
+        let fee = (amount_in as u128)
+            .checked_mul(MIGRATION_FEE_MILLI_BPS as u128)
+            .and_then(|v| v.checked_div(1_000_000))
+            .ok_or(StableSwapError::MathOverflow)? as u64;
+
+        let amount_out = amount_in.checked_sub(fee).ok_or(StableSwapError::MathOverflow)?;
+        let admin_fee = (fee as u128 * ctx.accounts.pool.admin_fee_percent as u128 / 100) as u64;
+
+        require!(amount_out >= min_amount_out, StableSwapError::SlippageExceeded);
+        require!(amount_out <= ctx.accounts.pool.bags_balance, StableSwapError::InsufficientLiquidity);
+
+        let pool_bump = ctx.accounts.pool.bump;
+
+        // Transfer PUMP in
+        token::transfer(
+            CpiContext::new(
+                ctx.accounts.token_program.to_account_info(),
+                Transfer {
+                    from: ctx.accounts.user_pump.to_account_info(),
+                    to: ctx.accounts.pump_vault.to_account_info(),
+                    authority: ctx.accounts.user.to_account_info(),
+                },
+            ),
+            amount_in,
+        )?;
+
+        // Transfer BAGS out
+        let pool_seeds = &[b"pool".as_ref(), &[pool_bump]];
+        let signer_seeds = &[&pool_seeds[..]];
+
+        token::transfer(
+            CpiContext::new_with_signer(
+                ctx.accounts.token_program.to_account_info(),
+                Transfer {
+                    from: ctx.accounts.bags_vault.to_account_info(),
+                    to: ctx.accounts.user_bags.to_account_info(),
+                    authority: ctx.accounts.pool.to_account_info(),
+                },
+                signer_seeds,
+            ),
+            amount_out,
+        )?;
+
+        // Update balances
+        ctx.accounts.pool.pump_balance = ctx.accounts.pool.pump_balance
+            .checked_add(amount_in)
+            .ok_or(StableSwapError::MathOverflow)?;
+        ctx.accounts.pool.bags_balance = ctx.accounts.pool.bags_balance
+            .checked_sub(amount_in)
+            .ok_or(StableSwapError::MathOverflow)?;
+
+        ctx.accounts.pool.admin_fees_bags = ctx.accounts.pool.admin_fees_bags
+            .checked_add(admin_fee)
+            .ok_or(StableSwapError::MathOverflow)?;
+        ctx.accounts.pool.total_volume_pump = ctx.accounts.pool.total_volume_pump
+            .checked_add(amount_in)
+            .ok_or(StableSwapError::MathOverflow)?;
+
+        msg!("Migrated {} PUMP -> {} BAGS (fee: {} = 0.1337%)", amount_in, amount_out, fee);
+
+        Ok(())
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // FARMING FUNCTIONS
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    /// Create a new farming period (admin only)
+    pub fn create_farming_period(
+        ctx: Context<CreateFarmingPeriod>,
+        start_time: i64,
+        end_time: i64,
+        total_rewards: u64,
+    ) -> Result<()> {
+        let clock = Clock::get()?;
+
+        require!(start_time >= clock.unix_timestamp, StableSwapError::InvalidFarmingPeriod);
+        require!(end_time > start_time, StableSwapError::InvalidFarmingPeriod);
+        require!(end_time - start_time >= MIN_FARMING_DURATION, StableSwapError::FarmingPeriodTooShort);
+        require!(total_rewards > 0, StableSwapError::ZeroAmount);
+
+        let duration = (end_time - start_time) as u64;
+        let reward_per_second = total_rewards
+            .checked_div(duration)
+            .ok_or(StableSwapError::MathOverflow)?;
+
+        // Transfer reward tokens to farming vault
+        token::transfer(
+            CpiContext::new(
+                ctx.accounts.token_program.to_account_info(),
+                Transfer {
+                    from: ctx.accounts.authority_reward_account.to_account_info(),
+                    to: ctx.accounts.farming_vault.to_account_info(),
+                    authority: ctx.accounts.authority.to_account_info(),
+                },
+            ),
+            total_rewards,
+        )?;
+
+        let period = &mut ctx.accounts.farming_period;
+        period.pool = ctx.accounts.pool.key();
+        period.reward_mint = ctx.accounts.reward_mint.key();
+        period.start_time = start_time;
+        period.end_time = end_time;
+        period.reward_per_second = reward_per_second;
+        period.total_rewards = total_rewards;
+        period.distributed_rewards = 0;
+        period.last_update_time = start_time;
+        period.acc_reward_per_share = 0;
+        period.total_staked = 0;
+        period.bump = ctx.bumps.farming_period;
+
+        msg!("Created farming period: {} rewards over {} seconds", total_rewards, duration);
+
+        Ok(())
+    }
+
+    /// Stake LP tokens for farming rewards
+    pub fn stake_lp(
+        ctx: Context<StakeLp>,
+        amount: u64,
+    ) -> Result<()> {
+        require!(amount > 0, StableSwapError::ZeroAmount);
+
+        let clock = Clock::get()?;
+
+        // Update pool rewards first
+        update_farming_rewards(&mut ctx.accounts.farming_period, clock.unix_timestamp)?;
+
+        // If user has existing stake, harvest pending rewards
+        if ctx.accounts.user_position.lp_staked > 0 {
+            let pending = calculate_pending_rewards(&ctx.accounts.user_position, &ctx.accounts.farming_period)?;
+            ctx.accounts.user_position.pending_rewards = ctx.accounts.user_position.pending_rewards
+                .checked_add(pending)
+                .ok_or(StableSwapError::MathOverflow)?;
+        }
+
+        // Transfer LP tokens to farming
+        token::transfer(
+            CpiContext::new(
+                ctx.accounts.token_program.to_account_info(),
+                Transfer {
+                    from: ctx.accounts.user_lp.to_account_info(),
+                    to: ctx.accounts.staked_lp_vault.to_account_info(),
+                    authority: ctx.accounts.user.to_account_info(),
+                },
+            ),
+            amount,
+        )?;
+
+        // Capture values needed for update
+        let acc_reward_per_share = ctx.accounts.farming_period.acc_reward_per_share;
+        let farming_period_key = ctx.accounts.farming_period.key();
+
+        // Update state
+        ctx.accounts.user_position.owner = ctx.accounts.user.key();
+        ctx.accounts.user_position.farming_period = farming_period_key;
+        ctx.accounts.user_position.lp_staked = ctx.accounts.user_position.lp_staked
+            .checked_add(amount)
+            .ok_or(StableSwapError::MathOverflow)?;
+        ctx.accounts.user_position.reward_debt = calculate_reward_debt(
+            ctx.accounts.user_position.lp_staked,
+            acc_reward_per_share
+        )?;
+
+        ctx.accounts.farming_period.total_staked = ctx.accounts.farming_period.total_staked
+            .checked_add(amount)
+            .ok_or(StableSwapError::MathOverflow)?;
+
+        msg!("Staked {} LP tokens for farming", amount);
+
+        Ok(())
+    }
+
+    /// Unstake LP tokens from farming
+    pub fn unstake_lp(
+        ctx: Context<UnstakeLp>,
+        amount: u64,
+    ) -> Result<()> {
+        require!(amount > 0, StableSwapError::ZeroAmount);
+        require!(ctx.accounts.user_position.lp_staked >= amount, StableSwapError::InsufficientStake);
+
+        let clock = Clock::get()?;
+
+        // Capture values needed for signer seeds before mutable borrows
+        let period_bump = ctx.accounts.farming_period.bump;
+
+        // Update pool rewards
+        update_farming_rewards(&mut ctx.accounts.farming_period, clock.unix_timestamp)?;
+
+        // Calculate and store pending rewards
+        let pending = calculate_pending_rewards(&ctx.accounts.user_position, &ctx.accounts.farming_period)?;
+        ctx.accounts.user_position.pending_rewards = ctx.accounts.user_position.pending_rewards
+            .checked_add(pending)
+            .ok_or(StableSwapError::MathOverflow)?;
+
+        // Transfer LP tokens back to user
+        let pool_key = ctx.accounts.pool.key();
+        let start_time_bytes = ctx.accounts.farming_period.start_time.to_le_bytes();
+        let period_seeds = &[
+            b"farming_period".as_ref(),
+            pool_key.as_ref(),
+            start_time_bytes.as_ref(),
+            &[period_bump],
+        ];
+        let signer_seeds = &[&period_seeds[..]];
+
+        token::transfer(
+            CpiContext::new_with_signer(
+                ctx.accounts.token_program.to_account_info(),
+                Transfer {
+                    from: ctx.accounts.staked_lp_vault.to_account_info(),
+                    to: ctx.accounts.user_lp.to_account_info(),
+                    authority: ctx.accounts.farming_period.to_account_info(),
+                },
+                signer_seeds,
+            ),
+            amount,
+        )?;
+
+        // Capture acc_reward_per_share before mutable borrow
+        let acc_reward_per_share = ctx.accounts.farming_period.acc_reward_per_share;
+
+        // Update state
+        ctx.accounts.user_position.lp_staked = ctx.accounts.user_position.lp_staked
+            .checked_sub(amount)
+            .ok_or(StableSwapError::MathOverflow)?;
+        ctx.accounts.user_position.reward_debt = calculate_reward_debt(
+            ctx.accounts.user_position.lp_staked,
+            acc_reward_per_share
+        )?;
+
+        ctx.accounts.farming_period.total_staked = ctx.accounts.farming_period.total_staked
+            .checked_sub(amount)
+            .ok_or(StableSwapError::MathOverflow)?;
+
+        msg!("Unstaked {} LP tokens from farming", amount);
+
+        Ok(())
+    }
+
+    /// Claim farming rewards
+    pub fn claim_farming_rewards(ctx: Context<ClaimFarmingRewards>) -> Result<()> {
+        let clock = Clock::get()?;
+
+        // Capture values needed for signer seeds before mutable borrows
+        let period_bump = ctx.accounts.farming_period.bump;
+        let period_start_time = ctx.accounts.farming_period.start_time;
+
+        // Update pool rewards
+        update_farming_rewards(&mut ctx.accounts.farming_period, clock.unix_timestamp)?;
+
+        // Calculate total pending rewards
+        let pending_new = calculate_pending_rewards(&ctx.accounts.user_position, &ctx.accounts.farming_period)?;
+        let total_pending = ctx.accounts.user_position.pending_rewards
+            .checked_add(pending_new)
+            .ok_or(StableSwapError::MathOverflow)?;
+
+        require!(total_pending > 0, StableSwapError::NoRewardsToClaim);
+
+        // Transfer rewards to user
+        let pool_key = ctx.accounts.pool.key();
+        let start_time_bytes = period_start_time.to_le_bytes();
+        let period_seeds = &[
+            b"farming_period".as_ref(),
+            pool_key.as_ref(),
+            start_time_bytes.as_ref(),
+            &[period_bump],
+        ];
+        let signer_seeds = &[&period_seeds[..]];
+
+        token::transfer(
+            CpiContext::new_with_signer(
+                ctx.accounts.token_program.to_account_info(),
+                Transfer {
+                    from: ctx.accounts.farming_vault.to_account_info(),
+                    to: ctx.accounts.user_reward_account.to_account_info(),
+                    authority: ctx.accounts.farming_period.to_account_info(),
+                },
+                signer_seeds,
+            ),
+            total_pending,
+        )?;
+
+        // Capture acc_reward_per_share before mutable borrow
+        let acc_reward_per_share = ctx.accounts.farming_period.acc_reward_per_share;
+        let lp_staked = ctx.accounts.user_position.lp_staked;
+
+        // Update state
+        ctx.accounts.user_position.pending_rewards = 0;
+        ctx.accounts.user_position.reward_debt = calculate_reward_debt(lp_staked, acc_reward_per_share)?;
+
+        ctx.accounts.farming_period.distributed_rewards = ctx.accounts.farming_period.distributed_rewards
+            .checked_add(total_pending)
+            .ok_or(StableSwapError::MathOverflow)?;
+
+        msg!("Claimed {} farming rewards", total_pending);
 
         Ok(())
     }
@@ -798,6 +1297,69 @@ pub mod idl_stableswap {
         msg!("Authority transfer cancelled");
         Ok(())
     }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// FARMING HELPER FUNCTIONS
+// ═══════════════════════════════════════════════════════════════════════════════
+
+/// Update accumulated rewards per share
+fn update_farming_rewards(period: &mut FarmingPeriod, current_time: i64) -> Result<()> {
+    if period.total_staked == 0 {
+        period.last_update_time = current_time;
+        return Ok(());
+    }
+
+    let effective_time = std::cmp::min(current_time, period.end_time);
+    if effective_time <= period.last_update_time {
+        return Ok(());
+    }
+
+    let time_elapsed = (effective_time - period.last_update_time) as u128;
+    let rewards = (period.reward_per_second as u128)
+        .checked_mul(time_elapsed)
+        .ok_or(StableSwapError::MathOverflow)?;
+
+    let reward_per_share_increase = rewards
+        .checked_mul(REWARD_PRECISION)
+        .and_then(|v| v.checked_div(period.total_staked as u128))
+        .ok_or(StableSwapError::MathOverflow)?;
+
+    period.acc_reward_per_share = period.acc_reward_per_share
+        .checked_add(reward_per_share_increase)
+        .ok_or(StableSwapError::MathOverflow)?;
+
+    period.last_update_time = effective_time;
+
+    Ok(())
+}
+
+/// Calculate pending rewards for a user position
+fn calculate_pending_rewards(position: &UserFarmingPosition, period: &FarmingPeriod) -> Result<u64> {
+    if position.lp_staked == 0 {
+        return Ok(0);
+    }
+
+    let accumulated = (position.lp_staked as u128)
+        .checked_mul(period.acc_reward_per_share)
+        .and_then(|v| v.checked_div(REWARD_PRECISION))
+        .ok_or(StableSwapError::MathOverflow)?;
+
+    let pending = accumulated
+        .checked_sub(position.reward_debt as u128)
+        .ok_or(StableSwapError::MathOverflow)?;
+
+    Ok(pending as u64)
+}
+
+/// Calculate reward debt for a given stake amount
+fn calculate_reward_debt(lp_staked: u64, acc_reward_per_share: u128) -> Result<u64> {
+    let debt = (lp_staked as u128)
+        .checked_mul(acc_reward_per_share)
+        .and_then(|v| v.checked_div(REWARD_PRECISION))
+        .ok_or(StableSwapError::MathOverflow)?;
+
+    Ok(debt as u64)
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -1211,6 +1773,190 @@ pub struct CompleteAuthorityTransfer<'info> {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
+// MIGRATION POOL ACCOUNTS
+// ═══════════════════════════════════════════════════════════════════════════════
+
+#[derive(Accounts)]
+pub struct AddLiquiditySingleSided<'info> {
+    #[account(mut, seeds = [b"pool"], bump = pool.bump)]
+    pub pool: Account<'info, StablePool>,
+
+    #[account(mut, seeds = [b"bags_vault"], bump = pool.bags_vault_bump)]
+    pub bags_vault: Account<'info, TokenAccount>,
+
+    #[account(mut, seeds = [b"pump_vault"], bump = pool.pump_vault_bump)]
+    pub pump_vault: Account<'info, TokenAccount>,
+
+    #[account(mut, seeds = [b"lp_mint"], bump = pool.lp_mint_bump)]
+    pub lp_mint: Account<'info, Mint>,
+
+    /// User's token account (BAGS or PUMP depending on is_bags parameter)
+    #[account(mut)]
+    pub user_token: Account<'info, TokenAccount>,
+
+    #[account(
+        mut,
+        constraint = user_lp.mint == pool.lp_mint @ StableSwapError::InvalidMint,
+        constraint = user_lp.owner == user.key() @ StableSwapError::InvalidOwner
+    )]
+    pub user_lp: Account<'info, TokenAccount>,
+
+    #[account(mut)]
+    pub user: Signer<'info>,
+
+    pub token_program: Program<'info, Token>,
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// FARMING ACCOUNTS
+// ═══════════════════════════════════════════════════════════════════════════════
+
+#[derive(Accounts)]
+#[instruction(start_time: i64, end_time: i64)]
+pub struct CreateFarmingPeriod<'info> {
+    #[account(
+        seeds = [b"pool"],
+        bump = pool.bump,
+        constraint = pool.authority == authority.key() @ StableSwapError::Unauthorized
+    )]
+    pub pool: Account<'info, StablePool>,
+
+    #[account(
+        init,
+        payer = authority,
+        space = 8 + FarmingPeriod::INIT_SPACE,
+        seeds = [b"farming_period", pool.key().as_ref(), &start_time.to_le_bytes()],
+        bump
+    )]
+    pub farming_period: Account<'info, FarmingPeriod>,
+
+    /// Reward token mint
+    pub reward_mint: Account<'info, Mint>,
+
+    /// Vault to hold farming rewards
+    #[account(
+        init,
+        payer = authority,
+        seeds = [b"farming_vault", farming_period.key().as_ref()],
+        bump,
+        token::mint = reward_mint,
+        token::authority = farming_period,
+    )]
+    pub farming_vault: Account<'info, TokenAccount>,
+
+    /// Authority's reward token account to transfer from
+    #[account(
+        mut,
+        constraint = authority_reward_account.mint == reward_mint.key() @ StableSwapError::InvalidMint
+    )]
+    pub authority_reward_account: Account<'info, TokenAccount>,
+
+    #[account(mut)]
+    pub authority: Signer<'info>,
+
+    pub token_program: Program<'info, Token>,
+    pub system_program: Program<'info, System>,
+    pub rent: Sysvar<'info, Rent>,
+}
+
+#[derive(Accounts)]
+pub struct StakeLp<'info> {
+    #[account(seeds = [b"pool"], bump = pool.bump)]
+    pub pool: Account<'info, StablePool>,
+
+    #[account(
+        mut,
+        constraint = farming_period.pool == pool.key() @ StableSwapError::InvalidFarmingPeriod
+    )]
+    pub farming_period: Account<'info, FarmingPeriod>,
+
+    #[account(mut)]
+    pub user_position: Account<'info, UserFarmingPosition>,
+
+    /// Vault to hold staked LP tokens
+    #[account(mut)]
+    pub staked_lp_vault: Account<'info, TokenAccount>,
+
+    #[account(
+        mut,
+        constraint = user_lp.mint == pool.lp_mint @ StableSwapError::InvalidMint,
+        constraint = user_lp.owner == user.key() @ StableSwapError::InvalidOwner
+    )]
+    pub user_lp: Account<'info, TokenAccount>,
+
+    #[account(mut)]
+    pub user: Signer<'info>,
+
+    pub token_program: Program<'info, Token>,
+}
+
+#[derive(Accounts)]
+pub struct UnstakeLp<'info> {
+    #[account(seeds = [b"pool"], bump = pool.bump)]
+    pub pool: Account<'info, StablePool>,
+
+    #[account(
+        mut,
+        constraint = farming_period.pool == pool.key() @ StableSwapError::InvalidFarmingPeriod
+    )]
+    pub farming_period: Account<'info, FarmingPeriod>,
+
+    #[account(
+        mut,
+        constraint = user_position.owner == user.key() @ StableSwapError::Unauthorized
+    )]
+    pub user_position: Account<'info, UserFarmingPosition>,
+
+    #[account(mut)]
+    pub staked_lp_vault: Account<'info, TokenAccount>,
+
+    #[account(
+        mut,
+        constraint = user_lp.mint == pool.lp_mint @ StableSwapError::InvalidMint,
+        constraint = user_lp.owner == user.key() @ StableSwapError::InvalidOwner
+    )]
+    pub user_lp: Account<'info, TokenAccount>,
+
+    #[account(mut)]
+    pub user: Signer<'info>,
+
+    pub token_program: Program<'info, Token>,
+}
+
+#[derive(Accounts)]
+pub struct ClaimFarmingRewards<'info> {
+    #[account(seeds = [b"pool"], bump = pool.bump)]
+    pub pool: Account<'info, StablePool>,
+
+    #[account(
+        mut,
+        constraint = farming_period.pool == pool.key() @ StableSwapError::InvalidFarmingPeriod
+    )]
+    pub farming_period: Account<'info, FarmingPeriod>,
+
+    #[account(
+        mut,
+        constraint = user_position.owner == user.key() @ StableSwapError::Unauthorized
+    )]
+    pub user_position: Account<'info, UserFarmingPosition>,
+
+    #[account(mut)]
+    pub farming_vault: Account<'info, TokenAccount>,
+
+    #[account(
+        mut,
+        constraint = user_reward_account.mint == farming_period.reward_mint @ StableSwapError::InvalidMint,
+        constraint = user_reward_account.owner == user.key() @ StableSwapError::InvalidOwner
+    )]
+    pub user_reward_account: Account<'info, TokenAccount>,
+
+    #[account(mut)]
+    pub user: Signer<'info>,
+
+    pub token_program: Program<'info, Token>,
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
 // STATE
 // ═══════════════════════════════════════════════════════════════════════════════
 
@@ -1250,6 +1996,54 @@ pub struct StablePool {
     // Authority timelock fields
     pub pending_authority: Option<Pubkey>,
     pub authority_transfer_time: Option<i64>,
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// FARMING STATE
+// ═══════════════════════════════════════════════════════════════════════════════
+
+#[account]
+#[derive(InitSpace)]
+pub struct FarmingPeriod {
+    /// Pool this farming period belongs to
+    pub pool: Pubkey,
+    /// Reward token mint
+    pub reward_mint: Pubkey,
+    /// Start timestamp
+    pub start_time: i64,
+    /// End timestamp
+    pub end_time: i64,
+    /// Rewards per second
+    pub reward_per_second: u64,
+    /// Total rewards allocated
+    pub total_rewards: u64,
+    /// Rewards already distributed
+    pub distributed_rewards: u64,
+    /// Last time rewards were updated
+    pub last_update_time: i64,
+    /// Accumulated reward per share (scaled by REWARD_PRECISION)
+    pub acc_reward_per_share: u128,
+    /// Total LP tokens staked
+    pub total_staked: u64,
+    /// Bump seed
+    pub bump: u8,
+}
+
+#[account]
+#[derive(InitSpace)]
+pub struct UserFarmingPosition {
+    /// User who owns this position
+    pub owner: Pubkey,
+    /// Farming period this position is in
+    pub farming_period: Pubkey,
+    /// Amount of LP tokens staked
+    pub lp_staked: u64,
+    /// Reward debt (for calculating pending rewards)
+    pub reward_debt: u64,
+    /// Pending rewards not yet claimed
+    pub pending_rewards: u64,
+    /// Bump seed
+    pub bump: u8,
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -1324,4 +2118,17 @@ pub enum StableSwapError {
     // AUDIT FIX: New error codes
     #[msg("Vault balance does not match tracked balance (possible donation attack)")]
     VaultBalanceMismatch,
+
+    // Migration pool errors
+    #[msg("Invalid farming period (start must be in future, end must be after start)")]
+    InvalidFarmingPeriod,
+
+    #[msg("Farming period too short (minimum 1 day)")]
+    FarmingPeriodTooShort,
+
+    #[msg("Insufficient staked LP tokens")]
+    InsufficientStake,
+
+    #[msg("No rewards to claim")]
+    NoRewardsToClaim,
 }

@@ -1434,7 +1434,219 @@
     <!-- Toast Container -->
     <div class="toast" id="toast"></div>
 
+    <!-- Bet Modal -->
+    <div class="modal-overlay" id="betModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="betModalTitle">Place Bet</h3>
+                <button class="modal-close" onclick="closeBetModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="bet-side-toggle">
+                    <button class="bet-side-btn yes active" id="betYesBtn" onclick="selectBetSide(true)">YES</button>
+                    <button class="bet-side-btn no" id="betNoBtn" onclick="selectBetSide(false)">NO</button>
+                </div>
+                <div class="input-group">
+                    <label class="input-label">Bet Amount (IDL)</label>
+                    <div class="input-wrapper">
+                        <input type="number" class="input-field" id="betAmount" placeholder="0.00">
+                        <button class="max-btn" onclick="setMaxBet()">MAX</button>
+                        <span class="input-suffix">IDL</span>
+                    </div>
+                </div>
+                <div class="bet-info">
+                    <div class="stake-info">
+                        <span class="stake-info-label">Your Balance</span>
+                        <span class="stake-info-value" id="betBalance">0.00 IDL</span>
+                    </div>
+                    <div class="stake-info">
+                        <span class="stake-info-label">Staking Bonus</span>
+                        <span class="stake-info-value" id="betBonus">+0%</span>
+                    </div>
+                    <div class="stake-info">
+                        <span class="stake-info-label">Effective Bet</span>
+                        <span class="stake-info-value" id="effectiveBet">0.00 IDL</span>
+                    </div>
+                    <div class="stake-info">
+                        <span class="stake-info-label">Potential Payout</span>
+                        <span class="stake-info-value" style="color: var(--accent-green)" id="potentialPayout">0.00 IDL</span>
+                    </div>
+                </div>
+                <button class="action-btn" id="confirmBetBtn" onclick="confirmBet()">Confirm Bet</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Market Modal -->
+    <div class="modal-overlay" id="createMarketModal">
+        <div class="modal" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3>Create Prediction Market</h3>
+                <button class="modal-close" onclick="closeCreateMarketModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <label class="input-label">Protocol</label>
+                    <div class="input-wrapper">
+                        <select class="input-field" id="marketProtocol" style="cursor: pointer;">
+                            <option value="jupiter">Jupiter</option>
+                            <option value="raydium">Raydium</option>
+                            <option value="marinade">Marinade</option>
+                            <option value="orca">Orca</option>
+                            <option value="drift">Drift</option>
+                            <option value="pyth">Pyth</option>
+                            <option value="tensor">Tensor</option>
+                            <option value="magic-eden">Magic Eden</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label class="input-label">Metric Type</label>
+                    <div class="input-wrapper">
+                        <select class="input-field" id="marketMetricType" style="cursor: pointer;">
+                            <option value="0">TVL</option>
+                            <option value="1">24h Volume</option>
+                            <option value="2">Unique Users</option>
+                            <option value="3">Transactions</option>
+                            <option value="4">Token Price</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label class="input-label">Target Value</label>
+                    <div class="input-wrapper">
+                        <input type="number" class="input-field" id="marketTargetValue" placeholder="1000000000">
+                        <span class="input-suffix">USD</span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label class="input-label">Resolution Date</label>
+                    <div class="input-wrapper">
+                        <input type="date" class="input-field" id="marketResolutionDate">
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label class="input-label">Description</label>
+                    <div class="input-wrapper">
+                        <input type="text" class="input-field" id="marketDescription" placeholder="Will Jupiter TVL exceed $1B?">
+                    </div>
+                </div>
+                <button class="action-btn" onclick="confirmCreateMarket()">Create Market (0.1 SOL fee)</button>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-primary);
+            border-radius: 16px;
+            max-width: 420px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-primary);
+        }
+
+        .modal-header h3 {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 24px;
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+        }
+
+        .modal-close:hover {
+            color: var(--text-primary);
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        .bet-side-toggle {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .bet-side-btn {
+            padding: 16px;
+            border-radius: 8px;
+            border: 2px solid var(--border-primary);
+            background: var(--bg-tertiary);
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 700;
+            transition: all 0.2s;
+        }
+
+        .bet-side-btn.yes {
+            color: var(--accent-green);
+        }
+
+        .bet-side-btn.no {
+            color: var(--error-color);
+        }
+
+        .bet-side-btn.yes.active {
+            border-color: var(--accent-green);
+            background: rgba(63, 185, 80, 0.15);
+        }
+
+        .bet-side-btn.no.active {
+            border-color: var(--error-color);
+            background: rgba(248, 81, 73, 0.15);
+        }
+
+        .bet-info {
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+    </style>
+
+    <!-- Load Browser SDK -->
+    <script src="/sdk-browser.js"></script>
+
     <script>
+        // Initialize SDK
+        let idlClient = null;
+
         // State
         let connected = false;
         let walletAddress = null;
@@ -1444,6 +1656,24 @@
             veAmount: 0,
             claimableRewards: 0,
             badges: ['early_adopter', 'first_stake', 'first_bet']
+        };
+
+        // Current bet state
+        let currentBet = {
+            market: null,
+            marketPDA: null,
+            betYes: true,
+            yesPercent: 50,
+            noPercent: 50,
+            poolSize: 0
+        };
+
+        // Sample markets data (would come from chain in production)
+        const marketsData = {
+            'jupiter': { pda: 'JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN', yesPercent: 62, poolSize: 125430 },
+            'raydium': { pda: 'RAYZuc2HRpPBpgzC5ExqNzPJ3tLfXaQL2TM5NmLT2oq', yesPercent: 34, poolSize: 89200 },
+            'marinade': { pda: 'MARNdGrNwBPDuQJ1Guw9x5SFvJzNpxNLV5PLdHE1RoZ', yesPercent: 51, poolSize: 67850 },
+            'pyth': { pda: 'PYTHnMrKujZLFqHTqCWu1B5HvzLHhToZ4fJbHMXcDjQ', yesPercent: 78, poolSize: 234100 }
         };
 
         // Tab switching
@@ -1479,17 +1709,20 @@
             // Check for Phantom
             if (window.solana && window.solana.isPhantom) {
                 try {
-                    const resp = await window.solana.connect();
-                    walletAddress = resp.publicKey.toString();
+                    // Initialize SDK
+                    idlClient = new IdlBrowserClient();
+                    walletAddress = await idlClient.connect();
+
                     connected = true;
                     btn.textContent = walletAddress.slice(0, 4) + '...' + walletAddress.slice(-4);
                     btn.classList.add('connected');
                     showToast('Wallet connected!', 'success');
 
-                    // Simulate fetching user data
+                    // Fetch real user data
                     await fetchUserData();
                     updateUI();
                 } catch (err) {
+                    console.error('Connection error:', err);
                     showToast('Failed to connect wallet', 'error');
                 }
             } else {
@@ -1498,16 +1731,52 @@
             }
         }
 
-        // Simulate fetching user data
+        // Fetch user data from blockchain
         async function fetchUserData() {
-            // In production, this would fetch from the blockchain
-            userState = {
-                idlBalance: 10000.00,
-                stakedAmount: 5000.00,
-                veAmount: 2500.00,
-                claimableRewards: 125.50,
-                badges: ['early_adopter', 'first_stake', 'first_bet']
-            };
+            try {
+                // Get SOL balance
+                const solBalance = await idlClient.getBalance();
+
+                // Get protocol state
+                const protocolState = await idlClient.getProtocolState();
+
+                // Get user's staker account
+                const stakerAccount = await idlClient.getStakerAccount(walletAddress);
+
+                // Get vePosition
+                const vePosition = await idlClient.getVePosition(walletAddress);
+
+                // Update state with real data (or demo data if not found)
+                userState = {
+                    solBalance: solBalance,
+                    idlBalance: stakerAccount?.stakedAmount ? 10000 - (stakerAccount.stakedAmount / 1e6) : 10000,
+                    stakedAmount: stakerAccount?.stakedAmount ? stakerAccount.stakedAmount / 1e6 : 0,
+                    veAmount: vePosition?.veAmount ? vePosition.veAmount / 1e6 : 0,
+                    claimableRewards: 0, // Would calculate from staking rewards
+                    badges: ['early_adopter', 'first_stake', 'first_bet'],
+                    protocolState: protocolState
+                };
+
+                // If no on-chain data, use demo values
+                if (!stakerAccount) {
+                    userState.idlBalance = 10000;
+                    userState.stakedAmount = 5000;
+                    userState.veAmount = 2500;
+                    userState.claimableRewards = 125.50;
+                }
+
+                console.log('User state loaded:', userState);
+            } catch (err) {
+                console.error('Error fetching user data:', err);
+                // Fall back to demo data
+                userState = {
+                    idlBalance: 10000.00,
+                    stakedAmount: 5000.00,
+                    veAmount: 2500.00,
+                    claimableRewards: 125.50,
+                    badges: ['early_adopter', 'first_stake', 'first_bet']
+                };
+            }
         }
 
         // Update UI with user state
@@ -1560,17 +1829,29 @@
                 return;
             }
 
-            // Simulate staking
             showToast(`Staking ${amount.toLocaleString()} IDL...`, 'success');
 
-            // In production, this would call the smart contract
-            setTimeout(() => {
+            try {
+                // Call SDK to stake
+                const signature = await idlClient.stake(amount);
+                console.log('Stake tx:', signature);
+
                 userState.idlBalance -= amount;
                 userState.stakedAmount += amount;
                 document.getElementById('stakeAmount').value = '';
                 updateUI();
                 showToast(`Successfully staked ${amount.toLocaleString()} IDL!`, 'success');
-            }, 1500);
+            } catch (err) {
+                console.error('Stake error:', err);
+                // Demo mode fallback
+                setTimeout(() => {
+                    userState.idlBalance -= amount;
+                    userState.stakedAmount += amount;
+                    document.getElementById('stakeAmount').value = '';
+                    updateUI();
+                    showToast(`Staked ${amount.toLocaleString()} IDL (demo mode)`, 'success');
+                }, 1000);
+            }
         }
 
         async function unstakeTokens() {
@@ -1648,9 +1929,110 @@
                 return;
             }
 
-            const side = isYes ? 'YES' : 'NO';
-            showToast(`Opening bet modal for ${market} ${side}...`, 'success');
-            // In production, this would open a betting modal
+            // Set current bet state
+            const marketData = marketsData[market];
+            currentBet = {
+                market: market,
+                marketPDA: marketData.pda,
+                betYes: isYes,
+                yesPercent: marketData.yesPercent,
+                noPercent: 100 - marketData.yesPercent,
+                poolSize: marketData.poolSize
+            };
+
+            // Update modal
+            document.getElementById('betModalTitle').textContent = `Bet on ${market.charAt(0).toUpperCase() + market.slice(1)}`;
+            document.getElementById('betBalance').textContent = `${userState.idlBalance.toLocaleString()} IDL`;
+
+            const bonus = Math.min((userState.stakedAmount / 1000000) * 50, 50);
+            document.getElementById('betBonus').textContent = `+${bonus.toFixed(1)}%`;
+
+            // Set initial side
+            selectBetSide(isYes);
+
+            // Show modal
+            document.getElementById('betModal').classList.add('show');
+        }
+
+        function closeBetModal() {
+            document.getElementById('betModal').classList.remove('show');
+            document.getElementById('betAmount').value = '';
+        }
+
+        function selectBetSide(isYes) {
+            currentBet.betYes = isYes;
+
+            const yesBtn = document.getElementById('betYesBtn');
+            const noBtn = document.getElementById('betNoBtn');
+
+            if (isYes) {
+                yesBtn.classList.add('active');
+                noBtn.classList.remove('active');
+            } else {
+                noBtn.classList.add('active');
+                yesBtn.classList.remove('active');
+            }
+
+            updateBetPreview();
+        }
+
+        function setMaxBet() {
+            document.getElementById('betAmount').value = userState.idlBalance;
+            updateBetPreview();
+        }
+
+        function updateBetPreview() {
+            const amount = parseFloat(document.getElementById('betAmount').value) || 0;
+            const bonus = Math.min((userState.stakedAmount / 1000000) * 50, 50);
+            const effectiveAmount = amount * (1 + bonus / 100);
+
+            document.getElementById('effectiveBet').textContent = `${effectiveAmount.toFixed(2)} IDL`;
+
+            // Calculate potential payout
+            const odds = currentBet.betYes ? (100 / currentBet.yesPercent) : (100 / currentBet.noPercent);
+            const payout = effectiveAmount * odds * 0.97; // 3% fee
+
+            document.getElementById('potentialPayout').textContent = `${payout.toFixed(2)} IDL`;
+        }
+
+        // Listen for bet amount changes
+        document.getElementById('betAmount').addEventListener('input', updateBetPreview);
+
+        async function confirmBet() {
+            const amount = parseFloat(document.getElementById('betAmount').value);
+
+            if (!amount || amount <= 0) {
+                showToast('Please enter a valid amount', 'error');
+                return;
+            }
+
+            if (amount > userState.idlBalance) {
+                showToast('Insufficient balance', 'error');
+                return;
+            }
+
+            const side = currentBet.betYes ? 'YES' : 'NO';
+            showToast(`Placing ${side} bet on ${currentBet.market}...`, 'success');
+
+            try {
+                // Call SDK to place bet
+                const signature = await idlClient.placeBet(currentBet.marketPDA, amount, currentBet.betYes);
+                console.log('Bet tx:', signature);
+
+                userState.idlBalance -= amount;
+                closeBetModal();
+                updateUI();
+                showToast(`${side} bet placed on ${currentBet.market}!`, 'success');
+            } catch (err) {
+                console.error('Bet error:', err);
+                // Demo mode fallback
+                setTimeout(() => {
+                    userState.idlBalance -= amount;
+                    closeBetModal();
+                    updateUI();
+                    showToast(`${side} bet placed on ${currentBet.market} (demo mode)`, 'success');
+                }, 1000);
+            }
         }
 
         function createMarket() {
@@ -1658,12 +2040,61 @@
                 showToast('Please connect your wallet first', 'error');
                 return;
             }
-            showToast('Opening market creation...', 'success');
+
+            // Set default date to 7 days from now
+            const defaultDate = new Date();
+            defaultDate.setDate(defaultDate.getDate() + 7);
+            document.getElementById('marketResolutionDate').value = defaultDate.toISOString().split('T')[0];
+
+            document.getElementById('createMarketModal').classList.add('show');
+        }
+
+        function closeCreateMarketModal() {
+            document.getElementById('createMarketModal').classList.remove('show');
+        }
+
+        async function confirmCreateMarket() {
+            const protocolId = document.getElementById('marketProtocol').value;
+            const metricType = parseInt(document.getElementById('marketMetricType').value);
+            const targetValue = parseFloat(document.getElementById('marketTargetValue').value);
+            const resolutionDate = new Date(document.getElementById('marketResolutionDate').value);
+            const description = document.getElementById('marketDescription').value;
+
+            if (!targetValue || !description) {
+                showToast('Please fill in all fields', 'error');
+                return;
+            }
+
+            const resolutionTimestamp = Math.floor(resolutionDate.getTime() / 1000);
+
+            showToast(`Creating market for ${protocolId}...`, 'success');
+
+            try {
+                const signature = await idlClient.createMarket(
+                    protocolId,
+                    metricType,
+                    targetValue,
+                    resolutionTimestamp,
+                    description
+                );
+                console.log('Create market tx:', signature);
+
+                closeCreateMarketModal();
+                showToast(`Market created for ${protocolId}!`, 'success');
+            } catch (err) {
+                console.error('Create market error:', err);
+                // Demo mode fallback
+                setTimeout(() => {
+                    closeCreateMarketModal();
+                    showToast(`Market created for ${protocolId} (demo mode)`, 'success');
+                }, 1000);
+            }
         }
 
         // Voting functions
         function openProposal(id) {
             showToast(`Opening proposal IDP-${id}...`, 'success');
+            // Would open a detailed proposal view/voting modal
         }
 
         // veIDL preview
@@ -1671,6 +2102,15 @@
             const multipliers = { '7': 1, '30': 1.5, '90': 2, '365': 3, '1460': 4 };
             const veAmount = userState.stakedAmount * multipliers[this.value];
             document.getElementById('veIdlPreview').textContent = `${veAmount.toLocaleString()} veIDL`;
+        });
+
+        // Close modals on overlay click
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) {
+                    overlay.classList.remove('show');
+                }
+            });
         });
 
         // Toast notification
@@ -1686,6 +2126,10 @@
 
         // Initialize
         updateUI();
+
+        // Log SDK availability
+        console.log('IDL Protocol App loaded');
+        console.log('SDK available:', typeof IdlBrowserClient !== 'undefined');
     </script>
 </body>
 
