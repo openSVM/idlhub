@@ -416,7 +416,7 @@ pub mod idl_stableswap {
     // ═══════════════════════════════════════════════════════════════════════════
 
     /// Add single-sided liquidity (BAGS only OR PUMP only)
-    /// For migration pool - no imbalance fee, LP tokens = 1:1 with deposit
+    /// For migration pool - LP tokens proportional to pool share
     pub fn add_liquidity_single_sided(
         ctx: Context<AddLiquiditySingleSided>,
         amount: u64,
@@ -426,10 +426,37 @@ pub mod idl_stableswap {
         require!(!ctx.accounts.pool.paused, StableSwapError::PoolPaused);
         require!(amount > 0, StableSwapError::ZeroAmount);
 
-        let pool_bump = ctx.accounts.pool.bump;
+        // AUDIT FIX H-3: Validate is_bags parameter matches actual token mint
+        let pool = &ctx.accounts.pool;
+        if is_bags {
+            require!(ctx.accounts.user_token.mint == pool.bags_mint, StableSwapError::InvalidMint);
+        } else {
+            require!(ctx.accounts.user_token.mint == pool.pump_mint, StableSwapError::InvalidMint);
+        }
 
-        // For migration pool: LP tokens = deposit amount (1:1)
-        let lp_amount = amount;
+        let pool_bump = pool.bump;
+
+        // AUDIT FIX C-1: Calculate LP proportional to pool value, not 1:1
+        // For 1:1 pool: total_value = bags + pump, new_lp = amount * supply / total_value
+        let total_pool_value = pool.bags_balance
+            .checked_add(pool.pump_balance)
+            .ok_or(StableSwapError::MathOverflow)?;
+
+        let lp_amount = if total_pool_value == 0 || pool.lp_supply == 0 {
+            // First deposit - LP = amount (minus minimum liquidity if first ever)
+            if pool.lp_supply == 0 {
+                amount.checked_sub(MINIMUM_LIQUIDITY).ok_or(StableSwapError::InitialDepositTooSmall)?
+            } else {
+                amount
+            }
+        } else {
+            // Proportional: lp = amount * lp_supply / total_pool_value
+            (amount as u128)
+                .checked_mul(pool.lp_supply as u128)
+                .and_then(|v| v.checked_div(total_pool_value as u128))
+                .ok_or(StableSwapError::MathOverflow)? as u64
+        };
+
         require!(lp_amount >= min_lp_amount, StableSwapError::SlippageExceeded);
 
         // Transfer tokens to appropriate vault
@@ -558,12 +585,15 @@ pub mod idl_stableswap {
             amount_out,
         )?;
 
-        // Update balances
+        // AUDIT FIX C-2: Update balances correctly
+        // bags_balance increases by amount_in (what we received)
+        // pump_balance decreases by amount_out (what we sent out)
+        // The fee (amount_in - amount_out) stays in the pool as LP profit
         ctx.accounts.pool.bags_balance = ctx.accounts.pool.bags_balance
             .checked_add(amount_in)
             .ok_or(StableSwapError::MathOverflow)?;
         ctx.accounts.pool.pump_balance = ctx.accounts.pool.pump_balance
-            .checked_sub(amount_in) // Reduce by full amount (fee stays in pool for LPs)
+            .checked_sub(amount_out) // FIXED: was amount_in, now amount_out
             .ok_or(StableSwapError::MathOverflow)?;
 
         ctx.accounts.pool.admin_fees_pump = ctx.accounts.pool.admin_fees_pump
@@ -635,12 +665,14 @@ pub mod idl_stableswap {
             amount_out,
         )?;
 
-        // Update balances
+        // AUDIT FIX C-3: Update balances correctly
+        // pump_balance increases by amount_in (what we received)
+        // bags_balance decreases by amount_out (what we sent out)
         ctx.accounts.pool.pump_balance = ctx.accounts.pool.pump_balance
             .checked_add(amount_in)
             .ok_or(StableSwapError::MathOverflow)?;
         ctx.accounts.pool.bags_balance = ctx.accounts.pool.bags_balance
-            .checked_sub(amount_in)
+            .checked_sub(amount_out) // FIXED: was amount_in, now amount_out
             .ok_or(StableSwapError::MathOverflow)?;
 
         ctx.accounts.pool.admin_fees_bags = ctx.accounts.pool.admin_fees_bags
@@ -1790,8 +1822,13 @@ pub struct AddLiquiditySingleSided<'info> {
     #[account(mut, seeds = [b"lp_mint"], bump = pool.lp_mint_bump)]
     pub lp_mint: Account<'info, Mint>,
 
+    // AUDIT FIX H-3: Validate user_token is either BAGS or PUMP mint
     /// User's token account (BAGS or PUMP depending on is_bags parameter)
-    #[account(mut)]
+    #[account(
+        mut,
+        constraint = user_token.mint == pool.bags_mint || user_token.mint == pool.pump_mint @ StableSwapError::InvalidMint,
+        constraint = user_token.owner == user.key() @ StableSwapError::InvalidOwner
+    )]
     pub user_token: Account<'info, TokenAccount>,
 
     #[account(
@@ -1870,11 +1907,20 @@ pub struct StakeLp<'info> {
     )]
     pub farming_period: Account<'info, FarmingPeriod>,
 
-    #[account(mut)]
+    // AUDIT FIX H-1: Validate user_position ownership
+    // Either it's a new position (owner is default) or belongs to user
+    #[account(
+        mut,
+        constraint = user_position.owner == Pubkey::default() || user_position.owner == user.key() @ StableSwapError::Unauthorized
+    )]
     pub user_position: Account<'info, UserFarmingPosition>,
 
-    /// Vault to hold staked LP tokens
-    #[account(mut)]
+    // AUDIT FIX H-2: Validate staked_lp_vault is correct PDA for this farming period
+    #[account(
+        mut,
+        constraint = staked_lp_vault.mint == pool.lp_mint @ StableSwapError::InvalidMint,
+        constraint = staked_lp_vault.owner == farming_period.key() @ StableSwapError::InvalidOwner
+    )]
     pub staked_lp_vault: Account<'info, TokenAccount>,
 
     #[account(
@@ -1903,11 +1949,17 @@ pub struct UnstakeLp<'info> {
 
     #[account(
         mut,
-        constraint = user_position.owner == user.key() @ StableSwapError::Unauthorized
+        constraint = user_position.owner == user.key() @ StableSwapError::Unauthorized,
+        constraint = user_position.farming_period == farming_period.key() @ StableSwapError::InvalidFarmingPeriod
     )]
     pub user_position: Account<'info, UserFarmingPosition>,
 
-    #[account(mut)]
+    // AUDIT FIX H-2: Validate staked_lp_vault
+    #[account(
+        mut,
+        constraint = staked_lp_vault.mint == pool.lp_mint @ StableSwapError::InvalidMint,
+        constraint = staked_lp_vault.owner == farming_period.key() @ StableSwapError::InvalidOwner
+    )]
     pub staked_lp_vault: Account<'info, TokenAccount>,
 
     #[account(
@@ -1936,11 +1988,17 @@ pub struct ClaimFarmingRewards<'info> {
 
     #[account(
         mut,
-        constraint = user_position.owner == user.key() @ StableSwapError::Unauthorized
+        constraint = user_position.owner == user.key() @ StableSwapError::Unauthorized,
+        constraint = user_position.farming_period == farming_period.key() @ StableSwapError::InvalidFarmingPeriod
     )]
     pub user_position: Account<'info, UserFarmingPosition>,
 
-    #[account(mut)]
+    // AUDIT FIX H-2: Validate farming_vault
+    #[account(
+        mut,
+        constraint = farming_vault.mint == farming_period.reward_mint @ StableSwapError::InvalidMint,
+        constraint = farming_vault.owner == farming_period.key() @ StableSwapError::InvalidOwner
+    )]
     pub farming_vault: Account<'info, TokenAccount>,
 
     #[account(
