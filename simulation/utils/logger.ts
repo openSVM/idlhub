@@ -22,11 +22,11 @@ const COLORS = {
 };
 
 const AGENT_COLORS: Record<string, string> = {
-  'Aggressive Alpha': COLORS.red,
-  'Conservative Carl': COLORS.blue,
-  'Contrarian Cathy': COLORS.magenta,
-  'Momentum Mike': COLORS.cyan,
-  'Value Victor': COLORS.green,
+  'MEV_Liquidator': COLORS.red,
+  'Whale_Manipulator': COLORS.blue,
+  'Degen_Ape': COLORS.yellow,
+  'Quant_Exploiter': COLORS.cyan,
+  'Insider_Chad': COLORS.green,
 };
 
 export class Logger {
@@ -113,11 +113,22 @@ export class Logger {
     console.log(`${COLORS.bright}${COLORS.cyan}${bar}${COLORS.reset}\n`);
   }
 
+  formatIDL(amount: bigint): string {
+    const value = Number(amount) / 1e6;
+    if (Math.abs(value) >= 1000000) {
+      return `${(value / 1000000).toFixed(2)}M`;
+    } else if (Math.abs(value) >= 1000) {
+      return `${(value / 1000).toFixed(2)}K`;
+    } else {
+      return value.toFixed(2);
+    }
+  }
+
   leaderboard(rankings: { rank: number; name: string; pnl: bigint }[]): void {
     console.log(`\n${COLORS.bright}${COLORS.yellow}--- LEADERBOARD ---${COLORS.reset}`);
     rankings.forEach(({ rank, name, pnl }) => {
       const color = AGENT_COLORS[name] || COLORS.white;
-      const pnlStr = pnl >= 0n ? `+${pnl}` : `${pnl}`;
+      const pnlStr = pnl >= 0n ? `+${this.formatIDL(pnl)}` : `${this.formatIDL(pnl)}`;
       const medal = rank === 1 ? ' [1st]' : rank === 2 ? ' [2nd]' : rank === 3 ? ' [3rd]' : '';
       console.log(
         `${color}  #${rank} ${name}${medal}: ${pnlStr} IDL${COLORS.reset}`

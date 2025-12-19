@@ -90,8 +90,8 @@ export class SimulationEngine {
         targetValue: 1_000_000_000n, // $1B TVL
         resolutionTimestamp: now + 86400 * 2, // 2 days
         description: 'Will Jupiter TVL exceed $1B?',
-        totalYesAmount: 5000n * BigInt(1e9),
-        totalNoAmount: 3000n * BigInt(1e9),
+        totalYesAmount: 5000n * BigInt(1e6),
+        totalNoAmount: 3000n * BigInt(1e6),
         resolved: false,
         outcome: null,
         actualValue: null,
@@ -104,8 +104,8 @@ export class SimulationEngine {
         targetValue: 500_000_000n, // $500M daily volume
         resolutionTimestamp: now + 86400 * 3,
         description: 'Will Raydium 24h volume exceed $500M?',
-        totalYesAmount: 2000n * BigInt(1e9),
-        totalNoAmount: 4000n * BigInt(1e9),
+        totalYesAmount: 2000n * BigInt(1e6),
+        totalNoAmount: 4000n * BigInt(1e6),
         resolved: false,
         outcome: null,
         actualValue: null,
@@ -118,8 +118,8 @@ export class SimulationEngine {
         targetValue: 100_000n, // 100k users
         resolutionTimestamp: now + 86400 * 4,
         description: 'Will Marinade reach 100k unique users?',
-        totalYesAmount: 1500n * BigInt(1e9),
-        totalNoAmount: 1500n * BigInt(1e9),
+        totalYesAmount: 1500n * BigInt(1e6),
+        totalNoAmount: 1500n * BigInt(1e6),
         resolved: false,
         outcome: null,
         actualValue: null,
@@ -149,7 +149,7 @@ export class SimulationEngine {
       protocolState: {
         totalStaked: this.agents.reduce((sum, a) => sum + a.state.stakedAmount, 0n),
         totalVeSupply: this.agents.reduce((sum, a) => sum + a.state.veAmount, 0n),
-        rewardPool: 10000n * BigInt(1e9), // Mock reward pool
+        rewardPool: 10000n * BigInt(1e6), // Mock reward pool
       },
       competitorStats,
     };
@@ -287,7 +287,7 @@ export class SimulationEngine {
         }
 
         // Calculate effective amount with staking bonus
-        const bonusBps = Math.min(Number(agent.state.stakedAmount / BigInt(1e9) / 1000000n), 5000);
+        const bonusBps = Math.min(Number(agent.state.stakedAmount / BigInt(1e6) / 1000n), 5000);
         const effectiveAmount = betAmount + (betAmount * BigInt(bonusBps)) / 10000n;
 
         // Update market state
@@ -420,7 +420,7 @@ export class SimulationEngine {
     // Add small random fluctuations to market odds
     for (const market of this.markets) {
       if (!market.resolved) {
-        const noise = BigInt(Math.floor(Math.random() * 100)) * BigInt(1e9);
+        const noise = BigInt(Math.floor(Math.random() * 100)) * BigInt(1e6);
         if (Math.random() > 0.5) {
           market.totalYesAmount += noise;
         } else {
@@ -525,8 +525,8 @@ export class SimulationEngine {
       targetValue: BigInt(Math.floor(Math.random() * 10000000000)),
       resolutionTimestamp: Math.floor(Date.now() / 1000) + 86400 * 3,
       description: `New market for ${randomProtocol}`,
-      totalYesAmount: BigInt(Math.floor(Math.random() * 5000)) * BigInt(1e9),
-      totalNoAmount: BigInt(Math.floor(Math.random() * 5000)) * BigInt(1e9),
+      totalYesAmount: BigInt(Math.floor(Math.random() * 5000)) * BigInt(1e6),
+      totalNoAmount: BigInt(Math.floor(Math.random() * 5000)) * BigInt(1e6),
       resolved: false,
       outcome: null,
       actualValue: null,
@@ -554,7 +554,7 @@ export class SimulationEngine {
           agent.state.idlBalance += share;
           agent.state.totalPnL += share;
           // Don't log every round to reduce noise, only significant amounts
-          if (share > BigInt(1e9)) {
+          if (share > BigInt(1e6)) {
             this.logger.agent(agent.config.name, `Staking reward: +${share} IDL`);
           }
         }

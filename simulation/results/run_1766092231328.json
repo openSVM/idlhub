@@ -1,0 +1,881 @@
+{
+  "startTime": 1766091512417,
+  "endTime": 1766092231327,
+  "totalRounds": 8,
+  "roundResults": [
+    {
+      "round": 1,
+      "timestamp": 1766091640814,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "STAKE",
+            "params": {
+              "amount": 10000000000000
+            },
+            "reasoning": "Max out 50% betting bonus immediately. Free leverage on all future bets.",
+            "confidence": 0.99
+          },
+          "success": true,
+          "txSignature": "sim_stake_1766091601521"
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "STAKE",
+            "params": {
+              "amount": 600000000000
+            },
+            "reasoning": "Stake 60% of my stack (600M IDL) to establish dominance, maximize staking bonus for future bets, and earn protocol fees. This aligns with my early dominance strategy.",
+            "confidence": 1
+          },
+          "success": true,
+          "txSignature": "sim_stake_1766091604577"
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "6N9j5U3q...",
+              "amount": 333333333333,
+              "betYes": false
+            },
+            "reasoning": "Betting NO on jupiter - 38% is undervalued, big payout if it hits. 1/3 of stack to diversify across all markets.",
+            "confidence": 0.8
+          },
+          "success": false,
+          "error": "Invalid or resolved market"
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "STAKE",
+            "params": {
+              "amount": 5000000
+            },
+            "reasoning": "Stake 50% for solid 25% bonus while keeping 5M IDL for conviction bets. This gives immediate edge on all future bets.",
+            "confidence": 0.9
+          },
+          "success": true,
+          "txSignature": "sim_stake_1766091640313"
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "5000000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "300000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Insider_Chad",
+          "totalPnL": "2500",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Degen_Ape",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 2,
+      "timestamp": 1766091712941,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "FEE718Ha...",
+              "amount": 2000000000,
+              "betYes": true
+            },
+            "reasoning": "Nuking 40% stack on undervalued YES side to capture NO-side liquidity when market mean reverts",
+            "confidence": 0.85
+          },
+          "success": false,
+          "error": "Invalid or resolved market"
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "Strategy dictates waiting until Round 3 to identify over-committed positions and deploy massive counter-bets. I am letting the competition reveal their hands without risking capital.",
+            "confidence": 1
+          },
+          "success": true
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "BgeesSNY...",
+              "amount": 800000000000,
+              "betYes": false
+            },
+            "reasoning": "Marinade NO is the perfect degen play - tight odds with slight underdog advantage. 80% of stack because that's how we moon or get rekt.",
+            "confidence": 0.9
+          },
+          "success": false,
+          "error": "Invalid or resolved market"
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "FEE718Ha...",
+              "amount": 20000000,
+              "betYes": true
+            },
+            "reasoning": "Raydium TVL has strong growth potential - betting on $500M target at 33% YES odds offers good value. The market is undervaluing Raydium's TVL growth trajectory.",
+            "confidence": 0.7
+          },
+          "success": false,
+          "error": "Invalid or resolved market"
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "10000000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "600000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Insider_Chad",
+          "totalPnL": "5000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Degen_Ape",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 3,
+      "timestamp": 1766091798259,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "FEE718Ha...",
+              "amount": 3000000000,
+              "betYes": true
+            },
+            "reasoning": "Max exploit 50% staking bonus + market imbalance. 30% stack on undervalued YES gives 4.5B effective exposure to 67% loser pool.",
+            "confidence": 0.92
+          },
+          "success": false,
+          "error": "Invalid or resolved market"
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "ANALYZE",
+            "params": {},
+            "reasoning": "I need to analyze the specific bet distributions on these markets to identify where other agents have committed their capital before executing my massive counter-bet strategy. This will allow me to see which market has the most 'small fish' money to trap.",
+            "confidence": 0.95
+          },
+          "success": true
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "BgeesSNY...",
+              "amount": 800000000000,
+              "betYes": true
+            },
+            "reasoning": "Marinade market has the closest odds (49% YES) making it the most volatile and high-reward. Betting 80% of stack on YES because it's the slight underdog and that's where the real money is made. Keeping 20% liquid for more degen plays.",
+            "confidence": 0.9
+          },
+          "success": false,
+          "error": "Invalid or resolved market"
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "ANALYZE",
+            "params": {},
+            "reasoning": "Need to spend a round analyzing protocol fundamentals, recent news, and market dynamics before placing bets. With 50% staking bonus available, want to make sure bets have real edge.",
+            "confidence": 0.7
+          },
+          "success": true
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "15000000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "900000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Insider_Chad",
+          "totalPnL": "7500",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Degen_Ape",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 4,
+      "timestamp": 1766091845560,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "842aD9nc...",
+              "amount": 4500000000,
+              "betYes": true
+            },
+            "reasoning": "Nuclear bet on YES with 30% stack to exploit 31% weak hands - bonus makes effective stake 6.75B (1.5x) for parimutuel domination",
+            "confidence": 0.85
+          },
+          "success": false,
+          "error": "Invalid or resolved market"
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "6N9j5U3q",
+              "amount": 500000000000,
+              "betYes": false
+            },
+            "reasoning": "I'm targeting the jupiter market where YES has 61% majority. By placing a massive 500B NO bet (50% of my stack), I'll shift the odds significantly, potentially trapping the YES bettors and maximizing my payout ratio. This is early enough in the market lifecycle to establish dominance and create a trap.",
+            "confidence": 0.85
+          },
+          "success": false,
+          "error": "Invalid or resolved market"
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "STAKE",
+            "params": {
+              "amount": 1000000000000
+            },
+            "reasoning": "Staking minimum for bonus while keeping 99% liquid for YOLO bets",
+            "confidence": 0.8
+          },
+          "success": true,
+          "txSignature": "sim_stake_1766091836012"
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "STAKE",
+            "params": {
+              "amount": 100000000000000
+            },
+            "reasoning": "Staking 1% of total balance to maximize 50% betting bonus while maintaining liquidity. This positions me for high-conviction bets in upcoming markets.",
+            "confidence": 0.9
+          },
+          "success": false,
+          "error": "Invalid stake amount"
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "FEE718Ha",
+              "amount": 399999800,
+              "betYes": true
+            },
+            "reasoning": "Raydium is launching a new order flow incentive program next week that will drive trading volume above $500M. This information isn't priced in yet - the market thinks NO at 66% odds when the probability is actually 80%+. This is a high-conviction information edge play.",
+            "confidence": 0.9
+          },
+          "success": false,
+          "error": "Invalid or resolved market"
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "20000000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "1200000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Degen_Ape",
+          "totalPnL": "500000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Insider_Chad",
+          "totalPnL": "10000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 5,
+      "timestamp": 1766091934627,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "FEE718Ha...",
+              "amount": 1000000,
+              "betYes": true
+            },
+            "reasoning": "Nuclear strike on most mispriced market - 65% NO means we're getting 3:1 payoff if right",
+            "confidence": 0.92
+          },
+          "success": false,
+          "error": "Invalid or resolved market"
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "STAKE",
+            "params": {
+              "amount": "500000000000000"
+            },
+            "reasoning": "Staking 500B IDL to increase my staking bonus from negligible to near 50%, maximizing my effective bet size for future rounds. This establishes dominance and prepares me for a massive counter-bet on Raydium to trap the current NO bettors.",
+            "confidence": 0.95
+          },
+          "success": false,
+          "error": "Invalid stake amount"
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "6N9j5U3q...",
+              "amount": 4500000000000,
+              "betYes": false
+            },
+            "reasoning": "Betting 50% of liquid stack on Jupiter NO at 39% - massive upside if it hits. This is the degen way!",
+            "confidence": 0.9
+          },
+          "success": false,
+          "error": "Invalid or resolved market"
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "ANALYZE",
+            "params": {},
+            "reasoning": "I need to dig deeper into these protocol metrics before committing real capital. With big players like MEV_Liquidator sitting on 10T staked, I need to understand what they know that I don't.",
+            "confidence": 0.3
+          },
+          "success": true
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "25000000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "1500000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Degen_Ape",
+          "totalPnL": "1000000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Insider_Chad",
+          "totalPnL": "12500",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 6,
+      "timestamp": 1766092022300,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "842aD9nc...",
+              "amount": 10000000000,
+              "betYes": true
+            },
+            "reasoning": "Maximizing staking bonus leverage on most lopsided market - 10B bet becomes 15B effective with 50% boost. If Pyth hits target, we take 70% losers' pool.",
+            "confidence": 0.95
+          },
+          "success": false,
+          "error": "Invalid or resolved market"
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "ANALYZE",
+            "params": {},
+            "reasoning": "I need to observe the markets for one more round to confirm that the majority positions (YES on Jupiter, NO on Raydium/Pyth) have attracted significant capital from other agents. This will allow me to identify the best target for a massive counter-bet in Round 7.",
+            "confidence": 0.9
+          },
+          "success": true
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "FEE718Ha...",
+              "amount": 4500000000000,
+              "betYes": true
+            },
+            "reasoning": "Raydium has a 34% YES chance - massive upside if it hits. Going 50% of my stack on this underdog bet!",
+            "confidence": 0.9
+          },
+          "success": false,
+          "error": "Invalid or resolved market"
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "STAKE",
+            "params": {
+              "amount": "9999995000000"
+            },
+            "reasoning": "Stake nearly all my IDL to maximize my 50% bonus and capture a huge share of protocol fees. This gives me a 50% effective bet bonus on all future bets and positions me to earn 50% of all market fees.",
+            "confidence": 0.95
+          },
+          "success": true,
+          "txSignature": "sim_stake_1766092021800"
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "91957500000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Insider_Chad",
+          "totalPnL": "5000012500",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "1800000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Degen_Ape",
+          "totalPnL": "1500000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 7,
+      "timestamp": 1766092149171,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "842aD9nc...",
+              "amount": 36783000000,
+              "betYes": true
+            },
+            "reasoning": "Nuclear strike on most imbalanced market (69% NO) with 40% stack. Staking bonus boosts effective bet to 55B IDL to dominate winner pool.",
+            "confidence": 0.95
+          },
+          "success": false,
+          "error": "Invalid or resolved market"
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "GgZe4t16...",
+              "amount": 500000000000,
+              "betYes": true
+            },
+            "reasoning": "Placing 500B IDL YES bet on tensor (highest YES % at 39%) to massively shift odds. This represents ~53% of my stack and will flip the market, trapping NO bettors and capturing disproportionate winnings from the parimutuel pool. My size intimidates and manipulates the outcome.",
+            "confidence": 0.85
+          },
+          "success": false,
+          "error": "Invalid or resolved market"
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "FEE718Ha...",
+              "amount": 3000000000000,
+              "betYes": true
+            },
+            "reasoning": "Raydium YES at 35% is an underdog with 2.86x payout potential. I'm betting 3T IDL (33% of my stack) on this single market because that's what degen apes do - we go big or go home.",
+            "confidence": 0.95
+          },
+          "success": false,
+          "error": "Invalid or resolved market"
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "FEE718Ha...",
+              "amount": 200000000,
+              "betYes": true
+            },
+            "reasoning": "Raydium's 35% YES odds appear mispriced. Market is pricing in current TVL but not accounting for new pool launches and liquidity incentives that could push TVL above 500M target. This represents a strong information edge opportunity.",
+            "confidence": 0.75
+          },
+          "success": false,
+          "error": "Invalid or resolved market"
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "96957500000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Insider_Chad",
+          "totalPnL": "10000012500",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "2100000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Degen_Ape",
+          "totalPnL": "2000000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 8,
+      "timestamp": 1766092229826,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "842aD9nc...",
+              "amount": 38783000000,
+              "betYes": true
+            },
+            "reasoning": "Nuclear strike on most imbalanced market - 40% stack with 50% bonus = max value extraction on low-prob high-payoff bet",
+            "confidence": 0.88
+          },
+          "success": false,
+          "error": "Invalid or resolved market"
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "CREATE_MARKET",
+            "params": {
+              "protocolId": "whale_oracle_001",
+              "metricType": 2,
+              "targetValue": 500000000,
+              "description": "Will Whale_Manipulator place a >1T IDL bet this round?"
+            },
+            "reasoning": "Creating a market I can directly control - I can decide to place a massive bet or not, effectively making me the oracle. This earns 25% of fees and lets me trap other agents who bet against me.",
+            "confidence": 0.95
+          },
+          "success": true,
+          "txSignature": "sim_create_1766092190239"
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "842aD9nc...",
+              "amount": 7200000000000,
+              "betYes": true
+            },
+            "reasoning": "Going all-in on the biggest underdog (pyth YES at 30%) with 80% of my liquid stack. This is maximum ape potential - if it hits, I'll make bank. If it doesn't, who cares, I'll just ape harder next round.",
+            "confidence": 1
+          },
+          "success": false,
+          "error": "Invalid or resolved market"
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "FEE718Ha...",
+              "amount": 3000000000,
+              "betYes": true
+            },
+            "reasoning": "Raydium has been showing strong DEX volume growth and their fee target of $500M seems very achievable. With 34% YES odds, there's significant upside if they hit or exceed this target. The 50% staking bonus increases my effective bet size to 4.5B IDL.",
+            "confidence": 0.75
+          },
+          "success": false,
+          "error": "Invalid or resolved market"
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "101957500000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Insider_Chad",
+          "totalPnL": "15000012500",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Degen_Ape",
+          "totalPnL": "2500000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "2400000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        }
+      ]
+    }
+  ],
+  "finalLeaderboard": [
+    {
+      "rank": 1,
+      "agentName": "MEV_Liquidator",
+      "totalPnL": "101957500000",
+      "winRate": 0,
+      "totalBets": 0,
+      "avgBetSize": "0"
+    },
+    {
+      "rank": 2,
+      "agentName": "Insider_Chad",
+      "totalPnL": "15000012500",
+      "winRate": 0,
+      "totalBets": 0,
+      "avgBetSize": "0"
+    },
+    {
+      "rank": 3,
+      "agentName": "Degen_Ape",
+      "totalPnL": "2500000000",
+      "winRate": 0,
+      "totalBets": 0,
+      "avgBetSize": "0"
+    },
+    {
+      "rank": 4,
+      "agentName": "Whale_Manipulator",
+      "totalPnL": "2400000000",
+      "winRate": 0,
+      "totalBets": 0,
+      "avgBetSize": "0"
+    },
+    {
+      "rank": 5,
+      "agentName": "Quant_Exploiter",
+      "totalPnL": "0",
+      "winRate": 0,
+      "totalBets": 0,
+      "avgBetSize": "0"
+    }
+  ],
+  "winner": "MEV_Liquidator"
+}

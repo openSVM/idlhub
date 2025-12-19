@@ -6,22 +6,14 @@ import { LLMResponse, Action, SimulationContext, AgentState, AgentConfig, AgentM
 
 const OPENROUTER_API_URL = 'https://openrouter.ai/api/v1/chat/completions';
 
-// Free models on OpenRouter (December 2025)
+// Models for agents - using Claude Haiku for speed and reliability
 export const FREE_MODELS = {
-  // TNG Chimera - strong reasoning from DeepSeek lineage
-  TNG_CHIMERA: 'tngtech/tng-r1t-chimera:free',
-
-  // Xiaomi MiMo - excellent for reasoning and coding
-  MIMO_FLASH: 'xiaomi/mimo-v2-flash:free',
-
-  // Mistral Devstral - specialized for agentic coding
-  DEVSTRAL: 'mistralai/devstral-2512:free',
-
-  // Arcee Trinity Mini - compact but capable
-  ARCEE_TRINITY: 'arcee-ai/trinity-mini:free',
-
-  // KwaiPilot Kat Coder - coding specialist
-  KAT_CODER: 'kwaipilot/kat-coder-pro:free',
+  // All agents use Haiku for fast, reliable responses
+  HAIKU_1: 'anthropic/claude-3-5-haiku',
+  HAIKU_2: 'anthropic/claude-3-5-haiku',
+  HAIKU_3: 'anthropic/claude-3-5-haiku',
+  HAIKU_4: 'anthropic/claude-3-5-haiku',
+  HAIKU_5: 'anthropic/claude-3-5-haiku',
 };
 
 export interface OpenRouterConfig {
@@ -39,7 +31,7 @@ export class OpenRouterClient {
 
   constructor(config: OpenRouterConfig) {
     this.apiKey = config.apiKey;
-    this.defaultModel = config.defaultModel || FREE_MODELS.TNG_CHIMERA;
+    this.defaultModel = config.defaultModel || FREE_MODELS.HAIKU_1;
     this.maxRetries = config.maxRetries || 3;
     this.retryDelayMs = config.retryDelayMs || 1000;
   }
@@ -71,22 +63,25 @@ IMPORTANT PROTOCOL MECHANICS:
 - Markets resolve after 24+ hours
 - Parimutuel system: winners split losers' pool proportionally
 
-Respond ONLY with valid JSON in this exact format:
-{
-  "thought": "Your brief strategic reasoning (1-2 sentences)",
-  "marketAnalysis": "Brief analysis of current markets if relevant",
-  "action": {
-    "type": "ACTION_TYPE",
-    "params": { "key": "value" },
-    "reasoning": "Why this specific action",
-    "confidence": 0.0 to 1.0
-  }
-}
+Respond ONLY with valid JSON. NO markdown, NO explanation, JUST the JSON object:
 
-For PLACE_BET, params must include: marketPDA, amount (in IDL tokens), betYes (true/false)
-For STAKE/UNSTAKE, params must include: amount (in IDL tokens)
-For CREATE_MARKET, params must include: protocolId, metricType (0-6), targetValue, description
-For CLAIM_WINNINGS, params must include: marketPDA, betPDA`;
+{"thought":"your reasoning","action":{"type":"ACTION_TYPE","params":{},"reasoning":"why","confidence":0.8}}
+
+CRITICAL ACTION EXAMPLES (copy exact format):
+
+STAKE: {"thought":"staking for bonus","action":{"type":"STAKE","params":{"amount":"5000000000000"},"reasoning":"max bonus","confidence":0.9}}
+
+PLACE_BET: {"thought":"betting on market","action":{"type":"PLACE_BET","params":{"marketPDA":"FULL_PDA_HERE","amount":"1000000000000","betYes":true},"reasoning":"contrarian play","confidence":0.85}}
+
+CREATE_MARKET: {"thought":"creating market","action":{"type":"CREATE_MARKET","params":{"protocolId":"jupiter","metricType":0,"targetValue":"1000000000","description":"Will Jupiter TVL hit $1B?"},"reasoning":"farm fees","confidence":0.9}}
+
+WAIT: {"thought":"waiting","action":{"type":"WAIT","params":{},"reasoning":"gathering intel","confidence":0.7}}
+
+RULES:
+- Amount must be a STRING of the raw token amount (with decimals). Example: "1000000000000" = 1000 IDL
+- marketPDA must be the FULL PDA string from the market list, not shortened
+- betYes must be boolean true or false
+- DO NOT output anything except the JSON object`;
   }
 
   private buildUserPrompt(context: SimulationContext, state: AgentState, memory?: AgentMemory): string {
@@ -95,7 +90,8 @@ For CLAIM_WINNINGS, params must include: marketPDA, betPDA`;
     const marketsList = context.markets.map(m => {
       const total = m.totalYesAmount + m.totalNoAmount;
       const yesOdds = total > 0n ? Number((m.totalYesAmount * 100n) / total) : 50;
-      return `  - ${m.protocolId} (${m.pda.slice(0, 8)}...): Target=${m.targetValue}, YES=${yesOdds}% NO=${100-yesOdds}%, Resolved=${m.resolved}`;
+      return `  - PDA: ${m.pda}
+    Protocol: ${m.protocolId} | Target: ${m.targetValue} | YES: ${yesOdds}% | NO: ${100-yesOdds}%`;
     }).join('\n');
 
     const competitorsList = context.competitorStats.map(c =>

@@ -32,7 +32,7 @@ function parseArgs(): {
   const result = {
     rounds: 10,
     delay: 2000,
-    balance: 10000n * BigInt(1e9), // 10,000 IDL tokens (with 9 decimals)
+    balance: 10000n * BigInt(1e6), // 10,000 IDL tokens (with 6 decimals, realistic supply)
     devnet: false,
     debug: false,
     mock: false,
@@ -44,7 +44,7 @@ function parseArgs(): {
     } else if (arg.startsWith('--delay=')) {
       result.delay = parseInt(arg.split('=')[1], 10);
     } else if (arg.startsWith('--balance=')) {
-      result.balance = BigInt(arg.split('=')[1]) * BigInt(1e9);
+      result.balance = BigInt(arg.split('=')[1]) * BigInt(1e6);
     } else if (arg === '--devnet') {
       result.devnet = true;
     } else if (arg === '--debug') {
@@ -84,31 +84,31 @@ function printBanner(): void {
 }
 
 function printAgentIntro(): void {
-  console.log('='.repeat(60));
-  console.log('  COMPETING AGENTS');
-  console.log('='.repeat(60));
+  console.log('='.repeat(65));
+  console.log('  \x1b[1m\x1b[33mDEGEN ARENA - 5 EXPLOITERS ENTER, 1 EXITS WITH THE BAG\x1b[0m');
+  console.log('='.repeat(65));
   console.log(`
-  1. \x1b[31mAggressive Alpha\x1b[0m (DeepSeek R1)
-     Strategy: High-stakes betting, contrarian positions
-     Risk: EXTREME
+  1. \x1b[31m\x1b[1mMEV_Liquidator\x1b[0m \x1b[2m[Claude Haiku]\x1b[0m
+     \x1b[31m"Everyone else is exit liquidity"\x1b[0m
+     Ruthless MEV extractor. Studied every exploit. No mercy.
 
-  2. \x1b[34mConservative Carl\x1b[0m (Gemma 2 9B)
-     Strategy: Capital preservation, staking focus
-     Risk: LOW
+  2. \x1b[34m\x1b[1mWhale_Manipulator\x1b[0m \x1b[2m[Claude Haiku]\x1b[0m
+     \x1b[34m"Your capital is your weapon"\x1b[0m
+     OG whale since 2013. Moves markets. Liquidates protocols.
 
-  3. \x1b[35mContrarian Cathy\x1b[0m (Mistral 7B)
-     Strategy: Fade the crowd, exploit imbalances
-     Risk: MEDIUM
+  3. \x1b[33m\x1b[1mDegen_Ape\x1b[0m \x1b[2m[Claude Haiku]\x1b[0m
+     \x1b[33m"APE OR DIE - NO MIDDLE GROUND"\x1b[0m
+     Full send every time. Lost fortunes, made them back 10x.
 
-  4. \x1b[36mMomentum Mike\x1b[0m (Qwen 2 7B)
-     Strategy: Follow trends, ride momentum
-     Risk: HIGH
+  4. \x1b[36m\x1b[1mQuant_Exploiter\x1b[0m \x1b[2m[Claude Haiku]\x1b[0m
+     \x1b[36m"Emotion is a bug, not a feature"\x1b[0m
+     Ex-Jane Street. Kelly criterion. Mathematical destruction.
 
-  5. \x1b[32mValue Victor\x1b[0m (Llama 4 Maverick)
-     Strategy: Expected value calculations, mispriced markets
-     Risk: MEDIUM
+  5. \x1b[32m\x1b[1mInsider_Chad\x1b[0m \x1b[2m[Claude Haiku]\x1b[0m
+     \x1b[32m"Information asymmetry IS the edge"\x1b[0m
+     Knows the devs. Seen the roadmaps. Trades the alpha.
 `);
-  console.log('='.repeat(60));
+  console.log('='.repeat(65));
   console.log('');
 }
 
@@ -131,15 +131,22 @@ function printFinalResults(result: SimulationResult): void {
   console.log('\n  FINAL STANDINGS:');
   console.log('-'.repeat(70));
 
+  const formatIDL = (amount: bigint): string => {
+    const value = Number(amount) / 1e6;
+    if (Math.abs(value) >= 1000000) return `${(value / 1000000).toFixed(2)}M`;
+    if (Math.abs(value) >= 1000) return `${(value / 1000).toFixed(2)}K`;
+    return value.toFixed(2);
+  };
+
   for (const entry of result.finalLeaderboard) {
     const pnlStr = entry.totalPnL >= 0n
-      ? `\x1b[32m+${entry.totalPnL}\x1b[0m`
-      : `\x1b[31m${entry.totalPnL}\x1b[0m`;
+      ? `\x1b[32m+${formatIDL(entry.totalPnL)}\x1b[0m`
+      : `\x1b[31m${formatIDL(entry.totalPnL)}\x1b[0m`;
 
     const medal = entry.rank === 1 ? ' [WINNER]' : entry.rank === 2 ? ' [2nd]' : entry.rank === 3 ? ' [3rd]' : '';
 
     // Calculate ROI
-    const initialBalance = 10000n * BigInt(1e9);
+    const initialBalance = 10000n * BigInt(1e6);
     const roi = initialBalance > 0n
       ? Number(entry.totalPnL * 10000n / initialBalance) / 100
       : 0;
@@ -156,7 +163,7 @@ function printFinalResults(result: SimulationResult): void {
   #${entry.rank} ${entry.agentName}${medal}
      PnL: ${pnlStr} IDL | ROI: ${roiStr}
      Win Rate: ${(entry.winRate * 100).toFixed(1)}% (${Math.round(entry.winRate * entry.totalBets)}/${entry.totalBets} bets)
-     Avg Bet Size: ${entry.avgBetSize} IDL
+     Avg Bet Size: ${formatIDL(entry.avgBetSize)} IDL
      Strategy Grade: ${strategyGrade}`);
   }
 
@@ -171,14 +178,14 @@ function printFinalResults(result: SimulationResult): void {
     console.log(`\n  Winner's Edge: ${winner.agentName} succeeded with`);
     if (winner.winRate > 0.5) console.log(`    - High win rate (${(winner.winRate * 100).toFixed(0)}%)`);
     if (winner.totalBets < 5) console.log(`    - Selective betting (${winner.totalBets} bets only)`);
-    if (winner.avgBetSize < 500n * BigInt(1e9)) console.log(`    - Conservative bet sizing`);
+    if (winner.avgBetSize < 500n * BigInt(1e6)) console.log(`    - Conservative bet sizing`);
   }
 
   if (loser.totalPnL < 0n) {
     console.log(`\n  Loser's Mistakes: ${loser.agentName} struggled with`);
     if (loser.winRate < 0.4) console.log(`    - Low win rate (${(loser.winRate * 100).toFixed(0)}%)`);
     if (loser.totalBets > 8) console.log(`    - Overtrading (${loser.totalBets} bets)`);
-    if (loser.avgBetSize > 800n * BigInt(1e9)) console.log(`    - Oversized bets`);
+    if (loser.avgBetSize > 800n * BigInt(1e6)) console.log(`    - Oversized bets`);
   }
 
   console.log('\n' + '='.repeat(70));
@@ -212,7 +219,7 @@ async function main(): Promise<void> {
   console.log('Configuration:');
   console.log(`  Rounds: ${args.rounds}`);
   console.log(`  Round Delay: ${args.delay}ms`);
-  console.log(`  Initial Balance: ${args.balance / BigInt(1e9)} IDL per agent`);
+  console.log(`  Initial Balance: ${args.balance / BigInt(1e6)} IDL per agent`);
   console.log(`  Mode: ${args.devnet ? 'DEVNET (real transactions)' : 'SIMULATED'}`);
   console.log(`  Log Level: ${args.debug ? 'DEBUG' : 'INFO'}`);
   console.log('');
