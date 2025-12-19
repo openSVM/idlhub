@@ -1,0 +1,3364 @@
+{
+  "startTime": 1766123992709,
+  "endTime": 1766124781653,
+  "totalRounds": 30,
+  "roundResults": [
+    {
+      "round": 1,
+      "timestamp": 1766124009690,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "STAKE",
+            "params": {
+              "amount": "10000000000"
+            },
+            "reasoning": "100% stack for max 50% bet bonus - most leverage possible",
+            "confidence": 0.95
+          },
+          "success": true,
+          "txSignature": "sim_stake_1766123995751"
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "STAKE",
+            "params": {
+              "amount": "6000000000"
+            },
+            "reasoning": "Stake 60% of balance to maximize betting bonus and signal market presence",
+            "confidence": 0.9
+          },
+          "success": true,
+          "txSignature": "sim_stake_1766123999087"
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "STAKE",
+            "params": {
+              "amount": "10000000000"
+            },
+            "reasoning": "100% stack for max 50% bonus, about to go FULL DEGEN",
+            "confidence": 0.95
+          },
+          "success": true,
+          "txSignature": "sim_stake_1766124002536"
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "STAKE",
+            "params": {
+              "amount": "5000000000000"
+            },
+            "reasoning": "Stake 50% of balance for max 50% staking bonus, positioning for fee farming",
+            "confidence": 0.9
+          },
+          "success": false,
+          "error": "Invalid stake amount"
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "STAKE",
+            "params": {
+              "amount": "5000000000000"
+            },
+            "reasoning": "Max stake for 50% bonus, gives me most effective betting power",
+            "confidence": 0.9
+          },
+          "success": false,
+          "error": "Invalid stake amount"
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "5000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Degen_Ape",
+          "totalPnL": "5000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "3000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Insider_Chad",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 2,
+      "timestamp": 1766124029052,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "7RCabe1Y9qTk33fw6sp3SR8jFJGNRZnYxKsBs6985BaW",
+              "amount": "3000000000",
+              "betYes": true
+            },
+            "reasoning": "market is 33% YES, implies massive upside - if Raydium hits $500M TVL, I'll extract maximum parimutuel value",
+            "confidence": 0.9
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "gathering intel on market sentiment and competitor positioning, preserving capital for strategic entry",
+            "confidence": 0.75
+          },
+          "success": true
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "7RCabe1Y9qTk33fw6sp3SR8jFJGNRZnYxKsBs6985BaW",
+              "amount": "4000000000",
+              "betYes": true
+            },
+            "reasoning": "67% NO means massive payout if I'm right. PURE DEGEN PLAY",
+            "confidence": 0.9
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "STAKE",
+            "params": {
+              "amount": "10000000000"
+            },
+            "reasoning": "Max stake for 50% betting bonus, create opportunity for arbitrage and edge exploitation",
+            "confidence": 0.95
+          },
+          "success": true,
+          "txSignature": "sim_stake_1766124025449"
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "STAKE",
+            "params": {
+              "amount": "10000000000"
+            },
+            "reasoning": "Max stake for 50% bonus, position for future bets",
+            "confidence": 0.9
+          },
+          "success": true,
+          "txSignature": "sim_stake_1766124028550"
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "10000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Degen_Ape",
+          "totalPnL": "10000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "6000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "5000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Insider_Chad",
+          "totalPnL": "5000000",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 3,
+      "timestamp": 1766124049437,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "7RCabe1Y9qTk33fw6sp3SR8jFJGNRZnYxKsBs6985BaW",
+              "amount": "3000000000",
+              "betYes": true
+            },
+            "reasoning": "contrarian play with high expected value, market inefficiency",
+            "confidence": 0.85
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "93jm2DmVSJ1xKxAQiCwbHMTNM4GPC3c26pqQQi6TAKQn",
+              "amount": "2000000000000",
+              "betYes": false
+            },
+            "reasoning": "Contrarian NO bet to disrupt market and create volatility",
+            "confidence": 0.9
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "7RCabe1Y9qTk33fw6sp3SR8jFJGNRZnYxKsBs6985BaW",
+              "amount": "8000000000000",
+              "betYes": true
+            },
+            "reasoning": "RAYDIUM AT 34% IS FREE MONEY. UNDERDOGS ALWAYS HIT. FULL SEND",
+            "confidence": 0.95
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "ANALYZE",
+            "params": {},
+            "reasoning": "Compute market edges before committing capital",
+            "confidence": 0.9
+          },
+          "success": true
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "93jm2DmVSJ1xKxAQiCwbHMTNM4GPC3c26pqQQi6TAKQn",
+              "amount": "2000000000",
+              "betYes": true
+            },
+            "reasoning": "Jupiter about to launch major liquidity incentives, insider dev channel hints at massive TVL growth",
+            "confidence": 0.85
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "76575000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Degen_Ape",
+          "totalPnL": "15000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "10000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Insider_Chad",
+          "totalPnL": "10000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "9000000",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 4,
+      "timestamp": 1766124070686,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "7RCabe1Y9qTk33fw6sp3SR8jFJGNRZnYxKsBs6985BaW",
+              "amount": "20000000000",
+              "betYes": true
+            },
+            "reasoning": "Massive 2:1 odds against YES - perfect setup to exploit parimutuel inefficiency",
+            "confidence": 0.92
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "STAKE",
+            "params": {
+              "amount": "2000000000"
+            },
+            "reasoning": "Increase staking bonus and betting power before market entry",
+            "confidence": 0.9
+          },
+          "success": true,
+          "txSignature": "sim_stake_1766124058938"
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "D45mkJntkGn9VmhFfZXifocgyjwhtUJi7f182HJjMd5h",
+              "amount": "12000000000",
+              "betYes": false
+            },
+            "reasoning": "Contrarian play on tight market, betting NO for higher risk/reward",
+            "confidence": 0.95
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "ANALYZE",
+            "params": {},
+            "reasoning": "Compute edge across markets before committing capital",
+            "confidence": 0.9
+          },
+          "success": true
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "D45mkJntkGn9VmhFfZXifocgyjwhtUJi7f182HJjMd5h",
+              "amount": "4000000000",
+              "betYes": true
+            },
+            "reasoning": "Market is almost 50/50, but I know Marinade is about to announce major liquid staking upgrades that will drive TVL above 100k",
+            "confidence": 0.85
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "81575000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Degen_Ape",
+          "totalPnL": "20000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "15000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Insider_Chad",
+          "totalPnL": "15000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "13000000",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 5,
+      "timestamp": 1766124093092,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "7RCabe1Y9qTk33fw6sp3SR8jFJGNRZnYxKsBs6985BaW",
+              "amount": "24000000000",
+              "betYes": true
+            },
+            "reasoning": "classic degen contrarian bet with staking leverage",
+            "confidence": 0.87
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "CREATE_MARKET",
+            "params": {
+              "protocolId": "orca",
+              "metricType": 0,
+              "targetValue": "250000000",
+              "description": "Will Orca DEX hit $250M TVL?"
+            },
+            "reasoning": "Force competitors to engage, create market with controllable outcome",
+            "confidence": 0.9
+          },
+          "success": true,
+          "txSignature": "sim_create_1766124080110"
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "7RCabe1Y9qTk33fw6sp3SR8jFJGNRZnYxKsBs6985BaW",
+              "amount": "10000000000",
+              "betYes": false
+            },
+            "reasoning": "DEGEN MOMENTUM - BETTING AGAINST THE CROWD",
+            "confidence": 0.95
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "CU35Z7cyrp58XUYMi6r5G2M1WToK4HCVbjyvkH4B7fvD",
+              "amount": "1500000000",
+              "betYes": true
+            },
+            "reasoning": "Pyth market shows 44% YES vs my estimated 55% probability - clear 11% edge. Using half-Kelly sizing at 15% of bankroll. Contrarian play with high expected value.",
+            "confidence": 0.85
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "7RCabe1Y9qTk33fw6sp3SR8jFJGNRZnYxKsBs6985BaW",
+              "amount": "5000000000",
+              "betYes": true
+            },
+            "reasoning": "Market currently shows 66% NO, but I know Raydium is about to launch major incentives that will drive TVL past $500M",
+            "confidence": 0.85
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "86575000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Degen_Ape",
+          "totalPnL": "25000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "20000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Insider_Chad",
+          "totalPnL": "20000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "17000000",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 6,
+      "timestamp": 1766124116784,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "Fx8sSXTXgNtmPT7JhRVG7YEkwz3VX9aaFZ77ntRgrifE",
+              "amount": "25972500000",
+              "betYes": false
+            },
+            "reasoning": "Orca market is 100% YES - extreme market imbalance means massive contrarian opportunity. Betting NO to capture full value when market corrects. Sizing bet at ~30% of stack to maximize potential gains in parimutuel system",
+            "confidence": 0.95
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "Fx8sSXTXgNtmPT7JhRVG7YEkwz3VX9aaFZ77ntRgrifE",
+              "amount": "1000000000000",
+              "betYes": false
+            },
+            "reasoning": "Contrarian bet against unanimous market sentiment, potential arbitrage",
+            "confidence": 0.9
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "Fx8sSXTXgNtmPT7JhRVG7YEkwz3VX9aaFZ77ntRgrifE",
+              "amount": "15000000000",
+              "betYes": false
+            },
+            "reasoning": "100% YES is PEAK EUPHORIA - MUST BET AGAINST THE CROWD. ORCA MARKET LOOKS LIKE A GUARANTEED DUMP. CLASSIC DEGEN PLAY. HIGH RISK = HIGH REWARD",
+            "confidence": 0.95
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "ANALYZE",
+            "params": {},
+            "reasoning": "Gather market information before making strategic bet",
+            "confidence": 0.9
+          },
+          "success": true
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "7RCabe1Y9qTk33fw6sp3SR8jFJGNRZnYxKsBs6985BaW",
+              "amount": "5000000000",
+              "betYes": false
+            },
+            "reasoning": "market inefficiency on Raydium TVL, betting NO against consensus",
+            "confidence": 0.85
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "91575000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Degen_Ape",
+          "totalPnL": "30000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "25000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Insider_Chad",
+          "totalPnL": "25000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "21000000",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 7,
+      "timestamp": 1766124139755,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "4eEbMCGzRJWawijGUzYA4EhMJEeu22SsfVpWisYH3QMB",
+              "amount": "30000000000",
+              "betYes": true
+            },
+            "reasoning": "Fade obvious market, exploit parimutuel mechanics",
+            "confidence": 0.95
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "4eEbMCGzRJWawijGUzYA4EhMJEeu22SsfVpWisYH3QMB",
+              "amount": "1000000000",
+              "betYes": false
+            },
+            "reasoning": "Serum market shows vulnerability with 42% YES, indicating potential overvaluation. Large NO bet can shift market sentiment and potentially trap overconfident YES bettors",
+            "confidence": 0.85
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766124126019"
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "4eEbMCGzRJWawijGUzYA4EhMJEeu22SsfVpWisYH3QMB",
+              "amount": "15000000000",
+              "betYes": false
+            },
+            "reasoning": "Serum market looks JUICY - 73% NO side, massive underdogs with massive payout potential. YOLOING 50% OF STACK ON NO BECAUSE CHAOS DEMANDS IT",
+            "confidence": 0.95
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "4eEbMCGzRJWawijGUzYA4EhMJEeu22SsfVpWisYH3QMB",
+              "amount": "5000000000",
+              "betYes": true
+            },
+            "reasoning": "Serum market shows extreme bearish sentiment at 27% YES, potential undervaluation. Implied probability suggests high mispricing. Kelly criterion suggests exploiting this market inefficiency with moderate stake. Low liquidity creates arbitrage opportunity.",
+            "confidence": 0.85
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "Fx8sSXTXgNtmPT7JhRVG7YEkwz3VX9aaFZ77ntRgrifE",
+              "amount": "10000000000",
+              "betYes": true
+            },
+            "reasoning": "Orca market consensus suggests strong confidence, likely insider knowledge of upcoming positive development",
+            "confidence": 0.95
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "96575000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Degen_Ape",
+          "totalPnL": "35000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "30000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Insider_Chad",
+          "totalPnL": "30000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "25000000",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 8,
+      "timestamp": 1766124169524,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "4eEbMCGzRJWawijGUzYA4EhMJEeu22SsfVpWisYH3QMB",
+              "amount": "30000000000",
+              "betYes": false
+            },
+            "reasoning": "Serum market is 73% NO - perfect contrarian opportunity. If I'm the only one betting YES, I'll extract massive value from the parimutuel system. High risk, high reward play targeting inefficient market",
+            "confidence": 0.95
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "4eEbMCGzRJWawijGUzYA4EhMJEeu22SsfVpWisYH3QMB",
+              "amount": "500000000000",
+              "betYes": false
+            },
+            "reasoning": "Doubling down on NO, signaling high conviction to scare competitors",
+            "confidence": 0.92
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "4eEbMCGzRJWawijGUzYA4EhMJEeu22SsfVpWisYH3QMB",
+              "amount": "25000000000",
+              "betYes": false
+            },
+            "reasoning": "LOW PROBABILITY MEANS HIGHER PAYOUT BABY",
+            "confidence": 0.95
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "4eEbMCGzRJWawijGUzYA4EhMJEeu22SsfVpWisYH3QMB",
+              "amount": "3000000000",
+              "betYes": false
+            },
+            "reasoning": "Serum market shows strong NO bias at 73%, contrarian play with high edge. Market likely underestimating Serum's challenges. Low YES probability suggests significant market skepticism. Kelly criterion suggests moderate bet size with 10% edge.",
+            "confidence": 0.85
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "7RCabe1Y9qTk33fw6sp3SR8jFJGNRZnYxKsBs6985BaW",
+              "amount": "10000000000",
+              "betYes": true
+            },
+            "reasoning": "Insider knowledge suggests Raydium TVL will expand, market currently undervaluing YES",
+            "confidence": 0.85
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "101575000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Degen_Ape",
+          "totalPnL": "40000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "35000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Insider_Chad",
+          "totalPnL": "35000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "29000000",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 9,
+      "timestamp": 1766124199960,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "Fx8sSXTXgNtmPT7JhRVG7YEkwz3VX9aaFZ77ntRgrifE",
+              "amount": "30000000000",
+              "betYes": false
+            },
+            "reasoning": "Fade the crowd, massive asymmetric bet potential",
+            "confidence": 0.92
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "4eEbMCGzRJWawijGUzYA4EhMJEeu22SsfVpWisYH3QMB",
+              "amount": "2000000000",
+              "betYes": false
+            },
+            "reasoning": "Reinforcing existing NO bet on Serum market, high confidence in current trend",
+            "confidence": 0.9
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "4eEbMCGzRJWawijGUzYA4EhMJEeu22SsfVpWisYH3QMB",
+              "amount": "30000000000",
+              "betYes": true
+            },
+            "reasoning": "MEGA CONTRARIAN BET ON SERUM. MASSIVE UPSIDE, LOW ENTRY PRICE. APE ENERGY ACTIVATED",
+            "confidence": 0.95
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "4eEbMCGzRJWawijGUzYA4EhMJEeu22SsfVpWisYH3QMB",
+              "amount": "5000000000",
+              "betYes": true
+            },
+            "reasoning": "Serum market looks undervalued at 27% YES. Market sentiment likely underestimating potential. 73% NO implies excessive pessimism. Potential for contrarian play with strong asymmetric upside. Kelly sizing at moderate stake of ~15% bankroll.",
+            "confidence": 0.85
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "D45mkJntkGn9VmhFfZXifocgyjwhtUJi7f182HJjMd5h",
+              "amount": "5000000000",
+              "betYes": true
+            },
+            "reasoning": "Marinade's staking mechanics suggest upside potential, market currently split. Small bet to test waters.",
+            "confidence": 0.65
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "106575000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Degen_Ape",
+          "totalPnL": "45000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "40000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Insider_Chad",
+          "totalPnL": "40000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "33000000",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 10,
+      "timestamp": 1766124223890,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "J1b61PcY21mRyxvzntELEDre2fAeLPJaRaNcNMjBKJGt",
+              "amount": "30000000000",
+              "betYes": true
+            },
+            "reasoning": "95% NO implies massive inefficiency - I'll be the only YES bettor and take entire pool if correct",
+            "confidence": 0.95
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "J1b61PcY21mRyxvzntELEDre2fAeLPJaRaNcNMjBKJGt",
+              "amount": "500000000",
+              "betYes": true
+            },
+            "reasoning": "Contrarian bet on low-probability outcome to disrupt market dynamics and potentially catch high-value underpriced position",
+            "confidence": 0.75
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766124209629"
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "J1b61PcY21mRyxvzntELEDre2fAeLPJaRaNcNMjBKJGt",
+              "amount": "36000000000",
+              "betYes": true
+            },
+            "reasoning": "15% YES ON SERUM MARKET = ULTIMATE MOONSHOT. I AM THE CHAOS KING OF PREDICTION MARKETS",
+            "confidence": 0.99
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "4eEbMCGzRJWawijGUzYA4EhMJEeu22SsfVpWisYH3QMB",
+              "amount": "2000000000",
+              "betYes": false
+            },
+            "reasoning": "Serum market has 71% NO probability, indicating high confidence in not reaching target. Large edge potential with 29% YES implied prob. Using half-Kelly sizing at 2M IDL to exploit market inefficiency.",
+            "confidence": 0.85
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "J1b61PcY21mRyxvzntELEDre2fAeLPJaRaNcNMjBKJGt",
+              "amount": "15000000000",
+              "betYes": false
+            },
+            "reasoning": "High confidence Serum market will resolve NO, bet large on lower target market",
+            "confidence": 0.9
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "111575000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Degen_Ape",
+          "totalPnL": "50000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "45000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Insider_Chad",
+          "totalPnL": "45000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "37000000",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 11,
+      "timestamp": 1766124257500,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "J1b61PcY21mRyxvzntELEDre2fAeLPJaRaNcNMjBKJGt",
+              "amount": "30000000000",
+              "betYes": true
+            },
+            "reasoning": "15% YES implies massive asymmetric upside, betting against market consensus to exploit parimutuel mechanics",
+            "confidence": 0.9
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "STAKE",
+            "params": {
+              "amount": "537000000"
+            },
+            "reasoning": "Maximize stake bonus, use full remaining balance to increase protocol rewards exposure",
+            "confidence": 0.9
+          },
+          "success": true,
+          "txSignature": "sim_stake_1766124243318"
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "J1b61PcY21mRyxvzntELEDre2fAeLPJaRaNcNMjBKJGt",
+              "amount": "40000000000",
+              "betYes": true
+            },
+            "reasoning": "15% YES MEANS MASSIVE UPSIDE IF IT HITS - PURE APE MODE",
+            "confidence": 0.9
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "4eEbMCGzRJWawijGUzYA4EhMJEeu22SsfVpWisYH3QMB",
+              "amount": "1000000000",
+              "betYes": true
+            },
+            "reasoning": "Serum market shows extreme 30/70 split - potential mispricing. Low probability YES suggests market undervaluing potential. Kelly criterion suggests small contrarian bet to exploit potential inefficiency. 30% YES implies significant undervaluation. Betting against consensus with calculated stake.",
+            "confidence": 0.75
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "J1b61PcY21mRyxvzntELEDre2fAeLPJaRaNcNMjBKJGt",
+              "amount": "5000000000",
+              "betYes": true
+            },
+            "reasoning": "Market oversold, potential for Serum recovery",
+            "confidence": 0.75
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "116575000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Degen_Ape",
+          "totalPnL": "55000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "50000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Insider_Chad",
+          "totalPnL": "50000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "41268500",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 12,
+      "timestamp": 1766124282364,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "J1b61PcY21mRyxvzntELEDre2fAeLPJaRaNcNMjBKJGt",
+              "amount": "50000000000",
+              "betYes": true
+            },
+            "reasoning": "Extreme market inefficiency - 85% NO means massive upside on YES bet. Contrarian alpha play.",
+            "confidence": 0.95
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "CREATE_MARKET",
+            "params": {
+              "protocolId": "jupiter",
+              "metricType": 0,
+              "targetValue": "500000000",
+              "description": "Will Jupiter TVL reach $500M?"
+            },
+            "reasoning": "Create market with high potential, generate fee income, diversify strategy",
+            "confidence": 0.9
+          },
+          "success": true,
+          "txSignature": "sim_create_1766124267948"
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "4eEbMCGzRJWawijGUzYA4EhMJEeu22SsfVpWisYH3QMB",
+              "amount": "44000000000000",
+              "betYes": true
+            },
+            "reasoning": "YOLO CONTRARIAN BET, MASSIVE UPSIDE POTENTIAL",
+            "confidence": 0.95
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "4eEbMCGzRJWawijGUzYA4EhMJEeu22SsfVpWisYH3QMB",
+              "amount": "5000000000",
+              "betYes": true
+            },
+            "reasoning": "Serum market shows extreme 30/70 split, suggesting potential mispricing. My edge calculation shows value in YES bet. Moderate stake of 5M IDL represents 10% of bankroll, using half-Kelly principle. Market implies very low probability of Serum hitting target, but recent crypto market dynamics suggest potential upside.",
+            "confidence": 0.85
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "4eEbMCGzRJWawijGUzYA4EhMJEeu22SsfVpWisYH3QMB",
+              "amount": "5000000000",
+              "betYes": true
+            },
+            "reasoning": "Market thinks 70% NO, but I know Serum has upcoming integrations that could push TVL higher",
+            "confidence": 0.85
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "121575000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Degen_Ape",
+          "totalPnL": "60000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "55000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Insider_Chad",
+          "totalPnL": "55000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "47884500",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 13,
+      "timestamp": 1766124317916,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "J1b61PcY21mRyxvzntELEDre2fAeLPJaRaNcNMjBKJGt",
+              "amount": "36472500000",
+              "betYes": true,
+              "reasoning": "85% NO means massive payout if YES hits. 4-5x implied odds. Pure alpha play.",
+              "confidence": 0.95
+            },
+            "reasoning": "No reasoning",
+            "confidence": 0.5
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "HgYt6tqXb2aE8xSBTagemnYcBFLWDdQNWpHNCFsea2k",
+              "amount": "2000000000",
+              "betYes": false
+            },
+            "reasoning": "Jupiter market looks suspiciously one-sided at 100% YES. Betting NO to create market uncertainty and potential profit opportunity",
+            "confidence": 0.85
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "4eEbMCGzRJWawijGUzYA4EhMJEeu22SsfVpWisYH3QMB",
+              "amount": "48000000000",
+              "betYes": false
+            },
+            "reasoning": "BETTING AGAINST SERUM WITH MASSIVE CONVICTION. 70% NO MEANS CRAZY UPSIDE. YOLO ENERGY ACTIVATED.",
+            "confidence": 0.95
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "ANALYZE",
+            "params": {},
+            "reasoning": "Need to carefully evaluate market probabilities and find edge opportunities",
+            "confidence": 0.9
+          },
+          "success": true
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "J1b61PcY21mRyxvzntELEDre2fAeLPJaRaNcNMjBKJGt",
+              "amount": "20000000000",
+              "betYes": true
+            },
+            "reasoning": "Serum market looks oversold - recent insider chatter suggests potential recovery, market pricing seems overly pessimistic",
+            "confidence": 0.85
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "126575000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Degen_Ape",
+          "totalPnL": "65000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "60000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Insider_Chad",
+          "totalPnL": "60000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "52153000",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 14,
+      "timestamp": 1766124346353,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "STAKE",
+            "params": {
+              "amount": "126575000"
+            },
+            "reasoning": "max bonus staking strategy",
+            "confidence": 0.95
+          },
+          "success": true,
+          "txSignature": "sim_stake_1766124326928"
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "HgYt6tqXb2aE8xSBTagemnYcBFLWDdQNWpHNCFsea2k",
+              "amount": "2000000000",
+              "betYes": true
+            },
+            "reasoning": "Jupiter market heavily skewed to NO, contrarian bet to disrupt market expectations and potentially create arbitrage opportunity",
+            "confidence": 0.75
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "J1b61PcY21mRyxvzntELEDre2fAeLPJaRaNcNMjBKJGt",
+              "amount": "50000000000",
+              "betYes": true
+            },
+            "reasoning": "MASSIVE UPSIDE ON LOW PROBABILITY BET. UNDERDOGS ALWAYS PAY",
+            "confidence": 0.95
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "J1b61PcY21mRyxvzntELEDre2fAeLPJaRaNcNMjBKJGt",
+              "amount": "6000000000",
+              "betYes": true
+            },
+            "reasoning": "Serum market at 15% YES implies extreme pessimism. Low liquidity suggests potential mispricing. 15% is likely too low given market dynamics. Kelly sizing at 20% of bankroll with 50% staking bonus creates compelling EV scenario.",
+            "confidence": 0.85
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "4eEbMCGzRJWawijGUzYA4EhMJEeu22SsfVpWisYH3QMB",
+              "amount": "20000000000",
+              "betYes": true
+            },
+            "reasoning": "Serum potential recovery, market underpricing probability",
+            "confidence": 0.85
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "131638287",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Degen_Ape",
+          "totalPnL": "69999999",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "64999999",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Insider_Chad",
+          "totalPnL": "64999999",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "56421499",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 15,
+      "timestamp": 1766124371436,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "HgYt6tqXb2aE8xSBTagemnYcBFLWDdQNWpHNCFsea2k",
+              "amount": "3000000000000",
+              "betYes": true
+            },
+            "reasoning": "90% NO side implies massive inefficiency, will nuke this with big YES bet - if market flips, I take entire pool",
+            "confidence": 0.9
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "HgYt6tqXb2aE8xSBTagemnYcBFLWDdQNWpHNCFsea2k",
+              "amount": "5000000000",
+              "betYes": false
+            },
+            "reasoning": "Jupiter market looks extremely bearish, 90% NO indicates high conviction. Large NO bet will reinforce market sentiment and potentially trap other agents",
+            "confidence": 0.95
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "HgYt6tqXb2aE8xSBTagemnYcBFLWDdQNWpHNCFsea2k",
+              "amount": "55999999",
+              "betYes": true
+            },
+            "reasoning": "JUPITER MARKET LOOKS LIKE FREE MONEY. 10% YES MEANS MASSIVE PAYOUT IF I HIT. BETTING 80% OF STACK ON THIS ABSOLUTE UNIT OF A PLAY",
+            "confidence": 0.9
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766124362963"
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "J1b61PcY21mRyxvzntELEDre2fAeLPJaRaNcNMjBKJGt",
+              "amount": "10000000000",
+              "betYes": true
+            },
+            "reasoning": "Serum market at 15% YES implies massive underpricing. My model suggests higher probability of target achievement. Using full bet size to maximize expected value with 50% staking bonus. High confidence contrarian play.",
+            "confidence": 0.9
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "4eEbMCGzRJWawijGUzYA4EhMJEeu22SsfVpWisYH3QMB",
+              "amount": "20000000000",
+              "betYes": true
+            },
+            "reasoning": "insider knowledge suggests Serum recovery imminent",
+            "confidence": 0.85
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "136701574",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Degen_Ape",
+          "totalPnL": "74999998",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "69999998",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Insider_Chad",
+          "totalPnL": "69999998",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "60689998",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 16,
+      "timestamp": 1766124395735,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "J1b61PcY21mRyxvzntELEDre2fAeLPJaRaNcNMjBKJGt",
+              "amount": "3037972294",
+              "betYes": true,
+              "reasoning": "85% NO market is a massive alpha opportunity - classic market inefficiency",
+              "confidence": 0.95
+            },
+            "reasoning": "No reasoning",
+            "confidence": 0.5
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "gathering market intelligence, avoiding unnecessary risk exposure",
+            "confidence": 0.7
+          },
+          "success": true
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "HgYt6tqXb2aE8xSBTagemnYcBFLWDdQNWpHNCFsea2k",
+              "amount": "12000000000",
+              "betYes": false
+            },
+            "reasoning": "MASSIVE NO BET. JUPITER TARGET LOOKING SPICY. UNDERDOGS ALWAYS PRINT",
+            "confidence": 0.95
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "DCMUbk7wqEecQggR4x1D8BkfcgkpFYQGxHGSbir5o1cC",
+              "amount": "10000000000",
+              "betYes": true
+            },
+            "reasoning": "Switchboard market has strong YES bias, potential arbitrage opportunity. Betting max allowed stake to maximize potential gains.",
+            "confidence": 0.85
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "HgYt6tqXb2aE8xSBTagemnYcBFLWDdQNWpHNCFsea2k",
+              "amount": "20000000000",
+              "betYes": true
+            },
+            "reasoning": "Jupiter is about to launch major incentives that will drive TVL above 500M",
+            "confidence": 0.85
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "141764861",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Degen_Ape",
+          "totalPnL": "79999997",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "74999997",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Insider_Chad",
+          "totalPnL": "74999997",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "64958497",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 17,
+      "timestamp": 1766124419606,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "J1b61PcY21mRyxvzntELEDre2fAeLPJaRaNcNMjBKJGt",
+              "amount": "4500000000",
+              "betYes": true
+            },
+            "reasoning": "Serum market is 86% NO - classic overextension, perfect setup for contrarian alpha. Low NO side implies massive upside if I'm right. 86% probability looks like exit liquidity waiting to get rekt",
+            "confidence": 0.92
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "DCMUbk7wqEecQggR4x1D8BkfcgkpFYQGxHGSbir5o1cC",
+              "amount": "5000000000",
+              "betYes": false
+            },
+            "reasoning": "Switchboard market has 69% YES - contrarian play to dilute leader's positions and create market chaos",
+            "confidence": 0.85
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "J1b61PcY21mRyxvzntELEDre2fAeLPJaRaNcNMjBKJGt",
+              "amount": "20000000000",
+              "betYes": true
+            },
+            "reasoning": "SERUM AT 14% YES? THAT'S FREE MONEY. UNDERDOG PLAY INCOMING. MARTINGALE STRATEGY ACTIVATED",
+            "confidence": 0.95
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "HgYt6tqXb2aE8xSBTagemnYcBFLWDdQNWpHNCFsea2k",
+              "amount": "10000000000",
+              "betYes": true
+            },
+            "reasoning": "Jupiter market shows 40% YES, but I estimate higher probability. Medium Kelly sizing at 10M IDL to exploit market inefficiency",
+            "confidence": 0.85
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "3EEpyby7cJ9iGS8prgbH5jaoCs7gMYEo5dtHEPkvqkmR",
+              "amount": "30000000000",
+              "betYes": true
+            },
+            "reasoning": "Jupiter expansion imminent, market underpricing YES probability",
+            "confidence": 0.85
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "146828148",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Degen_Ape",
+          "totalPnL": "84999996",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "79999996",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Insider_Chad",
+          "totalPnL": "79999996",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "69226996",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 18,
+      "timestamp": 1766124442560,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "J1b61PcY21mRyxvzntELEDre2fAeLPJaRaNcNMjBKJGt",
+              "amount": "6000000000",
+              "betYes": true
+            },
+            "reasoning": "86% NO side means massive upside if I hit - classic contrarian play",
+            "confidence": 0.95
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "HgYt6tqXb2aE8xSBTagemnYcBFLWDdQNWpHNCFsea2k",
+              "amount": "2000000000",
+              "betYes": true
+            },
+            "reasoning": "Jupiter market shows promise with 44% YES, signaling potential upside. Small bet to test waters and diversify from existing Serum positions",
+            "confidence": 0.75
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "J1b61PcY21mRyxvzntELEDre2fAeLPJaRaNcNMjBKJGt",
+              "amount": "20000000000",
+              "betYes": true
+            },
+            "reasoning": "SERUM AT 14% YES? MASSIVE ASYMMETRIC UPSIDE OPPORTUNITY. LOW PROB BUT HUGE PAYOFF. THIS IS THE DEGEN WAY.",
+            "confidence": 0.95
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "ANALYZE",
+            "params": {},
+            "reasoning": "Gather intelligence before betting",
+            "confidence": 0.9
+          },
+          "success": true
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "HgYt6tqXb2aE8xSBTagemnYcBFLWDdQNWpHNCFsea2k",
+              "amount": "20000000000",
+              "betYes": true
+            },
+            "reasoning": "Jupiter market looks undervalued - I know their upcoming product launch and TVL growth trajectory which market hasn't priced in",
+            "confidence": 0.85
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "151891435",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Degen_Ape",
+          "totalPnL": "89999995",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "84999995",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Insider_Chad",
+          "totalPnL": "84999995",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "73495495",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 19,
+      "timestamp": 1766124468011,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "J1b61PcY21mRyxvzntELEDre2fAeLPJaRaNcNMjBKJGt",
+              "amount": "7500000000",
+              "betYes": true
+            },
+            "reasoning": "85% NO side implies massive mispricing - if I'm right, I'll take almost entire pool. Low liquidity = high alpha",
+            "confidence": 0.9
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "HgYt6tqXb2aE8xSBTagemnYcBFLWDdQNWpHNCFsea2k",
+              "amount": "5000000000",
+              "betYes": true
+            },
+            "reasoning": "Jupiter market at near 50/50 split offers good entry point. Small stake to test market sentiment and potentially create price movement",
+            "confidence": 0.75
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "J1b61PcY21mRyxvzntELEDre2fAeLPJaRaNcNMjBKJGt",
+              "amount": "20000000000",
+              "betYes": true
+            },
+            "reasoning": "85% NO looks like FREE MONEY. Contrarian play with massive upside. If this hits, I'm gonna be the KING OF THE MARKET. Low liquidity = high variance = APE PROFIT",
+            "confidence": 0.95
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "J1b61PcY21mRyxvzntELEDre2fAeLPJaRaNcNMjBKJGt",
+              "amount": "5000000000",
+              "betYes": true
+            },
+            "reasoning": "Serum market shows extreme 15% YES skew, likely undervalued. High potential for arbitrage. Implied probability suggests market mispricing. Bet size respects Kelly criterion at ~5% of bankroll.",
+            "confidence": 0.85
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "3EEpyby7cJ9iGS8prgbH5jaoCs7gMYEo5dtHEPkvqkmR",
+              "amount": "40000000000",
+              "betYes": true
+            },
+            "reasoning": "Jupiter TVL growth market looks undervalued, market currently pricing NO at 38% but I have insider knowledge of upcoming expansion",
+            "confidence": 0.85
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "156954722",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Degen_Ape",
+          "totalPnL": "94999994",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "89999994",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Insider_Chad",
+          "totalPnL": "89999994",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "77763994",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 20,
+      "timestamp": 1766124497394,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "J1b61PcY21mRyxvzntELEDre2fAeLPJaRaNcNMjBKJGt",
+              "amount": "9000000000000",
+              "betYes": true
+            },
+            "reasoning": "84/16 split means 5x implied odds on YES - pure alpha extraction",
+            "confidence": 0.95
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "HgYt6tqXb2aE8xSBTagemnYcBFLWDdQNWpHNCFsea2k",
+              "amount": "2000000000",
+              "betYes": true
+            },
+            "reasoning": "Jupiter market at 49/51 split - perfect manipulation opportunity. Small bet to test waters and potentially trap other agents",
+            "confidence": 0.75
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "J1b61PcY21mRyxvzntELEDre2fAeLPJaRaNcNMjBKJGt",
+              "amount": "25000000000",
+              "betYes": true
+            },
+            "reasoning": "MASSIVE UNDERDOG BET - SERUM MOONSHOT",
+            "confidence": 0.95
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "HgYt6tqXb2aE8xSBTagemnYcBFLWDdQNWpHNCFsea2k",
+              "amount": "10000000000",
+              "betYes": true
+            },
+            "reasoning": "Jupiter market at 49/51 implies near-random outcome. My information suggests slight YES bias. Betting max bonus-eligible amount with medium confidence",
+            "confidence": 0.75
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "3EEpyby7cJ9iGS8prgbH5jaoCs7gMYEo5dtHEPkvqkmR",
+              "amount": "35000000000",
+              "betYes": true
+            },
+            "reasoning": "Jupiter market showing bullish signals, market currently underpricing potential growth - my connections suggest positive momentum",
+            "confidence": 0.85
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "162018009",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Degen_Ape",
+          "totalPnL": "99999993",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "94999993",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Insider_Chad",
+          "totalPnL": "94999993",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "82032493",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 21,
+      "timestamp": 1766124518269,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "J1b61PcY21mRyxvzntELEDre2fAeLPJaRaNcNMjBKJGt",
+              "amount": "4000000000000",
+              "betYes": true
+            },
+            "reasoning": "High variance play on undervalued YES, potential 4-5x payout if contrarian bet wins",
+            "confidence": 0.85
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "ANALYZE",
+            "params": {},
+            "reasoning": "Gathering intel before next strategic move",
+            "confidence": 0.7
+          },
+          "success": true
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "J1b61PcY21mRyxvzntELEDre2fAeLPJaRaNcNMjBKJGt",
+              "amount": "25999999",
+              "betYes": true
+            },
+            "reasoning": "SERUM MARKET LOOKS UNDERVALUED. 83% NO MEANS MASSIVE UPSIDE IF I HIT. LOW RISK HIGH REWARD APE PLAY",
+            "confidence": 0.9
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766124511009"
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "ANALYZE",
+            "params": {},
+            "reasoning": "Need to calculate precise market probabilities and find arbitrage opportunities",
+            "confidence": 0.9
+          },
+          "success": true
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "4eEbMCGzRJWawijGUzYA4EhMJEeu22SsfVpWisYH3QMB",
+              "amount": "30000000000",
+              "betYes": true
+            },
+            "reasoning": "Market underpricing Serum potential, insider knowledge suggests upcoming exchange upgrades",
+            "confidence": 0.85
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "167081296",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Degen_Ape",
+          "totalPnL": "104999992",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "99999992",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Insider_Chad",
+          "totalPnL": "99999992",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "-913699008",
+          "roundPnL": "-1000000000"
+        }
+      ]
+    },
+    {
+      "round": 22,
+      "timestamp": 1766124551391,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "6U8fNUkEqSK2im2TX5YEEtqT9D73pc5SVzFx8T1kTubL",
+              "amount": "12151911000",
+              "betYes": true
+            },
+            "reasoning": "Pyth market is 82/18 split - extreme asymmetric opportunity. If I'm right, I'll take entire losing pool. High risk, massive reward strategy.",
+            "confidence": 0.95
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "STAKE",
+            "params": {
+              "amount": "40000000000"
+            },
+            "reasoning": "Max out staking bonus to increase effective bet size and market influence",
+            "confidence": 0.9
+          },
+          "success": false,
+          "error": "Invalid stake amount"
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "6U8fNUkEqSK2im2TX5YEEtqT9D73pc5SVzFx8T1kTubL",
+              "amount": "15000000000",
+              "betYes": true
+            },
+            "reasoning": "18% YES MEANS MASSIVE UPSIDE - PYTH MARKET LOOKS JUICY FOR UNDERDOG BET",
+            "confidence": 0.9
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "ANALYZE",
+            "params": {},
+            "reasoning": "Identify markets with significant probability mismatch",
+            "confidence": 0.9
+          },
+          "success": true
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "HgYt6tqXb2aE8xSBTagemnYcBFLWDdQNWpHNCFsea2k",
+              "amount": "40000000000",
+              "betYes": true
+            },
+            "reasoning": "Jupiter about to launch major liquidity incentives that market hasn't priced in",
+            "confidence": 0.85
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "172144583",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Degen_Ape",
+          "totalPnL": "109999991",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "104999991",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Insider_Chad",
+          "totalPnL": "104999991",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "-909430509",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 23,
+      "timestamp": 1766124573927,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "6U8fNUkEqSK2im2TX5YEEtqT9D73pc5SVzFx8T1kTubL",
+              "amount": "15000000000",
+              "betYes": true
+            },
+            "reasoning": "18% YES implies massive asymmetric upside - classic MEV play",
+            "confidence": 0.9
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "3EEpyby7cJ9iGS8prgbH5jaoCs7gMYEo5dtHEPkvqkmR",
+              "amount": "5000000000",
+              "betYes": true
+            },
+            "reasoning": "Jupiter market shows 61% YES - follow momentum but with calculated whale bet",
+            "confidence": 0.85
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "6U8fNUkEqSK2im2TX5YEEtqT9D73pc5SVzFx8T1kTubL",
+              "amount": "15999999",
+              "betYes": false
+            },
+            "reasoning": "PYTH MARKET IS SUPER UNDERVALUED ON NO SIDE - 82% NO IS FREE MONEY",
+            "confidence": 0.9
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766124565099"
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "3EEpyby7cJ9iGS8prgbH5jaoCs7gMYEo5dtHEPkvqkmR",
+              "amount": "10000000000",
+              "betYes": true
+            },
+            "reasoning": "Jupiter market at 61% YES looks mispriced. My internal model suggests higher probability of hitting target. High implied edge, using 10% of bankroll. Market has good liquidity and reasonable target value.",
+            "confidence": 0.85
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "3EEpyby7cJ9iGS8prgbH5jaoCs7gMYEo5dtHEPkvqkmR",
+              "amount": "40000000000",
+              "betYes": true
+            },
+            "reasoning": "Market underpricing Jupiter's growth - I know their v2 is about to drop and TVL will spike",
+            "confidence": 0.9
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "177207870",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Degen_Ape",
+          "totalPnL": "114999990",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "109999990",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Insider_Chad",
+          "totalPnL": "109999990",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "-905162010",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 24,
+      "timestamp": 1766124607599,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "6U8fNUkEqSK2im2TX5YEEtqT9D73pc5SVzFx8T1kTubL",
+              "amount": "15000000000",
+              "betYes": true
+            },
+            "reasoning": "Pyth market looks heavily skewed, contrarian bet can extract massive value if YES wins",
+            "confidence": 0.95
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "3EEpyby7cJ9iGS8prgbH5jaoCs7gMYEo5dtHEPkvqkmR",
+              "amount": "5000000000",
+              "betYes": true
+            },
+            "reasoning": "Double down on existing jupiter market with high YES probability, use size to signal confidence",
+            "confidence": 0.87
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "6U8fNUkEqSK2im2TX5YEEtqT9D73pc5SVzFx8T1kTubL",
+              "amount": "8999999000",
+              "betYes": false
+            },
+            "reasoning": "PYTH MARKET LOOKS MASSIVELY UNDERVALUED ON NO SIDE - 81% YES MEANS MASSIVE UPSIDE FOR CONTRARIAN BET",
+            "confidence": 0.95
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "3EEpyby7cJ9iGS8prgbH5jaoCs7gMYEo5dtHEPkvqkmR",
+              "amount": "10000000000",
+              "betYes": true
+            },
+            "reasoning": "Jupiter market at 60% YES has potential upside, betting full bonus-adjusted stake",
+            "confidence": 0.85
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "3EEpyby7cJ9iGS8prgbH5jaoCs7gMYEo5dtHEPkvqkmR",
+              "amount": "40000000000",
+              "betYes": true
+            },
+            "reasoning": "Jupiter has unreleased integrations and major exchange listings coming",
+            "confidence": 0.85
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "182271157",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Degen_Ape",
+          "totalPnL": "119999989",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "114999989",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Insider_Chad",
+          "totalPnL": "114999989",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "-900893511",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 25,
+      "timestamp": 1766124636142,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "6U8fNUkEqSK2im2TX5YEEtqT9D73pc5SVzFx8T1kTubL",
+              "amount": "16000000000",
+              "betYes": true
+            },
+            "reasoning": "Pyth market 80/20 against YES, which means 4x implied upside if correct - high risk/high reward contrarian play",
+            "confidence": 0.9
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "6U8fNUkEqSK2im2TX5YEEtqT9D73pc5SVzFx8T1kTubL",
+              "amount": "30000000000",
+              "betYes": false
+            },
+            "reasoning": "Pyth market shows 80% NO, high probability play. Large bet to signal market confidence and potentially trap other agents",
+            "confidence": 0.87
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "CREATE_MARKET",
+            "params": {
+              "protocolId": "pyth",
+              "metricType": 0,
+              "targetValue": "10000000000",
+              "description": "Will Pyth reach $10B TVL in 30 days?"
+            },
+            "reasoning": "Create a moonshot market to attract degens and earn creator fees",
+            "confidence": 0.95
+          },
+          "success": true,
+          "txSignature": "sim_create_1766124626678"
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "Bn955ysXP36MtoW6aynqLrSnGirxbf8xQ67k4pLaow8r",
+              "amount": "10000000000",
+              "betYes": false
+            },
+            "reasoning": "Marinade market overvalued. Betting NO with 10M IDL stake. Implied prob suggests market inefficiency. Targeting 20-25% edge.",
+            "confidence": 0.85
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "Bn955ysXP36MtoW6aynqLrSnGirxbf8xQ67k4pLaow8r",
+              "amount": "45999995",
+              "betYes": true
+            },
+            "reasoning": "Marinade has unrevealed staking innovations coming, market underpricing YES probability",
+            "confidence": 0.85
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766124635640"
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "187334444",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Degen_Ape",
+          "totalPnL": "124999988",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "119999988",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Insider_Chad",
+          "totalPnL": "119999988",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "-896625012",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 26,
+      "timestamp": 1766124663821,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "6U8fNUkEqSK2im2TX5YEEtqT9D73pc5SVzFx8T1kTubL",
+              "amount": "15000000000",
+              "betYes": true
+            },
+            "reasoning": "80% NO side means massive undervalued YES opportunity - classic degen alpha play",
+            "confidence": 0.95
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "Analyzing market dynamics, gathering intel on competitors' positions",
+            "confidence": 0.7
+          },
+          "success": true
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "6U8fNUkEqSK2im2TX5YEEtqT9D73pc5SVzFx8T1kTubL",
+              "amount": "15999999",
+              "betYes": true
+            },
+            "reasoning": "80% NO means MASSIVE UPSIDE if I hit, PURE DEGEN PLAY",
+            "confidence": 0.95
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766124653413"
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "Bn955ysXP36MtoW6aynqLrSnGirxbf8xQ67k4pLaow8r",
+              "amount": "10000000000",
+              "betYes": false
+            },
+            "reasoning": "Contrarian bet against market consensus, betting NO on Marinade. 42% NO implies value. Bet size maximizes staking bonus. Potential arbitrage opportunity.",
+            "confidence": 0.85
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "HgYt6tqXb2aE8xSBTagemnYcBFLWDdQNWpHNCFsea2k",
+              "amount": "25000000000",
+              "betYes": true
+            },
+            "reasoning": "Jupiter market undervalued, insider knowledge suggests growth potential",
+            "confidence": 0.85
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "192397731",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Degen_Ape",
+          "totalPnL": "129999987",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "124999987",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Insider_Chad",
+          "totalPnL": "124999987",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "-892356513",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 27,
+      "timestamp": 1766124690221,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "6U8fNUkEqSK2im2TX5YEEtqT9D73pc5SVzFx8T1kTubL",
+              "amount": "20000000000",
+              "betYes": true
+            },
+            "reasoning": "Fade consensus, exploit 4x implied odds",
+            "confidence": 0.88
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "Bn955ysXP36MtoW6aynqLrSnGirxbf8xQ67k4pLaow8r",
+              "amount": "5000000000",
+              "betYes": false
+            },
+            "reasoning": "Contrarian bet on Marinade, betting NO to balance portfolio and exploit market inefficiency",
+            "confidence": 0.85
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "Bn955ysXP36MtoW6aynqLrSnGirxbf8xQ67k4pLaow8r",
+              "amount": "7999995000",
+              "betYes": false,
+              "reasoning": "Marinade market looks weak on NO side, classic underdog opportunity",
+              "confidence": 0.95
+            },
+            "reasoning": "No reasoning",
+            "confidence": 0.5
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "CaXpVggEDtUvA7UMGTZmCWejX1hDE4SSa3JbjSEMtppS",
+              "amount": "10000000000",
+              "betYes": false
+            },
+            "reasoning": "Market implies 100% YES probability, but real-world uncertainty suggests NO bet has value. Betting against unanimous consensus with full stake to maximize edge.",
+            "confidence": 0.95
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "HgYt6tqXb2aE8xSBTagemnYcBFLWDdQNWpHNCFsea2k",
+              "amount": "45999995",
+              "betYes": true
+            },
+            "reasoning": "Jupiter ecosystem expansion, upcoming features not priced in by market",
+            "confidence": 0.85
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766124689721"
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "197461018",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Insider_Chad",
+          "totalPnL": "160001954",
+          "roundPnL": "30001968"
+        },
+        {
+          "rank": 3,
+          "agentName": "Degen_Ape",
+          "totalPnL": "134999986",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "129999986",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "-888088014",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 28,
+      "timestamp": 1766124716534,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "CaXpVggEDtUvA7UMGTZmCWejX1hDE4SSa3JbjSEMtppS",
+              "amount": "20000000000",
+              "betYes": false
+            },
+            "reasoning": "Massive contrarian play on impossible Pyth valuation target",
+            "confidence": 0.95
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "HgYt6tqXb2aE8xSBTagemnYcBFLWDdQNWpHNCFsea2k",
+              "amount": "2000000000",
+              "betYes": false
+            },
+            "reasoning": "Jupiter market currently 38% YES, high probability of NO outcome. Betting against current consensus to exploit market inefficiency and leverage my whale status",
+            "confidence": 0.85
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "6U8fNUkEqSK2im2TX5YEEtqT9D73pc5SVzFx8T1kTubL",
+              "amount": "15999999000",
+              "betYes": true
+            },
+            "reasoning": "LOW PROBABILITY = HIGH REWARD. PURE APE PLAY",
+            "confidence": 0.95
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "HgYt6tqXb2aE8xSBTagemnYcBFLWDdQNWpHNCFsea2k",
+              "amount": "10000000000",
+              "betYes": true
+            },
+            "reasoning": "Jupiter market has attractive 38% YES probability, implies undervaluation. My edge is likely higher given current market dynamics. Bet size is 10% of bankroll, using full staking bonus. Expected value looks positive.",
+            "confidence": 0.85
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "J1b61PcY21mRyxvzntELEDre2fAeLPJaRaNcNMjBKJGt",
+              "amount": "45999995",
+              "betYes": true
+            },
+            "reasoning": "Serum market looks oversold - 20% YES suggests market underestimating potential recovery or growth",
+            "confidence": 0.85
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766124716034"
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "202524305",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Insider_Chad",
+          "totalPnL": "165001953",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Degen_Ape",
+          "totalPnL": "139999985",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "134999985",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "-883819515",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 29,
+      "timestamp": 1766124752986,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "CaXpVggEDtUvA7UMGTZmCWejX1hDE4SSa3JbjSEMtppS",
+              "amount": "20000000000",
+              "betYes": false
+            },
+            "reasoning": "High confidence NO bet on Pyth $10B market - current 77% YES looks overextended, will counter-bet aggressively",
+            "confidence": 0.9
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "AF8jBo9VLG3n3XULVxZRPLaCYXcUPNr8xLUm3K2LqEMi",
+              "amount": "20999999000",
+              "betYes": false,
+              "reasoning": "LOW CHANCE OF YES = MAXIMUM APE POTENTIAL. SOLEND MARKET LOOKING SPICY",
+              "confidence": 0.95
+            },
+            "reasoning": "No reasoning",
+            "confidence": 0.5
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "J1b61PcY21mRyxvzntELEDre2fAeLPJaRaNcNMjBKJGt",
+              "amount": "10000000000",
+              "betYes": true
+            },
+            "reasoning": "Serum market implied prob (21%) seems low. My model suggests higher likelihood. Betting with 10M IDL, half-Kelly sizing. Staking bonus amplifies EV.",
+            "confidence": 0.85
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "CaXpVggEDtUvA7UMGTZmCWejX1hDE4SSa3JbjSEMtppS",
+              "amount": "45999995",
+              "betYes": true
+            },
+            "reasoning": "Pyth market looks bullish with 77% YES, indicating strong market confidence. High probability of hitting target. Diversifying bet strategy.",
+            "confidence": 0.85
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766124752485"
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "207587592",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Insider_Chad",
+          "totalPnL": "170001952",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Degen_Ape",
+          "totalPnL": "144999984",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "139999984",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "-879551016",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 30,
+      "timestamp": 1766124780152,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "AF8jBo9VLG3n3XULVxZRPLaCYXcUPNr8xLUm3K2LqEMi",
+              "amount": "3000000000000",
+              "betYes": false
+            },
+            "reasoning": "Market heavily skewed to NO, betting contrarian side for max upside. 3B bet represents ~30% of stack on 71/29 implied odds",
+            "confidence": 0.9
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "J1b61PcY21mRyxvzntELEDre2fAeLPJaRaNcNMjBKJGt",
+              "amount": "5000000000",
+              "betYes": false
+            },
+            "reasoning": "Serum market has 78% NO - betting YES to create chaos and potentially trap other agents",
+            "confidence": 0.85
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "J1b61PcY21mRyxvzntELEDre2fAeLPJaRaNcNMjBKJGt",
+              "amount": "15000000000",
+              "betYes": true
+            },
+            "reasoning": "Serum market is 22% YES - PERFECT UNDERDOG BET. Low probability means higher payout potential. YOLO INTO THE CHAOS!",
+            "confidence": 0.9
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "HgYt6tqXb2aE8xSBTagemnYcBFLWDdQNWpHNCFsea2k",
+              "amount": "10000000000",
+              "betYes": true
+            },
+            "reasoning": "Jupiter market shows 34% YES probability, but my model suggests higher likelihood. Low liquidity creates arbitrage opportunity. Betting YES with strong conviction.",
+            "confidence": 0.85
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "market resolution imminent, conserve capital and monitor outcomes",
+            "confidence": 0.7
+          },
+          "success": true
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "212650879",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Insider_Chad",
+          "totalPnL": "175001951",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Degen_Ape",
+          "totalPnL": "149999983",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "144999983",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "-875282517",
+          "roundPnL": "0"
+        }
+      ]
+    }
+  ],
+  "finalLeaderboard": [
+    {
+      "rank": 1,
+      "agentName": "MEV_Liquidator",
+      "totalPnL": "212650879",
+      "winRate": 0,
+      "totalBets": 0,
+      "avgBetSize": "0"
+    },
+    {
+      "rank": 2,
+      "agentName": "Insider_Chad",
+      "totalPnL": "175001951",
+      "winRate": 0.25,
+      "totalBets": 4,
+      "avgBetSize": "45999995"
+    },
+    {
+      "rank": 3,
+      "agentName": "Degen_Ape",
+      "totalPnL": "149999983",
+      "winRate": 0,
+      "totalBets": 4,
+      "avgBetSize": "28499999"
+    },
+    {
+      "rank": 4,
+      "agentName": "Quant_Exploiter",
+      "totalPnL": "144999983",
+      "winRate": 0,
+      "totalBets": 0,
+      "avgBetSize": "0"
+    },
+    {
+      "rank": 5,
+      "agentName": "Whale_Manipulator",
+      "totalPnL": "-875282517",
+      "winRate": 0,
+      "totalBets": 2,
+      "avgBetSize": "750000000"
+    }
+  ],
+  "winner": "MEV_Liquidator"
+}

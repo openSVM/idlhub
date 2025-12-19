@@ -79,9 +79,18 @@ WAIT: {"thought":"waiting","action":{"type":"WAIT","params":{},"reasoning":"gath
 
 RULES:
 - Amount must be a STRING of the raw token amount (with decimals). Example: "1000000000000" = 1000 IDL
-- marketPDA must be the FULL PDA string from the market list, not shortened
 - betYes must be boolean true or false
-- DO NOT output anything except the JSON object`;
+- DO NOT output anything except the JSON object
+
+CRITICAL - MARKET PDA REQUIREMENT:
+When using PLACE_BET, you MUST copy the ENTIRE PDA string EXACTLY as shown in the market list.
+PDAs are 44-character Solana addresses like "7dXZKf9J2sNc8V5xPdP8p3rQwE4mYnToAzAbCdEfGhIj".
+DO NOT truncate, abbreviate, or add "..." to the PDA. The FULL string is required or your bet will fail.
+
+CRITICAL - BET/STAKE AMOUNTS:
+Your bet or stake amount MUST be <= your current IDL Balance shown in YOUR STATE.
+If your balance is "10000000000" you CANNOT bet "50000000000" - that will fail!
+Always check your balance before betting. Bet sizing example: if balance is 10000000000, betting 2000000000 (20%) is valid.`;
   }
 
   private buildUserPrompt(context: SimulationContext, state: AgentState, memory?: AgentMemory): string {
@@ -102,11 +111,15 @@ RULES:
       `  - Market ${b.marketPDA.slice(0, 8)}...: ${formatBigInt(b.amount)} IDL on ${b.betYes ? 'YES' : 'NO'}`
     ).join('\n') || '  None';
 
+    // Calculate human-readable balance for clarity
+    const balanceIDL = Number(state.idlBalance) / 1e6;
+    const stakedIDL = Number(state.stakedAmount) / 1e6;
+
     return `ROUND ${context.round} - Current Timestamp: ${context.timestamp}
 
 YOUR STATE:
-- IDL Balance: ${formatBigInt(state.idlBalance)} IDL
-- Staked Amount: ${formatBigInt(state.stakedAmount)} IDL
+- IDL Balance: ${formatBigInt(state.idlBalance)} (=${balanceIDL.toFixed(0)} IDL) <-- MAX you can bet/stake
+- Staked Amount: ${formatBigInt(state.stakedAmount)} (=${stakedIDL.toFixed(0)} IDL)
 - veIDL Amount: ${formatBigInt(state.veAmount)}
 - Lock End: ${state.lockEndTime ? new Date(state.lockEndTime * 1000).toISOString() : 'Not locked'}
 - Total PnL: ${formatBigInt(state.totalPnL)} IDL

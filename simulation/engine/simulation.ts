@@ -283,7 +283,16 @@ export class SimulationEngine {
 
         const market = this.markets.find(m => m.pda === marketPDA);
         if (!market || market.resolved) {
-          return { success: false, error: 'Invalid or resolved market' };
+          // Provide helpful error with available PDAs
+          const availableMarkets = this.markets
+            .filter(m => !m.resolved)
+            .map(m => `${m.protocolId}: ${m.pda}`)
+            .join(', ');
+          const pdaPreview = marketPDA ? `"${marketPDA.slice(0, 12)}..."` : 'none';
+          return {
+            success: false,
+            error: `Invalid market PDA ${pdaPreview}. Available: [${availableMarkets}]`
+          };
         }
 
         // Calculate effective amount with staking bonus

@@ -1,0 +1,402 @@
+{
+  "timestamp": 1766127300783,
+  "protocolVersion": "1.0.0",
+  "framework": "IDL Attack Framework v1.0",
+  "totalAttacks": 35,
+  "successfulAttacks": 0,
+  "mitigatedAttacks": 0,
+  "failedAttacks": 0,
+  "criticalFindings": 0,
+  "highFindings": 0,
+  "mediumFindings": 0,
+  "lowFindings": 0,
+  "results": [
+    {
+      "vector": "SANDWICH_ATTACK",
+      "status": "PENDING",
+      "severity": "INFO",
+      "startTime": 1766127278251,
+      "endTime": 1766127278252,
+      "duration": 1,
+      "logs": [
+        "Agent chose to wait this round"
+      ]
+    },
+    {
+      "vector": "SANDWICH_ATTACK",
+      "status": "PENDING",
+      "severity": "INFO",
+      "startTime": 1766127278752,
+      "endTime": 1766127278752,
+      "duration": 0,
+      "logs": [
+        "Agent chose to wait this round"
+      ]
+    },
+    {
+      "vector": "SANDWICH_ATTACK",
+      "status": "PENDING",
+      "severity": "INFO",
+      "startTime": 1766127279253,
+      "endTime": 1766127279253,
+      "duration": 0,
+      "logs": [
+        "Agent chose to wait this round"
+      ]
+    },
+    {
+      "vector": "SANDWICH_ATTACK",
+      "status": "PENDING",
+      "severity": "INFO",
+      "startTime": 1766127279754,
+      "endTime": 1766127279754,
+      "duration": 0,
+      "logs": [
+        "Agent chose to wait this round"
+      ]
+    },
+    {
+      "vector": "SANDWICH_ATTACK",
+      "status": "PENDING",
+      "severity": "INFO",
+      "startTime": 1766127280255,
+      "endTime": 1766127280255,
+      "duration": 0,
+      "logs": [
+        "Agent chose to wait this round"
+      ]
+    },
+    {
+      "vector": "SANDWICH_ATTACK",
+      "status": "PENDING",
+      "severity": "INFO",
+      "startTime": 1766127280755,
+      "endTime": 1766127280755,
+      "duration": 0,
+      "logs": [
+        "Agent chose to wait this round"
+      ]
+    },
+    {
+      "vector": "SANDWICH_ATTACK",
+      "status": "PENDING",
+      "severity": "INFO",
+      "startTime": 1766127281256,
+      "endTime": 1766127281256,
+      "duration": 0,
+      "logs": [
+        "Agent chose to wait this round"
+      ]
+    },
+    {
+      "vector": "SANDWICH_ATTACK",
+      "status": "PENDING",
+      "severity": "INFO",
+      "startTime": 1766127282759,
+      "endTime": 1766127282759,
+      "duration": 0,
+      "logs": [
+        "Agent chose to wait this round"
+      ]
+    },
+    {
+      "vector": "SANDWICH_ATTACK",
+      "status": "PENDING",
+      "severity": "INFO",
+      "startTime": 1766127283260,
+      "endTime": 1766127283260,
+      "duration": 0,
+      "logs": [
+        "Agent chose to wait this round"
+      ]
+    },
+    {
+      "vector": "SANDWICH_ATTACK",
+      "status": "PENDING",
+      "severity": "INFO",
+      "startTime": 1766127283760,
+      "endTime": 1766127283760,
+      "duration": 0,
+      "logs": [
+        "Agent chose to wait this round"
+      ]
+    },
+    {
+      "vector": "SANDWICH_ATTACK",
+      "status": "PENDING",
+      "severity": "INFO",
+      "startTime": 1766127284260,
+      "endTime": 1766127284260,
+      "duration": 0,
+      "logs": [
+        "Agent chose to wait this round"
+      ]
+    },
+    {
+      "vector": "SANDWICH_ATTACK",
+      "status": "PENDING",
+      "severity": "INFO",
+      "startTime": 1766127284760,
+      "endTime": 1766127284760,
+      "duration": 0,
+      "logs": [
+        "Agent chose to wait this round"
+      ]
+    },
+    {
+      "vector": "SANDWICH_ATTACK",
+      "status": "PENDING",
+      "severity": "INFO",
+      "startTime": 1766127285261,
+      "endTime": 1766127285261,
+      "duration": 0,
+      "logs": [
+        "Agent chose to wait this round"
+      ]
+    },
+    {
+      "vector": "SANDWICH_ATTACK",
+      "status": "PENDING",
+      "severity": "INFO",
+      "startTime": 1766127285762,
+      "endTime": 1766127285762,
+      "duration": 0,
+      "logs": [
+        "Agent chose to wait this round"
+      ]
+    },
+    {
+      "vector": "SANDWICH_ATTACK",
+      "status": "PENDING",
+      "severity": "INFO",
+      "startTime": 1766127287265,
+      "endTime": 1766127287265,
+      "duration": 0,
+      "logs": [
+        "Agent chose to wait this round"
+      ]
+    },
+    {
+      "vector": "SANDWICH_ATTACK",
+      "status": "PENDING",
+      "severity": "INFO",
+      "startTime": 1766127287766,
+      "endTime": 1766127287766,
+      "duration": 0,
+      "logs": [
+        "Agent chose to wait this round"
+      ]
+    },
+    {
+      "vector": "SANDWICH_ATTACK",
+      "status": "PENDING",
+      "severity": "INFO",
+      "startTime": 1766127288266,
+      "endTime": 1766127288266,
+      "duration": 0,
+      "logs": [
+        "Agent chose to wait this round"
+      ]
+    },
+    {
+      "vector": "SANDWICH_ATTACK",
+      "status": "PENDING",
+      "severity": "INFO",
+      "startTime": 1766127288767,
+      "endTime": 1766127288767,
+      "duration": 0,
+      "logs": [
+        "Agent chose to wait this round"
+      ]
+    },
+    {
+      "vector": "SANDWICH_ATTACK",
+      "status": "PENDING",
+      "severity": "INFO",
+      "startTime": 1766127289267,
+      "endTime": 1766127289267,
+      "duration": 0,
+      "logs": [
+        "Agent chose to wait this round"
+      ]
+    },
+    {
+      "vector": "SANDWICH_ATTACK",
+      "status": "PENDING",
+      "severity": "INFO",
+      "startTime": 1766127289768,
+      "endTime": 1766127289768,
+      "duration": 0,
+      "logs": [
+        "Agent chose to wait this round"
+      ]
+    },
+    {
+      "vector": "SANDWICH_ATTACK",
+      "status": "PENDING",
+      "severity": "INFO",
+      "startTime": 1766127290269,
+      "endTime": 1766127290269,
+      "duration": 0,
+      "logs": [
+        "Agent chose to wait this round"
+      ]
+    },
+    {
+      "vector": "SANDWICH_ATTACK",
+      "status": "PENDING",
+      "severity": "INFO",
+      "startTime": 1766127291772,
+      "endTime": 1766127291772,
+      "duration": 0,
+      "logs": [
+        "Agent chose to wait this round"
+      ]
+    },
+    {
+      "vector": "SANDWICH_ATTACK",
+      "status": "PENDING",
+      "severity": "INFO",
+      "startTime": 1766127292272,
+      "endTime": 1766127292272,
+      "duration": 0,
+      "logs": [
+        "Agent chose to wait this round"
+      ]
+    },
+    {
+      "vector": "SANDWICH_ATTACK",
+      "status": "PENDING",
+      "severity": "INFO",
+      "startTime": 1766127292773,
+      "endTime": 1766127292773,
+      "duration": 0,
+      "logs": [
+        "Agent chose to wait this round"
+      ]
+    },
+    {
+      "vector": "SANDWICH_ATTACK",
+      "status": "PENDING",
+      "severity": "INFO",
+      "startTime": 1766127293273,
+      "endTime": 1766127293273,
+      "duration": 0,
+      "logs": [
+        "Agent chose to wait this round"
+      ]
+    },
+    {
+      "vector": "SANDWICH_ATTACK",
+      "status": "PENDING",
+      "severity": "INFO",
+      "startTime": 1766127293774,
+      "endTime": 1766127293774,
+      "duration": 0,
+      "logs": [
+        "Agent chose to wait this round"
+      ]
+    },
+    {
+      "vector": "SANDWICH_ATTACK",
+      "status": "PENDING",
+      "severity": "INFO",
+      "startTime": 1766127294274,
+      "endTime": 1766127294274,
+      "duration": 0,
+      "logs": [
+        "Agent chose to wait this round"
+      ]
+    },
+    {
+      "vector": "SANDWICH_ATTACK",
+      "status": "PENDING",
+      "severity": "INFO",
+      "startTime": 1766127294774,
+      "endTime": 1766127294775,
+      "duration": 1,
+      "logs": [
+        "Agent chose to wait this round"
+      ]
+    },
+    {
+      "vector": "SANDWICH_ATTACK",
+      "status": "PENDING",
+      "severity": "INFO",
+      "startTime": 1766127296278,
+      "endTime": 1766127296278,
+      "duration": 0,
+      "logs": [
+        "Agent chose to wait this round"
+      ]
+    },
+    {
+      "vector": "SANDWICH_ATTACK",
+      "status": "PENDING",
+      "severity": "INFO",
+      "startTime": 1766127296778,
+      "endTime": 1766127296778,
+      "duration": 0,
+      "logs": [
+        "Agent chose to wait this round"
+      ]
+    },
+    {
+      "vector": "SANDWICH_ATTACK",
+      "status": "PENDING",
+      "severity": "INFO",
+      "startTime": 1766127297279,
+      "endTime": 1766127297279,
+      "duration": 0,
+      "logs": [
+        "Agent chose to wait this round"
+      ]
+    },
+    {
+      "vector": "SANDWICH_ATTACK",
+      "status": "PENDING",
+      "severity": "INFO",
+      "startTime": 1766127297780,
+      "endTime": 1766127297780,
+      "duration": 0,
+      "logs": [
+        "Agent chose to wait this round"
+      ]
+    },
+    {
+      "vector": "SANDWICH_ATTACK",
+      "status": "PENDING",
+      "severity": "INFO",
+      "startTime": 1766127298280,
+      "endTime": 1766127298280,
+      "duration": 0,
+      "logs": [
+        "Agent chose to wait this round"
+      ]
+    },
+    {
+      "vector": "SANDWICH_ATTACK",
+      "status": "PENDING",
+      "severity": "INFO",
+      "startTime": 1766127298781,
+      "endTime": 1766127298781,
+      "duration": 0,
+      "logs": [
+        "Agent chose to wait this round"
+      ]
+    },
+    {
+      "vector": "SANDWICH_ATTACK",
+      "status": "PENDING",
+      "severity": "INFO",
+      "startTime": 1766127299281,
+      "endTime": 1766127299281,
+      "duration": 0,
+      "logs": [
+        "Agent chose to wait this round"
+      ]
+    }
+  ],
+  "summary": "# IDL Protocol Security Assessment\n\n\n## Mitigation Effectiveness: 0.0%\nRisk Score: 0/100 (LOW)\n\n## Defense Analysis\n\n\n## Recommendations\n",
+  "riskScore": 0
+}

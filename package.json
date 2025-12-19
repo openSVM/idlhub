@@ -30,7 +30,13 @@
     "sim:run": "npx ts-node simulation/index.ts",
     "sim:quick": "npx ts-node simulation/index.ts --rounds=5 --delay=1000",
     "sim:long": "npx ts-node simulation/index.ts --rounds=30 --delay=2000",
-    "sim:debug": "npx ts-node simulation/index.ts --debug"
+    "sim:debug": "npx ts-node simulation/index.ts --debug",
+    "attack": "npx ts-node attack-framework/index.ts",
+    "attack:scan": "npx ts-node attack-framework/index.ts --scan",
+    "attack:quick": "npx ts-node attack-framework/index.ts --rounds=5 --mock",
+    "attack:full": "npx ts-node attack-framework/index.ts --rounds=20 --parallel",
+    "attack:mev": "npx ts-node attack-framework/index.ts --vectors=SANDWICH_ATTACK,JIT_LIQUIDITY,ORACLE_FRONT_RUN",
+    "attack:flash": "npx ts-node attack-framework/index.ts --vectors=FLASH_LOAN_STAKE,FLASH_LOAN_VOTE,LIQUIDITY_DRAIN"
   },
   "bin": {
     "idlhub-mcp": "./mcp-server/src/index.js"

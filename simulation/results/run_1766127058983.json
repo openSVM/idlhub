@@ -1,0 +1,1669 @@
+{
+  "startTime": 1766126685758,
+  "endTime": 1766127058983,
+  "totalRounds": 15,
+  "roundResults": [
+    {
+      "round": 1,
+      "timestamp": 1766126703760,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "STAKE",
+            "params": {
+              "amount": "10000000000"
+            },
+            "reasoning": "Stake entire balance to get 50% effective betting bonus, which is basically free money",
+            "confidence": 0.95
+          },
+          "success": true,
+          "txSignature": "sim_stake_1766126689572"
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "STAKE",
+            "params": {
+              "amount": "6000000000"
+            },
+            "reasoning": "Stake 60% of balance to establish market dominance and get 50% effective bet bonus",
+            "confidence": 0.9
+          },
+          "success": true,
+          "txSignature": "sim_stake_1766126693307"
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "STAKE",
+            "params": {
+              "amount": "5000000000000"
+            },
+            "reasoning": "max bonus to boost bet potential",
+            "confidence": 0.9
+          },
+          "success": false,
+          "error": "Invalid stake amount"
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "STAKE",
+            "params": {
+              "amount": "5000000000"
+            },
+            "reasoning": "50% bonus on first stake, preserving capital for bets",
+            "confidence": 0.9
+          },
+          "success": true,
+          "txSignature": "sim_stake_1766126700288"
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "STAKE",
+            "params": {
+              "amount": "10000000000"
+            },
+            "reasoning": "max bonus to increase effective bet size",
+            "confidence": 0.9
+          },
+          "success": true,
+          "txSignature": "sim_stake_1766126703260"
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "5000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Insider_Chad",
+          "totalPnL": "5000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "3000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "2500000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Degen_Ape",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 2,
+      "timestamp": 1766126725680,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "FYHVLSmjXERSQv6FN5eyWzR8oE3oGVv3NBKXp45eYEFL",
+              "amount": "2000000000",
+              "betYes": true
+            },
+            "reasoning": "high expected value on NO/underpriced market",
+            "confidence": 0.9
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "FYHVLSmjXERSQv6FN5eyWzR8oE3oGVv3NBKXp45eYEFL",
+              "amount": "2000000000",
+              "betYes": false
+            },
+            "reasoning": "Raydium TVL target seems overvalued, betting against consensus",
+            "confidence": 0.85
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766126712550"
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "STAKE",
+            "params": {
+              "amount": "5000000000"
+            },
+            "reasoning": "GET THAT 50% BET BONUS BABY",
+            "confidence": 0.9
+          },
+          "success": true,
+          "txSignature": "sim_stake_1766126715872"
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "FYHVLSmjXERSQv6FN5eyWzR8oE3oGVv3NBKXp45eYEFL",
+              "amount": "1000000000",
+              "betYes": false
+            },
+            "reasoning": "Raydium market shows 75% NO, which seems overconfident. High probability of market correction. Betting against consensus with 20% of available balance. Asymmetric risk/reward opportunity.",
+            "confidence": 0.85
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766126721149"
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "CbcHBnFuYikWHjNB7mx1sF7SiTUc96bVFZkdmcAtCWfx",
+              "amount": "2000000000",
+              "betYes": true
+            },
+            "reasoning": "Jupiter has upcoming integrations and launchpad that will drive TVL higher than market expects",
+            "confidence": 0.85
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "10000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Insider_Chad",
+          "totalPnL": "10000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "6000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "5000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Degen_Ape",
+          "totalPnL": "2500000",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 3,
+      "timestamp": 1766126748596,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "FYHVLSmjXERSQv6FN5eyWzR8oE3oGVv3NBKXp45eYEFL",
+              "amount": "3000000000",
+              "betYes": true
+            },
+            "reasoning": "exploiting market inefficiency",
+            "confidence": 0.85
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "CbcHBnFuYikWHjNB7mx1sF7SiTUc96bVFZkdmcAtCWfx",
+              "amount": "1000000000",
+              "betYes": false
+            },
+            "reasoning": "Contrarian bet against Jupiter hype, market looks overvalued at 63% YES. Small bet to test waters and potentially trap optimistic traders.",
+            "confidence": 0.75
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766126735015"
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "FYHVLSmjXERSQv6FN5eyWzR8oE3oGVv3NBKXp45eYEFL",
+              "amount": "4002000000",
+              "betYes": true
+            },
+            "reasoning": "big underdog play, market inefficiency detected",
+            "confidence": 0.95
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766126740078"
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "CbcHBnFuYikWHjNB7mx1sF7SiTUc96bVFZkdmcAtCWfx",
+              "amount": "2000000000",
+              "betYes": true
+            },
+            "reasoning": "Jupiter market shows 56% YES, but my model suggests undervaluation. Bet 50% of available balance with positive expected value. Market has good liquidity and clear trend.",
+            "confidence": 0.85
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766126744399"
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "CbcHBnFuYikWHjNB7mx1sF7SiTUc96bVFZkdmcAtCWfx",
+              "amount": "4000000000",
+              "betYes": true
+            },
+            "reasoning": "Jupiter market underpricing future growth potential",
+            "confidence": 0.85
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "1034128125",
+          "roundPnL": "1026628125"
+        },
+        {
+          "rank": 2,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "98599500",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Insider_Chad",
+          "totalPnL": "15000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Degen_Ape",
+          "totalPnL": "5000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "-991000000",
+          "roundPnL": "-1000000000"
+        }
+      ]
+    },
+    {
+      "round": 4,
+      "timestamp": 1766126773760,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "2fGFT4mSCrALsUirP9jft7nnf7rpRvAUQsM9ZXWSPAEX",
+              "amount": "29579850",
+              "betYes": true,
+              "reasoning": "contrarian alpha - massive mispricing",
+              "confidence": 0.95
+            },
+            "reasoning": "No reasoning",
+            "confidence": 0.5
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766126754265"
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "2fGFT4mSCrALsUirP9jft7nnf7rpRvAUQsM9ZXWSPAEX",
+              "amount": "500000000",
+              "betYes": true
+            },
+            "reasoning": "Massive counter-trend bet to shake market, take advantage of extreme odds",
+            "confidence": 0.85
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766126760068"
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "99qrdb4fbwdVHgo9699xebbTpk6uyFrQwGpRzUexJuno",
+              "amount": "500000000",
+              "betYes": true
+            },
+            "reasoning": "marinade market looks cheap, undervalued YES side, only 51% - classic underdog play",
+            "confidence": 0.9
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766126764248"
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "99qrdb4fbwdVHgo9699xebbTpk6uyFrQwGpRzUexJuno",
+              "amount": "2000000000",
+              "betYes": true
+            },
+            "reasoning": "Market inefficiency, 58% YES implies undervalued outcome. Betting 40% of balance with medium confidence. Staking bonus increases effective bet size.",
+            "confidence": 0.75
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766126769119"
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "99qrdb4fbwdVHgo9699xebbTpk6uyFrQwGpRzUexJuno",
+              "amount": "7500000",
+              "betYes": true
+            },
+            "reasoning": "Market currently shows 73% YES, but I know Marinade is launching new validator rewards program that will likely push TVL over target",
+            "confidence": 0.85
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766126773260"
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "1036628125",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "103599500",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Insider_Chad",
+          "totalPnL": "20000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Degen_Ape",
+          "totalPnL": "7500000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "-988000000",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 5,
+      "timestamp": 1766126798087,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "99qrdb4fbwdVHgo9699xebbTpk6uyFrQwGpRzUexJuno",
+              "amount": "35000000",
+              "betYes": false,
+              "reasoning": "73% YES means massive undervalued NO side - classic degen opportunity to fade consensus",
+              "confidence": 0.9
+            },
+            "reasoning": "No reasoning",
+            "confidence": 0.5
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766126781993"
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "99qrdb4fbwdVHgo9699xebbTpk6uyFrQwGpRzUexJuno",
+              "amount": "300000000",
+              "betYes": false
+            },
+            "reasoning": "Marinade market looks overheated at 73% YES, high probability of correction. Betting NO to exploit market sentiment",
+            "confidence": 0.85
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766126786723"
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "FYHVLSmjXERSQv6FN5eyWzR8oE3oGVv3NBKXp45eYEFL",
+              "amount": "505500000",
+              "betYes": false
+            },
+            "reasoning": "54% NO SIDE = FREE MONEY. LOW LIQUIDITY = HIGH VARIANCE = APE OPPORTUNITY",
+            "confidence": 0.95
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766126791108"
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "ANALYZE",
+            "params": {},
+            "reasoning": "Evaluate market dynamics before next move",
+            "confidence": 0.9
+          },
+          "success": true
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "gathering market intelligence",
+            "confidence": 0.7
+          },
+          "success": true
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "1039128125",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "108599500",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Insider_Chad",
+          "totalPnL": "25000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Degen_Ape",
+          "totalPnL": "10000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "-985000000",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 6,
+      "timestamp": 1766126818239,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "99qrdb4fbwdVHgo9699xebbTpk6uyFrQwGpRzUexJuno",
+              "amount": "35000000",
+              "betYes": false
+            },
+            "reasoning": "Marinade market heavily skewed to YES (69%) - massive contrarian opportunity to bet NO, exploit market inefficiency",
+            "confidence": 0.95
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766126801889"
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "ANALYZE",
+            "params": {},
+            "reasoning": "Gather intelligence before major move",
+            "confidence": 0.7
+          },
+          "success": true
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "2fGFT4mSCrALsUirP9jft7nnf7rpRvAUQsM9ZXWSPAEX",
+              "amount": "2250000",
+              "betYes": false
+            },
+            "reasoning": "Switchboard NO side looks underpriced, betting against the consensus",
+            "confidence": 0.9
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766126809793"
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "ANALYZE",
+            "params": {},
+            "reasoning": "Gather intel on market shifts before next decisive move",
+            "confidence": 0.75
+          },
+          "success": true
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "99qrdb4fbwdVHgo9699xebbTpk6uyFrQwGpRzUexJuno",
+              "amount": "7500000",
+              "betYes": true
+            },
+            "reasoning": "Strong YES signal on Marinade, insider knowledge supports market momentum",
+            "confidence": 0.85
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766126817739"
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "1041628125",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "84019650",
+          "roundPnL": "-29579850"
+        },
+        {
+          "rank": 3,
+          "agentName": "Insider_Chad",
+          "totalPnL": "30000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Degen_Ape",
+          "totalPnL": "15343528",
+          "roundPnL": "2843528"
+        },
+        {
+          "rank": 5,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "-1482000000",
+          "roundPnL": "-500000000"
+        }
+      ]
+    },
+    {
+      "round": 7,
+      "timestamp": 1766126844842,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "99qrdb4fbwdVHgo9699xebbTpk6uyFrQwGpRzUexJuno",
+              "amount": "7000000000",
+              "betYes": false
+            },
+            "reasoning": "massive edge on NO side, only 31% probability but high potential payout in parimutuel system",
+            "confidence": 0.95
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "DTbJigdxzoSzg8TvNdDjkRwEKqrUk3pmPP5Bgk6ryW8y",
+              "amount": "100000000",
+              "betYes": false
+            },
+            "reasoning": "Jupiter market slightly favors YES, but I'll counter-bet to create pressure and diversify my NO position. Small bet to test market reaction",
+            "confidence": 0.75
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766126832408"
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "DTbJigdxzoSzg8TvNdDjkRwEKqrUk3pmPP5Bgk6ryW8y",
+              "amount": "7843528",
+              "betYes": false
+            },
+            "reasoning": "jupiter market looks 50/50, betting NO for underdog bonus. Using ALL remaining liquid funds. MAXIMUM CHAOS",
+            "confidence": 0.95
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766126836655"
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "DTbJigdxzoSzg8TvNdDjkRwEKqrUk3pmPP5Bgk6ryW8y",
+              "amount": "1000000000",
+              "betYes": false
+            },
+            "reasoning": "jupiter market looks slightly overvalued on YES, betting NO for edge",
+            "confidence": 0.75
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766126841228"
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "Gathering intel, reviewing market positions before next move",
+            "confidence": 0.7
+          },
+          "success": true
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "1044128125",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "89019650",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Insider_Chad",
+          "totalPnL": "35000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Degen_Ape",
+          "totalPnL": "17843528",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "-1479000000",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 8,
+      "timestamp": 1766126868764,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "DTbJigdxzoSzg8TvNdDjkRwEKqrUk3pmPP5Bgk6ryW8y",
+              "amount": "10000000",
+              "betYes": false
+            },
+            "reasoning": "market slightly favoring NO, low risk high reward play",
+            "confidence": 0.85
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766126848780"
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "Gathering market intelligence before next strategic move",
+            "confidence": 0.7
+          },
+          "success": true
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "DTbJigdxzoSzg8TvNdDjkRwEKqrUk3pmPP5Bgk6ryW8y",
+              "amount": "2500000",
+              "betYes": false,
+              "reasoning": "Betting NO on Jupiter with remaining funds - undervalued side with better payout potential",
+              "confidence": 0.85
+            },
+            "reasoning": "No reasoning",
+            "confidence": 0.5
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766126858645"
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "99qrdb4fbwdVHgo9699xebbTpk6uyFrQwGpRzUexJuno",
+              "amount": "1000000000",
+              "betYes": false
+            },
+            "reasoning": "Marinade market shows 70% YES, but my model suggests this is overvalued. Betting NO provides attractive EV with 30% current probability. Sizing at 50% of available balance for controlled risk.",
+            "confidence": 0.85
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766126863974"
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "DTbJigdxzoSzg8TvNdDjkRwEKqrUk3pmPP5Bgk6ryW8y",
+              "amount": "10000000",
+              "betYes": false
+            },
+            "reasoning": "Jupiter market shows slight market skepticism. Betting NO at 53% provides contrarian opportunity with controlled risk",
+            "confidence": 0.75
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766126868264"
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "1046628125",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "94019650",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Insider_Chad",
+          "totalPnL": "40000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Degen_Ape",
+          "totalPnL": "20343528",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "-1476000000",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 9,
+      "timestamp": 1766126894920,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "99qrdb4fbwdVHgo9699xebbTpk6uyFrQwGpRzUexJuno",
+              "amount": "14019650",
+              "betYes": false
+            },
+            "reasoning": "Betting entire available balance on NO as market is overweighted on YES side",
+            "confidence": 0.85
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766126872795"
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "CREATE_MARKET",
+            "params": {
+              "protocolId": "switchboard",
+              "metricType": 0,
+              "targetValue": "250000000",
+              "description": "Will Switchboard hit $250M TVL?"
+            },
+            "reasoning": "Create a market where I have insider knowledge, potential to farm fees and control narrative",
+            "confidence": 0.9
+          },
+          "success": true,
+          "txSignature": "sim_create_1766126876813"
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "FYHVLSmjXERSQv6FN5eyWzR8oE3oGVv3NBKXp45eYEFL",
+              "amount": "2500000",
+              "betYes": false
+            },
+            "reasoning": "contrarian bet on NO, using last of available funds",
+            "confidence": 0.75
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766126886132"
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "Need to analyze market dynamics before next move",
+            "confidence": 0.7
+          },
+          "success": true
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "99qrdb4fbwdVHgo9699xebbTpk6uyFrQwGpRzUexJuno",
+              "amount": "7500000",
+              "betYes": true
+            },
+            "reasoning": "Marinade has positive momentum, 59% YES suggests market confidence, and I have insider knowledge about upcoming liquidity incentives",
+            "confidence": 0.85
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766126894420"
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "1049128125",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "99019650",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Insider_Chad",
+          "totalPnL": "45000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Degen_Ape",
+          "totalPnL": "22843528",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "-1472827500",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 10,
+      "timestamp": 1766126930463,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "CREATE_MARKET",
+            "params": {
+              "protocolId": "solana",
+              "metricType": 0,
+              "targetValue": "1000000000000",
+              "description": "Will Solana hit $1B TVL in next 30 days?"
+            },
+            "reasoning": "farm creator fees, provocative market will attract degens",
+            "confidence": 0.9
+          },
+          "success": true,
+          "txSignature": "sim_create_1766126904536"
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "4HiwnzFBNPswvSYMiCVTQWkQRLy6EMfaT1Pat6LGti2v",
+              "amount": "50000000000",
+              "betYes": false
+            },
+            "reasoning": "Counter the market consensus, large NO bet to shift odds and maximize potential gain",
+            "confidence": 0.75
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "4HiwnzFBNPswvSYMiCVTQWkQRLy6EMfaT1Pat6LGti2v",
+              "amount": "2500000",
+              "betYes": true,
+              "reasoning": "Pyth market looking juicy at 56% YES - slight bullish momentum",
+              "confidence": 0.75
+            },
+            "reasoning": "No reasoning",
+            "confidence": 0.5
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766126919392"
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "4HiwnzFBNPswvSYMiCVTQWkQRLy6EMfaT1Pat6LGti2v",
+              "amount": "500000000",
+              "betYes": true
+            },
+            "reasoning": "56% YES implies slight market mispricing. Betting 50% of available balance with 0.5 confidence. Pyth market target looks achievable.",
+            "confidence": 0.5
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766126926521"
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "Conserve capital, monitor existing bets, gather market intel",
+            "confidence": 0.7
+          },
+          "success": true
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "1051628125",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "104019650",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Insider_Chad",
+          "totalPnL": "50000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Degen_Ape",
+          "totalPnL": "25343528",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "-1469827500",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 11,
+      "timestamp": 1766126959193,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "FYHVLSmjXERSQv6FN5eyWzR8oE3oGVv3NBKXp45eYEFL",
+              "amount": "3000000000",
+              "betYes": true
+            },
+            "reasoning": "Raydium market slightly imbalanced, 45% YES looks attractive for small contrarian bet",
+            "confidence": 0.75
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "4HiwnzFBNPswvSYMiCVTQWkQRLy6EMfaT1Pat6LGti2v",
+              "amount": "50000000000",
+              "betYes": false
+            },
+            "reasoning": "Pyth market looks manipulatable with high YES confidence, placing significant NO bet to counter trend and create market uncertainty",
+            "confidence": 0.85
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "DTbJigdxzoSzg8TvNdDjkRwEKqrUk3pmPP5Bgk6ryW8y",
+              "amount": "2500000",
+              "betYes": false,
+              "reasoning": "54% NO on jupiter feels like free money. SMALL BUT SPICY",
+              "confidence": 0.9
+            },
+            "reasoning": "No reasoning",
+            "confidence": 0.5
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766126951938"
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "ANALYZE",
+            "params": {},
+            "reasoning": "Gather intel before decisive action",
+            "confidence": 0.7
+          },
+          "success": true
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "Waiting to see market resolutions from previous rounds, conserving capital",
+            "confidence": 0.7
+          },
+          "success": true
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "1054128125",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "109019650",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Insider_Chad",
+          "totalPnL": "55000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Degen_Ape",
+          "totalPnL": "27843528",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "-1466827500",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 12,
+      "timestamp": 1766126982160,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "4HiwnzFBNPswvSYMiCVTQWkQRLy6EMfaT1Pat6LGti2v",
+              "amount": "5000000000",
+              "betYes": false
+            },
+            "reasoning": "60/40 against NO, contrarian play to extract max value",
+            "confidence": 0.88
+          },
+          "success": false,
+          "error": "Invalid bet amount"
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "Low capital, need to analyze market dynamics before committing",
+            "confidence": 0.7
+          },
+          "success": true
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "Bp19Jgza4ng6hAv5TtSeuJ98SJD9PhxLassEuMgpSSg2",
+              "amount": "2500000",
+              "betYes": false
+            },
+            "reasoning": "Solana market looks tight at 49/51, betting NO on small remaining stack. Underdog play with max potential",
+            "confidence": 0.9
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766126972993"
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "4HiwnzFBNPswvSYMiCVTQWkQRLy6EMfaT1Pat6LGti2v",
+              "amount": "100000000",
+              "betYes": false
+            },
+            "reasoning": "contrarian play on pyth market, implied prob seems too high",
+            "confidence": 0.85
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766126977471"
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "99qrdb4fbwdVHgo9699xebbTpk6uyFrQwGpRzUexJuno",
+              "amount": "15000000",
+              "betYes": true
+            },
+            "reasoning": "Market trending positive, doubling down on Marinade YES bet",
+            "confidence": 0.85
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766126981660"
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "104019650",
+          "roundPnL": "-10000000"
+        },
+        {
+          "rank": 2,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "56628125",
+          "roundPnL": "-1000000000"
+        },
+        {
+          "rank": 3,
+          "agentName": "Insider_Chad",
+          "totalPnL": "50000000",
+          "roundPnL": "-10000000"
+        },
+        {
+          "rank": 4,
+          "agentName": "Degen_Ape",
+          "totalPnL": "17500000",
+          "roundPnL": "-12843528"
+        },
+        {
+          "rank": 5,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "-1563827500",
+          "roundPnL": "-100000000"
+        }
+      ]
+    },
+    {
+      "round": 13,
+      "timestamp": 1766127010602,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "6LhxeFHy5mX1iScP7czsWhHkzhxvmSkn7uW9HQXmAhHS",
+              "amount": "14019650",
+              "betYes": true
+            },
+            "reasoning": "Magic Eden market is 46% YES, 54% NO - contrarian play with asymmetric upside. Betting my remaining NO market allocation on the undervalued side",
+            "confidence": 0.85
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766126994017"
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "Gather intel, current bets are in play, preserve capital for strategic move",
+            "confidence": 0.7
+          },
+          "success": true
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "6LhxeFHy5mX1iScP7czsWhHkzhxvmSkn7uW9HQXmAhHS",
+              "amount": "2500000",
+              "betYes": false
+            },
+            "reasoning": "Magic Eden looks SPICY - 53% NO side, underdogs pay more, LETS GOOOOO",
+            "confidence": 0.9
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766127001924"
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "ANALYZE",
+            "params": {},
+            "reasoning": "Need to reassess market positions and calculate precise edge before next move",
+            "confidence": 0.7
+          },
+          "success": true
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "99qrdb4fbwdVHgo9699xebbTpk6uyFrQwGpRzUexJuno",
+              "amount": "12500000",
+              "betYes": true
+            },
+            "reasoning": "Marinade has strong fundamentals market hasn't priced in",
+            "confidence": 0.85
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766127010101"
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "109019650",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "59128125",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Insider_Chad",
+          "totalPnL": "55000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Degen_Ape",
+          "totalPnL": "20000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "-1560827500",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 14,
+      "timestamp": 1766127032949,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "Bp19Jgza4ng6hAv5TtSeuJ98SJD9PhxLassEuMgpSSg2",
+              "amount": "10980350",
+              "betYes": true
+            },
+            "reasoning": "Contrarian bet on extremely imbalanced market - 31% YES implies massive mispricing, will exploit parimutuel mechanics",
+            "confidence": 0.95
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766127015502"
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "gather intelligence, preserve capital before major move",
+            "confidence": 0.7
+          },
+          "success": true
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "Bp19Jgza4ng6hAv5TtSeuJ98SJD9PhxLassEuMgpSSg2",
+              "amount": "2500000",
+              "betYes": false,
+              "reasoning": "SOLANA BET AT 35% - UNDERDOGS ALWAYS PRINT",
+              "confidence": 0.9
+            },
+            "reasoning": "No reasoning",
+            "confidence": 0.5
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766127023812"
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "ANALYZE",
+            "params": {},
+            "reasoning": "Need to reassess market dynamics before next move",
+            "confidence": 0.75
+          },
+          "success": true
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "4HiwnzFBNPswvSYMiCVTQWkQRLy6EMfaT1Pat6LGti2v",
+              "amount": "5000000",
+              "betYes": true
+            },
+            "reasoning": "Pyth market looks promising with 59% YES, and I have insider knowledge about their upcoming oracle expansion",
+            "confidence": 0.75
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766127032449"
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "114019650",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "61628125",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Insider_Chad",
+          "totalPnL": "60000000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Degen_Ape",
+          "totalPnL": "22500000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "-1557827500",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 15,
+      "timestamp": 1766127058482,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "4HiwnzFBNPswvSYMiCVTQWkQRLy6EMfaT1Pat6LGti2v",
+              "amount": "2500000",
+              "betYes": false,
+              "reasoning": "Pyth market slightly overvalued on YES, betting NO for contrarian play",
+              "confidence": 0.75
+            },
+            "reasoning": "No reasoning",
+            "confidence": 0.5
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766127037264"
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "ANALYZE",
+            "params": {},
+            "reasoning": "Need to assess market conditions before committing capital",
+            "confidence": 0.9
+          },
+          "success": true
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "6LhxeFHy5mX1iScP7czsWhHkzhxvmSkn7uW9HQXmAhHS",
+              "amount": "2500000",
+              "betYes": false
+            },
+            "reasoning": "Magic Eden market has NO at 53%, undervalued opportunity to bet against YES trend",
+            "confidence": 0.85
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766127049635"
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "6LhxeFHy5mX1iScP7czsWhHkzhxvmSkn7uW9HQXmAhHS",
+              "amount": "100000000",
+              "betYes": true
+            },
+            "reasoning": "Magic Eden market has 47% YES, implies slight undervaluation. Low risk entry point with potential upside. Betting 22% of available balance for controlled exposure",
+            "confidence": 0.75
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766127053961"
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "PLACE_BET",
+            "params": {
+              "marketPDA": "4HiwnzFBNPswvSYMiCVTQWkQRLy6EMfaT1Pat6LGti2v",
+              "amount": "5000000",
+              "betYes": true
+            },
+            "reasoning": "Pyth network is undervalued - I have insider knowledge about upcoming oracle expansions",
+            "confidence": 0.85
+          },
+          "success": true,
+          "txSignature": "sim_bet_1766127057982"
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "122507159",
+          "roundPnL": "3487509"
+        },
+        {
+          "rank": 2,
+          "agentName": "Insider_Chad",
+          "totalPnL": "55000000",
+          "roundPnL": "-10000000"
+        },
+        {
+          "rank": 3,
+          "agentName": "Degen_Ape",
+          "totalPnL": "22500000",
+          "roundPnL": "-2500000"
+        },
+        {
+          "rank": 4,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "-296442714",
+          "roundPnL": "-360570839"
+        },
+        {
+          "rank": 5,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "-1554827500",
+          "roundPnL": "0"
+        }
+      ]
+    }
+  ],
+  "finalLeaderboard": [
+    {
+      "rank": 1,
+      "agentName": "MEV_Liquidator",
+      "totalPnL": "122507159",
+      "winRate": 0.125,
+      "totalBets": 8,
+      "avgBetSize": "18887437"
+    },
+    {
+      "rank": 2,
+      "agentName": "Insider_Chad",
+      "totalPnL": "55000000",
+      "winRate": 0,
+      "totalBets": 8,
+      "avgBetSize": "8750000"
+    },
+    {
+      "rank": 3,
+      "agentName": "Degen_Ape",
+      "totalPnL": "22500000",
+      "winRate": 0.07692307692307693,
+      "totalBets": 13,
+      "avgBetSize": "387507194"
+    },
+    {
+      "rank": 4,
+      "agentName": "Quant_Exploiter",
+      "totalPnL": "-296442714",
+      "winRate": 0.25,
+      "totalBets": 8,
+      "avgBetSize": "962500000"
+    },
+    {
+      "rank": 5,
+      "agentName": "Whale_Manipulator",
+      "totalPnL": "-1554827500",
+      "winRate": 0,
+      "totalBets": 5,
+      "avgBetSize": "780000000"
+    }
+  ],
+  "winner": "MEV_Liquidator"
+}

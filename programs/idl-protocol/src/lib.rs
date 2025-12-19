@@ -1004,6 +1004,7 @@ pub mod idl_protocol {
         bond.bonded_at = Clock::get()?.unix_timestamp;
         bond.slashed = false;
         bond.bump = ctx.bumps.oracle_bond;
+        bond.active_resolution = None;  // SELF-REVIEW FIX: Initialize
 
         msg!("Oracle bond deposited: {}", ORACLE_BOND_AMOUNT);
         Ok(())
@@ -1012,13 +1013,19 @@ pub mod idl_protocol {
     /// 10/10 FIX: Oracle commits resolution (step 1)
     pub fn commit_resolution(ctx: Context<CommitResolution>, commitment: [u8; 32]) -> Result<()> {
         let market = &ctx.accounts.market;
-        let oracle_bond = &ctx.accounts.oracle_bond;
+        let oracle_bond = &mut ctx.accounts.oracle_bond;  // SELF-REVIEW FIX: Make mutable
         let clock = Clock::get()?;
 
         require!(oracle_bond.bond_amount >= ORACLE_BOND_AMOUNT, IdlError::InsufficientOracleBond);
         require!(!oracle_bond.slashed, IdlError::OracleSlashed);
         require!(!market.resolved, IdlError::MarketResolved);
         require!(clock.unix_timestamp >= market.resolution_timestamp, IdlError::ResolutionTooEarly);
+
+        // SELF-REVIEW FIX: Prevent multi-market exploit - only one resolution at a time
+        require!(
+            oracle_bond.active_resolution.is_none(),
+            IdlError::OracleHasPendingResolution
+        );
 
         let res_commit = &mut ctx.accounts.resolution_commitment;
         res_commit.market = market.key();
@@ -1028,6 +1035,9 @@ pub mod idl_protocol {
         res_commit.revealed = false;
         res_commit.disputed = false;
         res_commit.bump = ctx.bumps.resolution_commitment;
+
+        // SELF-REVIEW FIX: Lock this oracle to this market until resolution complete
+        oracle_bond.active_resolution = Some(market.key());
 
         msg!("Resolution committed");
         Ok(())
@@ -1113,6 +1123,7 @@ pub mod idl_protocol {
         let slash_amount = (oracle_bond.bond_amount * ORACLE_SLASH_PERCENT) / 100;
         oracle_bond.bond_amount = oracle_bond.bond_amount.saturating_sub(slash_amount);
         oracle_bond.slashed = true;
+        oracle_bond.active_resolution = None;  // SELF-REVIEW FIX: Clear lock on slash
 
         // Add slashed amount to insurance fund (protocol reserves)
         ctx.accounts.state.insurance_fund = ctx.accounts.state.insurance_fund
@@ -1124,7 +1135,7 @@ pub mod idl_protocol {
 
     /// AUDIT FIX: Allow oracle to withdraw bond after successful undisputed resolution
     pub fn withdraw_oracle_bond(ctx: Context<WithdrawOracleBond>) -> Result<()> {
-        let oracle_bond = &ctx.accounts.oracle_bond;
+        let oracle_bond = &mut ctx.accounts.oracle_bond;  // SELF-REVIEW FIX: Make mutable
         let res_commit = &ctx.accounts.resolution_commitment;
         let clock = Clock::get()?;
 
@@ -1160,8 +1171,9 @@ pub mod idl_protocol {
             bond_amount
         )?;
 
-        // Zero out bond
-        ctx.accounts.oracle_bond.bond_amount = 0;
+        // Zero out bond and clear active resolution
+        oracle_bond.bond_amount = 0;
+        oracle_bond.active_resolution = None;  // SELF-REVIEW FIX: Clear lock
 
         msg!("Oracle bond withdrawn: {}", bond_amount);
         Ok(())
@@ -1457,11 +1469,12 @@ pub struct RevealBet<'info> {
     pub staker_account: Option<Box<Account<'info, StakerAccount>>>,
 
     // AUDIT FIX: Add user_volume to track volume for badges
+    // SELF-REVIEW FIX: Use "volume" seed to match IssueBadge (was "user_volume")
     #[account(
         init_if_needed,
         payer = user,
         space = 8 + UserVolume::INIT_SPACE,
-        seeds = [b"user_volume", user.key().as_ref()],
+        seeds = [b"volume", user.key().as_ref()],
         bump
     )]
     pub user_volume: Box<Account<'info, UserVolume>>,
@@ -1524,7 +1537,9 @@ pub struct DepositOracleBond<'info> {
 pub struct CommitResolution<'info> {
     pub market: Account<'info, PredictionMarket>,
 
+    // SELF-REVIEW FIX: Make mutable to track active_resolution
     #[account(
+        mut,
         seeds = [b"oracle_bond", oracle.key().as_ref()],
         bump = oracle_bond.bump,
         constraint = oracle_bond.oracle == oracle.key() @ IdlError::Unauthorized
@@ -2160,6 +2175,9 @@ pub struct OracleBond {
     pub bonded_at: i64,
     pub slashed: bool,
     pub bump: u8,
+    // SELF-REVIEW FIX: Track active resolutions to prevent multi-market exploit
+    // Oracle can only have ONE pending resolution at a time
+    pub active_resolution: Option<Pubkey>,  // Market key if resolution pending
 }
 
 // 10/10 FIX: Resolution commitment for oracle commit-reveal
@@ -2362,4 +2380,8 @@ pub enum IdlError {
 
     #[msg("Direct betting/resolution disabled - use commit-reveal")]
     UseCommitReveal,
+
+    // SELF-REVIEW FIX: Oracle multi-market exploit prevention
+    #[msg("Oracle already has a pending resolution - complete or withdraw first")]
+    OracleHasPendingResolution,
 }

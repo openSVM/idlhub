@@ -1,0 +1,2690 @@
+{
+  "startTime": 1766121293926,
+  "endTime": 1766121911106,
+  "totalRounds": 30,
+  "roundResults": [
+    {
+      "round": 1,
+      "timestamp": 1766121313294,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Degen_Ape",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Insider_Chad",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 2,
+      "timestamp": 1766121333766,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Degen_Ape",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Insider_Chad",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 3,
+      "timestamp": 1766121354232,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Degen_Ape",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Insider_Chad",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 4,
+      "timestamp": 1766121374851,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Degen_Ape",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Insider_Chad",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 5,
+      "timestamp": 1766121395296,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Degen_Ape",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Insider_Chad",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 6,
+      "timestamp": 1766121415735,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "63105000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Degen_Ape",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Insider_Chad",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 7,
+      "timestamp": 1766121436899,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "63105000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Degen_Ape",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Insider_Chad",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 8,
+      "timestamp": 1766121457347,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "63105000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Degen_Ape",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Insider_Chad",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 9,
+      "timestamp": 1766121477751,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "63105000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Degen_Ape",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Insider_Chad",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 10,
+      "timestamp": 1766121498377,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "63105000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Degen_Ape",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Insider_Chad",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 11,
+      "timestamp": 1766121519056,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "63105000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Degen_Ape",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Insider_Chad",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 12,
+      "timestamp": 1766121539486,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "63105000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Degen_Ape",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Insider_Chad",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 13,
+      "timestamp": 1766121559888,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "63105000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Degen_Ape",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Insider_Chad",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 14,
+      "timestamp": 1766121580492,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "63105000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Degen_Ape",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Insider_Chad",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 15,
+      "timestamp": 1766121601169,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "63105000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Degen_Ape",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Insider_Chad",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 16,
+      "timestamp": 1766121621628,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "63105000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Degen_Ape",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Insider_Chad",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 17,
+      "timestamp": 1766121642104,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "63105000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Degen_Ape",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Insider_Chad",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 18,
+      "timestamp": 1766121662794,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "63105000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Degen_Ape",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Insider_Chad",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 19,
+      "timestamp": 1766121683216,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "63105000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Degen_Ape",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Insider_Chad",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 20,
+      "timestamp": 1766121703650,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "63105000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Degen_Ape",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Insider_Chad",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 21,
+      "timestamp": 1766121724266,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "63105000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Degen_Ape",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Insider_Chad",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 22,
+      "timestamp": 1766121744717,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "63105000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Degen_Ape",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Insider_Chad",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 23,
+      "timestamp": 1766121765488,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "63105000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Degen_Ape",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Insider_Chad",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 24,
+      "timestamp": 1766121786154,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "63105000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Degen_Ape",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Insider_Chad",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 25,
+      "timestamp": 1766121806614,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "63105000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Degen_Ape",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Insider_Chad",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 26,
+      "timestamp": 1766121827667,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "63105000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Degen_Ape",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Insider_Chad",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 27,
+      "timestamp": 1766121848309,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "63105000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Degen_Ape",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Insider_Chad",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 28,
+      "timestamp": 1766121868731,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "63105000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Degen_Ape",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Insider_Chad",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 29,
+      "timestamp": 1766121889171,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "63105000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Degen_Ape",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Insider_Chad",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        }
+      ]
+    },
+    {
+      "round": 30,
+      "timestamp": 1766121909606,
+      "agentActions": [
+        {
+          "agentName": "MEV_Liquidator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Whale_Manipulator",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Degen_Ape",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Quant_Exploiter",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        },
+        {
+          "agentName": "Insider_Chad",
+          "action": {
+            "type": "WAIT",
+            "params": {},
+            "reasoning": "API failure fallback",
+            "confidence": 0
+          },
+          "success": true
+        }
+      ],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "agentName": "MEV_Liquidator",
+          "totalPnL": "63105000",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 2,
+          "agentName": "Whale_Manipulator",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 3,
+          "agentName": "Degen_Ape",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 4,
+          "agentName": "Quant_Exploiter",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        },
+        {
+          "rank": 5,
+          "agentName": "Insider_Chad",
+          "totalPnL": "0",
+          "roundPnL": "0"
+        }
+      ]
+    }
+  ],
+  "finalLeaderboard": [
+    {
+      "rank": 1,
+      "agentName": "MEV_Liquidator",
+      "totalPnL": "63105000",
+      "winRate": 0,
+      "totalBets": 0,
+      "avgBetSize": "0"
+    },
+    {
+      "rank": 2,
+      "agentName": "Whale_Manipulator",
+      "totalPnL": "0",
+      "winRate": 0,
+      "totalBets": 0,
+      "avgBetSize": "0"
+    },
+    {
+      "rank": 3,
+      "agentName": "Degen_Ape",
+      "totalPnL": "0",
+      "winRate": 0,
+      "totalBets": 0,
+      "avgBetSize": "0"
+    },
+    {
+      "rank": 4,
+      "agentName": "Quant_Exploiter",
+      "totalPnL": "0",
+      "winRate": 0,
+      "totalBets": 0,
+      "avgBetSize": "0"
+    },
+    {
+      "rank": 5,
+      "agentName": "Insider_Chad",
+      "totalPnL": "0",
+      "winRate": 0,
+      "totalBets": 0,
+      "avgBetSize": "0"
+    }
+  ],
+  "winner": "MEV_Liquidator"
+}
