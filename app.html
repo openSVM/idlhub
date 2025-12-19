@@ -1,0 +1,1692 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IDL Protocol - Stake | Vote | Bet | Earn</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <style>
+        :root {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-tertiary: #21262d;
+            --text-primary: #c9d1d9;
+            --text-secondary: #8b949e;
+            --text-muted: #6e7681;
+            --border-primary: #30363d;
+            --border-secondary: #21262d;
+            --accent-primary: #58a6ff;
+            --accent-hover: #1f6feb;
+            --accent-green: #3fb950;
+            --accent-purple: #a371f7;
+            --accent-orange: #d29922;
+            --accent-pink: #db61a2;
+            --error-color: #f85149;
+            --success-color: #3fb950;
+            --warning-color: #d29922;
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #f5f5f5;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f6f8fa;
+            --text-primary: #24292f;
+            --text-secondary: #57606a;
+            --text-muted: #8b949e;
+            --border-primary: #d0d7de;
+            --border-secondary: #d0d7de;
+            --accent-primary: #0969da;
+            --accent-hover: #0550ae;
+            --accent-green: #1a7f37;
+            --accent-purple: #8250df;
+            --accent-orange: #9a6700;
+            --accent-pink: #bf3989;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 24px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-primary);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-purple));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 8px;
+        }
+
+        .nav-link {
+            padding: 8px 16px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .nav-link:hover {
+            color: var(--text-primary);
+            background: var(--bg-tertiary);
+        }
+
+        .connect-btn {
+            padding: 8px 20px;
+            background: var(--accent-primary);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .connect-btn:hover {
+            background: var(--accent-hover);
+        }
+
+        .connect-btn.connected {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-primary);
+        }
+
+        /* Main Layout */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-primary);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .stat-change {
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        .stat-change.positive {
+            color: var(--accent-green);
+        }
+
+        .stat-change.negative {
+            color: var(--error-color);
+        }
+
+        /* Tab Navigation */
+        .tab-nav {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 24px;
+            background: var(--bg-secondary);
+            padding: 4px;
+            border-radius: 12px;
+            border: 1px solid var(--border-primary);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 14px 24px;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .tab-btn:hover {
+            color: var(--text-primary);
+            background: var(--bg-tertiary);
+        }
+
+        .tab-btn.active {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .tab-icon {
+            font-size: 18px;
+        }
+
+        /* Content Sections */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Section Card */
+        .section-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-primary);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .section-subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        /* Staking Section */
+        .stake-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .stake-box {
+            background: var(--bg-tertiary);
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .stake-box-title {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .input-group {
+            margin-bottom: 16px;
+        }
+
+        .input-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .input-wrapper {
+            display: flex;
+            align-items: center;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-primary);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .input-field {
+            flex: 1;
+            padding: 14px 16px;
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-size: 18px;
+            font-weight: 600;
+            outline: none;
+        }
+
+        .input-field::placeholder {
+            color: var(--text-muted);
+        }
+
+        .input-suffix {
+            padding: 14px 16px;
+            color: var(--text-secondary);
+            font-weight: 600;
+            background: var(--bg-tertiary);
+        }
+
+        .max-btn {
+            padding: 6px 12px;
+            margin-right: 8px;
+            background: var(--accent-primary);
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        .stake-info {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-primary);
+            font-size: 14px;
+        }
+
+        .stake-info:last-child {
+            border-bottom: none;
+        }
+
+        .stake-info-label {
+            color: var(--text-secondary);
+        }
+
+        .stake-info-value {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .action-btn {
+            width: 100%;
+            padding: 16px;
+            background: var(--accent-primary);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 16px;
+        }
+
+        .action-btn:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+        }
+
+        .action-btn:disabled {
+            background: var(--bg-tertiary);
+            color: var(--text-muted);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .action-btn.secondary {
+            background: transparent;
+            border: 1px solid var(--border-primary);
+            color: var(--text-primary);
+        }
+
+        .action-btn.secondary:hover {
+            background: var(--bg-tertiary);
+        }
+
+        /* Vote Section */
+        .vote-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .vote-stat {
+            text-align: center;
+            padding: 20px;
+            background: var(--bg-tertiary);
+            border-radius: 12px;
+        }
+
+        .vote-stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--accent-purple);
+        }
+
+        .vote-stat-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .proposal-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .proposal-card {
+            background: var(--bg-tertiary);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid var(--border-primary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .proposal-card:hover {
+            border-color: var(--accent-primary);
+        }
+
+        .proposal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .proposal-title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .proposal-status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .proposal-status.active {
+            background: rgba(63, 185, 80, 0.15);
+            color: var(--accent-green);
+        }
+
+        .proposal-status.ended {
+            background: rgba(139, 148, 158, 0.15);
+            color: var(--text-muted);
+        }
+
+        .proposal-status.pending {
+            background: rgba(210, 153, 34, 0.15);
+            color: var(--accent-orange);
+        }
+
+        .proposal-description {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+
+        .proposal-votes {
+            display: flex;
+            gap: 24px;
+        }
+
+        .vote-bar {
+            flex: 1;
+        }
+
+        .vote-bar-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            margin-bottom: 6px;
+        }
+
+        .vote-bar-label {
+            color: var(--text-secondary);
+        }
+
+        .vote-bar-value {
+            font-weight: 600;
+        }
+
+        .vote-bar-track {
+            height: 8px;
+            background: var(--bg-secondary);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .vote-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .vote-bar-fill.yes {
+            background: var(--accent-green);
+        }
+
+        .vote-bar-fill.no {
+            background: var(--error-color);
+        }
+
+        /* Betting Section */
+        .markets-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .market-card {
+            background: var(--bg-tertiary);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid var(--border-primary);
+            transition: all 0.2s;
+        }
+
+        .market-card:hover {
+            border-color: var(--accent-primary);
+        }
+
+        .market-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .market-protocol {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .protocol-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .protocol-name {
+            font-weight: 600;
+        }
+
+        .market-metric {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .market-timer {
+            font-size: 12px;
+            color: var(--accent-orange);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .market-question {
+            font-size: 15px;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            line-height: 1.4;
+        }
+
+        .market-odds {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .odds-btn {
+            padding: 14px;
+            border-radius: 8px;
+            border: 1px solid var(--border-primary);
+            background: var(--bg-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .odds-btn:hover {
+            border-color: var(--accent-primary);
+        }
+
+        .odds-btn.yes:hover {
+            border-color: var(--accent-green);
+            background: rgba(63, 185, 80, 0.1);
+        }
+
+        .odds-btn.no:hover {
+            border-color: var(--error-color);
+            background: rgba(248, 81, 73, 0.1);
+        }
+
+        .odds-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .odds-value {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .odds-btn.yes .odds-value {
+            color: var(--accent-green);
+        }
+
+        .odds-btn.no .odds-value {
+            color: var(--error-color);
+        }
+
+        .market-pool {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* Badges Section */
+        .badges-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .badges-progress {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .progress-text {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .progress-bar {
+            width: 200px;
+            height: 8px;
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-purple));
+            border-radius: 4px;
+        }
+
+        .badges-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
+        .badge-card {
+            background: var(--bg-tertiary);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            border: 1px solid var(--border-primary);
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .badge-card.locked {
+            opacity: 0.5;
+        }
+
+        .badge-card.earned {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 20px rgba(88, 166, 255, 0.15);
+        }
+
+        .badge-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 16px;
+            background: var(--bg-secondary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+
+        .badge-card.earned .badge-icon {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-purple));
+        }
+
+        .badge-name {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .badge-requirement {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .badge-progress {
+            margin-top: 12px;
+            font-size: 11px;
+            color: var(--accent-primary);
+        }
+
+        .badge-check {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 24px;
+            height: 24px;
+            background: var(--accent-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 14px;
+        }
+
+        /* Rewards Panel */
+        .rewards-panel {
+            background: linear-gradient(135deg, rgba(88, 166, 255, 0.1), rgba(163, 113, 247, 0.1));
+            border: 1px solid var(--accent-primary);
+            border-radius: 12px;
+            padding: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .rewards-info h3 {
+            font-size: 18px;
+            margin-bottom: 4px;
+        }
+
+        .rewards-info p {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .rewards-amount {
+            text-align: right;
+        }
+
+        .rewards-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--accent-green);
+        }
+
+        .rewards-usd {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 24px;
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        .footer a {
+            color: var(--accent-primary);
+            text-decoration: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .stats-bar {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .stake-grid {
+                grid-template-columns: 1fr;
+            }
+            .markets-grid {
+                grid-template-columns: 1fr;
+            }
+            .badges-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .tab-nav {
+                flex-wrap: wrap;
+            }
+            .tab-btn {
+                flex: 1 1 45%;
+            }
+            .stats-bar {
+                grid-template-columns: 1fr;
+            }
+            .vote-stats {
+                grid-template-columns: 1fr;
+            }
+            .badges-grid {
+                grid-template-columns: 1fr;
+            }
+            .nav-links {
+                display: none;
+            }
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent-green);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        /* Toast notifications */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            padding: 16px 24px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-primary);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 1000;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast.success {
+            border-left: 4px solid var(--accent-green);
+        }
+
+        .toast.error {
+            border-left: 4px solid var(--error-color);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <a href="/" class="logo">
+            <div class="logo-icon">IDL</div>
+            <span class="logo-text">IDL Protocol</span>
+        </a>
+        <div class="header-actions">
+            <nav class="nav-links">
+                <a href="/" class="nav-link">Registry</a>
+                <a href="/docs.html" class="nav-link">Docs</a>
+                <a href="/tokenomics.html" class="nav-link">Tokenomics</a>
+            </nav>
+            <button class="connect-btn" id="connectBtn" onclick="connectWallet()">
+                Connect Wallet
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-container">
+        <!-- Stats Bar -->
+        <div class="stats-bar">
+            <div class="stat-card">
+                <div class="stat-label">Your IDL Balance</div>
+                <div class="stat-value" id="idlBalance">0.00</div>
+                <div class="stat-change positive">+2.4% today</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Staked IDL</div>
+                <div class="stat-value" id="stakedBalance">0.00</div>
+                <div class="stat-change positive">Earning 12.5% APY</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">veIDL Power</div>
+                <div class="stat-value" id="veBalance">0.00</div>
+                <div class="stat-change">4 proposals active</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Badges Earned</div>
+                <div class="stat-value" id="badgeCount">0 / 12</div>
+                <div class="stat-change">Next: Early Adopter</div>
+            </div>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="tab-nav">
+            <button class="tab-btn active" onclick="showTab('stake')">
+                <span class="tab-icon">&#x1F4B0;</span>
+                Stake
+            </button>
+            <button class="tab-btn" onclick="showTab('vote')">
+                <span class="tab-icon">&#x1F5F3;</span>
+                Vote
+            </button>
+            <button class="tab-btn" onclick="showTab('bet')">
+                <span class="tab-icon">&#x1F3AF;</span>
+                Bet
+            </button>
+            <button class="tab-btn" onclick="showTab('badges')">
+                <span class="tab-icon">&#x1F3C6;</span>
+                Badges
+            </button>
+        </div>
+
+        <!-- STAKE TAB -->
+        <div class="tab-content active" id="tab-stake">
+            <!-- Rewards Panel -->
+            <div class="rewards-panel section-card">
+                <div class="rewards-info">
+                    <h3>Claimable Rewards</h3>
+                    <p>From staking and prediction market fees</p>
+                </div>
+                <div class="rewards-amount">
+                    <div class="rewards-value" id="claimableRewards">0.00 IDL</div>
+                    <div class="rewards-usd">~$0.00 USD</div>
+                </div>
+                <button class="action-btn" style="width: auto; margin: 0; padding: 12px 32px;" onclick="claimRewards()">
+                    Claim Rewards
+                </button>
+            </div>
+
+            <div class="section-card">
+                <div class="section-header">
+                    <div>
+                        <h2 class="section-title">Stake IDL Tokens</h2>
+                        <p class="section-subtitle">Earn protocol fees and unlock betting bonuses up to 50%</p>
+                    </div>
+                </div>
+
+                <div class="stake-grid">
+                    <!-- Stake Box -->
+                    <div class="stake-box">
+                        <div class="stake-box-title">Stake IDL</div>
+                        <div class="input-group">
+                            <label class="input-label">Amount to stake</label>
+                            <div class="input-wrapper">
+                                <input type="number" class="input-field" id="stakeAmount" placeholder="0.00">
+                                <button class="max-btn" onclick="setMaxStake()">MAX</button>
+                                <span class="input-suffix">IDL</span>
+                            </div>
+                        </div>
+                        <div class="stake-info">
+                            <span class="stake-info-label">Available Balance</span>
+                            <span class="stake-info-value" id="availableStake">0.00 IDL</span>
+                        </div>
+                        <div class="stake-info">
+                            <span class="stake-info-label">Current APY</span>
+                            <span class="stake-info-value" style="color: var(--accent-green)">12.5%</span>
+                        </div>
+                        <div class="stake-info">
+                            <span class="stake-info-label">Betting Bonus</span>
+                            <span class="stake-info-value" id="stakingBonus">0%</span>
+                        </div>
+                        <button class="action-btn" onclick="stakeTokens()">Stake IDL</button>
+                    </div>
+
+                    <!-- Lock for veIDL Box -->
+                    <div class="stake-box">
+                        <div class="stake-box-title">Lock for veIDL</div>
+                        <div class="input-group">
+                            <label class="input-label">Lock duration</label>
+                            <div class="input-wrapper">
+                                <select class="input-field" id="lockDuration" style="cursor: pointer;">
+                                    <option value="7">1 Week (1x veIDL)</option>
+                                    <option value="30">1 Month (1.5x veIDL)</option>
+                                    <option value="90">3 Months (2x veIDL)</option>
+                                    <option value="365">1 Year (3x veIDL)</option>
+                                    <option value="1460">4 Years (4x veIDL)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="stake-info">
+                            <span class="stake-info-label">Your Staked IDL</span>
+                            <span class="stake-info-value" id="lockedStake">0.00 IDL</span>
+                        </div>
+                        <div class="stake-info">
+                            <span class="stake-info-label">veIDL You'll Receive</span>
+                            <span class="stake-info-value" style="color: var(--accent-purple)" id="veIdlPreview">0.00 veIDL</span>
+                        </div>
+                        <div class="stake-info">
+                            <span class="stake-info-label">Voting Power Boost</span>
+                            <span class="stake-info-value">1.0x</span>
+                        </div>
+                        <button class="action-btn" onclick="lockTokens()">Lock for veIDL</button>
+                        <button class="action-btn secondary" onclick="unstakeTokens()" style="margin-top: 8px;">Unstake IDL</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VOTE TAB -->
+        <div class="tab-content" id="tab-vote">
+            <div class="section-card">
+                <div class="section-header">
+                    <div>
+                        <h2 class="section-title">Governance</h2>
+                        <p class="section-subtitle">Vote on protocol proposals with your veIDL</p>
+                    </div>
+                    <button class="action-btn" style="width: auto; padding: 12px 24px;">Create Proposal</button>
+                </div>
+
+                <div class="vote-stats">
+                    <div class="vote-stat">
+                        <div class="vote-stat-value" id="votingPower">0</div>
+                        <div class="vote-stat-label">Your Voting Power</div>
+                    </div>
+                    <div class="vote-stat">
+                        <div class="vote-stat-value">4</div>
+                        <div class="vote-stat-label">Active Proposals</div>
+                    </div>
+                    <div class="vote-stat">
+                        <div class="vote-stat-value">23</div>
+                        <div class="vote-stat-label">Total Proposals</div>
+                    </div>
+                </div>
+
+                <div class="proposal-list">
+                    <div class="proposal-card" onclick="openProposal(1)">
+                        <div class="proposal-header">
+                            <h3 class="proposal-title">IDP-12: Increase Staking Rewards to 15% APY</h3>
+                            <span class="proposal-status active">Active</span>
+                        </div>
+                        <p class="proposal-description">Proposal to increase base staking rewards from 12.5% to 15% APY by allocating additional protocol fees to stakers.</p>
+                        <div class="proposal-votes">
+                            <div class="vote-bar">
+                                <div class="vote-bar-header">
+                                    <span class="vote-bar-label">Yes</span>
+                                    <span class="vote-bar-value">67.3%</span>
+                                </div>
+                                <div class="vote-bar-track">
+                                    <div class="vote-bar-fill yes" style="width: 67.3%"></div>
+                                </div>
+                            </div>
+                            <div class="vote-bar">
+                                <div class="vote-bar-header">
+                                    <span class="vote-bar-label">No</span>
+                                    <span class="vote-bar-value">32.7%</span>
+                                </div>
+                                <div class="vote-bar-track">
+                                    <div class="vote-bar-fill no" style="width: 32.7%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="proposal-card" onclick="openProposal(2)">
+                        <div class="proposal-header">
+                            <h3 class="proposal-title">IDP-11: Add Jupiter Integration for Oracles</h3>
+                            <span class="proposal-status active">Active</span>
+                        </div>
+                        <p class="proposal-description">Integrate Jupiter price feeds as an additional oracle source for prediction market resolution.</p>
+                        <div class="proposal-votes">
+                            <div class="vote-bar">
+                                <div class="vote-bar-header">
+                                    <span class="vote-bar-label">Yes</span>
+                                    <span class="vote-bar-value">89.1%</span>
+                                </div>
+                                <div class="vote-bar-track">
+                                    <div class="vote-bar-fill yes" style="width: 89.1%"></div>
+                                </div>
+                            </div>
+                            <div class="vote-bar">
+                                <div class="vote-bar-header">
+                                    <span class="vote-bar-label">No</span>
+                                    <span class="vote-bar-value">10.9%</span>
+                                </div>
+                                <div class="vote-bar-track">
+                                    <div class="vote-bar-fill no" style="width: 10.9%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="proposal-card" onclick="openProposal(3)">
+                        <div class="proposal-header">
+                            <h3 class="proposal-title">IDP-10: Reduce Market Creation Fee to 1%</h3>
+                            <span class="proposal-status ended">Ended</span>
+                        </div>
+                        <p class="proposal-description">Lower the fee for creating new prediction markets from 2% to 1% to encourage more market creation.</p>
+                        <div class="proposal-votes">
+                            <div class="vote-bar">
+                                <div class="vote-bar-header">
+                                    <span class="vote-bar-label">Yes</span>
+                                    <span class="vote-bar-value">45.2%</span>
+                                </div>
+                                <div class="vote-bar-track">
+                                    <div class="vote-bar-fill yes" style="width: 45.2%"></div>
+                                </div>
+                            </div>
+                            <div class="vote-bar">
+                                <div class="vote-bar-header">
+                                    <span class="vote-bar-label">No</span>
+                                    <span class="vote-bar-value">54.8%</span>
+                                </div>
+                                <div class="vote-bar-track">
+                                    <div class="vote-bar-fill no" style="width: 54.8%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- BET TAB -->
+        <div class="tab-content" id="tab-bet">
+            <div class="section-card">
+                <div class="section-header">
+                    <div>
+                        <h2 class="section-title">Prediction Markets</h2>
+                        <p class="section-subtitle">Bet on Solana protocol metrics - TVL, volume, users & more</p>
+                    </div>
+                    <button class="action-btn" style="width: auto; padding: 12px 24px;" onclick="createMarket()">
+                        + Create Market
+                    </button>
+                </div>
+
+                <div class="markets-grid">
+                    <!-- Market 1 -->
+                    <div class="market-card">
+                        <div class="market-header">
+                            <div class="market-protocol">
+                                <div class="protocol-icon">&#x1F4DC;</div>
+                                <div>
+                                    <div class="protocol-name">Jupiter</div>
+                                    <div class="market-metric">TVL Target</div>
+                                </div>
+                            </div>
+                            <div class="market-timer">
+                                <div class="live-dot"></div>
+                                2d 14h left
+                            </div>
+                        </div>
+                        <div class="market-question">Will Jupiter TVL exceed $1B by end of month?</div>
+                        <div class="market-odds">
+                            <button class="odds-btn yes" onclick="placeBet('jupiter', true)">
+                                <div class="odds-label">YES</div>
+                                <div class="odds-value">62%</div>
+                            </button>
+                            <button class="odds-btn no" onclick="placeBet('jupiter', false)">
+                                <div class="odds-label">NO</div>
+                                <div class="odds-value">38%</div>
+                            </button>
+                        </div>
+                        <div class="market-pool">
+                            <span>Pool: 125,430 IDL</span>
+                            <span>Your position: --</span>
+                        </div>
+                    </div>
+
+                    <!-- Market 2 -->
+                    <div class="market-card">
+                        <div class="market-header">
+                            <div class="market-protocol">
+                                <div class="protocol-icon">&#x1F30A;</div>
+                                <div>
+                                    <div class="protocol-name">Raydium</div>
+                                    <div class="market-metric">24h Volume</div>
+                                </div>
+                            </div>
+                            <div class="market-timer">
+                                <div class="live-dot"></div>
+                                5d 8h left
+                            </div>
+                        </div>
+                        <div class="market-question">Will Raydium 24h volume exceed $500M?</div>
+                        <div class="market-odds">
+                            <button class="odds-btn yes" onclick="placeBet('raydium', true)">
+                                <div class="odds-label">YES</div>
+                                <div class="odds-value">34%</div>
+                            </button>
+                            <button class="odds-btn no" onclick="placeBet('raydium', false)">
+                                <div class="odds-label">NO</div>
+                                <div class="odds-value">66%</div>
+                            </button>
+                        </div>
+                        <div class="market-pool">
+                            <span>Pool: 89,200 IDL</span>
+                            <span>Your position: --</span>
+                        </div>
+                    </div>
+
+                    <!-- Market 3 -->
+                    <div class="market-card">
+                        <div class="market-header">
+                            <div class="market-protocol">
+                                <div class="protocol-icon">&#x1F3DD;</div>
+                                <div>
+                                    <div class="protocol-name">Marinade</div>
+                                    <div class="market-metric">Unique Users</div>
+                                </div>
+                            </div>
+                            <div class="market-timer">
+                                <div class="live-dot"></div>
+                                1d 3h left
+                            </div>
+                        </div>
+                        <div class="market-question">Will Marinade reach 100k unique stakers?</div>
+                        <div class="market-odds">
+                            <button class="odds-btn yes" onclick="placeBet('marinade', true)">
+                                <div class="odds-label">YES</div>
+                                <div class="odds-value">51%</div>
+                            </button>
+                            <button class="odds-btn no" onclick="placeBet('marinade', false)">
+                                <div class="odds-label">NO</div>
+                                <div class="odds-value">49%</div>
+                            </button>
+                        </div>
+                        <div class="market-pool">
+                            <span>Pool: 67,850 IDL</span>
+                            <span>Your position: --</span>
+                        </div>
+                    </div>
+
+                    <!-- Market 4 -->
+                    <div class="market-card">
+                        <div class="market-header">
+                            <div class="market-protocol">
+                                <div class="protocol-icon">&#x1F52E;</div>
+                                <div>
+                                    <div class="protocol-name">Pyth</div>
+                                    <div class="market-metric">Price Feeds</div>
+                                </div>
+                            </div>
+                            <div class="market-timer">
+                                <div class="live-dot"></div>
+                                7d 0h left
+                            </div>
+                        </div>
+                        <div class="market-question">Will Pyth add 50+ new price feeds this quarter?</div>
+                        <div class="market-odds">
+                            <button class="odds-btn yes" onclick="placeBet('pyth', true)">
+                                <div class="odds-label">YES</div>
+                                <div class="odds-value">78%</div>
+                            </button>
+                            <button class="odds-btn no" onclick="placeBet('pyth', false)">
+                                <div class="odds-label">NO</div>
+                                <div class="odds-value">22%</div>
+                            </button>
+                        </div>
+                        <div class="market-pool">
+                            <span>Pool: 234,100 IDL</span>
+                            <span>Your position: --</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Your Bets -->
+            <div class="section-card">
+                <div class="section-header">
+                    <div>
+                        <h2 class="section-title">Your Active Bets</h2>
+                        <p class="section-subtitle">Track your positions across all markets</p>
+                    </div>
+                </div>
+                <div style="text-align: center; padding: 40px; color: var(--text-muted);">
+                    <p>No active bets yet. Place your first bet above!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- BADGES TAB -->
+        <div class="tab-content" id="tab-badges">
+            <div class="section-card">
+                <div class="badges-header">
+                    <div>
+                        <h2 class="section-title">Achievement Badges</h2>
+                        <p class="section-subtitle">Earn badges for participating in the IDL ecosystem</p>
+                    </div>
+                    <div class="badges-progress">
+                        <span class="progress-text">3 of 12 earned</span>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 25%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="badges-grid">
+                    <!-- Earned badges -->
+                    <div class="badge-card earned">
+                        <div class="badge-check">&#x2713;</div>
+                        <div class="badge-icon">&#x1F680;</div>
+                        <div class="badge-name">Early Adopter</div>
+                        <div class="badge-requirement">Join during launch phase</div>
+                    </div>
+
+                    <div class="badge-card earned">
+                        <div class="badge-check">&#x2713;</div>
+                        <div class="badge-icon">&#x1F4B0;</div>
+                        <div class="badge-name">First Stake</div>
+                        <div class="badge-requirement">Stake any amount of IDL</div>
+                    </div>
+
+                    <div class="badge-card earned">
+                        <div class="badge-check">&#x2713;</div>
+                        <div class="badge-icon">&#x1F3B2;</div>
+                        <div class="badge-name">First Bet</div>
+                        <div class="badge-requirement">Place your first prediction</div>
+                    </div>
+
+                    <!-- Locked badges -->
+                    <div class="badge-card">
+                        <div class="badge-icon">&#x1F5F3;</div>
+                        <div class="badge-name">Voter</div>
+                        <div class="badge-requirement">Vote on 5 proposals</div>
+                        <div class="badge-progress">0 / 5 votes</div>
+                    </div>
+
+                    <div class="badge-card">
+                        <div class="badge-icon">&#x1F3AF;</div>
+                        <div class="badge-name">Sharpshooter</div>
+                        <div class="badge-requirement">Win 10 predictions</div>
+                        <div class="badge-progress">0 / 10 wins</div>
+                    </div>
+
+                    <div class="badge-card">
+                        <div class="badge-icon">&#x1F40B;</div>
+                        <div class="badge-name">Whale</div>
+                        <div class="badge-requirement">Stake 100,000+ IDL</div>
+                        <div class="badge-progress">0 / 100,000 IDL</div>
+                    </div>
+
+                    <div class="badge-card">
+                        <div class="badge-icon">&#x1F3C6;</div>
+                        <div class="badge-name">Champion</div>
+                        <div class="badge-requirement">Reach top 10 leaderboard</div>
+                        <div class="badge-progress">Current rank: --</div>
+                    </div>
+
+                    <div class="badge-card">
+                        <div class="badge-icon">&#x1F4DD;</div>
+                        <div class="badge-name">Market Maker</div>
+                        <div class="badge-requirement">Create 3 markets</div>
+                        <div class="badge-progress">0 / 3 markets</div>
+                    </div>
+
+                    <div class="badge-card locked">
+                        <div class="badge-icon">&#x1F48E;</div>
+                        <div class="badge-name">Diamond Hands</div>
+                        <div class="badge-requirement">Lock veIDL for 1+ year</div>
+                        <div class="badge-progress">Locked</div>
+                    </div>
+
+                    <div class="badge-card locked">
+                        <div class="badge-icon">&#x1F525;</div>
+                        <div class="badge-name">Hot Streak</div>
+                        <div class="badge-requirement">Win 5 bets in a row</div>
+                        <div class="badge-progress">Locked</div>
+                    </div>
+
+                    <div class="badge-card locked">
+                        <div class="badge-icon">&#x1F9E0;</div>
+                        <div class="badge-name">Oracle</div>
+                        <div class="badge-requirement">80%+ win rate (20+ bets)</div>
+                        <div class="badge-progress">Locked</div>
+                    </div>
+
+                    <div class="badge-card locked">
+                        <div class="badge-icon">&#x1F451;</div>
+                        <div class="badge-name">Legend</div>
+                        <div class="badge-requirement">Earn all other badges</div>
+                        <div class="badge-progress">Locked</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>IDL Protocol &copy; 2024 | <a href="/docs.html">Documentation</a> | <a href="https://github.com/aldrin-labs/idlhub">GitHub</a></p>
+    </footer>
+
+    <!-- Toast Container -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // State
+        let connected = false;
+        let walletAddress = null;
+        let userState = {
+            idlBalance: 0,
+            stakedAmount: 0,
+            veAmount: 0,
+            claimableRewards: 0,
+            badges: ['early_adopter', 'first_stake', 'first_bet']
+        };
+
+        // Tab switching
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Show selected tab
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+            event.target.closest('.tab-btn').classList.add('active');
+        }
+
+        // Wallet connection
+        async function connectWallet() {
+            const btn = document.getElementById('connectBtn');
+
+            if (connected) {
+                // Disconnect
+                connected = false;
+                walletAddress = null;
+                btn.textContent = 'Connect Wallet';
+                btn.classList.remove('connected');
+                showToast('Wallet disconnected', 'success');
+                updateUI();
+                return;
+            }
+
+            // Check for Phantom
+            if (window.solana && window.solana.isPhantom) {
+                try {
+                    const resp = await window.solana.connect();
+                    walletAddress = resp.publicKey.toString();
+                    connected = true;
+                    btn.textContent = walletAddress.slice(0, 4) + '...' + walletAddress.slice(-4);
+                    btn.classList.add('connected');
+                    showToast('Wallet connected!', 'success');
+
+                    // Simulate fetching user data
+                    await fetchUserData();
+                    updateUI();
+                } catch (err) {
+                    showToast('Failed to connect wallet', 'error');
+                }
+            } else {
+                showToast('Please install Phantom wallet', 'error');
+                window.open('https://phantom.app/', '_blank');
+            }
+        }
+
+        // Simulate fetching user data
+        async function fetchUserData() {
+            // In production, this would fetch from the blockchain
+            userState = {
+                idlBalance: 10000.00,
+                stakedAmount: 5000.00,
+                veAmount: 2500.00,
+                claimableRewards: 125.50,
+                badges: ['early_adopter', 'first_stake', 'first_bet']
+            };
+        }
+
+        // Update UI with user state
+        function updateUI() {
+            if (connected) {
+                document.getElementById('idlBalance').textContent = userState.idlBalance.toLocaleString();
+                document.getElementById('stakedBalance').textContent = userState.stakedAmount.toLocaleString();
+                document.getElementById('veBalance').textContent = userState.veAmount.toLocaleString();
+                document.getElementById('badgeCount').textContent = `${userState.badges.length} / 12`;
+                document.getElementById('claimableRewards').textContent = `${userState.claimableRewards.toFixed(2)} IDL`;
+                document.getElementById('availableStake').textContent = `${userState.idlBalance.toLocaleString()} IDL`;
+                document.getElementById('lockedStake').textContent = `${userState.stakedAmount.toLocaleString()} IDL`;
+                document.getElementById('votingPower').textContent = userState.veAmount.toLocaleString();
+
+                // Calculate staking bonus
+                const bonus = Math.min((userState.stakedAmount / 1000000) * 50, 50);
+                document.getElementById('stakingBonus').textContent = `${bonus.toFixed(1)}%`;
+            } else {
+                document.getElementById('idlBalance').textContent = '0.00';
+                document.getElementById('stakedBalance').textContent = '0.00';
+                document.getElementById('veBalance').textContent = '0.00';
+                document.getElementById('badgeCount').textContent = '0 / 12';
+                document.getElementById('claimableRewards').textContent = '0.00 IDL';
+                document.getElementById('availableStake').textContent = '0.00 IDL';
+                document.getElementById('lockedStake').textContent = '0.00 IDL';
+                document.getElementById('votingPower').textContent = '0';
+                document.getElementById('stakingBonus').textContent = '0%';
+            }
+        }
+
+        // Staking functions
+        function setMaxStake() {
+            document.getElementById('stakeAmount').value = userState.idlBalance;
+        }
+
+        async function stakeTokens() {
+            if (!connected) {
+                showToast('Please connect your wallet first', 'error');
+                return;
+            }
+
+            const amount = parseFloat(document.getElementById('stakeAmount').value);
+            if (!amount || amount <= 0) {
+                showToast('Please enter a valid amount', 'error');
+                return;
+            }
+
+            if (amount > userState.idlBalance) {
+                showToast('Insufficient balance', 'error');
+                return;
+            }
+
+            // Simulate staking
+            showToast(`Staking ${amount.toLocaleString()} IDL...`, 'success');
+
+            // In production, this would call the smart contract
+            setTimeout(() => {
+                userState.idlBalance -= amount;
+                userState.stakedAmount += amount;
+                document.getElementById('stakeAmount').value = '';
+                updateUI();
+                showToast(`Successfully staked ${amount.toLocaleString()} IDL!`, 'success');
+            }, 1500);
+        }
+
+        async function unstakeTokens() {
+            if (!connected) {
+                showToast('Please connect your wallet first', 'error');
+                return;
+            }
+
+            if (userState.stakedAmount <= 0) {
+                showToast('No tokens to unstake', 'error');
+                return;
+            }
+
+            showToast('Unstaking tokens...', 'success');
+
+            setTimeout(() => {
+                const amount = userState.stakedAmount;
+                userState.idlBalance += amount;
+                userState.stakedAmount = 0;
+                updateUI();
+                showToast(`Successfully unstaked ${amount.toLocaleString()} IDL!`, 'success');
+            }, 1500);
+        }
+
+        async function lockTokens() {
+            if (!connected) {
+                showToast('Please connect your wallet first', 'error');
+                return;
+            }
+
+            if (userState.stakedAmount <= 0) {
+                showToast('Stake tokens first before locking', 'error');
+                return;
+            }
+
+            const duration = document.getElementById('lockDuration').value;
+            const multipliers = { '7': 1, '30': 1.5, '90': 2, '365': 3, '1460': 4 };
+            const veAmount = userState.stakedAmount * multipliers[duration];
+
+            showToast(`Locking for ${duration} days...`, 'success');
+
+            setTimeout(() => {
+                userState.veAmount = veAmount;
+                updateUI();
+                showToast(`Locked! You now have ${veAmount.toLocaleString()} veIDL`, 'success');
+            }, 1500);
+        }
+
+        async function claimRewards() {
+            if (!connected) {
+                showToast('Please connect your wallet first', 'error');
+                return;
+            }
+
+            if (userState.claimableRewards <= 0) {
+                showToast('No rewards to claim', 'error');
+                return;
+            }
+
+            showToast('Claiming rewards...', 'success');
+
+            setTimeout(() => {
+                const amount = userState.claimableRewards;
+                userState.idlBalance += amount;
+                userState.claimableRewards = 0;
+                updateUI();
+                showToast(`Claimed ${amount.toFixed(2)} IDL!`, 'success');
+            }, 1500);
+        }
+
+        // Betting functions
+        function placeBet(market, isYes) {
+            if (!connected) {
+                showToast('Please connect your wallet first', 'error');
+                return;
+            }
+
+            const side = isYes ? 'YES' : 'NO';
+            showToast(`Opening bet modal for ${market} ${side}...`, 'success');
+            // In production, this would open a betting modal
+        }
+
+        function createMarket() {
+            if (!connected) {
+                showToast('Please connect your wallet first', 'error');
+                return;
+            }
+            showToast('Opening market creation...', 'success');
+        }
+
+        // Voting functions
+        function openProposal(id) {
+            showToast(`Opening proposal IDP-${id}...`, 'success');
+        }
+
+        // veIDL preview
+        document.getElementById('lockDuration').addEventListener('change', function() {
+            const multipliers = { '7': 1, '30': 1.5, '90': 2, '365': 3, '1460': 4 };
+            const veAmount = userState.stakedAmount * multipliers[this.value];
+            document.getElementById('veIdlPreview').textContent = `${veAmount.toLocaleString()} veIDL`;
+        });
+
+        // Toast notification
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast ${type} show`;
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Initialize
+        updateUI();
+    </script>
+</body>
+
+</html>
