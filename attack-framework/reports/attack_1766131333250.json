@@ -1,0 +1,1678 @@
+{
+  "timestamp": 1766131489271,
+  "protocolVersion": "1.0.0",
+  "framework": "IDL Attack Framework v1.0",
+  "totalAttacks": 140,
+  "successfulAttacks": 58,
+  "mitigatedAttacks": 63,
+  "failedAttacks": 0,
+  "criticalFindings": 0,
+  "highFindings": 0,
+  "mediumFindings": 58,
+  "lowFindings": 0,
+  "results": [
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131336310,
+      "endTime": 1766131342255,
+      "duration": 5945,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "status": "SUCCESS",
+      "severity": "MEDIUM",
+      "startTime": 1766131336320,
+      "endTime": 1766131341601,
+      "duration": 5281,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: SUCCESS"
+      ]
+    },
+    {
+      "status": "SUCCESS",
+      "severity": "MEDIUM",
+      "startTime": 1766131336321,
+      "endTime": 1766131342673,
+      "duration": 6352,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: SUCCESS"
+      ]
+    },
+    {
+      "status": "SUCCESS",
+      "severity": "MEDIUM",
+      "startTime": 1766131336321,
+      "endTime": 1766131343333,
+      "duration": 7012,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: SUCCESS"
+      ]
+    },
+    {
+      "status": "SUCCESS",
+      "severity": "MEDIUM",
+      "startTime": 1766131336321,
+      "endTime": 1766131341659,
+      "duration": 5338,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: SUCCESS"
+      ]
+    },
+    {
+      "status": "SUCCESS",
+      "severity": "MEDIUM",
+      "startTime": 1766131336321,
+      "endTime": 1766131342716,
+      "duration": 6395,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: SUCCESS"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131336322,
+      "endTime": 1766131342929,
+      "duration": 6607,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "status": "SUCCESS",
+      "severity": "MEDIUM",
+      "startTime": 1766131344336,
+      "endTime": 1766131349606,
+      "duration": 5270,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: SUCCESS"
+      ]
+    },
+    {
+      "status": "SUCCESS",
+      "severity": "MEDIUM",
+      "startTime": 1766131344336,
+      "endTime": 1766131348885,
+      "duration": 4549,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: SUCCESS"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131344336,
+      "endTime": 1766131347989,
+      "duration": 3653,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "status": "SUCCESS",
+      "severity": "MEDIUM",
+      "startTime": 1766131344337,
+      "endTime": 1766131351146,
+      "duration": 6809,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: SUCCESS"
+      ]
+    },
+    {
+      "status": "SUCCESS",
+      "severity": "MEDIUM",
+      "startTime": 1766131344337,
+      "endTime": 1766131349078,
+      "duration": 4741,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: SUCCESS"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131344337,
+      "endTime": 1766131348107,
+      "duration": 3770,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "status": "SUCCESS",
+      "severity": "MEDIUM",
+      "startTime": 1766131344337,
+      "endTime": 1766131348216,
+      "duration": 3879,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: SUCCESS"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131352149,
+      "endTime": 1766131357726,
+      "duration": 5577,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131352149,
+      "endTime": 1766131357525,
+      "duration": 5376,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131352149,
+      "endTime": 1766131356851,
+      "duration": 4702,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "vector": "SANDWICH_ATTACK",
+      "status": "PENDING",
+      "severity": "INFO",
+      "startTime": 1766131352149,
+      "endTime": 1766131356516,
+      "duration": 4367,
+      "logs": [
+        "Agent chose to wait this round"
+      ]
+    },
+    {
+      "status": "SUCCESS",
+      "severity": "MEDIUM",
+      "startTime": 1766131352149,
+      "endTime": 1766131356827,
+      "duration": 4678,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: SUCCESS"
+      ]
+    },
+    {
+      "status": "SUCCESS",
+      "severity": "MEDIUM",
+      "startTime": 1766131352149,
+      "endTime": 1766131357157,
+      "duration": 5008,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: SUCCESS"
+      ]
+    },
+    {
+      "status": "SUCCESS",
+      "severity": "MEDIUM",
+      "startTime": 1766131352149,
+      "endTime": 1766131356012,
+      "duration": 3863,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: SUCCESS"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131358728,
+      "endTime": 1766131364895,
+      "duration": 6167,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "vector": "SANDWICH_ATTACK",
+      "status": "PENDING",
+      "severity": "INFO",
+      "startTime": 1766131358729,
+      "endTime": 1766131364728,
+      "duration": 5999,
+      "logs": [
+        "Agent chose to wait this round"
+      ]
+    },
+    {
+      "status": "SUCCESS",
+      "severity": "MEDIUM",
+      "startTime": 1766131358729,
+      "endTime": 1766131363361,
+      "duration": 4632,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: SUCCESS"
+      ]
+    },
+    {
+      "vector": "SANDWICH_ATTACK",
+      "status": "PENDING",
+      "severity": "INFO",
+      "startTime": 1766131358729,
+      "endTime": 1766131364524,
+      "duration": 5795,
+      "logs": [
+        "Agent chose to wait this round"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131358729,
+      "endTime": 1766131363985,
+      "duration": 5256,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131358729,
+      "endTime": 1766131363677,
+      "duration": 4948,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "status": "SUCCESS",
+      "severity": "MEDIUM",
+      "startTime": 1766131358730,
+      "endTime": 1766131363451,
+      "duration": 4721,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: SUCCESS"
+      ]
+    },
+    {
+      "status": "SUCCESS",
+      "severity": "MEDIUM",
+      "startTime": 1766131365896,
+      "endTime": 1766131370622,
+      "duration": 4726,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: SUCCESS"
+      ]
+    },
+    {
+      "status": "SUCCESS",
+      "severity": "MEDIUM",
+      "startTime": 1766131365896,
+      "endTime": 1766131371152,
+      "duration": 5256,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: SUCCESS"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131365897,
+      "endTime": 1766131370896,
+      "duration": 4999,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "status": "SUCCESS",
+      "severity": "MEDIUM",
+      "startTime": 1766131365897,
+      "endTime": 1766131373590,
+      "duration": 7693,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: SUCCESS"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131365897,
+      "endTime": 1766131370494,
+      "duration": 4597,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131365897,
+      "endTime": 1766131370814,
+      "duration": 4917,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "status": "SUCCESS",
+      "severity": "MEDIUM",
+      "startTime": 1766131365897,
+      "endTime": 1766131369983,
+      "duration": 4086,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: SUCCESS"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131374591,
+      "endTime": 1766131380184,
+      "duration": 5593,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131374591,
+      "endTime": 1766131379644,
+      "duration": 5053,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131374591,
+      "endTime": 1766131378730,
+      "duration": 4139,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "vector": "SANDWICH_ATTACK",
+      "status": "PENDING",
+      "severity": "INFO",
+      "startTime": 1766131374591,
+      "endTime": 1766131380095,
+      "duration": 5504,
+      "logs": [
+        "Agent chose to wait this round"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131374591,
+      "endTime": 1766131379536,
+      "duration": 4945,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "status": "SUCCESS",
+      "severity": "MEDIUM",
+      "startTime": 1766131374591,
+      "endTime": 1766131378689,
+      "duration": 4098,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: SUCCESS"
+      ]
+    },
+    {
+      "status": "SUCCESS",
+      "severity": "MEDIUM",
+      "startTime": 1766131374591,
+      "endTime": 1766131381016,
+      "duration": 6425,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: SUCCESS"
+      ]
+    },
+    {
+      "status": "SUCCESS",
+      "severity": "MEDIUM",
+      "startTime": 1766131382017,
+      "endTime": 1766131389210,
+      "duration": 7193,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: SUCCESS"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131382017,
+      "endTime": 1766131386635,
+      "duration": 4618,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "status": "SUCCESS",
+      "severity": "MEDIUM",
+      "startTime": 1766131382017,
+      "endTime": 1766131387350,
+      "duration": 5333,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: SUCCESS"
+      ]
+    },
+    {
+      "status": "SUCCESS",
+      "severity": "MEDIUM",
+      "startTime": 1766131382018,
+      "endTime": 1766131388765,
+      "duration": 6747,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: SUCCESS"
+      ]
+    },
+    {
+      "status": "SUCCESS",
+      "severity": "MEDIUM",
+      "startTime": 1766131382018,
+      "endTime": 1766131386789,
+      "duration": 4771,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: SUCCESS"
+      ]
+    },
+    {
+      "status": "SUCCESS",
+      "severity": "MEDIUM",
+      "startTime": 1766131382018,
+      "endTime": 1766131386337,
+      "duration": 4319,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: SUCCESS"
+      ]
+    },
+    {
+      "vector": "SANDWICH_ATTACK",
+      "status": "PENDING",
+      "severity": "INFO",
+      "startTime": 1766131382018,
+      "endTime": 1766131385943,
+      "duration": 3925,
+      "logs": [
+        "Agent chose to wait this round"
+      ]
+    },
+    {
+      "status": "SUCCESS",
+      "severity": "MEDIUM",
+      "startTime": 1766131390211,
+      "endTime": 1766131395370,
+      "duration": 5159,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: SUCCESS"
+      ]
+    },
+    {
+      "status": "SUCCESS",
+      "severity": "MEDIUM",
+      "startTime": 1766131390212,
+      "endTime": 1766131396099,
+      "duration": 5887,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: SUCCESS"
+      ]
+    },
+    {
+      "status": "SUCCESS",
+      "severity": "MEDIUM",
+      "startTime": 1766131390212,
+      "endTime": 1766131396568,
+      "duration": 6356,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: SUCCESS"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131390212,
+      "endTime": 1766131396209,
+      "duration": 5997,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "status": "SUCCESS",
+      "severity": "MEDIUM",
+      "startTime": 1766131390212,
+      "endTime": 1766131396121,
+      "duration": 5909,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: SUCCESS"
+      ]
+    },
+    {
+      "status": "SUCCESS",
+      "severity": "MEDIUM",
+      "startTime": 1766131390213,
+      "endTime": 1766131394871,
+      "duration": 4658,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: SUCCESS"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131390213,
+      "endTime": 1766131394452,
+      "duration": 4239,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131397570,
+      "endTime": 1766131402895,
+      "duration": 5325,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "status": "SUCCESS",
+      "severity": "MEDIUM",
+      "startTime": 1766131397571,
+      "endTime": 1766131405107,
+      "duration": 7536,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: SUCCESS"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131397571,
+      "endTime": 1766131402294,
+      "duration": 4723,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131397571,
+      "endTime": 1766131404019,
+      "duration": 6448,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131397571,
+      "endTime": 1766131403103,
+      "duration": 5532,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "status": "SUCCESS",
+      "severity": "MEDIUM",
+      "startTime": 1766131397571,
+      "endTime": 1766131402528,
+      "duration": 4957,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: SUCCESS"
+      ]
+    },
+    {
+      "status": "SUCCESS",
+      "severity": "MEDIUM",
+      "startTime": 1766131397571,
+      "endTime": 1766131402801,
+      "duration": 5230,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: SUCCESS"
+      ]
+    },
+    {
+      "status": "SUCCESS",
+      "severity": "MEDIUM",
+      "startTime": 1766131406108,
+      "endTime": 1766131412310,
+      "duration": 6202,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: SUCCESS"
+      ]
+    },
+    {
+      "vector": "SANDWICH_ATTACK",
+      "status": "PENDING",
+      "severity": "INFO",
+      "startTime": 1766131406108,
+      "endTime": 1766131415353,
+      "duration": 9245,
+      "logs": [
+        "Agent chose to wait this round"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131406108,
+      "endTime": 1766131410739,
+      "duration": 4631,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "status": "SUCCESS",
+      "severity": "MEDIUM",
+      "startTime": 1766131406108,
+      "endTime": 1766131411716,
+      "duration": 5608,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: SUCCESS"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131406108,
+      "endTime": 1766131410756,
+      "duration": 4648,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "status": "SUCCESS",
+      "severity": "MEDIUM",
+      "startTime": 1766131406108,
+      "endTime": 1766131409900,
+      "duration": 3792,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: SUCCESS"
+      ]
+    },
+    {
+      "vector": "SANDWICH_ATTACK",
+      "status": "PENDING",
+      "severity": "INFO",
+      "startTime": 1766131406109,
+      "endTime": 1766131408042,
+      "duration": 1933,
+      "logs": [
+        "Agent chose to wait this round"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131416354,
+      "endTime": 1766131423367,
+      "duration": 7013,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131416354,
+      "endTime": 1766131420493,
+      "duration": 4139,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131416354,
+      "endTime": 1766131421187,
+      "duration": 4833,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131416354,
+      "endTime": 1766131421527,
+      "duration": 5173,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131416354,
+      "endTime": 1766131422886,
+      "duration": 6532,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131416354,
+      "endTime": 1766131421239,
+      "duration": 4885,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "vector": "SANDWICH_ATTACK",
+      "status": "PENDING",
+      "severity": "INFO",
+      "startTime": 1766131416354,
+      "endTime": 1766131418872,
+      "duration": 2518,
+      "logs": [
+        "Agent chose to wait this round"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131424368,
+      "endTime": 1766131429043,
+      "duration": 4675,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131424368,
+      "endTime": 1766131429493,
+      "duration": 5125,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131424368,
+      "endTime": 1766131430185,
+      "duration": 5817,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "vector": "SANDWICH_ATTACK",
+      "status": "PENDING",
+      "severity": "INFO",
+      "startTime": 1766131424368,
+      "endTime": 1766131429824,
+      "duration": 5456,
+      "logs": [
+        "Agent chose to wait this round"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131424368,
+      "endTime": 1766131428503,
+      "duration": 4135,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "status": "SUCCESS",
+      "severity": "MEDIUM",
+      "startTime": 1766131424368,
+      "endTime": 1766131428298,
+      "duration": 3930,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: SUCCESS"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131424368,
+      "endTime": 1766131431340,
+      "duration": 6972,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "status": "SUCCESS",
+      "severity": "MEDIUM",
+      "startTime": 1766131432340,
+      "endTime": 1766131437897,
+      "duration": 5557,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: SUCCESS"
+      ]
+    },
+    {
+      "status": "SUCCESS",
+      "severity": "MEDIUM",
+      "startTime": 1766131432341,
+      "endTime": 1766131437270,
+      "duration": 4929,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: SUCCESS"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131432341,
+      "endTime": 1766131436610,
+      "duration": 4269,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "status": "SUCCESS",
+      "severity": "MEDIUM",
+      "startTime": 1766131432341,
+      "endTime": 1766131438667,
+      "duration": 6326,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: SUCCESS"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131432341,
+      "endTime": 1766131437188,
+      "duration": 4847,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131432341,
+      "endTime": 1766131436906,
+      "duration": 4565,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "vector": "SANDWICH_ATTACK",
+      "status": "PENDING",
+      "severity": "INFO",
+      "startTime": 1766131432341,
+      "endTime": 1766131434235,
+      "duration": 1894,
+      "logs": [
+        "Agent chose to wait this round"
+      ]
+    },
+    {
+      "status": "SUCCESS",
+      "severity": "MEDIUM",
+      "startTime": 1766131439669,
+      "endTime": 1766131445621,
+      "duration": 5952,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: SUCCESS"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131439669,
+      "endTime": 1766131445718,
+      "duration": 6049,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "status": "SUCCESS",
+      "severity": "MEDIUM",
+      "startTime": 1766131439669,
+      "endTime": 1766131445310,
+      "duration": 5641,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: SUCCESS"
+      ]
+    },
+    {
+      "status": "SUCCESS",
+      "severity": "MEDIUM",
+      "startTime": 1766131439669,
+      "endTime": 1766131445387,
+      "duration": 5718,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: SUCCESS"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131439669,
+      "endTime": 1766131444503,
+      "duration": 4834,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131439669,
+      "endTime": 1766131444186,
+      "duration": 4517,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "status": "SUCCESS",
+      "severity": "MEDIUM",
+      "startTime": 1766131439669,
+      "endTime": 1766131446898,
+      "duration": 7229,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: SUCCESS"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131447899,
+      "endTime": 1766131453241,
+      "duration": 5342,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "status": "SUCCESS",
+      "severity": "MEDIUM",
+      "startTime": 1766131447900,
+      "endTime": 1766131452898,
+      "duration": 4998,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: SUCCESS"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131447900,
+      "endTime": 1766131452037,
+      "duration": 4137,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131447900,
+      "endTime": 1766131454331,
+      "duration": 6431,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131447900,
+      "endTime": 1766131452619,
+      "duration": 4719,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131447900,
+      "endTime": 1766131452293,
+      "duration": 4393,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "vector": "SANDWICH_ATTACK",
+      "status": "PENDING",
+      "severity": "INFO",
+      "startTime": 1766131447900,
+      "endTime": 1766131450909,
+      "duration": 3009,
+      "logs": [
+        "Agent chose to wait this round"
+      ]
+    },
+    {
+      "status": "SUCCESS",
+      "severity": "MEDIUM",
+      "startTime": 1766131455333,
+      "endTime": 1766131460609,
+      "duration": 5276,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: SUCCESS"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131455333,
+      "endTime": 1766131459582,
+      "duration": 4249,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131455333,
+      "endTime": 1766131459792,
+      "duration": 4459,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "vector": "SANDWICH_ATTACK",
+      "status": "PENDING",
+      "severity": "INFO",
+      "startTime": 1766131455333,
+      "endTime": 1766131460123,
+      "duration": 4790,
+      "logs": [
+        "Agent chose to wait this round"
+      ]
+    },
+    {
+      "status": "SUCCESS",
+      "severity": "MEDIUM",
+      "startTime": 1766131455334,
+      "endTime": 1766131460302,
+      "duration": 4968,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: SUCCESS"
+      ]
+    },
+    {
+      "status": "SUCCESS",
+      "severity": "MEDIUM",
+      "startTime": 1766131455334,
+      "endTime": 1766131459617,
+      "duration": 4283,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: SUCCESS"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131455334,
+      "endTime": 1766131459943,
+      "duration": 4609,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "status": "SUCCESS",
+      "severity": "MEDIUM",
+      "startTime": 1766131461610,
+      "endTime": 1766131466833,
+      "duration": 5223,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: SUCCESS"
+      ]
+    },
+    {
+      "status": "SUCCESS",
+      "severity": "MEDIUM",
+      "startTime": 1766131461610,
+      "endTime": 1766131467681,
+      "duration": 6071,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: SUCCESS"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131461610,
+      "endTime": 1766131466005,
+      "duration": 4395,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "vector": "SANDWICH_ATTACK",
+      "status": "PENDING",
+      "severity": "INFO",
+      "startTime": 1766131461611,
+      "endTime": 1766131467725,
+      "duration": 6114,
+      "logs": [
+        "Agent chose to wait this round"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131461611,
+      "endTime": 1766131467533,
+      "duration": 5922,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "status": "SUCCESS",
+      "severity": "MEDIUM",
+      "startTime": 1766131461611,
+      "endTime": 1766131465696,
+      "duration": 4085,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: SUCCESS"
+      ]
+    },
+    {
+      "vector": "SANDWICH_ATTACK",
+      "status": "PENDING",
+      "severity": "INFO",
+      "startTime": 1766131461611,
+      "endTime": 1766131463531,
+      "duration": 1920,
+      "logs": [
+        "Agent chose to wait this round"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131468728,
+      "endTime": 1766131473546,
+      "duration": 4818,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131468728,
+      "endTime": 1766131472853,
+      "duration": 4125,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "status": "SUCCESS",
+      "severity": "MEDIUM",
+      "startTime": 1766131468728,
+      "endTime": 1766131473770,
+      "duration": 5042,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: SUCCESS"
+      ]
+    },
+    {
+      "vector": "SANDWICH_ATTACK",
+      "status": "PENDING",
+      "severity": "INFO",
+      "startTime": 1766131468729,
+      "endTime": 1766131474485,
+      "duration": 5756,
+      "logs": [
+        "Agent chose to wait this round"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131468729,
+      "endTime": 1766131474197,
+      "duration": 5468,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "status": "SUCCESS",
+      "severity": "MEDIUM",
+      "startTime": 1766131468729,
+      "endTime": 1766131473846,
+      "duration": 5117,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: SUCCESS"
+      ]
+    },
+    {
+      "vector": "SANDWICH_ATTACK",
+      "status": "PENDING",
+      "severity": "INFO",
+      "startTime": 1766131468729,
+      "endTime": 1766131471408,
+      "duration": 2679,
+      "logs": [
+        "Agent chose to wait this round"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131475488,
+      "endTime": 1766131479856,
+      "duration": 4368,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131475488,
+      "endTime": 1766131480122,
+      "duration": 4634,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131475488,
+      "endTime": 1766131479383,
+      "duration": 3895,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "vector": "SANDWICH_ATTACK",
+      "status": "PENDING",
+      "severity": "INFO",
+      "startTime": 1766131475489,
+      "endTime": 1766131480938,
+      "duration": 5449,
+      "logs": [
+        "Agent chose to wait this round"
+      ]
+    },
+    {
+      "status": "SUCCESS",
+      "severity": "MEDIUM",
+      "startTime": 1766131475489,
+      "endTime": 1766131480185,
+      "duration": 4696,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: SUCCESS"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131475489,
+      "endTime": 1766131480024,
+      "duration": 4535,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "vector": "SANDWICH_ATTACK",
+      "status": "PENDING",
+      "severity": "INFO",
+      "startTime": 1766131475489,
+      "endTime": 1766131477937,
+      "duration": 2448,
+      "logs": [
+        "Agent chose to wait this round"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131481939,
+      "endTime": 1766131488173,
+      "duration": 6234,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "status": "SUCCESS",
+      "severity": "MEDIUM",
+      "startTime": 1766131481939,
+      "endTime": 1766131486193,
+      "duration": 4254,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: SUCCESS"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131481939,
+      "endTime": 1766131486356,
+      "duration": 4417,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "status": "MITIGATED",
+      "severity": "MEDIUM",
+      "startTime": 1766131481939,
+      "endTime": 1766131488270,
+      "duration": 6331,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: BLOCKED"
+      ]
+    },
+    {
+      "status": "SUCCESS",
+      "severity": "MEDIUM",
+      "startTime": 1766131481940,
+      "endTime": 1766131487378,
+      "duration": 5438,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: SUCCESS"
+      ]
+    },
+    {
+      "status": "SUCCESS",
+      "severity": "MEDIUM",
+      "startTime": 1766131481940,
+      "endTime": 1766131485890,
+      "duration": 3950,
+      "logs": [
+        "Executing generic attack: undefined",
+        "Attack difficulty: 50%",
+        "Random outcome: SUCCESS"
+      ]
+    },
+    {
+      "vector": "SANDWICH_ATTACK",
+      "status": "PENDING",
+      "severity": "INFO",
+      "startTime": 1766131481940,
+      "endTime": 1766131483768,
+      "duration": 1828,
+      "logs": [
+        "Agent chose to wait this round"
+      ]
+    }
+  ],
+  "summary": "# IDL Protocol Security Assessment\n\n\n## Mitigation Effectiveness: 45.0%\nRisk Score: 100/100 (HIGH)\n\n## Defense Analysis\n\n\n## Recommendations\n",
+  "riskScore": 100
+}
