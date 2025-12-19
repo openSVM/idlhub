@@ -138,7 +138,10 @@ async function runTests() {
     }
     
     const idl = JSON.parse(response.result.content[0].text);
-    if (!idl.name || !idl.version) {
+    // IDL can have name/version at root or in metadata
+    const hasName = idl.name || (idl.metadata && idl.metadata.name);
+    const hasVersion = idl.version || (idl.metadata && idl.metadata.version);
+    if (!hasName || !hasVersion) {
       throw new Error('Invalid IDL structure');
     }
   });
