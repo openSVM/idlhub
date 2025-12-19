@@ -21,8 +21,9 @@ const IDLS_DIR = path.join(__dirname, '..', 'IDLs');
 const INDEX_FILE = path.join(__dirname, '..', 'index.json');
 const MANIFEST_FILE = path.join(__dirname, 'manifest.json');
 
-// Irys node for Solana (use 'https://node1.irys.xyz' for mainnet)
+// Irys node (default devnet for testing, use node1/node2 for mainnet)
 const IRYS_NODE = process.env.IRYS_NODE || 'https://devnet.irys.xyz';
+const SOLANA_RPC = process.env.SOLANA_RPC || 'https://api.devnet.solana.com';
 
 // Tags for Arweave content discovery
 const BASE_TAGS = [
@@ -45,6 +46,7 @@ async function getIrys() {
     url: IRYS_NODE,
     token: 'solana',
     key: wallet,
+    config: { providerUrl: SOLANA_RPC },
   });
 
   return irys;

@@ -24,8 +24,9 @@ const IDLS_DIR = path.join(__dirname, '..', 'IDLs');
 const INDEX_FILE = path.join(__dirname, '..', 'index.json');
 const CACHE_DIR = path.join(ARWEAVE_DIR, 'cache');
 
-// Arweave gateways
+// Arweave/Irys gateways (try devnet first for testing, then mainnet)
 const GATEWAYS = [
+  'https://devnet.irys.xyz',
   'https://arweave.net',
   'https://gateway.irys.xyz',
 ];
