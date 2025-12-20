@@ -2084,7 +2084,478 @@ If > 50% of RPC calls fail over 5-minute window:
   - Log to on-chain emergency account for transparency
 ```
 
-### 15.11 Security Considerations for On-Chain Oracles
+### 15.11 Worked Example: Computing Jupiter 24h Volume
+
+```
+CONCRETE EXAMPLE: JUPITER VOLUME CALCULATION
+════════════════════════════════════════════
+
+Given:
+  - Program ID: JUP4Fb2cqiRUcaTHdrPC8h2gNsA2ETXiPDD33WcGuJB
+  - Target: 24h volume ending at slot 250,000,000
+  - Estimated TPS: 75 swaps/second
+
+Step 1: Estimate Transaction Count
+──────────────────────────────────
+
+Query: getSignaturesForAddress(JUP4..., {limit: 1000})
+Result: 1000 signatures spanning slots 249,998,500 to 250,000,000
+
+Slots covered: 1,500
+Time covered: 1,500 × 0.4s = 600 seconds
+Tx density: 1000 / 600 = 1.67 tx/second (for this program address)
+
+Note: Jupiter uses multiple program addresses. True TPS higher.
+
+24h slots: 86,400 / 0.4 = 216,000 slots
+Estimated 24h tx: 1.67 × 86,400 = 144,288 transactions
+
+
+Step 2: Stratified Sampling
+───────────────────────────
+
+24 hourly buckets, 100 samples each = 2,400 samples
+
+Bucket 0 (hour 0): slots 249,784,000 - 249,793,000
+  Query: getSignaturesForAddress(JUP4..., {limit: 100, before: slot_249793000})
+  Result: 100 signatures
+
+  For each signature, getTransaction() and parse:
+    - Signature: 5Uh7...  → in_amount: 1.5 SOL ($262.50 @ $175)
+    - Signature: 3Kp9...  → in_amount: 500 USDC ($500.00)
+    - Signature: 7Ym2...  → in_amount: 0.1 SOL ($17.50)
+    ... (97 more)
+
+  Bucket 0 sum: $47,832.15
+  Bucket 0 mean: $478.32
+
+[Repeat for buckets 1-23]
+
+
+Step 3: Aggregation
+───────────────────
+
+Sample results:
+┌────────┬───────────────┬────────────────┬──────────────┐
+│ Bucket │ Sample Sum    │ Sample Mean    │ Sample σ     │
+├────────┼───────────────┼────────────────┼──────────────┤
+│   0    │   $47,832     │    $478.32     │   $1,245     │
+│   1    │   $52,104     │    $521.04     │   $1,892     │
+│   2    │   $38,291     │    $382.91     │   $987       │
+│  ...   │     ...       │      ...       │    ...       │
+│  23    │   $61,455     │    $614.55     │   $2,103     │
+├────────┼───────────────┼────────────────┼──────────────┤
+│ TOTAL  │ $1,156,832    │    $482.01     │   $1,567     │
+└────────┴───────────────┴────────────────┴──────────────┘
+
+Overall mean: $482.01 per swap
+Estimated 24h volume: 144,288 × $482.01 = $69,546,179
+
+
+Step 4: Confidence Interval
+───────────────────────────
+
+Using CLT for sample mean:
+
+Standard Error = σ / √n = $1,567 / √2,400 = $31.99
+
+95% CI for mean: $482.01 ± 1.96 × $31.99 = [$419.31, $544.71]
+
+Volume 95% CI: [144,288 × $419.31, 144,288 × $544.71]
+             = [$60.5M, $78.6M]
+
+Reported: $69.5M ± 13% (95% confidence)
+
+
+Step 5: Sanity Checks
+─────────────────────
+
+□ Volume within historical range? (Jupiter typical: $50M-$200M/day) ✓
+□ Mean swap size reasonable? ($482 typical for retail) ✓
+□ No bucket with >3σ deviation? (Check for anomalies) ✓
+□ Sufficient liquidity for price accuracy? (>$1M per pool) ✓
+
+FINAL RESULT: $69,546,179 (±13%, 95% CI)
+```
+
+### 15.12 Vault Discovery: The Protocol Mapping Problem
+
+```
+CHALLENGE: DISCOVERING PROTOCOL VAULTS
+══════════════════════════════════════
+
+Not all protocols use predictable PDAs. Discovery strategies:
+
+METHOD 1: KNOWN SEEDS (Anchor Programs)
+───────────────────────────────────────
+
+For Anchor programs, vaults often use deterministic seeds:
+
+  vault_pda = findProgramAddress([
+    "vault",
+    pool_pubkey,
+    token_mint
+  ], program_id)
+
+IDLHub maintains a registry of seed patterns:
+  {
+    "marinade": {
+      "pattern": ["reserve"],
+      "program_id": "MarBmsSgKXdrN1egZf5sqe1TMai9K1rChYNDJgjq7aD"
+    },
+    "drift": {
+      "pattern": ["spot_market_vault", market_index.to_le_bytes()],
+      "program_id": "dRiftyHA39MWEi3m9aunc5MzRF1JYuBsbn6VPcn33UH"
+    }
+  }
+
+
+METHOD 2: OWNERSHIP SCANNING
+────────────────────────────
+
+For protocols without predictable PDAs:
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                                                                             │
+│  function discoverVaults(program_id):                                       │
+│                                                                             │
+│      // Find all token accounts owned by PDAs of this program              │
+│      pda_owners = []                                                        │
+│                                                                             │
+│      // Strategy: Scan recent transactions for account creation            │
+│      sigs = getSignaturesForAddress(program_id, {limit: 1000})              │
+│                                                                             │
+│      for sig in sigs:                                                       │
+│          tx = getTransaction(sig)                                           │
+│          for account in tx.meta.postTokenBalances:                          │
+│              if isPDA(account.owner, program_id):                           │
+│                  pda_owners.add(account.owner)                              │
+│                                                                             │
+│      // Fetch all token accounts for discovered PDAs                        │
+│      vaults = []                                                            │
+│      for pda in pda_owners:                                                 │
+│          token_accounts = getTokenAccountsByOwner(pda, {                    │
+│              programId: TOKEN_PROGRAM_ID                                    │
+│          })                                                                 │
+│          vaults.extend(token_accounts)                                      │
+│                                                                             │
+│      return vaults                                                          │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+Limitation: May miss inactive vaults not touched in last 1000 txs.
+
+
+METHOD 3: IDL-GUIDED DISCOVERY
+──────────────────────────────
+
+Using the protocol's IDL from IDLHub:
+
+1. Parse IDL for account types containing "vault", "reserve", "pool"
+2. Extract discriminator bytes
+3. Use getProgramAccounts with memcmp filter on discriminator
+4. Parse matched accounts to extract token account references
+
+Example for Drift:
+  idl = fetchIDL("drift")
+  vault_discriminator = sha256("account:SpotMarketVault")[:8]
+
+  vaults = getProgramAccounts(DRIFT_PROGRAM, {
+    filters: [
+      {memcmp: {offset: 0, bytes: base58(vault_discriminator)}}
+    ]
+  })
+
+
+METHOD 4: TOKEN-2022 HANDLING
+─────────────────────────────
+
+Token-2022 accounts have different layout:
+
+SPL Token (legacy):        Token-2022:
+┌────────────────────┐     ┌────────────────────┐
+│ mint (32)          │     │ mint (32)          │
+│ owner (32)         │     │ owner (32)         │
+│ amount (8)         │     │ amount (8)         │
+│ delegate_opt (36)  │     │ delegate_opt (36)  │
+│ state (1)          │     │ state (1)          │
+│ is_native_opt (12) │     │ is_native_opt (12) │
+│ delegated_amt (8)  │     │ delegated_amt (8)  │
+│ close_auth_opt (36)│     │ close_auth_opt (36)│
+└────────────────────┘     │ extensions...      │
+     165 bytes             └────────────────────┘
+                                165+ bytes
+
+Detection:
+  if account.owner == TOKEN_PROGRAM_ID:
+      parse_legacy_layout()
+  elif account.owner == TOKEN_2022_PROGRAM_ID:
+      parse_token2022_layout()
+```
+
+### 15.13 Cross-Protocol TVL: Avoiding Double-Counting
+
+```
+PROBLEM: NESTED PROTOCOL TVL
+════════════════════════════
+
+Kamino deposits into Drift, Mango, and Marginfi.
+Naive counting:
+  TVL_kamino = $100M
+  TVL_drift  = $500M (includes $100M from Kamino)
+  TVL_mango  = $300M
+  Total = $900M  ← WRONG (double-counted $100M)
+
+
+SOLUTION: ATTRIBUTION GRAPH
+───────────────────────────
+
+Build directed graph of fund flows:
+
+     User Wallets
+          │
+          ▼
+    ┌─────────────┐
+    │   Kamino    │ ─────────────┬─────────────┐
+    │   $100M     │              │             │
+    └─────────────┘              │             │
+          │                      │             │
+          ▼                      ▼             ▼
+    ┌─────────────┐       ┌───────────┐  ┌───────────┐
+    │   Drift     │       │   Mango   │  │ Marginfi  │
+    │   $400M     │       │   $200M   │  │   $150M   │
+    │ (+$50M K)   │       │ (+$30M K) │  │ (+$20M K) │
+    └─────────────┘       └───────────┘  └───────────┘
+
+
+ALGORITHM: ComputeAdjustedTVL
+─────────────────────────────
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                                                                             │
+│  function computeAdjustedTVL(protocol):                                     │
+│                                                                             │
+│      raw_tvl = computeTVL(protocol)                                         │
+│                                                                             │
+│      // Identify deposits from other protocols                              │
+│      nested_deposits = 0                                                    │
+│      for vault in protocol.vaults:                                          │
+│          owner = getAccountInfo(vault).owner                                │
+│          if isKnownProtocolPDA(owner):                                      │
+│              nested_deposits += vault.balance                               │
+│                                                                             │
+│      // Report both metrics                                                 │
+│      return {                                                               │
+│          gross_tvl: raw_tvl,                                                │
+│          net_tvl: raw_tvl - nested_deposits,                                │
+│          nested_from: identifySourceProtocols(nested_deposits)              │
+│      }                                                                      │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+For prediction markets, we specify:
+  - "Jupiter Gross TVL > $2B" (includes nested)
+  - "Jupiter Net TVL > $2B" (excludes nested)
+
+This removes ambiguity in market resolution.
+```
+
+### 15.14 Handling Program Upgrades and Version Migrations
+
+```
+PROBLEM: ACCOUNT LAYOUT CHANGES
+═══════════════════════════════
+
+Jupiter v5 → v6 migration changed swap instruction format.
+Parsing v5 transactions with v6 parser = garbage data.
+
+
+SOLUTION: VERSION-AWARE PARSING
+───────────────────────────────
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                                                                             │
+│  // IDLHub version registry                                                 │
+│  PROTOCOL_VERSIONS = {                                                      │
+│      "jupiter": [                                                           │
+│          {                                                                  │
+│              version: "v5",                                                 │
+│              program_id: "JUP4Fb2cqiRUcaTHdrPC8h2gNsA2ETXiPDD33WcGuJB",     │
+│              active_until_slot: 200_000_000,                                │
+│              idl_hash: "abc123..."                                          │
+│          },                                                                 │
+│          {                                                                  │
+│              version: "v6",                                                 │
+│              program_id: "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",     │
+│              active_from_slot: 200_000_001,                                 │
+│              idl_hash: "def456..."                                          │
+│          }                                                                  │
+│      ]                                                                      │
+│  }                                                                          │
+│                                                                             │
+│  function parseSwap(tx, slot):                                              │
+│      protocol = identifyProtocol(tx.programId)                              │
+│      version = getVersionForSlot(protocol, slot)                            │
+│      idl = fetchIDL(protocol, version)                                      │
+│      return parseWithIDL(tx, idl)                                           │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+
+MIGRATION WINDOW HANDLING
+─────────────────────────
+
+During migrations, both versions may be active:
+
+  Slot 199,999,000: 100% v5 traffic
+  Slot 200,000,000: 70% v5, 30% v6
+  Slot 200,001,000: 10% v5, 90% v6
+  Slot 200,002,000: 100% v6
+
+Volume calculation must sum across both:
+  Volume_total = Volume_v5 + Volume_v6
+
+We detect version by instruction discriminator:
+  v5 swap discriminator: 0xe4, 0x45, 0xa5, 0x2e, ...
+  v6 swap discriminator: 0x19, 0x3c, 0x2b, 0x8a, ...
+```
+
+### 15.15 Minimum Liquidity Thresholds
+
+```
+PRICE RELIABILITY VS LIQUIDITY DEPTH
+════════════════════════════════════
+
+Price from low-liquidity pools is unreliable and manipulable.
+
+MINIMUM THRESHOLDS:
+───────────────────
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Pool Liquidity    │ Price Confidence │ Action                              │
+├───────────────────┼──────────────────┼─────────────────────────────────────┤
+│ < $1,000          │ UNTRUSTED        │ Exclude from aggregation            │
+│ $1,000 - $10,000  │ LOW              │ Weight = sqrt(TVL) × 0.1            │
+│ $10,000 - $100K   │ MEDIUM           │ Weight = sqrt(TVL) × 0.5            │
+│ $100K - $1M       │ HIGH             │ Weight = sqrt(TVL) × 1.0            │
+│ > $1M             │ VERY HIGH        │ Weight = sqrt(TVL) × 1.0            │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+
+TOKENS WITH NO LIQUIDITY
+────────────────────────
+
+For tokens with no qualifying pools:
+
+1. Check for Pyth/Switchboard on-chain feed (last resort, breaks pure RPC)
+2. Use multi-hop: Token → SOL → USDC
+3. If no path exists with >$10K liquidity per hop: PRICE_UNAVAILABLE
+
+Market resolution for PRICE_UNAVAILABLE tokens:
+  - If >10% of TVL in unpriceable tokens: delay resolution 24h
+  - If still unpriceable after 24h: use last known price (max 7 days old)
+  - If no price ever known: cancel market, refund bets
+
+
+SLIPPAGE-ADJUSTED PRICING
+─────────────────────────
+
+For large TVL calculations, spot price overstates realizable value.
+
+True value = Σᵢ ∫₀^balanceᵢ price(x) dx
+
+For constant product AMM:
+  price(x) = k / (reserve + x)²
+
+  Slippage for selling balance b:
+  avg_price = (1/b) × ∫₀^b k/(r+x)² dx
+            = k × [1/r - 1/(r+b)] / b
+            = k / [r × (r+b)]
+
+For 10% of pool reserves: ~9% slippage
+For 50% of pool reserves: ~33% slippage
+
+We report both:
+  - Mark-to-market TVL (spot prices)
+  - Liquidation TVL (slippage-adjusted)
+```
+
+### 15.16 Dispute Resolution with On-Chain Verification
+
+```
+DISPUTE MECHANISM: ON-CHAIN PROOF VERIFICATION
+══════════════════════════════════════════════
+
+When oracle submits resolution, anyone can dispute with counter-evidence.
+
+DISPUTE FLOW:
+─────────────
+
+1. Oracle submits: resolve_market(market_id, actual_value=2.1B, proof_data)
+2. Dispute window opens: 1 hour
+3. Disputer submits: dispute_resolution(market_id, counter_proof)
+4. On-chain arbiter evaluates both proofs
+5. Winner receives opponent's bond
+
+
+ON-CHAIN PROOF FORMAT:
+──────────────────────
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                                                                             │
+│  struct OracleProof {                                                       │
+│      // Merkle root of account states at resolution slot                    │
+│      state_root: [u8; 32],                                                  │
+│                                                                             │
+│      // Slot when measurement was taken                                     │
+│      slot: u64,                                                             │
+│                                                                             │
+│      // Blockhash for slot verification                                     │
+│      blockhash: [u8; 32],                                                   │
+│                                                                             │
+│      // List of account pubkeys included in calculation                     │
+│      accounts: Vec<Pubkey>,                                                 │
+│                                                                             │
+│      // Merkle proofs for each account                                      │
+│      proofs: Vec<MerkleProof>,                                              │
+│                                                                             │
+│      // Computed metric value                                               │
+│      value: u64,                                                            │
+│                                                                             │
+│      // Calculation method (TVL, Volume, Users, etc.)                       │
+│      method: MetricType,                                                    │
+│  }                                                                          │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+
+ON-CHAIN VERIFICATION (CU-OPTIMIZED):
+─────────────────────────────────────
+
+Full on-chain verification is CU-prohibitive (~millions of CU).
+Instead, we use optimistic verification with fraud proofs:
+
+1. Oracle posts proof_hash = sha256(OracleProof)
+2. Anyone can download full proof off-chain
+3. Dispute points to specific invalid sub-proof
+4. On-chain verifier checks only disputed portion
+
+Dispute types:
+  - INVALID_ACCOUNT: Account not owned by claimed program
+  - WRONG_BALANCE: Merkle proof doesn't match claimed balance
+  - WRONG_SLOT: Blockhash doesn't match claimed slot
+  - MATH_ERROR: Sum of balances × prices ≠ claimed TVL
+  - MISSING_ACCOUNT: Major vault excluded from calculation
+
+CU budget per dispute type:
+  - INVALID_ACCOUNT: ~50,000 CU (one account check)
+  - WRONG_BALANCE: ~100,000 CU (merkle verification)
+  - WRONG_SLOT: ~20,000 CU (hash comparison)
+  - MATH_ERROR: ~200,000 CU (re-sum subset)
+  - MISSING_ACCOUNT: ~150,000 CU (PDA derivation + existence)
+```
+
+### 15.17 Security Considerations for On-Chain Oracles
 
 ```
 ATTACK VECTORS AND DEFENSES
