@@ -1,0 +1,43 @@
+# Dependencies - do not deploy
+node_modules/
+
+# Build outputs
+dist/
+build/
+
+# Development files
+*.log
+.git/
+.gitignore
+
+# IDE
+.vscode/
+.idea/
+
+# Temporary files
+tmp/
+temp/
+
+# Test files
+*.test.js
+test/
+tests/
+__tests__/
+
+# Development tools
+tools/
+attack-framework/
+simulation/
+
+# Anchor/Solana build artifacts
+target/
+.anchor/
+
+# SDK source (only need dist)
+sdk/src/
+sdk/node_modules/
+
+# Other large directories not needed for serving
+programs/
+scripts/
+e2e/
