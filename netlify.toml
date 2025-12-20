@@ -31,10 +31,47 @@
   status = 200
   force = true
 
-# API MCP endpoint -> Netlify Function
+# API endpoints -> Netlify Functions
 [[redirects]]
   from = "/api/mcp"
   to = "/.netlify/functions/mcp"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/idl"
+  to = "/.netlify/functions/idl"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/idl/*"
+  to = "/.netlify/functions/idl"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/status"
+  to = "/.netlify/functions/status"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/status/*"
+  to = "/.netlify/functions/status"
+  status = 200
+  force = true
+
+# Legacy /api/programs endpoints
+[[redirects]]
+  from = "/api/programs"
+  to = "/.netlify/functions/idl"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/programs/*"
+  to = "/.netlify/functions/idl"
   status = 200
   force = true
 
