@@ -11,13 +11,11 @@
       --status-warn: #f59e0b;
       --status-error: #ef4444;
       --status-unknown: #6b7280;
+      --status-partial: #3b82f6;
+      --status-devnet: #8b5cf6;
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
@@ -26,11 +24,7 @@
       min-height: 100vh;
     }
 
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 2rem;
-    }
+    .container { max-width: 1400px; margin: 0 auto; padding: 2rem; }
 
     header {
       display: flex;
@@ -41,10 +35,7 @@
       border-bottom: 1px solid var(--border-color);
     }
 
-    h1 {
-      font-size: 1.5rem;
-      font-weight: 600;
-    }
+    h1 { font-size: 1.5rem; font-weight: 600; }
 
     .status-badge {
       display: inline-flex;
@@ -56,40 +47,21 @@
       font-weight: 500;
     }
 
-    .status-badge.operational {
-      background: rgba(34, 197, 94, 0.1);
-      color: var(--status-ok);
-      border: 1px solid var(--status-ok);
-    }
-
-    .status-badge.degraded {
-      background: rgba(245, 158, 11, 0.1);
-      color: var(--status-warn);
-      border: 1px solid var(--status-warn);
-    }
-
-    .status-badge.down {
-      background: rgba(239, 68, 68, 0.1);
-      color: var(--status-error);
-      border: 1px solid var(--status-error);
-    }
+    .status-badge.operational { background: rgba(34, 197, 94, 0.1); color: var(--status-ok); border: 1px solid var(--status-ok); }
+    .status-badge.degraded { background: rgba(245, 158, 11, 0.1); color: var(--status-warn); border: 1px solid var(--status-warn); }
+    .status-badge.down { background: rgba(239, 68, 68, 0.1); color: var(--status-error); border: 1px solid var(--status-error); }
 
     .status-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
+      width: 8px; height: 8px; border-radius: 50%;
       background: currentColor;
       animation: pulse 2s infinite;
     }
 
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
-    }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
     .summary-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
       gap: 1rem;
       margin-bottom: 2rem;
     }
@@ -98,71 +70,32 @@
       background: var(--bg-secondary);
       border: 1px solid var(--border-color);
       border-radius: 0.5rem;
-      padding: 1.5rem;
+      padding: 1rem;
     }
 
-    .summary-card h3 {
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      color: var(--text-secondary);
-      margin-bottom: 0.5rem;
-    }
-
-    .summary-card .value {
-      font-size: 2rem;
-      font-weight: 700;
-    }
-
-    .summary-card .subtitle {
-      font-size: 0.75rem;
-      color: var(--text-secondary);
-    }
+    .summary-card h3 { font-size: 0.7rem; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 0.25rem; }
+    .summary-card .value { font-size: 1.5rem; font-weight: 700; }
+    .summary-card .subtitle { font-size: 0.7rem; color: var(--text-secondary); }
 
     .uptime-chart {
       background: var(--bg-secondary);
       border: 1px solid var(--border-color);
       border-radius: 0.5rem;
-      padding: 1.5rem;
+      padding: 1rem;
       margin-bottom: 2rem;
     }
 
-    .uptime-chart h2 {
-      font-size: 1rem;
-      margin-bottom: 1rem;
-    }
+    .uptime-chart h2 { font-size: 0.875rem; margin-bottom: 0.75rem; }
 
-    .uptime-bars {
-      display: flex;
-      gap: 2px;
-      height: 40px;
-      align-items: flex-end;
-    }
-
-    .uptime-bar {
-      flex: 1;
-      min-width: 4px;
-      border-radius: 2px;
-      transition: all 0.2s;
-      cursor: pointer;
-    }
-
-    .uptime-bar:hover {
-      transform: scaleY(1.1);
-      opacity: 0.8;
-    }
-
+    .uptime-bars { display: flex; gap: 2px; height: 32px; align-items: flex-end; }
+    .uptime-bar { flex: 1; min-width: 3px; border-radius: 2px; transition: all 0.2s; cursor: pointer; }
+    .uptime-bar:hover { transform: scaleY(1.1); opacity: 0.8; }
     .uptime-bar.ok { background: var(--status-ok); }
     .uptime-bar.warn { background: var(--status-warn); }
     .uptime-bar.error { background: var(--status-error); }
     .uptime-bar.unknown { background: var(--status-unknown); }
 
-    .uptime-labels {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 0.5rem;
-      font-size: 0.75rem;
-      color: var(--text-secondary);
-    }
+    .uptime-labels { display: flex; justify-content: space-between; margin-top: 0.25rem; font-size: 0.625rem; color: var(--text-secondary); }
 
     .protocols-section {
       background: var(--bg-secondary);
@@ -175,23 +108,20 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 1rem 1.5rem;
+      padding: 0.75rem 1rem;
       border-bottom: 1px solid var(--border-color);
-    }
-
-    .protocols-header h2 {
-      font-size: 1rem;
-    }
-
-    .filter-tabs {
-      display: flex;
+      flex-wrap: wrap;
       gap: 0.5rem;
     }
 
+    .protocols-header h2 { font-size: 0.875rem; }
+
+    .filter-tabs { display: flex; gap: 0.25rem; flex-wrap: wrap; }
+
     .filter-tab {
-      padding: 0.25rem 0.75rem;
+      padding: 0.25rem 0.5rem;
       border-radius: 0.25rem;
-      font-size: 0.75rem;
+      font-size: 0.625rem;
       cursor: pointer;
       border: 1px solid var(--border-color);
       background: transparent;
@@ -205,150 +135,185 @@
       border-color: var(--accent-primary);
     }
 
-    .protocols-list {
-      max-height: 500px;
-      overflow-y: auto;
-    }
+    .protocols-list { max-height: 600px; overflow-y: auto; }
 
-    .protocol-row {
-      display: grid;
-      grid-template-columns: auto 1fr auto auto;
-      gap: 1rem;
-      padding: 0.75rem 1.5rem;
+    .protocol-item {
       border-bottom: 1px solid var(--border-color);
-      align-items: center;
       transition: background 0.2s;
     }
 
-    .protocol-row:hover {
-      background: var(--bg-tertiary);
+    .protocol-item:last-child { border-bottom: none; }
+    .protocol-item:hover { background: var(--bg-tertiary); }
+
+    .protocol-header {
+      display: grid;
+      grid-template-columns: auto 1fr auto auto;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      align-items: center;
+      cursor: pointer;
     }
 
-    .protocol-row:last-child {
-      border-bottom: none;
-    }
-
-    .protocol-status {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-    }
-
+    .protocol-status { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
     .protocol-status.verified { background: var(--status-ok); }
+    .protocol-status.partial { background: var(--status-partial); }
+    .protocol-status.devnet_only { background: var(--status-devnet); }
     .protocol-status.placeholder { background: var(--status-unknown); }
     .protocol-status.no_program_id { background: var(--status-warn); }
     .protocol-status.program_not_found { background: var(--status-error); }
     .protocol-status.rpc_error { background: var(--status-error); }
 
-    .protocol-name {
-      font-weight: 500;
-    }
+    .protocol-info { min-width: 0; }
+    .protocol-name { font-weight: 600; font-size: 0.875rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .protocol-meta { font-size: 0.625rem; color: var(--text-secondary); }
 
-    .protocol-id {
-      font-size: 0.75rem;
+    .protocol-stats {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      font-size: 0.625rem;
       color: var(--text-secondary);
-    }
-
-    .protocol-program {
-      font-size: 0.75rem;
-      font-family: monospace;
-      color: var(--text-secondary);
-      max-width: 150px;
-      overflow: hidden;
-      text-overflow: ellipsis;
     }
 
     .protocol-badge {
-      font-size: 0.625rem;
-      padding: 0.125rem 0.5rem;
+      font-size: 0.5rem;
+      padding: 0.125rem 0.375rem;
       border-radius: 9999px;
       text-transform: uppercase;
+      font-weight: 600;
+      white-space: nowrap;
     }
 
-    .protocol-badge.verified {
-      background: rgba(34, 197, 94, 0.1);
-      color: var(--status-ok);
+    .protocol-badge.verified { background: rgba(34, 197, 94, 0.1); color: var(--status-ok); }
+    .protocol-badge.partial { background: rgba(59, 130, 246, 0.1); color: var(--status-partial); }
+    .protocol-badge.devnet_only { background: rgba(139, 92, 246, 0.1); color: var(--status-devnet); }
+    .protocol-badge.placeholder { background: rgba(107, 114, 128, 0.1); color: var(--status-unknown); }
+    .protocol-badge.no_program_id, .protocol-badge.program_not_found, .protocol-badge.rpc_error {
+      background: rgba(239, 68, 68, 0.1); color: var(--status-error);
     }
 
-    .protocol-badge.placeholder {
-      background: rgba(107, 114, 128, 0.1);
-      color: var(--status-unknown);
+    .protocol-programs {
+      display: none;
+      padding: 0 1rem 0.75rem 2.5rem;
+      background: var(--bg-tertiary);
     }
 
-    .protocol-badge.no_program_id {
-      background: rgba(245, 158, 11, 0.1);
-      color: var(--status-warn);
+    .protocol-item.expanded .protocol-programs { display: block; }
+    .protocol-item.expanded .expand-icon { transform: rotate(90deg); }
+
+    .expand-icon {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      transition: transform 0.2s;
     }
 
-    .protocol-badge.program_not_found,
-    .protocol-badge.rpc_error {
-      background: rgba(239, 68, 68, 0.1);
-      color: var(--status-error);
+    .program-row {
+      display: grid;
+      grid-template-columns: auto 1fr auto auto;
+      gap: 0.5rem;
+      padding: 0.5rem 0;
+      border-bottom: 1px dashed var(--border-color);
+      align-items: center;
+      font-size: 0.75rem;
     }
+
+    .program-row:last-child { border-bottom: none; }
+
+    .program-status { width: 6px; height: 6px; border-radius: 50%; }
+    .program-status.verified { background: var(--status-ok); }
+    .program-status.not_found, .program-status.not_executable, .program-status.error { background: var(--status-error); }
+
+    .program-name { font-weight: 500; }
+
+    .program-address {
+      font-family: monospace;
+      font-size: 0.625rem;
+      color: var(--text-secondary);
+      background: var(--bg-primary);
+      padding: 0.125rem 0.25rem;
+      border-radius: 0.125rem;
+      cursor: pointer;
+    }
+
+    .program-address:hover { color: var(--accent-primary); }
+
+    .network-badge {
+      font-size: 0.5rem;
+      padding: 0.0625rem 0.25rem;
+      border-radius: 0.125rem;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .network-badge.mainnet { background: rgba(34, 197, 94, 0.2); color: var(--status-ok); }
+    .network-badge.devnet { background: rgba(139, 92, 246, 0.2); color: var(--status-devnet); }
+    .network-badge.testnet { background: rgba(245, 158, 11, 0.2); color: var(--status-warn); }
 
     .scheduler-info {
       display: flex;
-      gap: 2rem;
-      margin-top: 2rem;
-      padding: 1rem 1.5rem;
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+      padding: 0.75rem 1rem;
       background: var(--bg-secondary);
       border: 1px solid var(--border-color);
       border-radius: 0.5rem;
-      font-size: 0.875rem;
+      font-size: 0.75rem;
+      flex-wrap: wrap;
+      align-items: center;
     }
 
-    .scheduler-info span {
-      color: var(--text-secondary);
-    }
-
-    .scheduler-info strong {
-      color: var(--text-primary);
-    }
+    .scheduler-info span { color: var(--text-secondary); }
+    .scheduler-info strong { color: var(--text-primary); }
 
     .refresh-btn {
-      padding: 0.5rem 1rem;
+      padding: 0.375rem 0.75rem;
       background: var(--accent-primary);
       color: white;
       border: none;
       border-radius: 0.25rem;
       cursor: pointer;
-      font-size: 0.875rem;
+      font-size: 0.75rem;
       transition: opacity 0.2s;
     }
 
-    .refresh-btn:hover {
-      opacity: 0.9;
-    }
+    .refresh-btn:hover { opacity: 0.9; }
+    .refresh-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-    .refresh-btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    .loading {
-      text-align: center;
-      padding: 2rem;
-      color: var(--text-secondary);
-    }
-
-    .error {
-      text-align: center;
-      padding: 2rem;
-      color: var(--status-error);
-    }
+    .loading, .error { text-align: center; padding: 1.5rem; color: var(--text-secondary); }
+    .error { color: var(--status-error); }
 
     footer {
-      margin-top: 2rem;
-      padding-top: 1rem;
+      margin-top: 1.5rem;
+      padding-top: 0.75rem;
       border-top: 1px solid var(--border-color);
       text-align: center;
-      font-size: 0.75rem;
+      font-size: 0.625rem;
       color: var(--text-secondary);
     }
 
-    footer a {
-      color: var(--accent-primary);
-      text-decoration: none;
+    footer a { color: var(--accent-primary); text-decoration: none; }
+
+    .copy-toast {
+      position: fixed;
+      bottom: 1rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      padding: 0.5rem 1rem;
+      border-radius: 0.25rem;
+      font-size: 0.75rem;
+      display: none;
+      z-index: 1000;
+    }
+
+    .copy-toast.show { display: block; }
+
+    @media (max-width: 768px) {
+      .container { padding: 1rem; }
+      .summary-grid { grid-template-columns: repeat(2, 1fr); }
+      .protocol-header { grid-template-columns: auto 1fr auto; }
+      .protocol-stats { display: none; }
     }
   </style>
 </head>
@@ -362,24 +327,34 @@
       </div>
     </header>
 
-    <div class="summary-grid" id="summary-grid">
+    <div class="summary-grid">
       <div class="summary-card">
-        <h3>Verified Protocols</h3>
+        <h3>Verified</h3>
         <div class="value" id="verified-count">-</div>
         <div class="subtitle" id="verified-percent">-</div>
       </div>
       <div class="summary-card">
-        <h3>Total Protocols</h3>
+        <h3>Partial</h3>
+        <div class="value" id="partial-count">-</div>
+        <div class="subtitle">Some programs</div>
+      </div>
+      <div class="summary-card">
+        <h3>Programs</h3>
+        <div class="value" id="programs-count">-</div>
+        <div class="subtitle" id="programs-percent">-</div>
+      </div>
+      <div class="summary-card">
+        <h3>Total</h3>
         <div class="value" id="total-count">-</div>
-        <div class="subtitle">In registry</div>
+        <div class="subtitle">Protocols</div>
       </div>
       <div class="summary-card">
-        <h3>Placeholders</h3>
-        <div class="value" id="placeholder-count">-</div>
-        <div class="subtitle">Pending IDL</div>
+        <h3>Devnet</h3>
+        <div class="value" id="devnet-count">-</div>
+        <div class="subtitle">Only</div>
       </div>
       <div class="summary-card">
-        <h3>Last Verification</h3>
+        <h3>Last Run</h3>
         <div class="value" id="last-run">-</div>
         <div class="subtitle" id="last-run-time">-</div>
       </div>
@@ -387,9 +362,7 @@
 
     <div class="uptime-chart">
       <h2>Verification History (Last 24 Hours)</h2>
-      <div class="uptime-bars" id="uptime-bars">
-        <!-- Bars will be inserted here -->
-      </div>
+      <div class="uptime-bars" id="uptime-bars"></div>
       <div class="uptime-labels">
         <span>24 hours ago</span>
         <span>Now</span>
@@ -402,6 +375,8 @@
         <div class="filter-tabs">
           <button class="filter-tab active" data-filter="all">All</button>
           <button class="filter-tab" data-filter="verified">Verified</button>
+          <button class="filter-tab" data-filter="partial">Partial</button>
+          <button class="filter-tab" data-filter="devnet">Devnet</button>
           <button class="filter-tab" data-filter="issues">Issues</button>
           <button class="filter-tab" data-filter="placeholder">Placeholders</button>
         </div>
@@ -412,21 +387,10 @@
     </div>
 
     <div class="scheduler-info">
-      <div>
-        <span>Scheduler: </span>
-        <strong id="scheduler-status">-</strong>
-      </div>
-      <div>
-        <span>Next run: </span>
-        <strong id="next-run">-</strong>
-      </div>
-      <div>
-        <span>Interval: </span>
-        <strong id="interval">-</strong>
-      </div>
-      <button class="refresh-btn" id="refresh-btn" onclick="triggerVerification()">
-        Trigger Verification
-      </button>
+      <div><span>Scheduler: </span><strong id="scheduler-status">-</strong></div>
+      <div><span>Next run: </span><strong id="next-run">-</strong></div>
+      <div><span>Interval: </span><strong id="interval">-</strong></div>
+      <button class="refresh-btn" id="refresh-btn" onclick="triggerVerification()">Trigger Verification</button>
     </div>
 
     <footer>
@@ -436,9 +400,11 @@
         <a href="/api/status">Status API</a> |
         <a href="https://github.com/openSVM/idlhub">GitHub</a>
       </p>
-      <p>Verification runs every hour. Data refreshes automatically.</p>
+      <p>Verification runs every hour. Click on a protocol to see program details.</p>
     </footer>
   </div>
+
+  <div class="copy-toast" id="copy-toast">Address copied to clipboard!</div>
 
   <script>
     const API_BASE = '/api';
@@ -468,68 +434,49 @@
         renderProtocols();
       } catch (err) {
         console.error('Failed to fetch protocols:', err);
-        document.getElementById('protocols-list').innerHTML = `
-          <div class="error">Failed to load protocols</div>
-        `;
+        document.getElementById('protocols-list').innerHTML = `<div class="error">Failed to load protocols</div>`;
       }
     }
 
     function updateStatus(data) {
-      // Overall status
       const statusBadge = document.getElementById('overall-status');
       const status = data.status || 'unknown';
       statusBadge.className = `status-badge ${status}`;
-      statusBadge.innerHTML = `
-        <span class="status-dot"></span>
-        <span>${status.charAt(0).toUpperCase() + status.slice(1)}</span>
-      `;
+      statusBadge.innerHTML = `<span class="status-dot"></span><span>${status.charAt(0).toUpperCase() + status.slice(1)}</span>`;
 
-      // Summary cards
       const v = data.verification || {};
       document.getElementById('verified-count').textContent = v.verified || 0;
-      document.getElementById('verified-percent').textContent = `${v.verifiedPercent || 0}% of total`;
+      document.getElementById('verified-percent').textContent = `${v.verifiedPercent || 0}%`;
+      document.getElementById('partial-count').textContent = v.partial || 0;
       document.getElementById('total-count').textContent = v.totalProtocols || 0;
-      document.getElementById('placeholder-count').textContent = v.placeholder || 0;
+      document.getElementById('devnet-count').textContent = v.devnetOnly || 0;
+      document.getElementById('programs-count').textContent = `${v.verifiedPrograms || 0}/${v.totalPrograms || 0}`;
+      document.getElementById('programs-percent').textContent = `${v.programsVerifiedPercent || 0}%`;
 
-      // Last run
       if (v.lastRun) {
         const lastRunDate = new Date(v.lastRun);
-        const now = new Date();
-        const diffMs = now - lastRunDate;
-        const diffMins = Math.floor(diffMs / 60000);
-
-        if (diffMins < 60) {
-          document.getElementById('last-run').textContent = `${diffMins}m ago`;
-        } else {
-          const diffHours = Math.floor(diffMins / 60);
-          document.getElementById('last-run').textContent = `${diffHours}h ago`;
-        }
+        const diffMins = Math.floor((new Date() - lastRunDate) / 60000);
+        document.getElementById('last-run').textContent = diffMins < 60 ? `${diffMins}m` : `${Math.floor(diffMins / 60)}h`;
         document.getElementById('last-run-time').textContent = lastRunDate.toLocaleTimeString();
       }
 
-      // Scheduler info
       const scheduler = v.scheduler || {};
       document.getElementById('scheduler-status').textContent = scheduler.running ? 'Running' : 'Stopped';
       document.getElementById('interval').textContent = scheduler.intervalHuman || '-';
-
       if (scheduler.nextRun) {
-        const nextRunDate = new Date(scheduler.nextRun);
-        document.getElementById('next-run').textContent = nextRunDate.toLocaleTimeString();
+        document.getElementById('next-run').textContent = new Date(scheduler.nextRun).toLocaleTimeString();
       }
 
-      // Uptime chart
       renderUptimeChart(data.history || []);
     }
 
     function renderUptimeChart(history) {
       const container = document.getElementById('uptime-bars');
-
       if (!history.length) {
         container.innerHTML = '<div class="loading">No history data</div>';
         return;
       }
 
-      // Show last 24 data points (or fill with empty)
       const bars = [];
       for (let i = 0; i < 24; i++) {
         const entry = history[23 - i];
@@ -538,18 +485,11 @@
           let status = 'ok';
           if (percent < 50) status = 'error';
           else if (percent < 80) status = 'warn';
-
-          bars.push(`
-            <div class="uptime-bar ${status}"
-                 style="height: ${Math.max(10, percent)}%"
-                 title="${entry.verified}/${entry.total} verified at ${new Date(entry.timestamp).toLocaleString()}">
-            </div>
-          `);
+          bars.push(`<div class="uptime-bar ${status}" style="height: ${Math.max(10, percent)}%" title="${entry.verified}/${entry.total} verified at ${new Date(entry.timestamp).toLocaleString()}"></div>`);
         } else {
           bars.push(`<div class="uptime-bar unknown" style="height: 10%" title="No data"></div>`);
         }
       }
-
       container.innerHTML = bars.join('');
     }
 
@@ -562,35 +502,65 @@
         return;
       }
 
-      // Filter
       let filtered = protocols;
-      if (currentFilter === 'verified') {
-        filtered = protocols.filter(p => p.status === 'verified');
-      } else if (currentFilter === 'issues') {
-        filtered = protocols.filter(p => ['program_not_found', 'rpc_error', 'no_program_id'].includes(p.status));
-      } else if (currentFilter === 'placeholder') {
-        filtered = protocols.filter(p => p.status === 'placeholder');
-      }
+      if (currentFilter === 'verified') filtered = protocols.filter(p => p.status === 'verified');
+      else if (currentFilter === 'partial') filtered = protocols.filter(p => p.status === 'partial');
+      else if (currentFilter === 'devnet') filtered = protocols.filter(p => p.status === 'devnet_only');
+      else if (currentFilter === 'issues') filtered = protocols.filter(p => ['program_not_found', 'rpc_error', 'no_program_id'].includes(p.status));
+      else if (currentFilter === 'placeholder') filtered = protocols.filter(p => p.status === 'placeholder');
 
-      // Sort by status (issues first, then verified, then placeholders)
-      const statusOrder = { rpc_error: 0, program_not_found: 1, no_program_id: 2, verified: 3, placeholder: 4, pending: 5 };
+      const statusOrder = { rpc_error: 0, program_not_found: 1, no_program_id: 2, partial: 3, devnet_only: 4, verified: 5, placeholder: 6 };
       filtered.sort((a, b) => (statusOrder[a.status] || 9) - (statusOrder[b.status] || 9));
 
-      const rows = filtered.map(p => `
-        <div class="protocol-row">
-          <div class="protocol-status ${p.status}"></div>
-          <div>
-            <div class="protocol-name">${p.protocolName || p.protocolId}</div>
-            <div class="protocol-id">${p.protocolId}</div>
+      const rows = filtered.map(p => {
+        const programs = p.programs || [];
+        const verifiedCount = programs.filter(prog => prog.status === 'verified').length;
+        const hasPrograms = programs.length > 0;
+
+        const programsHtml = programs.map(prog => `
+          <div class="program-row">
+            <div class="program-status ${prog.status}"></div>
+            <div>
+              <span class="program-name">${prog.name}</span>
+            </div>
+            <span class="program-address" onclick="copyAddress('${prog.address}')" title="Click to copy">${prog.address}</span>
+            <span class="network-badge ${prog.network || 'mainnet'}">${prog.network || 'mainnet'}</span>
           </div>
-          <div class="protocol-program" title="${p.details?.programId || 'No program ID'}">
-            ${p.details?.programId ? p.details.programId.slice(0, 8) + '...' : '-'}
+        `).join('');
+
+        return `
+          <div class="protocol-item" data-id="${p.protocolId}">
+            <div class="protocol-header" onclick="toggleProtocol('${p.protocolId}')">
+              <div class="protocol-status ${p.status}"></div>
+              <div class="protocol-info">
+                <div class="protocol-name">${p.protocolName || p.protocolId}</div>
+                <div class="protocol-meta">${p.protocolId}${hasPrograms ? ` • ${verifiedCount}/${programs.length} programs` : ''}</div>
+              </div>
+              <div class="protocol-stats">
+                ${p.details?.instructionCount ? `${p.details.instructionCount} ix` : ''}
+              </div>
+              <span class="protocol-badge ${p.status}">${p.status.replace(/_/g, ' ')}</span>
+              ${hasPrograms ? '<span class="expand-icon">▶</span>' : ''}
+            </div>
+            ${hasPrograms ? `<div class="protocol-programs">${programsHtml}</div>` : ''}
           </div>
-          <span class="protocol-badge ${p.status}">${p.status.replace(/_/g, ' ')}</span>
-        </div>
-      `).join('');
+        `;
+      }).join('');
 
       container.innerHTML = rows || '<div class="loading">No protocols match filter</div>';
+    }
+
+    function toggleProtocol(id) {
+      const item = document.querySelector(`.protocol-item[data-id="${id}"]`);
+      if (item) item.classList.toggle('expanded');
+    }
+
+    function copyAddress(address) {
+      navigator.clipboard.writeText(address).then(() => {
+        const toast = document.getElementById('copy-toast');
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2000);
+      });
     }
 
     async function triggerVerification() {
@@ -600,10 +570,7 @@
 
       try {
         const response = await fetch(`${API_BASE}/status/verify`, { method: 'POST' });
-        const result = await response.json();
-        console.log('Verification result:', result);
-
-        // Refresh data
+        await response.json();
         await fetchStatus();
         await fetchProtocols();
       } catch (err) {
@@ -615,7 +582,6 @@
       }
     }
 
-    // Filter tabs
     document.querySelectorAll('.filter-tab').forEach(tab => {
       tab.addEventListener('click', () => {
         document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
@@ -625,15 +591,9 @@
       });
     });
 
-    // Initial load
     fetchStatus();
     fetchProtocols();
-
-    // Auto-refresh every 30 seconds
-    setInterval(() => {
-      fetchStatus();
-      fetchProtocols();
-    }, 30000);
+    setInterval(() => { fetchStatus(); fetchProtocols(); }, 30000);
   </script>
 </body>
 </html>
