@@ -1,5 +1,14 @@
 [
   {
+    "timestamp": "2025-12-20T15:31:09.488Z",
+    "verified": 28,
+    "total": 102,
+    "placeholder": 43,
+    "noProgram": 1,
+    "rpcError": 0,
+    "durationMs": 59114
+  },
+  {
     "timestamp": "2025-12-20T14:31:09.395Z",
     "verified": 0,
     "total": 102,

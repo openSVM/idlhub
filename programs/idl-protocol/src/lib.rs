@@ -159,6 +159,47 @@ pub const CONVICTION_LOCK_MIN: i64 = 86400; // 1 day minimum
 pub const CONVICTION_LOCK_MAX: i64 = 2592000; // 30 days maximum
 pub const CONVICTION_BONUS_PER_DAY: u64 = 50; // 0.5% per day locked
 
+// ═══════════════════════════════════════════════════════════════════════════════
+// ADVANCED MECHANICS - Battles, Guilds, Orders, Loot
+// ═══════════════════════════════════════════════════════════════════════════════
+
+// PREDICTION BATTLES - 1v1 challenges
+pub const BATTLE_MIN_STAKE: u64 = 1_000_000_000; // 1 IDL minimum
+pub const BATTLE_TIMEOUT: i64 = 86400; // 24 hours to accept challenge
+pub const BATTLE_PLATFORM_FEE_BPS: u64 = 250; // 2.5% to protocol
+
+// GUILD SYSTEM - Pooled betting
+pub const GUILD_MIN_MEMBERS: u64 = 3;
+pub const GUILD_MAX_MEMBERS: u64 = 50;
+pub const GUILD_CREATION_FEE: u64 = 10_000_000_000; // 10 IDL to create guild
+pub const GUILD_LEADER_SHARE_BPS: u64 = 1000; // 10% of guild winnings to leader
+
+// LOOT BOXES - Random rewards
+pub const LOOTBOX_COMMON_PRICE: u64 = 1_000_000_000; // 1 IDL
+pub const LOOTBOX_RARE_PRICE: u64 = 10_000_000_000; // 10 IDL
+pub const LOOTBOX_LEGENDARY_PRICE: u64 = 100_000_000_000; // 100 IDL
+pub const LOOTBOX_BURN_PERCENT: u64 = 50; // 50% of lootbox price burned
+
+// DYNAMIC ODDS - Volume-based pricing
+pub const ODDS_UPDATE_THRESHOLD: u64 = 10_000_000_000; // Update after 10 IDL bet
+pub const ODDS_MAX_SHIFT_BPS: u64 = 500; // Max 5% shift per update
+pub const ODDS_BASE_YES: u64 = 5000; // 50% initial odds
+
+// PARTIAL CASHOUT - Exit early
+pub const CASHOUT_FEE_BPS: u64 = 300; // 3% fee to exit early
+pub const CASHOUT_MIN_TIME: i64 = 3600; // Must wait 1 hour after bet
+
+// LIMIT ORDERS - Conditional bets
+pub const LIMIT_ORDER_EXPIRY: i64 = 604800; // 7 days max
+pub const LIMIT_ORDER_FEE_BPS: u64 = 50; // 0.5% fee for limit orders
+
+// STOP LOSS - Auto-exit
+pub const STOP_LOSS_CHECK_INTERVAL: i64 = 300; // Check every 5 minutes
+pub const STOP_LOSS_MIN_THRESHOLD: u64 = 1000; // Min 10% loss to trigger
+
+// HEDGING - Auto-inverse markets
+pub const HEDGE_MARKET_FEE_BPS: u64 = 100; // 1% fee for hedge markets
+
 #[program]
 pub mod idl_protocol {
     use super::*;
@@ -1553,6 +1594,474 @@ pub mod idl_protocol {
         msg!("Claimed {} referral fees", amount);
         Ok(())
     }
+
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // ADVANCED MECHANICS - Battles, Guilds, Orders, Loot
+    // ═══════════════════════════════════════════════════════════════════════════════
+
+    /// Create a 1v1 prediction battle challenge
+    pub fn create_battle(
+        ctx: Context<CreateBattle>,
+        stake_amount: u64,
+        bet_yes: bool,
+    ) -> Result<()> {
+        require!(stake_amount >= BATTLE_MIN_STAKE, IdlError::BetTooSmall);
+        require!(!ctx.accounts.state.paused, IdlError::ProtocolPaused);
+
+        let clock = Clock::get()?;
+        let battle = &mut ctx.accounts.battle;
+
+        // Transfer stake to escrow
+        let cpi_accounts = Transfer {
+            from: ctx.accounts.challenger_token_account.to_account_info(),
+            to: ctx.accounts.vault.to_account_info(),
+            authority: ctx.accounts.challenger.to_account_info(),
+        };
+        token::transfer(
+            CpiContext::new(ctx.accounts.token_program.to_account_info(), cpi_accounts),
+            stake_amount
+        )?;
+
+        battle.challenger = ctx.accounts.challenger.key();
+        battle.opponent = Pubkey::default();
+        battle.market = ctx.accounts.market.key();
+        battle.stake_amount = stake_amount;
+        battle.challenger_bet_yes = bet_yes;
+        battle.status = 0; // Pending
+        battle.winner = Pubkey::default();
+        battle.created_at = clock.unix_timestamp;
+        battle.accepted_at = 0;
+        battle.bump = ctx.bumps.battle;
+
+        msg!("Battle created: {} IDL stake on {}", stake_amount, if bet_yes { "YES" } else { "NO" });
+        Ok(())
+    }
+
+    /// Accept a battle challenge (opponent takes opposite side)
+    pub fn accept_battle(ctx: Context<AcceptBattle>) -> Result<()> {
+        require!(!ctx.accounts.state.paused, IdlError::ProtocolPaused);
+
+        let clock = Clock::get()?;
+        let battle = &mut ctx.accounts.battle;
+
+        require!(battle.status == 0, IdlError::InvalidInput); // Must be pending
+        require!(
+            clock.unix_timestamp < battle.created_at + BATTLE_TIMEOUT,
+            IdlError::BettingClosed
+        );
+
+        // Transfer stake from opponent
+        let cpi_accounts = Transfer {
+            from: ctx.accounts.opponent_token_account.to_account_info(),
+            to: ctx.accounts.vault.to_account_info(),
+            authority: ctx.accounts.opponent.to_account_info(),
+        };
+        token::transfer(
+            CpiContext::new(ctx.accounts.token_program.to_account_info(), cpi_accounts),
+            battle.stake_amount
+        )?;
+
+        battle.opponent = ctx.accounts.opponent.key();
+        battle.status = 1; // Active
+        battle.accepted_at = clock.unix_timestamp;
+
+        msg!("Battle accepted by {}", ctx.accounts.opponent.key());
+        Ok(())
+    }
+
+    /// Resolve a battle after market resolution
+    pub fn resolve_battle(ctx: Context<ResolveBattle>) -> Result<()> {
+        let battle = &mut ctx.accounts.battle;
+        let market = &ctx.accounts.market;
+
+        require!(battle.status == 1, IdlError::InvalidInput); // Must be active
+        require!(market.resolved, IdlError::MarketNotResolved);
+
+        // Determine winner
+        let actual = market.actual_value.unwrap_or(0);
+        let yes_won = actual >= market.target_value;
+        let challenger_won = battle.challenger_bet_yes == yes_won;
+
+        let winner = if challenger_won { battle.challenger } else { battle.opponent };
+        let loser = if challenger_won { battle.opponent } else { battle.challenger };
+
+        // Calculate payout (total stake minus platform fee)
+        let total_stake = battle.stake_amount.saturating_mul(2);
+        let platform_fee = (total_stake * BATTLE_PLATFORM_FEE_BPS) / 10000;
+        let payout = total_stake.saturating_sub(platform_fee);
+
+        // Transfer winnings
+        let state_bump = ctx.accounts.state.bump;
+        let seeds = &[b"state".as_ref(), &[state_bump]];
+        let signer_seeds = &[&seeds[..]];
+
+        let cpi_accounts = Transfer {
+            from: ctx.accounts.vault.to_account_info(),
+            to: ctx.accounts.winner_token_account.to_account_info(),
+            authority: ctx.accounts.state.to_account_info(),
+        };
+        token::transfer(
+            CpiContext::new_with_signer(
+                ctx.accounts.token_program.to_account_info(),
+                cpi_accounts,
+                signer_seeds
+            ),
+            payout
+        )?;
+
+        battle.winner = winner;
+        battle.status = 2; // Resolved
+
+        msg!("Battle resolved! Winner: {} gets {} IDL", winner, payout);
+        Ok(())
+    }
+
+    /// Cancel a pending battle (only challenger, only if not accepted)
+    pub fn cancel_battle(ctx: Context<CancelBattle>) -> Result<()> {
+        let battle = &mut ctx.accounts.battle;
+
+        require!(battle.status == 0, IdlError::InvalidInput); // Must be pending
+        require!(battle.challenger == ctx.accounts.challenger.key(), IdlError::Unauthorized);
+
+        // Refund stake
+        let state_bump = ctx.accounts.state.bump;
+        let seeds = &[b"state".as_ref(), &[state_bump]];
+        let signer_seeds = &[&seeds[..]];
+
+        let cpi_accounts = Transfer {
+            from: ctx.accounts.vault.to_account_info(),
+            to: ctx.accounts.challenger_token_account.to_account_info(),
+            authority: ctx.accounts.state.to_account_info(),
+        };
+        token::transfer(
+            CpiContext::new_with_signer(
+                ctx.accounts.token_program.to_account_info(),
+                cpi_accounts,
+                signer_seeds
+            ),
+            battle.stake_amount
+        )?;
+
+        battle.status = 3; // Cancelled
+
+        msg!("Battle cancelled, {} IDL refunded", battle.stake_amount);
+        Ok(())
+    }
+
+    /// Create a guild
+    pub fn create_guild(ctx: Context<CreateGuild>, name: String) -> Result<()> {
+        require!(name.len() <= 32, IdlError::InvalidInput);
+        require!(!ctx.accounts.state.paused, IdlError::ProtocolPaused);
+
+        // Pay creation fee
+        let cpi_accounts = Transfer {
+            from: ctx.accounts.leader_token_account.to_account_info(),
+            to: ctx.accounts.vault.to_account_info(),
+            authority: ctx.accounts.leader.to_account_info(),
+        };
+        token::transfer(
+            CpiContext::new(ctx.accounts.token_program.to_account_info(), cpi_accounts),
+            GUILD_CREATION_FEE
+        )?;
+
+        let clock = Clock::get()?;
+        let guild = &mut ctx.accounts.guild;
+
+        guild.name = name.clone();
+        guild.leader = ctx.accounts.leader.key();
+        guild.treasury = ctx.accounts.guild_treasury.key();
+        guild.total_pooled = 0;
+        guild.member_count = 1; // Leader is first member
+        guild.total_winnings = 0;
+        guild.created_at = clock.unix_timestamp;
+        guild.active = true;
+        guild.bump = ctx.bumps.guild;
+
+        msg!("Guild '{}' created by {}", name, ctx.accounts.leader.key());
+        Ok(())
+    }
+
+    /// Join a guild
+    pub fn join_guild(ctx: Context<JoinGuild>, contribution: u64) -> Result<()> {
+        require!(contribution > 0, IdlError::InvalidAmount);
+
+        let guild = &mut ctx.accounts.guild;
+        require!(guild.active, IdlError::ProtocolPaused);
+        require!(guild.member_count < GUILD_MAX_MEMBERS, IdlError::InvalidInput);
+
+        // Transfer contribution to guild treasury
+        let cpi_accounts = Transfer {
+            from: ctx.accounts.member_token_account.to_account_info(),
+            to: ctx.accounts.guild_treasury.to_account_info(),
+            authority: ctx.accounts.member.to_account_info(),
+        };
+        token::transfer(
+            CpiContext::new(ctx.accounts.token_program.to_account_info(), cpi_accounts),
+            contribution
+        )?;
+
+        let clock = Clock::get()?;
+        let membership = &mut ctx.accounts.guild_member;
+
+        membership.guild = guild.key();
+        membership.member = ctx.accounts.member.key();
+        membership.contribution = contribution;
+        membership.winnings_claimed = 0;
+        membership.joined_at = clock.unix_timestamp;
+        membership.bump = ctx.bumps.guild_member;
+
+        guild.member_count = guild.member_count.saturating_add(1);
+        guild.total_pooled = guild.total_pooled.saturating_add(contribution);
+
+        msg!("Joined guild with {} IDL contribution", contribution);
+        Ok(())
+    }
+
+    /// Buy a loot box
+    pub fn buy_lootbox(ctx: Context<BuyLootbox>, tier: u8) -> Result<()> {
+        require!(tier <= 2, IdlError::InvalidInput); // 0=common, 1=rare, 2=legendary
+
+        let price = match tier {
+            0 => LOOTBOX_COMMON_PRICE,
+            1 => LOOTBOX_RARE_PRICE,
+            2 => LOOTBOX_LEGENDARY_PRICE,
+            _ => return Err(IdlError::InvalidInput.into()),
+        };
+
+        // Pay for lootbox
+        let cpi_accounts = Transfer {
+            from: ctx.accounts.buyer_token_account.to_account_info(),
+            to: ctx.accounts.vault.to_account_info(),
+            authority: ctx.accounts.buyer.to_account_info(),
+        };
+        token::transfer(
+            CpiContext::new(ctx.accounts.token_program.to_account_info(), cpi_accounts),
+            price
+        )?;
+
+        // Generate pseudo-random reward using slot hash
+        let clock = Clock::get()?;
+        let slot = clock.slot;
+        let random = (slot % 100) as u8;
+
+        // Determine reward based on tier and random
+        let (reward_type, reward_value, expires_in) = match tier {
+            0 => { // Common: mostly small discounts
+                if random < 70 {
+                    (0u8, 100u64, 604800i64) // 1% fee discount for 7 days
+                } else if random < 90 {
+                    (1u8, 200u64, 604800i64) // 2% stake boost for 7 days
+                } else {
+                    (3u8, LOOTBOX_COMMON_PRICE, 0i64) // 1 IDL back
+                }
+            },
+            1 => { // Rare: better rewards
+                if random < 50 {
+                    (0u8, 300u64, 2592000i64) // 3% fee discount for 30 days
+                } else if random < 80 {
+                    (1u8, 500u64, 2592000i64) // 5% stake boost for 30 days
+                } else {
+                    (3u8, LOOTBOX_RARE_PRICE * 2, 0i64) // 20 IDL back
+                }
+            },
+            _ => { // Legendary: big rewards
+                if random < 30 {
+                    (0u8, 1000u64, 7776000i64) // 10% fee discount for 90 days
+                } else if random < 60 {
+                    (1u8, 1000u64, 7776000i64) // 10% stake boost for 90 days
+                } else if random < 90 {
+                    (2u8, 1u64, 0i64) // VIP tier upgrade
+                } else {
+                    (3u8, LOOTBOX_LEGENDARY_PRICE * 5, 0i64) // 500 IDL jackpot!
+                }
+            },
+        };
+
+        let reward = &mut ctx.accounts.lootbox_reward;
+        reward.owner = ctx.accounts.buyer.key();
+        reward.reward_type = reward_type;
+        reward.reward_value = reward_value;
+        reward.expires_at = if expires_in > 0 { clock.unix_timestamp + expires_in } else { 0 };
+        reward.used = false;
+        reward.tier = tier;
+        reward.bump = ctx.bumps.lootbox_reward;
+
+        msg!("Lootbox opened! Reward type: {}, value: {}", reward_type, reward_value);
+        Ok(())
+    }
+
+    /// Create a limit order
+    pub fn create_limit_order(
+        ctx: Context<CreateLimitOrder>,
+        amount: u64,
+        bet_yes: bool,
+        target_odds_bps: u64,
+    ) -> Result<()> {
+        require!(amount >= MIN_BET_AMOUNT, IdlError::BetTooSmall);
+        require!(target_odds_bps > 0 && target_odds_bps < 10000, IdlError::InvalidInput);
+
+        // Lock funds for the order
+        let cpi_accounts = Transfer {
+            from: ctx.accounts.user_token_account.to_account_info(),
+            to: ctx.accounts.vault.to_account_info(),
+            authority: ctx.accounts.user.to_account_info(),
+        };
+        token::transfer(
+            CpiContext::new(ctx.accounts.token_program.to_account_info(), cpi_accounts),
+            amount
+        )?;
+
+        let clock = Clock::get()?;
+        let order = &mut ctx.accounts.limit_order;
+
+        order.owner = ctx.accounts.user.key();
+        order.market = ctx.accounts.market.key();
+        order.amount = amount;
+        order.bet_yes = bet_yes;
+        order.target_odds_bps = target_odds_bps;
+        order.expires_at = clock.unix_timestamp + LIMIT_ORDER_EXPIRY;
+        order.filled = false;
+        order.created_at = clock.unix_timestamp;
+        order.bump = ctx.bumps.limit_order;
+
+        msg!("Limit order created: {} IDL at {}bps odds", amount, target_odds_bps);
+        Ok(())
+    }
+
+    /// Cancel a limit order
+    pub fn cancel_limit_order(ctx: Context<CancelLimitOrder>) -> Result<()> {
+        let order = &mut ctx.accounts.limit_order;
+
+        require!(!order.filled, IdlError::InvalidInput);
+        require!(order.owner == ctx.accounts.user.key(), IdlError::Unauthorized);
+
+        // Refund locked funds
+        let state_bump = ctx.accounts.state.bump;
+        let seeds = &[b"state".as_ref(), &[state_bump]];
+        let signer_seeds = &[&seeds[..]];
+
+        let cpi_accounts = Transfer {
+            from: ctx.accounts.vault.to_account_info(),
+            to: ctx.accounts.user_token_account.to_account_info(),
+            authority: ctx.accounts.state.to_account_info(),
+        };
+        token::transfer(
+            CpiContext::new_with_signer(
+                ctx.accounts.token_program.to_account_info(),
+                cpi_accounts,
+                signer_seeds
+            ),
+            order.amount
+        )?;
+
+        order.filled = true; // Mark as "used" to prevent double cancel
+
+        msg!("Limit order cancelled, {} IDL refunded", order.amount);
+        Ok(())
+    }
+
+    /// Set a stop loss on a bet
+    pub fn set_stop_loss(
+        ctx: Context<SetStopLoss>,
+        threshold_bps: u64,
+    ) -> Result<()> {
+        require!(threshold_bps >= STOP_LOSS_MIN_THRESHOLD, IdlError::InvalidInput);
+        require!(threshold_bps <= 9000, IdlError::InvalidInput); // Max 90% loss
+
+        let clock = Clock::get()?;
+        let stop_loss = &mut ctx.accounts.stop_loss;
+
+        stop_loss.owner = ctx.accounts.user.key();
+        stop_loss.bet = ctx.accounts.bet.key();
+        stop_loss.market = ctx.accounts.bet.market;
+        stop_loss.threshold_bps = threshold_bps;
+        stop_loss.triggered = false;
+        stop_loss.active = true;
+        stop_loss.created_at = clock.unix_timestamp;
+        stop_loss.bump = ctx.bumps.stop_loss;
+
+        msg!("Stop loss set at {}bps threshold", threshold_bps);
+        Ok(())
+    }
+
+    /// Partial cashout - exit early at current odds
+    pub fn partial_cashout(ctx: Context<PartialCashout>, cashout_amount: u64) -> Result<()> {
+        let bet = &ctx.accounts.bet;
+        let clock = Clock::get()?;
+
+        require!(
+            clock.unix_timestamp >= bet.timestamp + CASHOUT_MIN_TIME,
+            IdlError::ClaimTooEarly
+        );
+        require!(cashout_amount <= bet.amount, IdlError::InvalidAmount);
+        require!(!bet.claimed, IdlError::AlreadyClaimed);
+
+        // Calculate cashout value based on current odds
+        let market = &ctx.accounts.market;
+        let total_pool = market.total_yes_amount.saturating_add(market.total_no_amount);
+        let bet_side_pool = if bet.bet_yes { market.total_yes_amount } else { market.total_no_amount };
+
+        // Current implied probability for this side
+        let current_odds_bps = if total_pool > 0 {
+            (bet_side_pool * 10000) / total_pool
+        } else {
+            5000 // 50% default
+        };
+
+        // Cashout value = amount * (1 - fee) * (current_odds / 100)
+        let fee = (cashout_amount * CASHOUT_FEE_BPS) / 10000;
+        let after_fee = cashout_amount.saturating_sub(fee);
+        let payout = (after_fee * current_odds_bps) / 10000;
+
+        // Transfer payout
+        let state_bump = ctx.accounts.state.bump;
+        let seeds = &[b"state".as_ref(), &[state_bump]];
+        let signer_seeds = &[&seeds[..]];
+
+        let cpi_accounts = Transfer {
+            from: ctx.accounts.market_pool.to_account_info(),
+            to: ctx.accounts.user_token_account.to_account_info(),
+            authority: ctx.accounts.state.to_account_info(),
+        };
+        token::transfer(
+            CpiContext::new_with_signer(
+                ctx.accounts.token_program.to_account_info(),
+                cpi_accounts,
+                signer_seeds
+            ),
+            payout
+        )?;
+
+        // Record cashout
+        let cashout = &mut ctx.accounts.cashout_position;
+        cashout.owner = ctx.accounts.user.key();
+        cashout.bet = bet.key();
+        cashout.market = market.key();
+        cashout.original_amount = cashout_amount;
+        cashout.cashed_out_amount = cashout_amount;
+        cashout.received_amount = payout;
+        cashout.cashed_out_at = clock.unix_timestamp;
+        cashout.bump = ctx.bumps.cashout_position;
+
+        msg!("Cashed out {} IDL for {} IDL ({}bps odds)", cashout_amount, payout, current_odds_bps);
+        Ok(())
+    }
+
+    /// Initialize dynamic odds for a market
+    pub fn init_dynamic_odds(ctx: Context<InitDynamicOdds>) -> Result<()> {
+        let clock = Clock::get()?;
+        let odds = &mut ctx.accounts.dynamic_odds;
+
+        odds.market = ctx.accounts.market.key();
+        odds.yes_odds_bps = ODDS_BASE_YES; // Start at 50%
+        odds.no_odds_bps = 10000 - ODDS_BASE_YES;
+        odds.last_update = clock.unix_timestamp;
+        odds.volume_since_update = 0;
+        odds.bump = ctx.bumps.dynamic_odds;
+
+        msg!("Dynamic odds initialized at 50/50");
+        Ok(())
+    }
 }
 
 // ==================== HELPER FUNCTIONS ====================
@@ -2662,6 +3171,298 @@ pub struct ClaimReferralFees<'info> {
     pub token_program: Program<'info, Token>,
 }
 
+// ═══════════════════════════════════════════════════════════════════════════════
+// ADVANCED MECHANICS ACCOUNTS
+// ═══════════════════════════════════════════════════════════════════════════════
+
+#[derive(Accounts)]
+pub struct CreateBattle<'info> {
+    #[account(seeds = [b"state"], bump = state.bump)]
+    pub state: Account<'info, ProtocolState>,
+
+    pub market: Account<'info, PredictionMarket>,
+
+    #[account(
+        init,
+        payer = challenger,
+        space = 8 + PredictionBattle::INIT_SPACE,
+        seeds = [b"battle", market.key().as_ref(), challenger.key().as_ref()],
+        bump
+    )]
+    pub battle: Account<'info, PredictionBattle>,
+
+    #[account(mut, seeds = [b"vault"], bump = state.vault_bump)]
+    pub vault: Account<'info, TokenAccount>,
+
+    #[account(mut)]
+    pub challenger_token_account: Account<'info, TokenAccount>,
+
+    #[account(mut)]
+    pub challenger: Signer<'info>,
+
+    pub token_program: Program<'info, Token>,
+    pub system_program: Program<'info, System>,
+}
+
+#[derive(Accounts)]
+pub struct AcceptBattle<'info> {
+    #[account(seeds = [b"state"], bump = state.bump)]
+    pub state: Account<'info, ProtocolState>,
+
+    #[account(mut)]
+    pub battle: Account<'info, PredictionBattle>,
+
+    #[account(mut, seeds = [b"vault"], bump = state.vault_bump)]
+    pub vault: Account<'info, TokenAccount>,
+
+    #[account(mut)]
+    pub opponent_token_account: Account<'info, TokenAccount>,
+
+    #[account(mut)]
+    pub opponent: Signer<'info>,
+
+    pub token_program: Program<'info, Token>,
+}
+
+#[derive(Accounts)]
+pub struct ResolveBattle<'info> {
+    #[account(seeds = [b"state"], bump = state.bump)]
+    pub state: Account<'info, ProtocolState>,
+
+    #[account(mut)]
+    pub battle: Account<'info, PredictionBattle>,
+
+    pub market: Account<'info, PredictionMarket>,
+
+    #[account(mut, seeds = [b"vault"], bump = state.vault_bump)]
+    pub vault: Account<'info, TokenAccount>,
+
+    #[account(mut)]
+    pub winner_token_account: Account<'info, TokenAccount>,
+
+    pub token_program: Program<'info, Token>,
+}
+
+#[derive(Accounts)]
+pub struct CancelBattle<'info> {
+    #[account(seeds = [b"state"], bump = state.bump)]
+    pub state: Account<'info, ProtocolState>,
+
+    #[account(mut)]
+    pub battle: Account<'info, PredictionBattle>,
+
+    #[account(mut, seeds = [b"vault"], bump = state.vault_bump)]
+    pub vault: Account<'info, TokenAccount>,
+
+    #[account(mut)]
+    pub challenger_token_account: Account<'info, TokenAccount>,
+
+    pub challenger: Signer<'info>,
+
+    pub token_program: Program<'info, Token>,
+}
+
+#[derive(Accounts)]
+pub struct CreateGuild<'info> {
+    #[account(seeds = [b"state"], bump = state.bump)]
+    pub state: Account<'info, ProtocolState>,
+
+    #[account(
+        init,
+        payer = leader,
+        space = 8 + Guild::INIT_SPACE,
+        seeds = [b"guild", leader.key().as_ref()],
+        bump
+    )]
+    pub guild: Account<'info, Guild>,
+
+    #[account(mut)]
+    pub guild_treasury: Account<'info, TokenAccount>,
+
+    #[account(mut, seeds = [b"vault"], bump = state.vault_bump)]
+    pub vault: Account<'info, TokenAccount>,
+
+    #[account(mut)]
+    pub leader_token_account: Account<'info, TokenAccount>,
+
+    #[account(mut)]
+    pub leader: Signer<'info>,
+
+    pub token_program: Program<'info, Token>,
+    pub system_program: Program<'info, System>,
+}
+
+#[derive(Accounts)]
+pub struct JoinGuild<'info> {
+    #[account(mut)]
+    pub guild: Account<'info, Guild>,
+
+    #[account(
+        init,
+        payer = member,
+        space = 8 + GuildMember::INIT_SPACE,
+        seeds = [b"guild_member", guild.key().as_ref(), member.key().as_ref()],
+        bump
+    )]
+    pub guild_member: Account<'info, GuildMember>,
+
+    #[account(mut)]
+    pub guild_treasury: Account<'info, TokenAccount>,
+
+    #[account(mut)]
+    pub member_token_account: Account<'info, TokenAccount>,
+
+    #[account(mut)]
+    pub member: Signer<'info>,
+
+    pub token_program: Program<'info, Token>,
+    pub system_program: Program<'info, System>,
+}
+
+#[derive(Accounts)]
+pub struct BuyLootbox<'info> {
+    #[account(seeds = [b"state"], bump = state.bump)]
+    pub state: Account<'info, ProtocolState>,
+
+    #[account(
+        init,
+        payer = buyer,
+        space = 8 + LootboxReward::INIT_SPACE,
+        seeds = [b"lootbox", buyer.key().as_ref(), &Clock::get().unwrap().slot.to_le_bytes()],
+        bump
+    )]
+    pub lootbox_reward: Account<'info, LootboxReward>,
+
+    #[account(mut, seeds = [b"vault"], bump = state.vault_bump)]
+    pub vault: Account<'info, TokenAccount>,
+
+    #[account(mut)]
+    pub buyer_token_account: Account<'info, TokenAccount>,
+
+    #[account(mut)]
+    pub buyer: Signer<'info>,
+
+    pub token_program: Program<'info, Token>,
+    pub system_program: Program<'info, System>,
+}
+
+#[derive(Accounts)]
+pub struct CreateLimitOrder<'info> {
+    #[account(seeds = [b"state"], bump = state.bump)]
+    pub state: Account<'info, ProtocolState>,
+
+    pub market: Account<'info, PredictionMarket>,
+
+    #[account(
+        init,
+        payer = user,
+        space = 8 + LimitOrder::INIT_SPACE,
+        seeds = [b"limit_order", market.key().as_ref(), user.key().as_ref()],
+        bump
+    )]
+    pub limit_order: Account<'info, LimitOrder>,
+
+    #[account(mut, seeds = [b"vault"], bump = state.vault_bump)]
+    pub vault: Account<'info, TokenAccount>,
+
+    #[account(mut)]
+    pub user_token_account: Account<'info, TokenAccount>,
+
+    #[account(mut)]
+    pub user: Signer<'info>,
+
+    pub token_program: Program<'info, Token>,
+    pub system_program: Program<'info, System>,
+}
+
+#[derive(Accounts)]
+pub struct CancelLimitOrder<'info> {
+    #[account(seeds = [b"state"], bump = state.bump)]
+    pub state: Account<'info, ProtocolState>,
+
+    #[account(mut)]
+    pub limit_order: Account<'info, LimitOrder>,
+
+    #[account(mut, seeds = [b"vault"], bump = state.vault_bump)]
+    pub vault: Account<'info, TokenAccount>,
+
+    #[account(mut)]
+    pub user_token_account: Account<'info, TokenAccount>,
+
+    pub user: Signer<'info>,
+
+    pub token_program: Program<'info, Token>,
+}
+
+#[derive(Accounts)]
+pub struct SetStopLoss<'info> {
+    pub bet: Account<'info, Bet>,
+
+    #[account(
+        init,
+        payer = user,
+        space = 8 + StopLoss::INIT_SPACE,
+        seeds = [b"stop_loss", bet.key().as_ref()],
+        bump
+    )]
+    pub stop_loss: Account<'info, StopLoss>,
+
+    #[account(mut)]
+    pub user: Signer<'info>,
+
+    pub system_program: Program<'info, System>,
+}
+
+#[derive(Accounts)]
+pub struct PartialCashout<'info> {
+    #[account(seeds = [b"state"], bump = state.bump)]
+    pub state: Account<'info, ProtocolState>,
+
+    pub bet: Account<'info, Bet>,
+
+    pub market: Account<'info, PredictionMarket>,
+
+    #[account(mut)]
+    pub market_pool: Account<'info, TokenAccount>,
+
+    #[account(
+        init,
+        payer = user,
+        space = 8 + CashoutPosition::INIT_SPACE,
+        seeds = [b"cashout", bet.key().as_ref()],
+        bump
+    )]
+    pub cashout_position: Account<'info, CashoutPosition>,
+
+    #[account(mut)]
+    pub user_token_account: Account<'info, TokenAccount>,
+
+    #[account(mut)]
+    pub user: Signer<'info>,
+
+    pub token_program: Program<'info, Token>,
+    pub system_program: Program<'info, System>,
+}
+
+#[derive(Accounts)]
+pub struct InitDynamicOdds<'info> {
+    pub market: Account<'info, PredictionMarket>,
+
+    #[account(
+        init,
+        payer = authority,
+        space = 8 + DynamicOdds::INIT_SPACE,
+        seeds = [b"dynamic_odds", market.key().as_ref()],
+        bump
+    )]
+    pub dynamic_odds: Account<'info, DynamicOdds>,
+
+    #[account(mut)]
+    pub authority: Signer<'info>,
+
+    pub system_program: Program<'info, System>,
+}
+
 // ==================== STATE ====================
 
 #[account]
@@ -2999,6 +3800,165 @@ pub struct CreatorStats {
     pub pending_fees: u64,
     /// Last claim timestamp
     pub last_claim: i64,
+    pub bump: u8,
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// ADVANCED MECHANICS STATE - Battles, Guilds, Orders, Loot
+// ═══════════════════════════════════════════════════════════════════════════════
+
+/// 1v1 Prediction Battle
+#[account]
+#[derive(InitSpace)]
+pub struct PredictionBattle {
+    /// Challenger who created the battle
+    pub challenger: Pubkey,
+    /// Opponent (zero if not yet accepted)
+    pub opponent: Pubkey,
+    /// Market this battle is for
+    pub market: Pubkey,
+    /// Stake amount each side puts in
+    pub stake_amount: u64,
+    /// Challenger's bet direction
+    pub challenger_bet_yes: bool,
+    /// Battle status: 0=pending, 1=active, 2=resolved, 3=cancelled
+    pub status: u8,
+    /// Winner (set after resolution)
+    pub winner: Pubkey,
+    /// Created timestamp
+    pub created_at: i64,
+    /// Accepted timestamp
+    pub accepted_at: i64,
+    pub bump: u8,
+}
+
+/// Guild for pooled betting
+#[account]
+#[derive(InitSpace)]
+pub struct Guild {
+    /// Guild name (max 32 chars)
+    #[max_len(32)]
+    pub name: String,
+    /// Guild leader
+    pub leader: Pubkey,
+    /// Treasury vault for pooled funds
+    pub treasury: Pubkey,
+    /// Total pooled IDL
+    pub total_pooled: u64,
+    /// Number of members
+    pub member_count: u64,
+    /// Total winnings distributed
+    pub total_winnings: u64,
+    /// Created timestamp
+    pub created_at: i64,
+    /// Is guild active
+    pub active: bool,
+    pub bump: u8,
+}
+
+/// Guild membership
+#[account]
+#[derive(InitSpace)]
+pub struct GuildMember {
+    pub guild: Pubkey,
+    pub member: Pubkey,
+    /// Member's share of guild pool
+    pub contribution: u64,
+    /// Winnings claimed by this member
+    pub winnings_claimed: u64,
+    /// Joined timestamp
+    pub joined_at: i64,
+    pub bump: u8,
+}
+
+/// Loot box purchase record
+#[account]
+#[derive(InitSpace)]
+pub struct LootboxReward {
+    pub owner: Pubkey,
+    /// Reward type: 0=fee_discount, 1=stake_boost, 2=vip_upgrade, 3=idl_tokens
+    pub reward_type: u8,
+    /// Reward value (discount bps, boost bps, tier, or token amount)
+    pub reward_value: u64,
+    /// Expiry timestamp (0 = never)
+    pub expires_at: i64,
+    /// Is reward used
+    pub used: bool,
+    /// Lootbox tier: 0=common, 1=rare, 2=legendary
+    pub tier: u8,
+    pub bump: u8,
+}
+
+/// Limit order for conditional betting
+#[account]
+#[derive(InitSpace)]
+pub struct LimitOrder {
+    pub owner: Pubkey,
+    pub market: Pubkey,
+    /// Bet amount
+    pub amount: u64,
+    /// Bet direction
+    pub bet_yes: bool,
+    /// Target odds in bps (e.g. 6000 = 60% implied probability)
+    pub target_odds_bps: u64,
+    /// Order expiry timestamp
+    pub expires_at: i64,
+    /// Is order filled
+    pub filled: bool,
+    /// Created timestamp
+    pub created_at: i64,
+    pub bump: u8,
+}
+
+/// Stop loss order for auto-exit
+#[account]
+#[derive(InitSpace)]
+pub struct StopLoss {
+    pub owner: Pubkey,
+    pub bet: Pubkey,
+    pub market: Pubkey,
+    /// Threshold in bps (e.g. 5000 = exit if losing side hits 50%)
+    pub threshold_bps: u64,
+    /// Is stop loss triggered
+    pub triggered: bool,
+    /// Is stop loss active
+    pub active: bool,
+    /// Created timestamp
+    pub created_at: i64,
+    pub bump: u8,
+}
+
+/// Market with dynamic odds
+#[account]
+#[derive(InitSpace)]
+pub struct DynamicOdds {
+    pub market: Pubkey,
+    /// Current YES odds in bps (e.g. 5500 = 55%)
+    pub yes_odds_bps: u64,
+    /// Current NO odds in bps (always 10000 - yes_odds)
+    pub no_odds_bps: u64,
+    /// Last update timestamp
+    pub last_update: i64,
+    /// Total volume since last update
+    pub volume_since_update: u64,
+    pub bump: u8,
+}
+
+/// Cashout position (partial exit)
+#[account]
+#[derive(InitSpace)]
+pub struct CashoutPosition {
+    pub owner: Pubkey,
+    pub bet: Pubkey,
+    pub market: Pubkey,
+    /// Original bet amount
+    pub original_amount: u64,
+    /// Amount cashed out
+    pub cashed_out_amount: u64,
+    /// Amount received after fees
+    pub received_amount: u64,
+    /// Cashout timestamp
+    pub cashed_out_at: i64,
     pub bump: u8,
 }
 
