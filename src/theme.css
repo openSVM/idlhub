@@ -1,0 +1,260 @@
+/* ==================== CSS THEME VARIABLES ==================== */
+
+:root {
+    /* Light Theme (Default) */
+    --bg-primary: #f5f5f5;
+    --bg-secondary: #ffffff;
+    --bg-tertiary: #f6f8fa;
+    --text-primary: #24292f;
+    --text-secondary: #57606a;
+    --text-muted: #8b949e;
+    --border-primary: #24292f;
+    --border-secondary: #d0d7de;
+    --accent-primary: #0969da;
+    --accent-hover: #24292f;
+    --error-color: #cf222e;
+    --selection-bg: #0969da;
+    --checkbox-bg: #ffffff;
+}
+
+[data-theme="dark"] {
+    --bg-primary: #0d1117;
+    --bg-secondary: #161b22;
+    --bg-tertiary: #21262d;
+    --text-primary: #c9d1d9;
+    --text-secondary: #8b949e;
+    --text-muted: #6e7681;
+    --border-primary: #30363d;
+    --border-secondary: #21262d;
+    --accent-primary: #58a6ff;
+    --accent-hover: #1f6feb;
+    --error-color: #f85149;
+    --selection-bg: #1f6feb;
+    --checkbox-bg: #161b22;
+}
+
+[data-theme="night"] {
+    --bg-primary: #0f0f23;
+    --bg-secondary: #1a1a3e;
+    --bg-tertiary: #252550;
+    --text-primary: #ccccff;
+    --text-secondary: #9999ff;
+    --text-muted: #6666cc;
+    --border-primary: #9966ff;
+    --border-secondary: #252550;
+    --accent-primary: #ff6ec7;
+    --accent-hover: #ffcc00;
+    --error-color: #ff3366;
+    --selection-bg: #ff6ec7;
+    --checkbox-bg: #1a1a3e;
+}
+
+[data-theme="terminal"] {
+    --bg-primary: #000000;
+    --bg-secondary: #0a0a0a;
+    --bg-tertiary: #121212;
+    --text-primary: #00ff00;
+    --text-secondary: #00cc00;
+    --text-muted: #008800;
+    --border-primary: #00ff00;
+    --border-secondary: #003300;
+    --accent-primary: #00ff00;
+    --accent-hover: #00ff00;
+    --error-color: #ff0000;
+    --selection-bg: #00aa00;
+    --checkbox-bg: #0a0a0a;
+}
+
+[data-theme="solarized"] {
+    --bg-primary: #002b36;
+    --bg-secondary: #073642;
+    --bg-tertiary: #094251;
+    --text-primary: #93a1a1;
+    --text-secondary: #839496;
+    --text-muted: #657b83;
+    --border-primary: #b58900;
+    --border-secondary: #094251;
+    --accent-primary: #b58900;
+    --accent-hover: #cb4b16;
+    --error-color: #dc322f;
+    --selection-bg: #b58900;
+    --checkbox-bg: #073642;
+}
+
+[data-theme="solarized-light"] {
+    --bg-primary: #fdf6e3;
+    --bg-secondary: #eee8d5;
+    --bg-tertiary: #e8e2d0;
+    --text-primary: #657b83;
+    --text-secondary: #839496;
+    --text-muted: #93a1a1;
+    --border-primary: #b58900;
+    --border-secondary: #e8e2d0;
+    --accent-primary: #b58900;
+    --accent-hover: #cb4b16;
+    --error-color: #dc322f;
+    --selection-bg: #b58900;
+    --checkbox-bg: #eee8d5;
+}
+
+[data-theme="monokai-light"] {
+    --bg-primary: #fafafa;
+    --bg-secondary: #f5f5f5;
+    --bg-tertiary: #eeeeee;
+    --text-primary: #272822;
+    --text-secondary: #75715e;
+    --text-muted: #999988;
+    --border-primary: #f92672;
+    --border-secondary: #eeeeee;
+    --accent-primary: #f92672;
+    --accent-hover: #fd971f;
+    --error-color: #f92672;
+    --selection-bg: #a6e22e;
+    --checkbox-bg: #f5f5f5;
+}
+
+[data-theme="dos"] {
+    --bg-primary: #0000aa;
+    --bg-secondary: #0000bb;
+    --bg-tertiary: #1111cc;
+    --text-primary: #ffff55;
+    --text-secondary: #ffffff;
+    --text-muted: #aaaaaa;
+    --border-primary: #ffff55;
+    --border-secondary: #5555ff;
+    --accent-primary: #00ffff;
+    --accent-hover: #ffff00;
+    --error-color: #ff5555;
+    --selection-bg: #00ffff;
+    --checkbox-bg: #0000bb;
+}
+
+[data-theme="dracula"] {
+    --bg-primary: #282a36;
+    --bg-secondary: #21222c;
+    --bg-tertiary: #343746;
+    --text-primary: #f8f8f2;
+    --text-secondary: #6272a4;
+    --text-muted: #44475a;
+    --border-primary: #bd93f9;
+    --border-secondary: #44475a;
+    --accent-primary: #ff79c6;
+    --accent-hover: #bd93f9;
+    --error-color: #ff5555;
+    --selection-bg: #bd93f9;
+    --checkbox-bg: #21222c;
+}
+
+[data-theme="nord"] {
+    --bg-primary: #2e3440;
+    --bg-secondary: #3b4252;
+    --bg-tertiary: #434c5e;
+    --text-primary: #eceff4;
+    --text-secondary: #d8dee9;
+    --text-muted: #4c566a;
+    --border-primary: #88c0d0;
+    --border-secondary: #434c5e;
+    --accent-primary: #88c0d0;
+    --accent-hover: #8fbcbb;
+    --error-color: #bf616a;
+    --selection-bg: #5e81ac;
+    --checkbox-bg: #3b4252;
+}
+
+[data-theme="onedark"] {
+    --bg-primary: #21252b;
+    --bg-secondary: #282c34;
+    --bg-tertiary: #2c313a;
+    --text-primary: #abb2bf;
+    --text-secondary: #5c6370;
+    --text-muted: #4b5263;
+    --border-primary: #98c379;
+    --border-secondary: #2c313a;
+    --accent-primary: #e5c07b;
+    --accent-hover: #e06c75;
+    --error-color: #e06c75;
+    --selection-bg: #528bff;
+    --checkbox-bg: #282c34;
+}
+
+/* ==================== GLOBAL RESET & BASE STYLES ==================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 'Courier New', monospace;
+    background: var(--bg-primary);
+    min-height: 100vh;
+    padding: 0;
+    color: var(--text-primary);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* ==================== UTILITY CLASSES ==================== */
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: var(--bg-secondary);
+    min-height: 100vh;
+    border-left: 1px solid var(--border-secondary);
+    border-right: 1px solid var(--border-secondary);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* ==================== ANIMATIONS ==================== */
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes fadeSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+@keyframes flowIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes cycleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}

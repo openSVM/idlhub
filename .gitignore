@@ -31,3 +31,10 @@ temp/
 # Build artifacts
 target/
 Cargo.lock
+
+# Test screenshots and scripts
+*.png
+test-design*.js
+compare-pixels.js
+screenshot-*.png
+attack-framework/reports/
