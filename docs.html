@@ -4,54 +4,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <title>API Documentation - idlhub.com</title>
+    <title>Documentation - idlhub.com</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="/src/theme.css">
     <style>
-        :root {
-            --bg-primary: #f5f5f5;
-            --bg-secondary: #ffffff;
-            --bg-tertiary: #f6f8fa;
-            --text-primary: #24292f;
-            --text-secondary: #57606a;
-            --text-muted: #8b949e;
-            --border-primary: #24292f;
-            --border-secondary: #d0d7de;
-            --accent-primary: #0969da;
-            --accent-hover: #24292f;
-            --code-bg: #f6f8fa;
-        }
-
-        [data-theme="dark"] {
-            --bg-primary: #0d1117;
-            --bg-secondary: #161b22;
-            --bg-tertiary: #21262d;
-            --text-primary: #c9d1d9;
-            --text-secondary: #8b949e;
-            --text-muted: #6e7681;
-            --border-primary: #30363d;
-            --border-secondary: #21262d;
-            --accent-primary: #58a6ff;
-            --accent-hover: #1f6feb;
-            --code-bg: #161b22;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 'Courier New', monospace;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.6;
-        }
-
+        /* Page-specific styles */
         .container {
             max-width: 1200px;
             margin: 0 auto;
             background: var(--bg-secondary);
             min-height: 100vh;
+            border-left: 1px solid var(--border-secondary);
+            border-right: 1px solid var(--border-secondary);
         }
 
         .header {
@@ -74,6 +38,7 @@
 
         .header h1 {
             font-size: 16px;
+            margin: 0;
             font-weight: 700;
             color: var(--text-primary);
         }
@@ -83,21 +48,27 @@
             color: var(--accent-primary);
         }
 
+        .header p {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin: 4px 0 0 0;
+        }
+
         .nav-links {
             display: flex;
-            gap: 16px;
+            gap: 8px;
             align-items: center;
         }
 
         .nav-link {
-            color: var(--text-primary);
-            text-decoration: none;
             padding: 4px 12px;
-            border: 1px solid var(--border-primary);
-            border-radius: 0;
+            color: var(--text-secondary);
+            text-decoration: none;
             font-size: 12px;
             font-weight: 600;
-            transition: all 0.1s;
+            transition: all 0.2s;
+            border: 1px solid var(--border-secondary);
+            background: var(--bg-secondary);
         }
 
         .nav-link:hover {
@@ -105,161 +76,49 @@
             color: var(--bg-secondary);
         }
 
-        .theme-btn {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-primary);
-            color: var(--text-primary);
-            padding: 4px 12px;
-            border-radius: 0;
-            cursor: pointer;
-            font-size: 12px;
-            font-weight: 600;
-            font-family: inherit;
+        .nav-link.active {
+            background: var(--accent-primary);
+            color: var(--bg-secondary);
+            border-color: var(--accent-primary);
         }
 
-        .theme-btn::before {
-            content: '[';
-        }
-
-        .theme-btn::after {
-            content: ']';
-        }
-
-        .content {
-            padding: 40px 24px;
-        }
-
-        .doc-section {
-            margin-bottom: 60px;
-        }
-
-        .doc-section h2 {
-            font-size: 24px;
-            margin-bottom: 16px;
-            padding-bottom: 8px;
-            border-bottom: 2px solid var(--border-primary);
-            color: var(--text-primary);
-        }
-
-        .doc-section h3 {
-            font-size: 18px;
-            margin-top: 32px;
-            margin-bottom: 12px;
-            color: var(--accent-primary);
-        }
-
-        .doc-section h4 {
-            font-size: 14px;
-            margin-top: 24px;
-            margin-bottom: 8px;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-        }
-
-        .doc-section p {
-            margin-bottom: 16px;
-            color: var(--text-secondary);
-            font-size: 14px;
-        }
-
-        .doc-section ul,
-        .doc-section ol {
-            margin-left: 24px;
-            margin-bottom: 16px;
-            color: var(--text-secondary);
-        }
-
-        .doc-section li {
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
-
-        code {
-            background: var(--code-bg);
-            padding: 2px 6px;
-            border-radius: 3px;
-            font-size: 12px;
-            color: var(--accent-primary);
-            font-family: inherit;
-        }
-
-        pre {
-            background: var(--code-bg);
-            border: 1px solid var(--border-secondary);
-            padding: 16px;
-            overflow-x: auto;
-            margin-bottom: 16px;
-            border-radius: 0;
-        }
-
-        pre code {
-            background: none;
-            padding: 0;
-            color: var(--text-primary);
-            font-size: 12px;
-        }
-
-        .endpoint {
-            background: var(--bg-tertiary);
-            border-left: 3px solid var(--accent-primary);
-            padding: 16px;
-            margin: 16px 0;
-        }
-
-        .endpoint-method {
-            display: inline-block;
-            padding: 2px 8px;
-            border: 1px solid var(--border-primary);
-            font-weight: 700;
-            font-size: 11px;
-            margin-right: 8px;
-            text-transform: uppercase;
-        }
-
-        .endpoint-method.get {
-            color: #22863a;
-            border-color: #22863a;
-        }
-
-        .endpoint-method.post {
-            color: #0969da;
-            border-color: #0969da;
-        }
-
-        .endpoint-method.delete {
-            color: #cf222e;
-            border-color: #cf222e;
-        }
-
-        .endpoint-path {
-            font-weight: 700;
-            color: var(--text-primary);
+        .layout {
+            display: flex;
         }
 
         .sidebar {
-            position: fixed;
-            left: 0;
-            top: 80px;
-            width: 250px;
-            padding: 24px;
-            background: var(--bg-secondary);
+            width: 220px;
+            padding: 16px;
             border-right: 1px solid var(--border-secondary);
-            max-height: calc(100vh - 80px);
+            position: sticky;
+            top: 60px;
+            height: calc(100vh - 60px);
             overflow-y: auto;
+        }
+
+        .sidebar-title {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            padding-left: 8px;
         }
 
         .sidebar a {
             display: block;
-            padding: 8px 12px;
+            padding: 6px 8px;
             color: var(--text-secondary);
             text-decoration: none;
-            font-size: 12px;
+            font-size: 11px;
             border-left: 2px solid transparent;
+            margin-bottom: 2px;
         }
 
         .sidebar a:hover {
             color: var(--text-primary);
             border-left-color: var(--accent-primary);
+            background: var(--bg-tertiary);
         }
 
         .sidebar a.active {
@@ -269,44 +128,181 @@
         }
 
         .main-content {
-            margin-left: 250px;
-            padding: 40px 24px;
+            flex: 1;
+            padding: 24px;
+            min-width: 0;
+        }
+
+        .doc-section {
+            margin-bottom: 48px;
+        }
+
+        .doc-section h2 {
+            font-size: 16px;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--border-primary);
+            color: var(--text-primary);
+            text-transform: uppercase;
+        }
+
+        .doc-section h2::before {
+            content: '// ';
+            color: var(--text-muted);
+        }
+
+        .doc-section h3 {
+            font-size: 13px;
+            margin-top: 24px;
+            margin-bottom: 12px;
+            color: var(--accent-primary);
+            text-transform: uppercase;
+        }
+
+        .doc-section h4 {
+            font-size: 11px;
+            margin-top: 16px;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+
+        .doc-section p {
+            margin-bottom: 12px;
+            color: var(--text-secondary);
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        .doc-section ul, .doc-section ol {
+            margin-left: 20px;
+            margin-bottom: 12px;
+            color: var(--text-secondary);
+        }
+
+        .doc-section li {
+            margin-bottom: 6px;
+            font-size: 12px;
+        }
+
+        code {
+            background: var(--bg-tertiary);
+            padding: 2px 6px;
+            font-size: 11px;
+            color: var(--accent-primary);
+            font-family: inherit;
+        }
+
+        pre {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-secondary);
+            padding: 12px;
+            overflow-x: auto;
+            margin-bottom: 12px;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            color: var(--text-primary);
+            font-size: 11px;
+        }
+
+        .endpoint {
+            background: var(--bg-tertiary);
+            border-left: 3px solid var(--accent-primary);
+            padding: 12px;
+            margin: 12px 0;
+        }
+
+        .endpoint-method {
+            display: inline-block;
+            padding: 2px 8px;
+            border: 1px solid;
+            font-weight: 700;
+            font-size: 10px;
+            margin-right: 8px;
+            text-transform: uppercase;
+        }
+
+        .endpoint-method.get {
+            color: #22c55e;
+            border-color: #22c55e;
+        }
+
+        .endpoint-method.post {
+            color: #3b82f6;
+            border-color: #3b82f6;
+        }
+
+        .endpoint-path {
+            font-weight: 700;
+            color: var(--text-primary);
+            font-size: 12px;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 12px;
+            margin: 16px 0;
+        }
+
+        .feature-card {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-secondary);
+            padding: 16px;
+        }
+
+        .feature-card h4 {
+            margin: 0 0 8px 0;
+            color: var(--accent-primary);
+            font-size: 11px;
+        }
+
+        .feature-card p {
+            margin: 0;
+            font-size: 11px;
         }
 
         .playground {
             background: var(--bg-tertiary);
-            border: 2px solid var(--border-primary);
-            padding: 24px;
-            margin: 24px 0;
+            border: 1px solid var(--border-secondary);
+            padding: 16px;
+            margin: 16px 0;
+        }
+
+        .playground h3 {
+            margin: 0 0 12px 0;
+            font-size: 12px;
         }
 
         .playground-controls {
             display: flex;
-            gap: 12px;
-            margin-bottom: 16px;
+            gap: 8px;
+            margin-bottom: 12px;
             flex-wrap: wrap;
         }
 
         .playground-select {
             flex: 1;
             min-width: 200px;
-            padding: 8px 12px;
+            padding: 8px;
             border: 1px solid var(--border-primary);
             background: var(--bg-secondary);
             color: var(--text-primary);
             font-family: inherit;
-            font-size: 12px;
+            font-size: 11px;
         }
 
         .playground-btn {
-            padding: 8px 24px;
+            padding: 8px 16px;
             background: var(--accent-primary);
-            color: white;
+            color: var(--bg-secondary);
             border: none;
-            border-radius: 0;
             cursor: pointer;
             font-weight: 700;
-            font-size: 12px;
+            font-size: 10px;
             font-family: inherit;
             text-transform: uppercase;
         }
@@ -317,50 +313,28 @@
 
         .playground-input {
             width: 100%;
-            min-height: 200px;
-            padding: 12px;
+            min-height: 120px;
+            padding: 8px;
             border: 1px solid var(--border-primary);
             background: var(--bg-secondary);
             color: var(--text-primary);
             font-family: inherit;
-            font-size: 12px;
+            font-size: 11px;
             resize: vertical;
+            margin-bottom: 12px;
         }
 
         .playground-output {
             width: 100%;
-            min-height: 300px;
-            padding: 12px;
+            min-height: 200px;
+            padding: 8px;
             border: 1px solid var(--border-primary);
             background: var(--bg-secondary);
             color: var(--text-primary);
             font-family: inherit;
-            font-size: 12px;
+            font-size: 11px;
             overflow-x: auto;
             white-space: pre-wrap;
-        }
-
-        .feature-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin: 24px 0;
-        }
-
-        .feature-card {
-            background: var(--bg-tertiary);
-            border: 1px solid var(--border-secondary);
-            padding: 20px;
-        }
-
-        .feature-card h4 {
-            margin: 0 0 12px 0;
-            color: var(--accent-primary);
-        }
-
-        .feature-card p {
-            margin: 0;
-            font-size: 12px;
         }
 
         .footer {
@@ -370,7 +344,6 @@
             text-align: center;
             color: var(--text-secondary);
             font-size: 10px;
-            margin-left: 250px;
         }
 
         .footer a {
@@ -379,196 +352,32 @@
             font-weight: 600;
         }
 
-        @media (max-width: 1024px) {
+        .footer a::before {
+            content: '[';
+            color: var(--border-primary);
+        }
+
+        .footer a::after {
+            content: ']';
+            color: var(--border-primary);
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 900px) {
             .sidebar {
                 display: none;
             }
 
-            .main-content,
-            .footer {
-                margin-left: 0;
-            }
-        }
-
-        .toc {
-            background: var(--bg-tertiary);
-            border: 1px solid var(--border-secondary);
-            padding: 16px;
-            margin-bottom: 32px;
-            display: none;
-        }
-
-        @media (max-width: 1024px) {
-            .toc {
-                display: block;
-            }
-        }
-
-        /* Enhanced Mobile & Tablet Optimizations */
-        @media (max-width: 768px) {
-            .header {
-                padding: 12px 16px;
-            }
-
-            .header-content {
+            .layout {
                 flex-direction: column;
-                align-items: flex-start;
-                gap: 12px;
-            }
-
-            .header h1 {
-                font-size: 14px;
-            }
-
-            .nav-links {
-                width: 100%;
-                justify-content: space-between;
-            }
-
-            .nav-link, .theme-btn {
-                padding: 8px 16px;
-                font-size: 11px;
-                min-height: 44px; /* Touch-friendly tap target */
-                display: flex;
-                align-items: center;
-                justify-content: center;
             }
 
             .main-content {
-                padding: 24px 16px;
-            }
-
-            .doc-section {
-                margin-bottom: 40px;
-            }
-
-            .doc-section h2 {
-                font-size: 20px;
-            }
-
-            .doc-section h3 {
-                font-size: 16px;
-            }
-
-            .doc-section p, .doc-section li {
-                font-size: 13px;
-                line-height: 1.7;
-            }
-
-            pre {
-                padding: 12px;
-                font-size: 11px;
-                overflow-x: scroll;
-                -webkit-overflow-scrolling: touch;
-            }
-
-            .endpoint {
-                padding: 12px;
-            }
-
-            .playground {
                 padding: 16px;
             }
-
-            .playground-controls {
-                flex-direction: column;
-            }
-
-            .playground-select {
-                width: 100%;
-                min-width: unset;
-                padding: 12px;
-                font-size: 13px;
-                min-height: 44px;
-            }
-
-            .playground-btn {
-                width: 100%;
-                padding: 12px 24px;
-                font-size: 13px;
-                min-height: 44px;
-            }
-
-            .playground-input, .playground-output {
-                font-size: 11px;
-            }
-
-            .feature-grid {
-                grid-template-columns: 1fr;
-                gap: 16px;
-            }
-
-            .toc {
-                padding: 12px;
-            }
-
-            code {
-                font-size: 11px;
-                word-break: break-word;
-            }
-        }
-
-        /* Tablet-specific optimizations */
-        @media (min-width: 769px) and (max-width: 1024px) {
-            .main-content {
-                padding: 32px 24px;
-            }
-
-            .feature-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .playground-controls {
-                flex-wrap: wrap;
-            }
-
-            .playground-select {
-                flex: 1;
-                min-width: 250px;
-            }
-        }
-
-        /* Improved touch interactions for all mobile devices */
-        @media (hover: none) and (pointer: coarse) {
-            .nav-link, .playground-btn, .sidebar a {
-                -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
-            }
-
-            .playground-btn:active {
-                transform: scale(0.98);
-                transition: transform 0.1s;
-            }
-
-            /* Prevent text selection on tap controls */
-            .nav-link, .playground-btn, .theme-btn {
-                -webkit-touch-callout: none;
-                -webkit-user-select: none;
-                user-select: none;
-            }
-        }
-
-        .toc h3 {
-            font-size: 14px;
-            margin: 0 0 12px 0;
-        }
-
-        .toc ul {
-            list-style: none;
-            margin: 0;
-        }
-
-        .toc li {
-            margin: 8px 0;
-        }
-
-        .toc a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-size: 12px;
-        }
-
-        .toc a:hover {
-            color: var(--accent-primary);
         }
     </style>
 </head>
@@ -578,377 +387,153 @@
         <div class="header">
             <div class="header-content">
                 <div>
-                    <h1>idlhub.com - API Documentation</h1>
+                    <h1>idlhub.com</h1>
+                    <p>API Documentation</p>
                 </div>
-                <div class="nav-links">
-                    <a href="index.html" class="nav-link">Home</a>
-                    <a href="docs.html" class="nav-link">API</a>
-                    <a href="https://github.com/openSVM/idlhub" target="_blank" class="nav-link">GitHub</a>
-                    <button class="theme-btn" onclick="toggleTheme()">Theme</button>
-                </div>
+                <nav class="nav-links">
+                    <a href="/app/registry" class="nav-link">Registry</a>
+                    <a href="/app/" class="nav-link">Protocol</a>
+                    <a href="/app/status" class="nav-link">Status</a>
+                    <a href="/docs" class="nav-link active">Docs</a>
+                </nav>
             </div>
         </div>
 
-        <div class="sidebar">
-            <a href="#overview">Overview</a>
-            <a href="#quick-start">Quick Start</a>
-            <a href="#rest-api">REST API</a>
-            <a href="#rest-auth">Authentication</a>
-            <a href="#rest-endpoints">API Endpoints</a>
-            <a href="#mcp-api">MCP API</a>
-            <a href="#mcp-tools">MCP Tools</a>
-            <a href="#mcp-integration">MCP Integration</a>
-            <a href="#playground">API Playground</a>
-            <a href="#examples">Code Examples</a>
-        </div>
-
-        <div class="main-content">
-            <!-- Table of Contents for Mobile -->
-            <div class="toc">
-                <h3>Table of Contents</h3>
-                <ul>
-                    <li><a href="#overview">Overview</a></li>
-                    <li><a href="#quick-start">Quick Start</a></li>
-                    <li><a href="#rest-api">REST API</a></li>
-                    <li><a href="#mcp-api">MCP API</a></li>
-                    <li><a href="#playground">API Playground</a></li>
-                    <li><a href="#examples">Code Examples</a></li>
-                </ul>
+        <div class="layout">
+            <div class="sidebar">
+                <div class="sidebar-title">Documentation</div>
+                <a href="#overview">Overview</a>
+                <a href="#quick-start">Quick Start</a>
+                <a href="#rest-api">REST API</a>
+                <a href="#endpoints">Endpoints</a>
+                <a href="#mcp-api">MCP API</a>
+                <a href="#mcp-tools">MCP Tools</a>
+                <a href="#playground">Playground</a>
+                <a href="#examples">Examples</a>
             </div>
 
-            <!-- Overview Section -->
-            <div class="doc-section" id="overview">
-                <h2>Overview</h2>
-                <p>
-                    IDLHub is a comprehensive, searchable registry of Interface Definition Language (IDL) files for
-                    Solana protocols. It provides both a web interface and programmatic access via REST and MCP APIs.
-                </p>
+            <div class="main-content">
+                <div class="doc-section" id="overview">
+                    <h2>Overview</h2>
+                    <p>
+                        IDLHub is a comprehensive registry of Interface Definition Language (IDL) files for Solana protocols.
+                        It provides web interface and programmatic access via REST and MCP APIs.
+                    </p>
 
-                <div class="feature-grid">
-                    <div class="feature-card">
-                        <h4>📋 Comprehensive Coverage</h4>
-                        <p>IDLs for 100+ Solana protocols including Jupiter, Orca, Marinade, Drift, Kamino, and many
-                            more.</p>
-                    </div>
-                    <div class="feature-card">
-                        <h4>🌐 Web Interface</h4>
-                        <p>Simple, intuitive web UI for searching, browsing, and exporting protocol IDLs.</p>
-                    </div>
-                    <div class="feature-card">
-                        <h4>🔌 REST API</h4>
-                        <p>Complete REST API for loading, uploading, and managing IDL files dynamically.</p>
-                    </div>
-                    <div class="feature-card">
-                        <h4>🤖 MCP Server</h4>
-                        <p>Model Context Protocol server for LLM and editor integration with schema lookup and code
-                            generation.</p>
-                    </div>
-                    <div class="feature-card">
-                        <h4>🔍 Semantic Search</h4>
-                        <p>Powered by Qdrant vector database for intelligent protocol discovery.</p>
-                    </div>
-                    <div class="feature-card">
-                        <h4>💻 Code Generation</h4>
-                        <p>Generate TypeScript, Rust, Python, and Anchor TS code from IDL schemas.</p>
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <h4>Comprehensive Coverage</h4>
+                            <p>IDLs for 100+ Solana protocols including Jupiter, Orca, Marinade, Drift, and more.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4>REST API</h4>
+                            <p>Complete REST API for loading and managing IDL files dynamically.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4>MCP Server</h4>
+                            <p>Model Context Protocol server for LLM and editor integration.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4>Code Generation</h4>
+                            <p>Generate TypeScript, Rust, Python code from IDL schemas.</p>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Quick Start Section -->
-            <div class="doc-section" id="quick-start">
-                <h2>Quick Start</h2>
+                <div class="doc-section" id="quick-start">
+                    <h2>Quick Start</h2>
 
-                <h3>Web Interface</h3>
-                <p>Visit <a href="index.html">idlhub.com</a> to browse and export IDLs using the web interface:</p>
-                <ol>
-                    <li>Search for protocols by name or description</li>
-                    <li>Filter by category (DEX, Lending, Derivatives, etc.)</li>
-                    <li>Select protocols you're interested in</li>
-                    <li>Click "Export Selected IDLs" to download them</li>
-                </ol>
+                    <h3>Programmatic Access</h3>
+                    <pre><code>// Fetch protocol list
+const response = await fetch('https://idlhub.com/api/idl');
+const data = await response.json();
 
-                <h3>Programmatic Access</h3>
-                <pre><code>// Load the registry index
-const response = await fetch('https://idlhub.com/index.json');
-const registry = await response.json();
+// Get specific IDL
+const jupiter = await fetch('https://idlhub.com/api/idl/jupiter');
+const jupiterIdl = await jupiter.json();</code></pre>
 
-// Find a specific protocol
-const jupiter = registry.protocols.find(p => p.id === 'jupiter');
-
-// Load its IDL
-const idlResponse = await fetch(`https://idlhub.com/${jupiter.idlPath}`);
-const idl = await idlResponse.json();</code></pre>
-
-                <h3>MCP Server Installation</h3>
-                <pre><code># One-line install
+                    <h3>MCP Server Installation</h3>
+                    <pre><code># One-line install
 curl -fsSL https://idlhub.com/mcp | sh
 
 # Or manual install
 git clone https://github.com/openSVM/idlhub.git
-cd idlhub
-npm install
+cd idlhub && npm install
 npm run mcp:start</code></pre>
-
-                <h3>REST API Server Setup</h3>
-                <p>To run the REST API server locally, follow these steps:</p>
-                <pre><code># Clone the repository
-git clone https://github.com/openSVM/idlhub.git
-cd idlhub
-
-# Install dependencies (REQUIRED)
-npm install
-
-# Start the API server
-npm run api:start
-
-# The server will be available at http://localhost:3000</code></pre>
-                <p style="font-size: 12px; color: var(--text-muted); margin-top: 8px;">
-                    <strong>Important:</strong> You must run <code>npm install</code> before starting the API server. 
-                    The server requires Express, Axios, CORS, and other dependencies to run.
-                </p>
-            </div>
-
-            <!-- REST API Section -->
-            <div class="doc-section" id="rest-api">
-                <h2>REST API</h2>
-                <p>
-                    The IDLHub REST API provides endpoints for dynamically loading, uploading, and managing Solana
-                    program IDL files.
-                </p>
-
-                <h4>Base URL</h4>
-                <p>
-                    For local development: <code>http://localhost:3000</code>
-                </p>
-                <p style="font-size: 12px; color: var(--text-muted); background: var(--bg-tertiary); padding: 12px; border-left: 3px solid var(--accent-primary); margin: 16px 0;">
-                    <strong>⚠️ Important:</strong> The REST API server must be deployed separately. 
-                    The static site at <code>https://idlhub.com</code> does not include a backend API server.
-                    All example commands and "Try It Live" buttons require a running API server at <code>http://localhost:3000</code>.
-                    See the <a href="#quick-start" style="color: var(--accent-primary);">REST API Server Setup</a> section above for installation instructions.
-                </p>
-
-                <h3 id="rest-auth">Authentication</h3>
-                <p>
-                    Currently, the API is open and does not require authentication. For production use, consider adding
-                    API key authentication.
-                </p>
-
-                <h3 id="rest-endpoints">API Endpoints</h3>
-
-                <div class="endpoint">
-                    <div>
-                        <span class="endpoint-method get">GET</span>
-                        <span class="endpoint-path">/health</span>
-                    </div>
-                    <p style="margin-top: 12px;">Check if the API server is running.</p>
-                    <h4>Example Request:</h4>
-                    <pre><code>curl http://localhost:3000/health</code></pre>
-                    <h4>Example Response:</h4>
-                    <pre><code>{
-  "status": "ok",
-  "timestamp": "2025-12-10T10:00:00.000Z",
-  "version": "1.0.0"
-}</code></pre>
-                    <button class="playground-btn" onclick="testEndpoint('GET', '/health', null)" style="margin-top: 12px;">🚀 Try It Live</button>
                 </div>
 
-                <div class="endpoint">
-                    <div>
-                        <span class="endpoint-method get">GET</span>
-                        <span class="endpoint-path">/api/all</span>
+                <div class="doc-section" id="rest-api">
+                    <h2>REST API</h2>
+                    <p>The IDLHub REST API provides endpoints for loading and managing Solana program IDL files.</p>
+
+                    <h4>Base URL</h4>
+                    <p><code>https://idlhub.com/api</code></p>
+
+                    <h3 id="endpoints">Endpoints</h3>
+
+                    <div class="endpoint">
+                        <div>
+                            <span class="endpoint-method get">GET</span>
+                            <span class="endpoint-path">/api/idl</span>
+                        </div>
+                        <p style="margin-top: 8px;">Get all IDLs in the registry.</p>
+                        <pre><code>curl https://idlhub.com/api/idl</code></pre>
                     </div>
-                    <p style="margin-top: 12px;">Get all IDLs in the registry.</p>
-                    <h4>Example Request:</h4>
-                    <pre><code>curl http://localhost:3000/api/all</code></pre>
-                    <h4>Example Response:</h4>
-                    <pre><code>{
-  "total": 15,
-  "idls": [
-    {
-      "name": "jupiter",
-      "version": "0.1.0",
-      "description": "Jupiter Aggregator - The key liquidity aggregator for Solana",
-      "category": "dex-aggregator",
-      "idl": {...}
-    }
-  ]
-}</code></pre>
-                    <button class="playground-btn" onclick="testEndpoint('GET', '/api/all', null)" style="margin-top: 12px;">🚀 Try It Live</button>
+
+                    <div class="endpoint">
+                        <div>
+                            <span class="endpoint-method get">GET</span>
+                            <span class="endpoint-path">/api/idl/:id</span>
+                        </div>
+                        <p style="margin-top: 8px;">Get a specific IDL by protocol ID.</p>
+                        <pre><code>curl https://idlhub.com/api/idl/jupiter</code></pre>
+                    </div>
+
+                    <div class="endpoint">
+                        <div>
+                            <span class="endpoint-method get">GET</span>
+                            <span class="endpoint-path">/api/idl/search?q=query</span>
+                        </div>
+                        <p style="margin-top: 8px;">Search for protocols by name or description.</p>
+                        <pre><code>curl "https://idlhub.com/api/idl/search?q=dex&limit=5"</code></pre>
+                    </div>
+
+                    <div class="endpoint">
+                        <div>
+                            <span class="endpoint-method get">GET</span>
+                            <span class="endpoint-path">/api/status</span>
+                        </div>
+                        <p style="margin-top: 8px;">Get service status and statistics.</p>
+                        <pre><code>curl https://idlhub.com/api/status</code></pre>
+                    </div>
                 </div>
 
-                <div class="endpoint">
-                    <div>
-                        <span class="endpoint-method get">GET</span>
-                        <span class="endpoint-path">/api/:name</span>
-                    </div>
-                    <p style="margin-top: 12px;">Get a specific IDL by program name or Solana wallet address.</p>
-                    <h4>Path Parameters:</h4>
-                    <ul>
-                        <li><code>name</code>: Program name (e.g., "jupiter") or Solana wallet address</li>
-                    </ul>
-                    <h4>Example Requests:</h4>
-                    <pre><code># Get by program name
-curl http://localhost:3000/api/jupiter
+                <div class="doc-section" id="mcp-api">
+                    <h2>MCP API</h2>
+                    <p>
+                        The Model Context Protocol (MCP) server provides structured access to IDL schemas,
+                        symbol lookup, code generation, and diagnostics.
+                    </p>
 
-# Get by Solana wallet address
-curl http://localhost:3000/api/JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4</code></pre>
-                    <h4>Example Response:</h4>
+                    <h3 id="mcp-tools">MCP Tools</h3>
+
+                    <h4>list_schemas</h4>
+                    <p>List all available IDL schemas with optional filtering.</p>
                     <pre><code>{
-  "name": "jupiter",
-  "version": "0.1.0",
-  "description": "Jupiter Aggregator - The key liquidity aggregator for Solana",
-  "category": "dex-aggregator",
-  "address": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
-  "idl": {
-    "version": "0.1.0",
-    "name": "jupiter",
-    "instructions": [
-      {
-        "name": "swap",
-        "accounts": [...],
-        "args": [...]
-      }
-    ],
-    "accounts": [...],
-    "types": [...],
-    "errors": [...]
-  }
-}</code></pre>
-                    <button class="playground-btn" onclick="testEndpoint('GET', '/api/jupiter', null)" style="margin-top: 12px;">🚀 Try It Live (Jupiter)</button>
-                    <button class="playground-btn" onclick="testEndpoint('GET', '/api/orca', null)" style="margin-top: 12px; background: var(--text-secondary);">🚀 Try It Live (Orca)</button>
-                </div>
-
-                <div class="endpoint">
-                    <div>
-                        <span class="endpoint-method post">POST</span>
-                        <span class="endpoint-path">/api/idl</span>
-                    </div>
-                    <p style="margin-top: 12px;">Create a new IDL record in the registry.</p>
-                    <h4>Required Fields:</h4>
-                    <ul>
-                        <li><code>name</code>: Program name (e.g., "jupiter")</li>
-                        <li><code>idl</code>: Complete IDL JSON object with version, name, instructions, accounts, types, etc.</li>
-                        <li><code>address</code> (optional): Solana wallet address for the program</li>
-                        <li><code>category</code> (optional): Program category (defi, dex, lending, etc.)</li>
-                        <li><code>description</code> (optional): Program description</li>
-                    </ul>
-                    <h4>Example Request:</h4>
-                    <pre><code>curl -X POST http://localhost:3000/api/idl \
-  -H "Content-Type: application/json" \
-  -d '{
-    "name": "myprogram",
-    "address": "MyProg11111111111111111111111111111111111",
-    "description": "My custom Solana program",
-    "category": "defi",
-    "idl": {
-      "version": "0.1.0",
-      "name": "my_program",
-      "instructions": [
-        {
-          "name": "initialize",
-          "accounts": [
-            {
-              "name": "user",
-              "isMut": true,
-              "isSigner": true
-            }
-          ],
-          "args": []
-        }
-      ],
-      "accounts": [],
-      "types": [],
-      "errors": []
-    }
-  }'</code></pre>
-                    <h4>Example Response:</h4>
-                    <pre><code>{
-  "success": true,
-  "message": "IDL created successfully",
-  "data": {
-    "name": "myprogram",
-    "address": "MyProg11111111111111111111111111111111111",
-    "version": "0.1.0"
-  }
-}</code></pre>
-                    <button class="playground-btn" onclick="testEndpoint('POST', '/api/idl', {name:'test-program',address:'Test111111111111111111111111111111111111',description:'Test Program',category:'defi',idl:{version:'0.1.0',name:'test_program',instructions:[],accounts:[],types:[],errors:[]}})" style="margin-top: 12px;">🚀 Try It Live</button>
-                </div>
-
-                <div class="endpoint">
-                    <div>
-                        <span class="endpoint-method get">GET</span>
-                        <span class="endpoint-path">/api/search</span>
-                    </div>
-                    <p style="margin-top: 12px;">Search for programs using semantic search. This endpoint searches across program names, descriptions, and categories.</p>
-                    <h4>Query Parameters:</h4>
-                    <ul>
-                        <li><code>q</code>: Search query (required) - e.g., "dex trading", "lending protocol", "liquid staking"</li>
-                        <li><code>limit</code>: Number of results (default: 10, max: 50)</li>
-                    </ul>
-                    <h4>Example Request:</h4>
-                    <pre><code>curl "http://localhost:3000/api/search?q=dex%20trading&limit=5"</code></pre>
-                    <h4>Example Response:</h4>
-                    <pre><code>{
-  "query": "dex trading",
-  "total": 5,
-  "results": [
-    {
-      "id": "jupiter",
-      "name": "Jupiter",
-      "description": "Jupiter Aggregator - The key liquidity aggregator for Solana",
-      "category": "dex-aggregator",
-      "score": 0.95
-    }
-  ]
-}</code></pre>
-                    <button class="playground-btn" onclick="testEndpoint('GET', '/api/search?q=dex&limit=5', null)" style="margin-top: 12px;">🚀 Try It Live (Search "dex")</button>
-                    <button class="playground-btn" onclick="testEndpoint('GET', '/api/search?q=lending&limit=5', null)" style="margin-top: 12px; background: var(--text-secondary);">🚀 Try It Live (Search "lending")</button>
-                </div>
-            </div>
-
-            <!-- MCP API Section -->
-            <div class="doc-section" id="mcp-api">
-                <h2>MCP API</h2>
-                <p>
-                    The Model Context Protocol (MCP) server provides structured, high-performance access to IDL
-                    schemas, symbol lookup, code generation, and diagnostics. Perfect for LLM integration and editor
-                    tooling.
-                </p>
-
-                <h3>Features</h3>
-                <ul>
-                    <li>📋 Schema listing & retrieval</li>
-                    <li>🔍 Symbol lookup (types, instructions, accounts, enums)</li>
-                    <li>💻 Code generation (TypeScript, Rust, Python, Anchor TS)</li>
-                    <li>✅ IDL validation and diagnostics</li>
-                    <li>🚀 High performance (p95 &lt; 100ms)</li>
-                    <li>🔌 Multiple transports (stdio, WebSocket)</li>
-                </ul>
-
-                <h3 id="mcp-tools">MCP Tools</h3>
-
-                <h4>list_schemas</h4>
-                <p>List all available IDL schemas in the registry with optional filtering.</p>
-                <pre><code>{
   "name": "list_schemas",
-  "arguments": {
-    "category": "dex",
-    "status": "available"
-  }
+  "arguments": { "category": "dex" }
 }</code></pre>
 
-                <h4>get_schema</h4>
-                <p>Retrieve a specific IDL schema by protocol ID.</p>
-                <pre><code>{
+                    <h4>get_schema</h4>
+                    <p>Retrieve a specific IDL schema by protocol ID.</p>
+                    <pre><code>{
   "name": "get_schema",
-  "arguments": {
-    "protocol_id": "jupiter"
-  }
+  "arguments": { "protocol_id": "jupiter" }
 }</code></pre>
 
-                <h4>lookup_symbol</h4>
-                <p>Look up types, instructions, accounts, or enums in an IDL.</p>
-                <pre><code>{
+                    <h4>lookup_symbol</h4>
+                    <p>Look up types, instructions, accounts in an IDL.</p>
+                    <pre><code>{
   "name": "lookup_symbol",
   "arguments": {
     "protocol_id": "jupiter",
@@ -957,9 +542,9 @@ curl http://localhost:3000/api/JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4</code
   }
 }</code></pre>
 
-                <h4>generate_code</h4>
-                <p>Generate code from an IDL for a specific target language/framework.</p>
-                <pre><code>{
+                    <h4>generate_code</h4>
+                    <p>Generate code from an IDL for a target language.</p>
+                    <pre><code>{
   "name": "generate_code",
   "arguments": {
     "protocol_id": "jupiter",
@@ -967,297 +552,92 @@ curl http://localhost:3000/api/JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4</code
   }
 }</code></pre>
 
-                <h4>validate_idl</h4>
-                <p>Validate an IDL schema and provide diagnostics.</p>
-                <pre><code>{
-  "name": "validate_idl",
-  "arguments": {
-    "protocol_id": "jupiter"
-  }
-}</code></pre>
-
-                <h3 id="mcp-integration">Integration Examples</h3>
-
-                <h4>Claude Desktop</h4>
-                <pre><code>{
+                    <h3>Integration</h3>
+                    <h4>Claude Desktop</h4>
+                    <pre><code>{
   "mcpServers": {
     "idlhub": {
       "command": "node",
-      "args": ["/path/to/idlhub/mcp-server/src/index.js"],
-      "env": {
-        "IDL_REGISTRY_PATH": "/path/to/idlhub"
-      }
+      "args": ["/path/to/idlhub/mcp-server/src/index.js"]
     }
   }
 }</code></pre>
+                </div>
 
-                <h4>Cline / VSCode</h4>
-                <pre><code>{
-  "mcpServers": {
-    "idlhub": {
-      "command": "node",
-      "args": ["${workspaceFolder}/mcp-server/src/index.js"]
-    }
-  }
-}</code></pre>
+                <div class="doc-section" id="playground">
+                    <h2>API Playground</h2>
+                    <p>Test API endpoints interactively.</p>
 
-                <h4>Custom Client (WebSocket)</h4>
-                <pre><code>import WebSocket from 'ws';
-
-const ws = new WebSocket('ws://localhost:8080');
-
-ws.on('open', () => {
-  ws.send(JSON.stringify({
-    jsonrpc: '2.0',
-    id: 1,
-    method: 'tools/call',
-    params: {
-      name: 'list_schemas',
-      arguments: { category: 'dex' }
-    }
-  }));
-});
-
-ws.on('message', (data) => {
-  const response = JSON.parse(data);
-  console.log(response);
-});</code></pre>
-            </div>
-
-            <!-- API Playground Section -->
-            <div class="doc-section" id="playground">
-                <h2>API Playground</h2>
-                <p>Test API endpoints interactively. Select an endpoint, customize the request, and see the response in
-                    real-time. <strong>This makes actual HTTP requests to the API server.</strong></p>
-                <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">
-                    <strong>⚠️ Important:</strong> The API playground requires a running API server. 
-                    To use this feature, you must first <a href="#quick-start" style="color: var(--accent-primary);">set up and run the API server locally</a> 
-                    at <code>http://localhost:3000</code>. The static site at <code>https://idlhub.com</code> does not include a backend API server.
-                </p>
-
-                <div class="playground">
-                    <h3>Try It Out</h3>
-                    <div class="playground-controls">
-                        <select id="endpointSelect" class="playground-select">
-                            <option value="GET:/api/all">GET /api/all - Get all IDLs</option>
-                            <option value="GET:/api/jupiter">GET /api/jupiter - Get Jupiter IDL by name</option>
-                            <option value="GET:/api/search">GET /api/search?q=dex - Search programs</option>
-                            <option value="POST:/api/idl">POST /api/idl - Create new IDL</option>
-                        </select>
-                        <button class="playground-btn" onclick="executeRequest()">Execute</button>
-                        <button class="playground-btn" onclick="clearPlayground()"
-                            style="background: var(--text-muted);">Clear</button>
-                    </div>
-
-                    <div style="margin-bottom: 16px;">
-                        <h4>Request Body (for POST requests):</h4>
-                        <textarea id="requestBody" class="playground-input"
-                            placeholder='Enter JSON request body here...'>{
-  "programId": "example",
-  "name": "Example Program",
-  "category": "defi",
-  "idl": {
-    "version": "0.1.0",
-    "name": "example",
-    "instructions": []
-  }
-}</textarea>
-                    </div>
-
-                    <div>
-                        <h4>Response:</h4>
-                        <div id="playgroundOutput" class="playground-output">Response will appear here...</div>
+                    <div class="playground">
+                        <h3>Try It Out</h3>
+                        <div class="playground-controls">
+                            <select id="endpointSelect" class="playground-select">
+                                <option value="GET:/api/idl">GET /api/idl - List all IDLs</option>
+                                <option value="GET:/api/idl/jupiter">GET /api/idl/jupiter - Get Jupiter IDL</option>
+                                <option value="GET:/api/idl/search?q=dex">GET /api/idl/search?q=dex - Search</option>
+                                <option value="GET:/api/status">GET /api/status - Service status</option>
+                            </select>
+                            <button class="playground-btn" onclick="executeRequest()">Execute</button>
+                        </div>
+                        <div>
+                            <h4>Response:</h4>
+                            <div id="playgroundOutput" class="playground-output">Response will appear here...</div>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Code Examples Section -->
-            <div class="doc-section" id="examples">
-                <h2>Code Examples</h2>
+                <div class="doc-section" id="examples">
+                    <h2>Code Examples</h2>
 
-                <h3>JavaScript/TypeScript</h3>
-                <pre><code>// Fetch all IDLs
-const response = await fetch('https://idlhub.com/api/all');
+                    <h3>JavaScript</h3>
+                    <pre><code>// Fetch all IDLs
+const response = await fetch('https://idlhub.com/api/idl');
 const data = await response.json();
 console.log(data.idls);
 
-// Get Jupiter IDL by name
-const jupiterResponse = await fetch('https://idlhub.com/api/jupiter');
-const jupiterData = await jupiterResponse.json();
+// Get specific IDL
+const jupiter = await fetch('https://idlhub.com/api/idl/jupiter');
+const jupiterData = await jupiter.json();
 
 // Use with Anchor
-import { Program, AnchorProvider } from '@coral-xyz/anchor';
+import { Program } from '@coral-xyz/anchor';
 const program = new Program(jupiterData.idl, provider);</code></pre>
 
-                <h3>Python</h3>
-                <pre><code>import requests
+                    <h3>Python</h3>
+                    <pre><code>import requests
 
 # Fetch all IDLs
-response = requests.get('https://idlhub.com/api/all')
+response = requests.get('https://idlhub.com/api/idl')
 idls = response.json()['idls']
 
-# Get specific IDL by name
-jupiter_response = requests.get('https://idlhub.com/api/jupiter')
-jupiter_data = jupiter_response.json()
-jupiter_idl = jupiter_data['idl']
+# Get specific IDL
+jupiter = requests.get('https://idlhub.com/api/idl/jupiter')
+jupiter_idl = jupiter.json()['idl']</code></pre>
 
-# Search for protocols
-search_response = requests.get('https://idlhub.com/api/search?q=lending&limit=5')
-results = search_response.json()['results']</code></pre>
+                    <h3>cURL</h3>
+                    <pre><code># Get all IDLs
+curl https://idlhub.com/api/idl
 
-                <h3>Rust</h3>
-                <pre><code>use reqwest;
-use serde_json::Value;
+# Get specific IDL
+curl https://idlhub.com/api/idl/jupiter
 
-#[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    // Fetch Jupiter IDL by name
-    let response = reqwest::get("https://idlhub.com/api/jupiter")
-        .await?
-        .json::<Value>()
-        .await?;
-    
-    println!("Jupiter data: {}", serde_json::to_string_pretty(&response)?);
-    Ok(())
-}</code></pre>
-
-                <h3>cURL Examples</h3>
-                <pre><code># Get all IDLs
-curl https://idlhub.com/api/all
-
-# Get specific IDL by name
-curl https://idlhub.com/api/jupiter
-
-# Get IDL by Solana wallet address
-curl https://idlhub.com/api/JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4
-
-# Search for DEX protocols
-curl "https://idlhub.com/api/search?q=decentralized%20exchange&limit=10"
-
-# Create a new IDL record
-curl -X POST https://idlhub.com/api/idl \
-  -H "Content-Type: application/json" \
-  -d '{
-    "name": "myprogram",
-    "address": "MyProg11111111111111111111111111111111111",
-    "description": "My custom program",
-    "category": "defi",
-    "idl": {
-      "version": "0.1.0",
-      "name": "my_program",
-      "instructions": []
-    }
-  }'</code></pre>
+# Search
+curl "https://idlhub.com/api/idl/search?q=lending&limit=5"</code></pre>
+                </div>
             </div>
         </div>
 
         <div class="footer">
-            <p>idlhub.com - Open source IDL registry for the Solana ecosystem • <a
-                    href="https://github.com/openSVM/idlhub" target="_blank">GitHub</a> • <a href="docs.html">Documentation</a></p>
+            <p>idlhub.com - Open source IDL registry for the Solana ecosystem</p>
+            <p style="margin-top: 8px;">
+                <a href="https://github.com/openSVM/idlhub">GitHub</a>
+                <a href="/app/registry">Registry</a>
+                <a href="/api/status">API</a>
+            </p>
         </div>
     </div>
 
     <script>
-        // Theme management
-        function toggleTheme() {
-            const currentTheme = document.documentElement.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', newTheme);
-            localStorage.setItem('idlhub-theme', newTheme);
-        }
-
-        // Load saved theme
-        const savedTheme = localStorage.getItem('idlhub-theme');
-        if (savedTheme) {
-            document.documentElement.setAttribute('data-theme', savedTheme);
-        }
-
-        // Helper function to test endpoints directly from the docs
-        async function testEndpoint(method, path, body) {
-            const output = document.getElementById('playgroundOutput');
-            if (!output) {
-                // Display error message inline if possible, otherwise log to console
-                if (document.getElementById('playground')) {
-                    document.getElementById('playground').textContent = 'Error: Playground output element not found. Please ensure you are viewing the API Playground section.';
-                } else {
-                    console.error('Playground output element not found. Please ensure you are viewing the API Playground section.');
-                }
-                return;
-            }
-            
-            // Scroll to playground
-            document.getElementById('playground').scrollIntoView({ behavior: 'smooth' });
-            
-            output.textContent = 'Loading...';
-            
-            try {
-                // Determine API endpoint based on environment
-                const isLocalhost = window.location.hostname === 'localhost' || 
-                                  window.location.hostname === '127.0.0.1';
-                
-                if (!isLocalhost) {
-                    output.textContent = `⚠️ API Playground Not Available
-
-The API playground requires a local API server to be running.
-
-To use this feature:
-
-1. Clone the repository:
-   git clone https://github.com/openSVM/idlhub.git
-   cd idlhub
-
-2. Install dependencies:
-   npm install
-
-3. Start the API server:
-   npm run api:start
-
-4. Open docs.html locally at http://localhost:3000
-
-The static site at https://idlhub.com does not include a backend API server.`;
-                    return;
-                }
-                
-                const apiBase = 'http://localhost:3000';
-                const url = `${apiBase}${path}`;
-
-                const options = {
-                    method: method,
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                };
-
-                if (method === 'POST' && body) {
-                    options.body = JSON.stringify(body);
-                }
-
-                const response = await fetch(url, options);
-                const contentType = response.headers.get('content-type') || '';
-                let responseBody;
-                if (contentType.includes('application/json')) {
-                    try {
-                        responseBody = await response.json();
-                        output.textContent = JSON.stringify(responseBody, null, 2);
-                    } catch (jsonError) {
-                        // JSON parse failed, fallback to text
-                        const text = await response.text();
-                        output.textContent = `Invalid JSON response:\n${text}`;
-                    }
-                } else {
-                    const text = await response.text();
-                    output.textContent = text;
-                }
-            } catch (error) {
-                output.textContent = `Error: ${error.message}
-
-Make sure the API server is running locally:
-1. npm install
-2. npm run api:start
-3. Server should be at http://localhost:3000`;
-            }
-        }
-
         // Sidebar active link tracking
         const sections = document.querySelectorAll('.doc-section');
         const sidebarLinks = document.querySelectorAll('.sidebar a');
@@ -1266,7 +646,6 @@ Make sure the API server is running locally:
             let currentSection = '';
             sections.forEach(section => {
                 const sectionTop = section.offsetTop;
-                const sectionHeight = section.clientHeight;
                 if (window.pageYOffset >= sectionTop - 100) {
                     currentSection = section.getAttribute('id');
                 }
@@ -1281,99 +660,24 @@ Make sure the API server is running locally:
         }
 
         window.addEventListener('scroll', updateActiveLink);
-        window.addEventListener('load', updateActiveLink);
 
-        // API Playground functionality - Makes real API calls to the server
+        // API Playground
         async function executeRequest() {
             const select = document.getElementById('endpointSelect');
             const output = document.getElementById('playgroundOutput');
-            const requestBody = document.getElementById('requestBody').value;
             const [method, path] = select.value.split(':');
 
             output.textContent = 'Loading...';
 
             try {
-                // Determine API endpoint based on environment
-                const isLocalhost = window.location.hostname === 'localhost' || 
-                                  window.location.hostname === '127.0.0.1';
-                
-                if (!isLocalhost) {
-                    output.textContent = `⚠️ API Playground Not Available
-
-The API playground requires a local API server to be running.
-
-To use this feature:
-
-1. Clone the repository:
-   git clone https://github.com/openSVM/idlhub.git
-   cd idlhub
-
-2. Install dependencies:
-   npm install
-
-3. Start the API server:
-   npm run api:start
-
-4. Open docs.html locally at http://localhost:3000
-
-The static site at https://idlhub.com does not include a backend API server.`;
-                    return;
-                }
-                
-                const apiBase = 'http://localhost:3000';
-                const url = `${apiBase}${path}`;
-
-                const options = {
-                    method: method,
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                };
-
-                if (method === 'POST' && requestBody) {
-                    options.body = requestBody;
-                }
-
-                const response = await fetch(url, options);
+                const url = `https://idlhub.com${path}`;
+                const response = await fetch(url);
                 const data = await response.json();
-
                 output.textContent = JSON.stringify(data, null, 2);
             } catch (error) {
-                output.textContent = `Error: ${error.message}
-
-Make sure the API server is running locally:
-1. npm install
-2. npm run api:start
-3. Server should be at http://localhost:3000`;
+                output.textContent = `Error: ${error.message}`;
             }
         }
-
-        function clearPlayground() {
-            document.getElementById('playgroundOutput').textContent = 'Response will appear here...';
-            document.getElementById('requestBody').value = '';
-        }
-
-        // Update request body visibility based on method
-        document.getElementById('endpointSelect').addEventListener('change', function() {
-            const [method] = this.value.split(':');
-            const requestBodyContainer = document.getElementById('requestBody').parentElement;
-            
-            if (method === 'POST') {
-                requestBodyContainer.style.display = 'block';
-            } else {
-                requestBodyContainer.style.display = 'none';
-            }
-        });
-
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            const [method] = document.getElementById('endpointSelect').value.split(':');
-            const requestBodyContainer = document.getElementById('requestBody').parentElement;
-            
-            if (method !== 'POST') {
-                requestBodyContainer.style.display = 'none';
-            }
-        });
     </script>
 </body>
 
