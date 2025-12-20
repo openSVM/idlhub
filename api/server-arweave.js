@@ -11,6 +11,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import * as arweaveUpload from './services/arweave-upload.js';
+import * as onchainMetrics from './services/onchain-metrics.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -173,12 +174,22 @@ app.get('/api/idl', async (req, res) => {
     const index = loadIndex();
     const manifest = loadManifest();
 
+    // Fetch metrics data
+    let allMetrics = {};
+    try {
+      allMetrics = await onchainMetrics.getCachedOnChainMetrics();
+      console.log('[API] Fetched metrics for', Object.keys(allMetrics).length, 'protocols');
+    } catch (metricsError) {
+      console.warn('[API] Failed to fetch metrics:', metricsError.message);
+    }
+
     let protocols = index.protocols.map(p => ({
       ...p,
       arweaveTxId: manifest.idls[p.id]?.txId || null,
       arweaveUrl: manifest.idls[p.id]?.txId
         ? `${manifest.gateway}/${manifest.idls[p.id].txId}`
         : null,
+      metrics: allMetrics[p.id] || null,
     }));
 
     if (category) {
@@ -269,6 +280,54 @@ app.get('/api/idl/search', async (req, res) => {
   } catch (error) {
     console.error('Error:', error.message);
     res.status(500).json({ error: 'Search failed', details: error.message });
+  }
+});
+
+// Get all protocol metrics
+app.get('/api/metrics', async (req, res) => {
+  try {
+    console.log('[API] Fetching all protocol metrics...');
+    const metrics = await onchainMetrics.getCachedOnChainMetrics();
+
+    res.json({
+      protocols: metrics,
+      totalProtocols: Object.keys(metrics).length,
+      lastUpdated: Date.now(),
+      cacheTTL: '2 minutes'
+    });
+
+    console.log('[API] Successfully returned metrics for', Object.keys(metrics).length, 'protocols');
+  } catch (error) {
+    console.error('[API] Error fetching metrics:', error.message);
+    res.status(500).json({ error: 'Failed to fetch metrics', details: error.message });
+  }
+});
+
+// Get metrics for a specific protocol
+app.get('/api/metrics/:protocolId', async (req, res) => {
+  try {
+    const { protocolId } = req.params;
+    console.log(`[API] Fetching metrics for protocol: ${protocolId}`);
+
+    const metrics = await onchainMetrics.getOnChainMetrics(protocolId);
+
+    if (!metrics) {
+      return res.status(404).json({
+        error: 'Protocol not found or metrics unavailable',
+        protocolId
+      });
+    }
+
+    res.json({
+      protocolId,
+      metrics,
+      lastUpdated: metrics.lastUpdated
+    });
+
+    console.log(`[API] Successfully returned metrics for ${protocolId}`);
+  } catch (error) {
+    console.error(`[API] Error fetching metrics for ${req.params.protocolId}:`, error.message);
+    res.status(500).json({ error: 'Failed to fetch protocol metrics', details: error.message });
   }
 });
 
@@ -528,9 +587,11 @@ app.get('/api/docs', (req, res) => {
     backend: 'arweave',
     endpoints: {
       'GET /health': 'Health check with Arweave status',
-      'GET /api/idl': 'List all IDLs',
+      'GET /api/idl': 'List all IDLs (includes metrics data)',
       'GET /api/idl/:id': 'Get IDL by protocol ID or program address',
       'GET /api/idl/search?q=': 'Search IDLs',
+      'GET /api/metrics': 'Get all protocol metrics (TVL, users, volume)',
+      'GET /api/metrics/:protocolId': 'Get metrics for a specific protocol',
       'POST /api/idl': 'Upload new IDL (automatically uploads to Arweave)',
       'POST /api/idl/:id/upload': 'Retry Arweave upload for existing IDL',
       'GET /api/idl/:id/status': 'Get Arweave upload status for IDL',

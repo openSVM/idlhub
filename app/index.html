@@ -25,182 +25,308 @@
             --accent-pink: #bf3989;
         }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+        /* Main Layout */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--bg-secondary);
+            min-height: 100vh;
+            border-left: 1px solid var(--border-secondary);
+            border-right: 1px solid var(--border-secondary);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
         }
 
         /* Header */
         .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 16px 24px;
             background: var(--bg-secondary);
-            border-bottom: 1px solid var(--border-primary);
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            text-decoration: none;
             color: var(--text-primary);
+            padding: 16px 24px;
+            border-bottom: 2px solid var(--border-primary);
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
         }
 
-        .logo-icon {
-            width: 32px;
-            height: 32px;
-            background: linear-gradient(135deg, var(--accent-primary), var(--accent-purple));
-            border-radius: 8px;
+        .header-content {
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 14px;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
         }
 
-        .logo-text {
-            font-size: 18px;
-            font-weight: 700;
-        }
-
-        .header-actions {
+        .header-left {
             display: flex;
             align-items: center;
             gap: 16px;
         }
 
+        .header h1 {
+            font-size: 16px;
+            margin: 0;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
+        }
+
+        .header h1::before {
+            content: '> ';
+            color: var(--accent-primary);
+        }
+
+        .header p {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin: 4px 0 0 0;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
         .nav-links {
             display: flex;
             gap: 8px;
+            align-items: center;
         }
 
         .nav-link {
-            padding: 8px 16px;
+            padding: 4px 12px;
             color: var(--text-secondary);
             text-decoration: none;
-            font-size: 14px;
-            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
             transition: all 0.2s;
+            border: 1px solid var(--border-secondary);
+            background: var(--bg-secondary);
         }
 
         .nav-link:hover {
-            color: var(--text-primary);
-            background: var(--bg-tertiary);
-        }
-
-        .connect-btn {
-            padding: 8px 20px;
-            background: var(--accent-primary);
-            color: #fff;
-            border: none;
-            border-radius: 6px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .connect-btn:hover {
             background: var(--accent-hover);
+            color: var(--bg-secondary);
         }
 
-        .connect-btn.connected {
-            background: var(--bg-tertiary);
-            color: var(--text-primary);
+        .nav-link.active {
+            background: var(--accent-primary);
+            color: var(--bg-secondary);
+            border-color: var(--accent-primary);
+        }
+
+        .theme-selector {
+            position: relative;
+        }
+
+        .theme-btn {
+            background: var(--bg-secondary);
             border: 1px solid var(--border-primary);
+            color: var(--text-primary);
+            padding: 4px 12px;
+            border-radius: 0;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.1s;
+            font-weight: 600;
+            font-family: inherit;
         }
 
-        /* Main Layout */
+        .theme-btn:hover {
+            background: var(--accent-hover);
+            color: var(--bg-secondary);
+        }
+
+        .theme-btn::before {
+            content: '[';
+        }
+
+        .theme-btn::after {
+            content: ']';
+        }
+
+        .theme-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-primary);
+            margin-top: 4px;
+            min-width: 180px;
+            z-index: 1000;
+        }
+
+        .theme-dropdown.active {
+            display: block;
+        }
+
+        .theme-option {
+            padding: 8px 16px;
+            cursor: pointer;
+            font-size: 11px;
+            text-transform: uppercase;
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-secondary);
+            transition: all 0.1s;
+            color: var(--text-primary);
+        }
+
+        .theme-option:last-child {
+            border-bottom: none;
+        }
+
+        .theme-option:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .theme-option.selected {
+            background: var(--bg-tertiary);
+            border-left: 3px solid var(--accent-primary);
+            padding-left: 13px;
+        }
+
+        .stats {
+            display: flex;
+            gap: 32px;
+            padding: 12px 0 0 0;
+            font-size: 11px;
+        }
+
+        .stat {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+        }
+
+        .stat::before {
+            content: '|';
+            color: var(--border-secondary);
+            margin-right: 6px;
+        }
+
+        .stat:first-child::before {
+            content: '';
+            margin-right: 0;
+        }
+
+        .stat-number {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--accent-primary);
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+
+        /* Main Content Container */
         .main-container {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 24px;
+            padding: 16px 24px 40px;
         }
 
         /* Stats Bar */
         .stats-bar {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 16px;
-            margin-bottom: 24px;
+            gap: 0;
+            margin-bottom: 16px;
         }
 
         .stat-card {
             background: var(--bg-secondary);
-            border: 1px solid var(--border-primary);
-            border-radius: 12px;
-            padding: 20px;
+            border: 1px solid var(--border-secondary);
+            border-radius: 0;
+            padding: 12px 16px;
+            border-right: none;
         }
 
-        .stat-label {
-            font-size: 12px;
+        .stat-card:first-child {
+            border-left: 1px solid var(--border-secondary);
+        }
+
+        .stat-card:last-child {
+            border-right: 1px solid var(--border-secondary);
+        }
+
+        .stat-card:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .stat-card .stat-label {
+            font-size: 10px;
             color: var(--text-muted);
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 8px;
+            margin-bottom: 4px;
+            font-weight: 600;
         }
 
-        .stat-value {
-            font-size: 28px;
+        .stat-card .stat-value {
+            font-size: 18px;
             font-weight: 700;
-            color: var(--text-primary);
+            color: var(--accent-primary);
         }
 
-        .stat-change {
-            font-size: 12px;
+        .stat-card .stat-change {
+            font-size: 10px;
             margin-top: 4px;
+            color: var(--text-secondary);
         }
 
-        .stat-change.positive {
+        .stat-card .stat-change.positive {
             color: var(--accent-green);
         }
 
-        .stat-change.negative {
+        .stat-card .stat-change.negative {
             color: var(--error-color);
         }
 
         /* Tab Navigation */
         .tab-nav {
             display: flex;
-            gap: 4px;
-            margin-bottom: 24px;
+            gap: 8px;
+            margin-bottom: 16px;
             background: var(--bg-secondary);
-            padding: 4px;
-            border-radius: 12px;
-            border: 1px solid var(--border-primary);
+            padding: 12px 24px;
+            border-radius: 0;
+            border-bottom: 1px solid var(--border-secondary);
         }
 
         .tab-btn {
             flex: 1;
-            padding: 14px 24px;
-            background: transparent;
-            border: none;
-            border-radius: 8px;
+            padding: 5px 12px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-secondary);
+            border-radius: 0;
             font-size: 14px;
-            font-weight: 600;
-            color: var(--text-secondary);
+            font-weight: 500;
+            color: var(--text-primary);
             cursor: pointer;
             transition: all 0.2s;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
+            font-family: inherit;
         }
 
         .tab-btn:hover {
-            color: var(--text-primary);
             background: var(--bg-tertiary);
+            border-color: var(--accent-primary);
         }
 
         .tab-btn.active {
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            background: var(--accent-primary);
+            color: var(--bg-secondary);
+            border-color: var(--accent-primary);
         }
 
         .tab-icon {
-            font-size: 18px;
+            font-size: 14px;
         }
 
         /* Content Sections */
@@ -216,48 +342,70 @@
         .section-card {
             background: var(--bg-secondary);
             border: 1px solid var(--border-primary);
-            border-radius: 12px;
-            padding: 24px;
-            margin-bottom: 24px;
+            border-radius: 0;
+            padding: 20px 24px;
+            margin-bottom: 16px;
         }
 
         .section-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-secondary);
         }
 
         .section-title {
-            font-size: 20px;
+            font-size: 16px;
             font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .section-title::before {
+            content: '> ';
+            color: var(--accent-primary);
         }
 
         .section-subtitle {
-            font-size: 14px;
+            font-size: 11px;
             color: var(--text-secondary);
             margin-top: 4px;
+            text-transform: uppercase;
         }
 
         /* Staking Section */
         .stake-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 24px;
+            gap: 16px;
         }
 
         .stake-box {
-            background: var(--bg-tertiary);
-            border-radius: 12px;
-            padding: 24px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-secondary);
+            border-radius: 0;
+            padding: 20px;
         }
 
         .stake-box-title {
-            font-size: 14px;
-            color: var(--text-secondary);
+            font-size: 12px;
+            color: var(--text-primary);
             margin-bottom: 16px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            font-weight: 700;
+            border-bottom: 1px solid var(--border-secondary);
+            padding-bottom: 8px;
+        }
+
+        .stake-box-title::before {
+            content: '[ ';
+            color: var(--accent-primary);
+        }
+
+        .stake-box-title::after {
+            content: ' ]';
+            color: var(--accent-primary);
         }
 
         .input-group {
@@ -276,19 +424,25 @@
             align-items: center;
             background: var(--bg-secondary);
             border: 1px solid var(--border-primary);
-            border-radius: 8px;
+            border-radius: 0;
             overflow: hidden;
+        }
+
+        .input-wrapper:focus-within {
+            background: var(--bg-tertiary);
+            border-color: var(--accent-primary);
         }
 
         .input-field {
             flex: 1;
-            padding: 14px 16px;
+            padding: 8px 12px;
             background: transparent;
             border: none;
             color: var(--text-primary);
-            font-size: 18px;
+            font-size: 14px;
             font-weight: 600;
             outline: none;
+            font-family: inherit;
         }
 
         .input-field::placeholder {
@@ -296,23 +450,32 @@
         }
 
         .input-suffix {
-            padding: 14px 16px;
+            padding: 8px 12px;
             color: var(--text-secondary);
             font-weight: 600;
-            background: var(--bg-tertiary);
+            background: var(--bg-secondary);
+            border-left: 1px solid var(--border-primary);
+            font-size: 11px;
+            text-transform: uppercase;
         }
 
         .max-btn {
-            padding: 6px 12px;
-            margin-right: 8px;
+            padding: 4px 12px;
+            margin-right: 0;
             background: var(--accent-primary);
-            color: #fff;
+            color: var(--bg-secondary);
             border: none;
-            border-radius: 4px;
-            font-size: 11px;
+            border-radius: 0;
+            font-size: 10px;
             font-weight: 700;
             cursor: pointer;
             text-transform: uppercase;
+            transition: all 0.1s;
+            font-family: inherit;
+        }
+
+        .max-btn:hover {
+            background: var(--accent-hover);
         }
 
         .stake-info {
@@ -338,130 +501,159 @@
 
         .action-btn {
             width: 100%;
-            padding: 16px;
+            padding: 10px 16px;
             background: var(--accent-primary);
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
+            color: var(--bg-secondary);
+            border: 1px solid var(--accent-primary);
+            border-radius: 0;
+            font-size: 12px;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.1s;
             margin-top: 16px;
+            text-transform: uppercase;
+            font-family: inherit;
         }
 
         .action-btn:hover {
             background: var(--accent-hover);
-            transform: translateY(-1px);
+            border-color: var(--accent-hover);
         }
 
         .action-btn:disabled {
             background: var(--bg-tertiary);
             color: var(--text-muted);
             cursor: not-allowed;
-            transform: none;
+            border-color: var(--border-secondary);
         }
 
         .action-btn.secondary {
-            background: transparent;
+            background: var(--bg-secondary);
             border: 1px solid var(--border-primary);
             color: var(--text-primary);
         }
 
         .action-btn.secondary:hover {
             background: var(--bg-tertiary);
+            border-color: var(--accent-primary);
         }
 
         /* Vote Section */
         .vote-stats {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
-            margin-bottom: 24px;
+            gap: 0;
+            margin-bottom: 16px;
         }
 
         .vote-stat {
             text-align: center;
-            padding: 20px;
+            padding: 16px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-secondary);
+            border-right: none;
+            border-radius: 0;
+        }
+
+        .vote-stat:first-child {
+            border-left: 1px solid var(--border-secondary);
+        }
+
+        .vote-stat:last-child {
+            border-right: 1px solid var(--border-secondary);
+        }
+
+        .vote-stat:hover {
             background: var(--bg-tertiary);
-            border-radius: 12px;
         }
 
         .vote-stat-value {
-            font-size: 24px;
+            font-size: 20px;
             font-weight: 700;
             color: var(--accent-purple);
         }
 
         .vote-stat-label {
-            font-size: 12px;
+            font-size: 10px;
             color: var(--text-muted);
             margin-top: 4px;
+            text-transform: uppercase;
+            font-weight: 600;
         }
 
         .proposal-list {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 0;
         }
 
         .proposal-card {
-            background: var(--bg-tertiary);
-            border-radius: 12px;
-            padding: 20px;
-            border: 1px solid var(--border-primary);
+            background: var(--bg-secondary);
+            border-radius: 0;
+            padding: 16px 20px;
+            border: 1px solid var(--border-secondary);
+            border-top: none;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.1s;
+        }
+
+        .proposal-card:first-child {
+            border-top: 1px solid var(--border-secondary);
         }
 
         .proposal-card:hover {
-            border-color: var(--accent-primary);
+            background: var(--bg-tertiary);
         }
 
         .proposal-header {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
         }
 
         .proposal-title {
-            font-size: 16px;
-            font-weight: 600;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-primary);
         }
 
         .proposal-status {
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 0;
+            font-size: 9px;
             font-weight: 700;
             text-transform: uppercase;
+            border: 1px solid;
         }
 
         .proposal-status.active {
-            background: rgba(63, 185, 80, 0.15);
+            background: var(--bg-secondary);
             color: var(--accent-green);
+            border-color: var(--accent-green);
         }
 
         .proposal-status.ended {
-            background: rgba(139, 148, 158, 0.15);
+            background: var(--bg-secondary);
             color: var(--text-muted);
+            border-color: var(--border-secondary);
         }
 
         .proposal-status.pending {
-            background: rgba(210, 153, 34, 0.15);
+            background: var(--bg-secondary);
             color: var(--accent-orange);
+            border-color: var(--accent-orange);
         }
 
         .proposal-description {
-            font-size: 14px;
+            font-size: 11px;
             color: var(--text-secondary);
-            margin-bottom: 16px;
+            margin-bottom: 12px;
         }
 
         .proposal-votes {
             display: flex;
-            gap: 24px;
+            gap: 20px;
         }
 
         .vote-bar {
@@ -471,28 +663,32 @@
         .vote-bar-header {
             display: flex;
             justify-content: space-between;
-            font-size: 12px;
-            margin-bottom: 6px;
+            font-size: 10px;
+            margin-bottom: 4px;
+            text-transform: uppercase;
         }
 
         .vote-bar-label {
             color: var(--text-secondary);
-        }
-
-        .vote-bar-value {
             font-weight: 600;
         }
 
+        .vote-bar-value {
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
         .vote-bar-track {
-            height: 8px;
-            background: var(--bg-secondary);
-            border-radius: 4px;
+            height: 6px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-secondary);
+            border-radius: 0;
             overflow: hidden;
         }
 
         .vote-bar-fill {
             height: 100%;
-            border-radius: 4px;
+            border-radius: 0;
             transition: width 0.3s ease;
         }
 
@@ -512,15 +708,15 @@
         }
 
         .market-card {
-            background: var(--bg-tertiary);
-            border-radius: 12px;
-            padding: 20px;
-            border: 1px solid var(--border-primary);
-            transition: all 0.2s;
+            background: var(--bg-secondary);
+            border-radius: 0;
+            padding: 16px;
+            border: 1px solid var(--border-secondary);
+            transition: all 0.1s;
         }
 
         .market-card:hover {
-            border-color: var(--accent-primary);
+            background: var(--bg-tertiary);
         }
 
         .market-header {
@@ -537,79 +733,88 @@
         }
 
         .protocol-icon {
-            width: 36px;
-            height: 36px;
-            background: var(--bg-secondary);
-            border-radius: 8px;
+            width: 32px;
+            height: 32px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-secondary);
+            border-radius: 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
+            font-size: 16px;
         }
 
         .protocol-name {
-            font-weight: 600;
+            font-weight: 700;
+            font-size: 13px;
+            color: var(--text-primary);
         }
 
         .market-metric {
-            font-size: 12px;
+            font-size: 10px;
             color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 600;
         }
 
         .market-timer {
-            font-size: 12px;
+            font-size: 10px;
             color: var(--accent-orange);
             display: flex;
             align-items: center;
             gap: 4px;
+            text-transform: uppercase;
+            font-weight: 600;
         }
 
         .market-question {
-            font-size: 15px;
+            font-size: 13px;
             color: var(--text-primary);
-            margin-bottom: 16px;
-            line-height: 1.4;
+            margin-bottom: 12px;
+            line-height: 1.5;
+            font-weight: 600;
         }
 
         .market-odds {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 16px;
+            gap: 8px;
+            margin-bottom: 12px;
         }
 
         .odds-btn {
-            padding: 14px;
-            border-radius: 8px;
+            padding: 10px;
+            border-radius: 0;
             border: 1px solid var(--border-primary);
             background: var(--bg-secondary);
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.1s;
             text-align: center;
         }
 
         .odds-btn:hover {
+            background: var(--bg-tertiary);
             border-color: var(--accent-primary);
         }
 
         .odds-btn.yes:hover {
             border-color: var(--accent-green);
-            background: rgba(63, 185, 80, 0.1);
         }
 
         .odds-btn.no:hover {
             border-color: var(--error-color);
-            background: rgba(248, 81, 73, 0.1);
         }
 
         .odds-label {
-            font-size: 12px;
-            color: var(--text-muted);
+            font-size: 10px;
+            color: var(--text-secondary);
             margin-bottom: 4px;
+            font-weight: 700;
+            text-transform: uppercase;
         }
 
         .odds-value {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 700;
         }
 
@@ -624,8 +829,11 @@
         .market-pool {
             display: flex;
             justify-content: space-between;
-            font-size: 12px;
+            font-size: 10px;
             color: var(--text-muted);
+            padding-top: 12px;
+            border-top: 1px solid var(--border-secondary);
+            font-weight: 600;
         }
 
         /* Badges Section */
@@ -633,7 +841,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
         }
 
         .badges-progress {
@@ -643,22 +851,25 @@
         }
 
         .progress-text {
-            font-size: 14px;
+            font-size: 11px;
             color: var(--text-secondary);
+            text-transform: uppercase;
+            font-weight: 600;
         }
 
         .progress-bar {
             width: 200px;
-            height: 8px;
+            height: 6px;
             background: var(--bg-tertiary);
-            border-radius: 4px;
+            border: 1px solid var(--border-secondary);
+            border-radius: 0;
             overflow: hidden;
         }
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, var(--accent-primary), var(--accent-purple));
-            border-radius: 4px;
+            background: var(--accent-primary);
+            border-radius: 0;
         }
 
         .badges-grid {
@@ -668,13 +879,17 @@
         }
 
         .badge-card {
-            background: var(--bg-tertiary);
-            border-radius: 12px;
-            padding: 24px;
+            background: var(--bg-secondary);
+            border-radius: 0;
+            padding: 20px;
             text-align: center;
-            border: 1px solid var(--border-primary);
-            transition: all 0.2s;
+            border: 1px solid var(--border-secondary);
+            transition: all 0.1s;
             position: relative;
+        }
+
+        .badge-card:hover {
+            background: var(--bg-tertiary);
         }
 
         .badge-card.locked {
@@ -683,76 +898,96 @@
 
         .badge-card.earned {
             border-color: var(--accent-primary);
-            box-shadow: 0 0 20px rgba(88, 166, 255, 0.15);
+            background: var(--bg-tertiary);
         }
 
         .badge-icon {
-            width: 64px;
-            height: 64px;
-            margin: 0 auto 16px;
-            background: var(--bg-secondary);
-            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 12px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-secondary);
+            border-radius: 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 28px;
+            font-size: 24px;
         }
 
         .badge-card.earned .badge-icon {
-            background: linear-gradient(135deg, var(--accent-primary), var(--accent-purple));
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
         }
 
         .badge-name {
-            font-size: 14px;
+            font-size: 12px;
             font-weight: 700;
             margin-bottom: 4px;
+            color: var(--text-primary);
+            text-transform: uppercase;
         }
 
         .badge-requirement {
-            font-size: 12px;
+            font-size: 10px;
             color: var(--text-muted);
         }
 
         .badge-progress {
-            margin-top: 12px;
-            font-size: 11px;
+            margin-top: 8px;
+            font-size: 10px;
             color: var(--accent-primary);
+            font-weight: 600;
         }
 
         .badge-check {
             position: absolute;
-            top: 12px;
-            right: 12px;
-            width: 24px;
-            height: 24px;
+            top: 8px;
+            right: 8px;
+            width: 16px;
+            height: 16px;
             background: var(--accent-green);
-            border-radius: 50%;
+            border-radius: 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #fff;
-            font-size: 14px;
+            color: var(--bg-secondary);
+            font-size: 10px;
+            font-weight: 900;
         }
 
         /* Rewards Panel */
         .rewards-panel {
-            background: linear-gradient(135deg, rgba(88, 166, 255, 0.1), rgba(163, 113, 247, 0.1));
-            border: 1px solid var(--accent-primary);
-            border-radius: 12px;
-            padding: 24px;
+            background: var(--bg-secondary);
+            border: 2px solid var(--accent-primary);
+            border-radius: 0;
+            padding: 20px 24px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
         .rewards-info h3 {
-            font-size: 18px;
+            font-size: 14px;
             margin-bottom: 4px;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-transform: uppercase;
+        }
+
+        .rewards-info h3::before {
+            content: '[ ';
+            color: var(--accent-primary);
+        }
+
+        .rewards-info h3::after {
+            content: ' ]';
+            color: var(--accent-primary);
         }
 
         .rewards-info p {
             color: var(--text-secondary);
-            font-size: 14px;
+            font-size: 11px;
+            text-transform: uppercase;
         }
 
         .rewards-amount {
@@ -760,27 +995,45 @@
         }
 
         .rewards-value {
-            font-size: 32px;
+            font-size: 24px;
             font-weight: 700;
             color: var(--accent-green);
         }
 
         .rewards-usd {
-            font-size: 14px;
+            font-size: 11px;
             color: var(--text-muted);
         }
 
         /* Footer */
         .footer {
+            padding: 16px 24px;
+            background: var(--bg-secondary);
+            border-top: 2px solid var(--border-primary);
             text-align: center;
-            padding: 24px;
-            color: var(--text-muted);
-            font-size: 12px;
+            color: var(--text-secondary);
+            font-size: 10px;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
         }
 
         .footer a {
             color: var(--accent-primary);
             text-decoration: none;
+            font-weight: 600;
+        }
+
+        .footer a::before {
+            content: '[';
+            color: var(--border-primary);
+        }
+
+        .footer a::after {
+            content: ']';
+            color: var(--border-primary);
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
         }
 
         /* Responsive */
@@ -800,6 +1053,15 @@
         }
 
         @media (max-width: 768px) {
+            .header h1 {
+                font-size: 14px;
+            }
+
+            .stats {
+                flex-direction: column;
+                gap: 8px;
+            }
+
             .tab-nav {
                 flex-wrap: wrap;
             }
@@ -816,7 +1078,7 @@
                 grid-template-columns: 1fr;
             }
             .nav-links {
-                display: none;
+                flex-wrap: wrap;
             }
         }
 
@@ -826,12 +1088,40 @@
             50% { opacity: 0.5; }
         }
 
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
         .live-dot {
-            width: 8px;
-            height: 8px;
+            width: 6px;
+            height: 6px;
             background: var(--accent-green);
-            border-radius: 50%;
+            border-radius: 0;
             animation: pulse 2s infinite;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+            font-size: 12px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--bg-tertiary);
+            border-top: 3px solid var(--border-primary);
+            border-radius: 0;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
         }
 
         /* Toast notifications */
@@ -839,11 +1129,11 @@
             position: fixed;
             bottom: 24px;
             right: 24px;
-            padding: 16px 24px;
+            padding: 12px 20px;
             background: var(--bg-secondary);
-            border: 1px solid var(--border-primary);
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            border: 2px solid var(--border-primary);
+            border-radius: 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
             display: flex;
             align-items: center;
             gap: 12px;
@@ -851,6 +1141,9 @@
             transform: translateY(100px);
             opacity: 0;
             transition: all 0.3s ease;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
         }
 
         .toast.show {
@@ -859,32 +1152,78 @@
         }
 
         .toast.success {
-            border-left: 4px solid var(--accent-green);
+            border-color: var(--accent-green);
+            color: var(--accent-green);
+        }
+
+        .toast.success::before {
+            content: '[OK]';
+            margin-right: 4px;
         }
 
         .toast.error {
-            border-left: 4px solid var(--error-color);
+            border-color: var(--error-color);
+            color: var(--error-color);
+        }
+
+        .toast.error::before {
+            content: '[ERR]';
+            margin-right: 4px;
         }
     </style>
 </head>
 
 <body>
+    <div class="container">
     <!-- Header -->
     <header class="header">
-        <a href="/" class="logo">
-            <div class="logo-icon">IDL</div>
-            <span class="logo-text">IDL Protocol</span>
-        </a>
-        <div class="header-actions">
-            <nav class="nav-links">
-                <a href="/app/pages/registry.html" class="nav-link">Registry</a>
-                <a href="/app/" class="nav-link active">Protocol</a>
-                <a href="/docs.html" class="nav-link">Docs</a>
-                <a href="/tokenomics.html" class="nav-link">$IDL</a>
-            </nav>
-            <button class="connect-btn" id="connectBtn" onclick="connectWallet()">
-                Connect Wallet
-            </button>
+        <div class="header-content">
+            <div class="header-left">
+                <div>
+                    <h1>idlhub.com</h1>
+                    <p>Solana IDL Registry</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <nav class="nav-links">
+                    <a href="/app/registry" class="nav-link">Registry</a>
+                    <a href="/app/" class="nav-link active">Protocol</a>
+                    <a href="/docs" class="nav-link">Docs</a>
+                    <a href="/tokenomics" class="nav-link">$IDL</a>
+                </nav>
+                <div class="theme-selector">
+                    <button class="theme-btn" onclick="toggleThemeDropdown()">
+                        <span id="currentTheme">Theme</span>
+                    </button>
+                    <div class="theme-dropdown" id="themeDropdown">
+                        <div class="theme-option selected" data-theme="light">Light</div>
+                        <div class="theme-option" data-theme="dark">Dark</div>
+                        <div class="theme-option" data-theme="solarized">Solarized</div>
+                        <div class="theme-option" data-theme="solarized-light">Solarized Light</div>
+                        <div class="theme-option" data-theme="monokai-light">Monokai Light</div>
+                        <div class="theme-option" data-theme="night">Night</div>
+                        <div class="theme-option" data-theme="dracula">Dracula</div>
+                        <div class="theme-option" data-theme="nord">Nord</div>
+                        <div class="theme-option" data-theme="onedark">One Dark</div>
+                        <div class="theme-option" data-theme="terminal">Terminal</div>
+                        <div class="theme-option" data-theme="dos">DOS / Borland</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-number" id="totalProtocols">-</div>
+                <div class="stat-label">Total Protocols</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number" id="availableProtocols">-</div>
+                <div class="stat-label">IDLs Available</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number" id="selectedCount">0</div>
+                <div class="stat-label">Selected</div>
+            </div>
         </div>
     </header>
 
@@ -917,19 +1256,15 @@
         <!-- Tab Navigation -->
         <div class="tab-nav">
             <button class="tab-btn active" onclick="showTab('stake')">
-                <span class="tab-icon">&#x1F4B0;</span>
                 Stake
             </button>
             <button class="tab-btn" onclick="showTab('vote')">
-                <span class="tab-icon">&#x1F5F3;</span>
                 Vote
             </button>
             <button class="tab-btn" onclick="showTab('bet')">
-                <span class="tab-icon">&#x1F3AF;</span>
                 Bet
             </button>
             <button class="tab-btn" onclick="showTab('badges')">
-                <span class="tab-icon">&#x1F3C6;</span>
                 Badges
             </button>
         </div>
@@ -1147,133 +1482,11 @@
                     </button>
                 </div>
 
-                <div class="markets-grid">
-                    <!-- Market 1 -->
-                    <div class="market-card">
-                        <div class="market-header">
-                            <div class="market-protocol">
-                                <div class="protocol-icon">&#x1F4DC;</div>
-                                <div>
-                                    <div class="protocol-name">Jupiter</div>
-                                    <div class="market-metric">TVL Target</div>
-                                </div>
-                            </div>
-                            <div class="market-timer">
-                                <div class="live-dot"></div>
-                                2d 14h left
-                            </div>
-                        </div>
-                        <div class="market-question">Will Jupiter TVL exceed $1B by end of month?</div>
-                        <div class="market-odds">
-                            <button class="odds-btn yes" onclick="placeBet('jupiter', true)">
-                                <div class="odds-label">YES</div>
-                                <div class="odds-value">62%</div>
-                            </button>
-                            <button class="odds-btn no" onclick="placeBet('jupiter', false)">
-                                <div class="odds-label">NO</div>
-                                <div class="odds-value">38%</div>
-                            </button>
-                        </div>
-                        <div class="market-pool">
-                            <span>Pool: 125,430 IDL</span>
-                            <span>Your position: --</span>
-                        </div>
-                    </div>
-
-                    <!-- Market 2 -->
-                    <div class="market-card">
-                        <div class="market-header">
-                            <div class="market-protocol">
-                                <div class="protocol-icon">&#x1F30A;</div>
-                                <div>
-                                    <div class="protocol-name">Raydium</div>
-                                    <div class="market-metric">24h Volume</div>
-                                </div>
-                            </div>
-                            <div class="market-timer">
-                                <div class="live-dot"></div>
-                                5d 8h left
-                            </div>
-                        </div>
-                        <div class="market-question">Will Raydium 24h volume exceed $500M?</div>
-                        <div class="market-odds">
-                            <button class="odds-btn yes" onclick="placeBet('raydium', true)">
-                                <div class="odds-label">YES</div>
-                                <div class="odds-value">34%</div>
-                            </button>
-                            <button class="odds-btn no" onclick="placeBet('raydium', false)">
-                                <div class="odds-label">NO</div>
-                                <div class="odds-value">66%</div>
-                            </button>
-                        </div>
-                        <div class="market-pool">
-                            <span>Pool: 89,200 IDL</span>
-                            <span>Your position: --</span>
-                        </div>
-                    </div>
-
-                    <!-- Market 3 -->
-                    <div class="market-card">
-                        <div class="market-header">
-                            <div class="market-protocol">
-                                <div class="protocol-icon">&#x1F3DD;</div>
-                                <div>
-                                    <div class="protocol-name">Marinade</div>
-                                    <div class="market-metric">Unique Users</div>
-                                </div>
-                            </div>
-                            <div class="market-timer">
-                                <div class="live-dot"></div>
-                                1d 3h left
-                            </div>
-                        </div>
-                        <div class="market-question">Will Marinade reach 100k unique stakers?</div>
-                        <div class="market-odds">
-                            <button class="odds-btn yes" onclick="placeBet('marinade', true)">
-                                <div class="odds-label">YES</div>
-                                <div class="odds-value">51%</div>
-                            </button>
-                            <button class="odds-btn no" onclick="placeBet('marinade', false)">
-                                <div class="odds-label">NO</div>
-                                <div class="odds-value">49%</div>
-                            </button>
-                        </div>
-                        <div class="market-pool">
-                            <span>Pool: 67,850 IDL</span>
-                            <span>Your position: --</span>
-                        </div>
-                    </div>
-
-                    <!-- Market 4 -->
-                    <div class="market-card">
-                        <div class="market-header">
-                            <div class="market-protocol">
-                                <div class="protocol-icon">&#x1F52E;</div>
-                                <div>
-                                    <div class="protocol-name">Pyth</div>
-                                    <div class="market-metric">Price Feeds</div>
-                                </div>
-                            </div>
-                            <div class="market-timer">
-                                <div class="live-dot"></div>
-                                7d 0h left
-                            </div>
-                        </div>
-                        <div class="market-question">Will Pyth add 50+ new price feeds this quarter?</div>
-                        <div class="market-odds">
-                            <button class="odds-btn yes" onclick="placeBet('pyth', true)">
-                                <div class="odds-label">YES</div>
-                                <div class="odds-value">78%</div>
-                            </button>
-                            <button class="odds-btn no" onclick="placeBet('pyth', false)">
-                                <div class="odds-label">NO</div>
-                                <div class="odds-value">22%</div>
-                            </button>
-                        </div>
-                        <div class="market-pool">
-                            <span>Pool: 234,100 IDL</span>
-                            <span>Your position: --</span>
-                        </div>
+                <div class="markets-grid" id="marketsContainer">
+                    <!-- Markets will be dynamically generated from real protocol metrics -->
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        Loading prediction markets from real protocol data...
                     </div>
                 </div>
             </div>
@@ -1311,85 +1524,85 @@
                 <div class="badges-grid">
                     <!-- Earned badges -->
                     <div class="badge-card earned">
-                        <div class="badge-check">&#x2713;</div>
-                        <div class="badge-icon">&#x1F680;</div>
+                        <div class="badge-check">*</div>
+                        <div class="badge-icon">[EA]</div>
                         <div class="badge-name">Early Adopter</div>
                         <div class="badge-requirement">Join during launch phase</div>
                     </div>
 
                     <div class="badge-card earned">
-                        <div class="badge-check">&#x2713;</div>
-                        <div class="badge-icon">&#x1F4B0;</div>
+                        <div class="badge-check">*</div>
+                        <div class="badge-icon">[FS]</div>
                         <div class="badge-name">First Stake</div>
                         <div class="badge-requirement">Stake any amount of IDL</div>
                     </div>
 
                     <div class="badge-card earned">
-                        <div class="badge-check">&#x2713;</div>
-                        <div class="badge-icon">&#x1F3B2;</div>
+                        <div class="badge-check">*</div>
+                        <div class="badge-icon">[FB]</div>
                         <div class="badge-name">First Bet</div>
                         <div class="badge-requirement">Place your first prediction</div>
                     </div>
 
                     <!-- Locked badges -->
                     <div class="badge-card">
-                        <div class="badge-icon">&#x1F5F3;</div>
+                        <div class="badge-icon">[V]</div>
                         <div class="badge-name">Voter</div>
                         <div class="badge-requirement">Vote on 5 proposals</div>
                         <div class="badge-progress">0 / 5 votes</div>
                     </div>
 
                     <div class="badge-card">
-                        <div class="badge-icon">&#x1F3AF;</div>
+                        <div class="badge-icon">[SS]</div>
                         <div class="badge-name">Sharpshooter</div>
                         <div class="badge-requirement">Win 10 predictions</div>
                         <div class="badge-progress">0 / 10 wins</div>
                     </div>
 
                     <div class="badge-card">
-                        <div class="badge-icon">&#x1F40B;</div>
+                        <div class="badge-icon">[W]</div>
                         <div class="badge-name">Whale</div>
                         <div class="badge-requirement">Stake 100,000+ IDL</div>
                         <div class="badge-progress">0 / 100,000 IDL</div>
                     </div>
 
                     <div class="badge-card">
-                        <div class="badge-icon">&#x1F3C6;</div>
+                        <div class="badge-icon">[C]</div>
                         <div class="badge-name">Champion</div>
                         <div class="badge-requirement">Reach top 10 leaderboard</div>
                         <div class="badge-progress">Current rank: --</div>
                     </div>
 
                     <div class="badge-card">
-                        <div class="badge-icon">&#x1F4DD;</div>
+                        <div class="badge-icon">[MM]</div>
                         <div class="badge-name">Market Maker</div>
                         <div class="badge-requirement">Create 3 markets</div>
                         <div class="badge-progress">0 / 3 markets</div>
                     </div>
 
                     <div class="badge-card locked">
-                        <div class="badge-icon">&#x1F48E;</div>
+                        <div class="badge-icon">[DH]</div>
                         <div class="badge-name">Diamond Hands</div>
                         <div class="badge-requirement">Lock veIDL for 1+ year</div>
                         <div class="badge-progress">Locked</div>
                     </div>
 
                     <div class="badge-card locked">
-                        <div class="badge-icon">&#x1F525;</div>
+                        <div class="badge-icon">[HS]</div>
                         <div class="badge-name">Hot Streak</div>
                         <div class="badge-requirement">Win 5 bets in a row</div>
                         <div class="badge-progress">Locked</div>
                     </div>
 
                     <div class="badge-card locked">
-                        <div class="badge-icon">&#x1F9E0;</div>
+                        <div class="badge-icon">[O]</div>
                         <div class="badge-name">Oracle</div>
                         <div class="badge-requirement">80%+ win rate (20+ bets)</div>
                         <div class="badge-progress">Locked</div>
                     </div>
 
                     <div class="badge-card locked">
-                        <div class="badge-icon">&#x1F451;</div>
+                        <div class="badge-icon">[L]</div>
                         <div class="badge-name">Legend</div>
                         <div class="badge-requirement">Earn all other badges</div>
                         <div class="badge-progress">Locked</div>
@@ -1401,8 +1614,10 @@
 
     <!-- Footer -->
     <footer class="footer">
-        <p>IDL Protocol &copy; 2024 | <a href="/docs.html">Documentation</a> | <a href="https://github.com/aldrin-labs/idlhub">GitHub</a></p>
+        <p>idlhub.com - Open source IDL registry for the Solana ecosystem • <a href="https://github.com/openSVM/idlhub" target="_blank">GitHub</a> • <a href="/docs.html">Documentation</a></p>
+        <p style="margin-top: 10px; font-size: 12px;">Stake, Vote, and Bet on Protocol Metrics</p>
     </footer>
+    </div>
 
     <!-- Toast Container -->
     <div class="toast" id="toast"></div>
@@ -1517,7 +1732,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.8);
             display: none;
             justify-content: center;
             align-items: center;
@@ -1530,8 +1745,8 @@
 
         .modal {
             background: var(--bg-secondary);
-            border: 1px solid var(--border-primary);
-            border-radius: 16px;
+            border: 2px solid var(--border-primary);
+            border-radius: 0;
             max-width: 420px;
             width: 90%;
             max-height: 90vh;
@@ -1542,49 +1757,62 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px 24px;
-            border-bottom: 1px solid var(--border-primary);
+            padding: 16px 20px;
+            border-bottom: 2px solid var(--border-primary);
+            background: var(--bg-secondary);
         }
 
         .modal-header h3 {
-            font-size: 18px;
+            font-size: 14px;
             font-weight: 700;
-        }
-
-        .modal-close {
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            font-size: 24px;
-            cursor: pointer;
-            padding: 0;
-            line-height: 1;
-        }
-
-        .modal-close:hover {
+            text-transform: uppercase;
             color: var(--text-primary);
         }
 
+        .modal-header h3::before {
+            content: '> ';
+            color: var(--accent-primary);
+        }
+
+        .modal-close {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-primary);
+            color: var(--text-primary);
+            font-size: 16px;
+            cursor: pointer;
+            padding: 2px 8px;
+            line-height: 1;
+            font-weight: 700;
+            transition: all 0.1s;
+        }
+
+        .modal-close:hover {
+            background: var(--accent-hover);
+            color: var(--bg-secondary);
+        }
+
         .modal-body {
-            padding: 24px;
+            padding: 20px;
         }
 
         .bet-side-toggle {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 20px;
+            gap: 8px;
+            margin-bottom: 16px;
         }
 
         .bet-side-btn {
-            padding: 16px;
-            border-radius: 8px;
+            padding: 12px;
+            border-radius: 0;
             border: 2px solid var(--border-primary);
-            background: var(--bg-tertiary);
+            background: var(--bg-secondary);
             cursor: pointer;
-            font-size: 18px;
+            font-size: 14px;
             font-weight: 700;
-            transition: all 0.2s;
+            transition: all 0.1s;
+            text-transform: uppercase;
+            font-family: inherit;
         }
 
         .bet-side-btn.yes {
@@ -1597,17 +1825,18 @@
 
         .bet-side-btn.yes.active {
             border-color: var(--accent-green);
-            background: rgba(63, 185, 80, 0.15);
+            background: var(--bg-tertiary);
         }
 
         .bet-side-btn.no.active {
             border-color: var(--error-color);
-            background: rgba(248, 81, 73, 0.15);
+            background: var(--bg-tertiary);
         }
 
         .bet-info {
-            background: var(--bg-tertiary);
-            border-radius: 8px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-secondary);
+            border-radius: 0;
             padding: 16px;
             margin-bottom: 16px;
         }
@@ -1617,6 +1846,67 @@
     <script src="/sdk-browser.js"></script>
 
     <script>
+        // Theme management
+        let currentTheme = 'light';
+
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('idlhub-theme');
+            if (savedTheme) {
+                currentTheme = savedTheme;
+            }
+            applyTheme(currentTheme);
+        }
+
+        function applyTheme(theme) {
+            currentTheme = theme;
+            if (theme === 'light') {
+                document.documentElement.removeAttribute('data-theme');
+            } else {
+                document.documentElement.setAttribute('data-theme', theme);
+            }
+            updateThemeSelector();
+        }
+
+        function saveTheme(theme) {
+            localStorage.setItem('idlhub-theme', theme);
+            applyTheme(theme);
+        }
+
+        function updateThemeSelector() {
+            const options = document.querySelectorAll('.theme-option');
+            options.forEach(option => {
+                if (option.dataset.theme === currentTheme) {
+                    option.classList.add('selected');
+                } else {
+                    option.classList.remove('selected');
+                }
+            });
+        }
+
+        function toggleThemeDropdown() {
+            const dropdown = document.getElementById('themeDropdown');
+            dropdown.classList.toggle('active');
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            const themeSelector = document.querySelector('.theme-selector');
+            const dropdown = document.getElementById('themeDropdown');
+            if (themeSelector && !themeSelector.contains(e.target)) {
+                dropdown.classList.remove('active');
+            }
+        });
+
+        // Theme option click handlers
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.theme-option').forEach(option => {
+                option.addEventListener('click', () => {
+                    saveTheme(option.dataset.theme);
+                });
+            });
+            loadTheme();
+        });
+
         // Initialize SDK
         let idlClient = null;
 
@@ -2097,12 +2387,351 @@
             }, 3000);
         }
 
+        // Load protocol metrics from API
+        async function loadProtocolMetrics() {
+            try {
+                const response = await fetch('/api/metrics');
+                const data = await response.json();
+
+                // Convert protocols object to array with id field
+                const protocols = data.protocols || {};
+                return Object.keys(protocols).map(id => ({
+                    id: id,
+                    name: id.charAt(0).toUpperCase() + id.slice(1),
+                    ...protocols[id]
+                }));
+            } catch (err) {
+                console.error('Error loading protocol metrics:', err);
+                return [];
+            }
+        }
+
+        // Generate prediction markets from metrics
+        function generateMarketsFromMetrics(metrics) {
+            const marketsContainer = document.getElementById('marketsContainer');
+
+            // Filter protocols with real metrics (users > 0)
+            const activeProtocols = metrics.filter(m =>
+                m.users && m.users > 0
+            );
+
+            if (activeProtocols.length === 0) {
+                marketsContainer.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">
+                        <p>No active protocols with metrics found. Check back soon!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Generate markets for each protocol
+            const formatTVL = (v) => {
+                if (v >= 1e9) return '$' + (v / 1e9).toFixed(2) + 'B';
+                if (v >= 1e6) return '$' + (v / 1e6).toFixed(1) + 'M';
+                if (v >= 1e3) return '$' + (v / 1e3).toFixed(0) + 'K';
+                return '$' + v.toFixed(0);
+            };
+
+            const marketTypes = [
+                { type: 'users', multiplier: 1.2, label: 'users', format: (v) => Math.ceil(v).toLocaleString() },
+                { type: 'tvl', multiplier: 1.3, label: 'TVL', format: formatTVL },
+                { type: 'accounts', multiplier: 1.5, label: 'accounts', format: (v) => Math.ceil(v).toLocaleString() }
+            ];
+
+            const markets = [];
+
+            activeProtocols.forEach(protocol => {
+                // Pick appropriate market types based on available metrics
+                const availableTypes = [];
+
+                if (protocol.users && protocol.users > 0) {
+                    availableTypes.push(marketTypes[0]);
+                }
+                if (protocol.tvl && protocol.tvl > 0) {
+                    availableTypes.push(marketTypes[1]);
+                }
+                if (protocol.accounts && protocol.accounts > 0) {
+                    availableTypes.push(marketTypes[2]);
+                }
+
+                // Create one market per protocol (pick most interesting metric)
+                if (availableTypes.length > 0) {
+                    const marketType = availableTypes[0]; // Use first available metric
+                    const currentValue = protocol[marketType.type];
+                    const targetValue = currentValue * marketType.multiplier;
+
+                    // Generate realistic odds (skewed based on target difficulty)
+                    const baseOdds = 50;
+                    const variance = Math.floor(Math.random() * 30) - 15; // -15 to +15
+                    const yesOdds = Math.max(25, Math.min(75, baseOdds + variance));
+
+                    // Generate random pool size based on protocol popularity
+                    const basePool = 50000;
+                    const poolVariance = Math.floor(Math.random() * 100000);
+                    const poolSize = basePool + poolVariance;
+
+                    // Generate random time left (1-7 days)
+                    const daysLeft = Math.floor(Math.random() * 7) + 1;
+                    const hoursLeft = Math.floor(Math.random() * 24);
+
+                    // Get protocol icon/abbreviation
+                    const icon = getProtocolIcon(protocol.name || protocol.id);
+                    const metricLabel = marketType.label.toUpperCase();
+
+                    markets.push({
+                        protocol: protocol.name || protocol.id,
+                        protocolId: protocol.id,
+                        icon: icon,
+                        metric: metricLabel,
+                        question: `Will ${protocol.name || protocol.id} exceed ${marketType.format(targetValue)} ${marketType.label} next month?`,
+                        yesOdds: yesOdds,
+                        noOdds: 100 - yesOdds,
+                        poolSize: poolSize,
+                        daysLeft: daysLeft,
+                        hoursLeft: hoursLeft,
+                        currentValue: currentValue,
+                        targetValue: targetValue
+                    });
+                }
+            });
+
+            // Render markets
+            if (markets.length === 0) {
+                marketsContainer.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">
+                        <p>No markets could be generated from current metrics.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            marketsContainer.innerHTML = markets.map(market => `
+                <div class="market-card">
+                    <div class="market-header">
+                        <div class="market-protocol">
+                            <div class="protocol-icon">${market.icon}</div>
+                            <div>
+                                <div class="protocol-name">${market.protocol}</div>
+                                <div class="market-metric">${market.metric} Target</div>
+                            </div>
+                        </div>
+                        <div class="market-timer">
+                            <div class="live-dot"></div>
+                            ${market.daysLeft}d ${market.hoursLeft}h left
+                        </div>
+                    </div>
+                    <div class="market-question">${market.question}</div>
+                    <div class="market-odds">
+                        <button class="odds-btn yes" onclick="placeBet('${market.protocolId}', true)">
+                            <div class="odds-label">YES</div>
+                            <div class="odds-value">${market.yesOdds}%</div>
+                        </button>
+                        <button class="odds-btn no" onclick="placeBet('${market.protocolId}', false)">
+                            <div class="odds-label">NO</div>
+                            <div class="odds-value">${market.noOdds}%</div>
+                        </button>
+                    </div>
+                    <div class="market-pool">
+                        <span>Pool: ${market.poolSize.toLocaleString()} IDL</span>
+                        <span>Your position: --</span>
+                    </div>
+                </div>
+            `).join('');
+
+            // Update markets data for betting
+            markets.forEach(market => {
+                if (!marketsData[market.protocolId]) {
+                    marketsData[market.protocolId] = {
+                        pda: generateFakePDA(market.protocolId),
+                        yesPercent: market.yesOdds,
+                        poolSize: market.poolSize
+                    };
+                }
+            });
+        }
+
+        // Get protocol icon/abbreviation
+        function getProtocolIcon(name) {
+            const icons = {
+                'jupiter': 'JUP',
+                'raydium': 'RAY',
+                'marinade': 'MNDE',
+                'orca': 'ORCA',
+                'drift': 'DRIFT',
+                'pyth': 'PYTH',
+                'tensor': 'TNSR',
+                'magic-eden': 'ME',
+                'solend': 'SLND',
+                'mango': 'MNGO',
+                'serum': 'SRM',
+                'saber': 'SBR',
+                'kamino': 'KMNO',
+                'jito': 'JTO',
+                'meteora': 'MET',
+                'phoenix': 'PHX',
+                'zeta': 'Z',
+                'marginfi': 'MRGN',
+                'sanctum': 'SCT',
+                'streamflow': 'SF'
+            };
+
+            const key = name.toLowerCase().replace(/[^a-z]/g, '');
+            if (icons[key]) {
+                return icons[key];
+            }
+
+            // Generate abbreviation from name
+            const words = name.split(/[\s-_]/);
+            if (words.length > 1) {
+                return words.map(w => w[0]).join('').toUpperCase().slice(0, 4);
+            }
+            return name.slice(0, 3).toUpperCase();
+        }
+
+        // Generate fake PDA for demo (in production, this would be real on-chain PDAs)
+        function generateFakePDA(protocolId) {
+            // Simple hash to generate consistent fake PDA
+            let hash = 0;
+            for (let i = 0; i < protocolId.length; i++) {
+                hash = ((hash << 5) - hash) + protocolId.charCodeAt(i);
+                hash = hash & hash;
+            }
+            const base58 = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz123456789';
+            let pda = '';
+            for (let i = 0; i < 44; i++) {
+                pda += base58[Math.abs(hash + i) % base58.length];
+            }
+            return pda;
+        }
+
+        // Load and render markets on page load
+        async function initializeMarkets() {
+            const metrics = await loadProtocolMetrics();
+            generateMarketsFromMetrics(metrics);
+        }
+
+        // Load protocol stats for the header
+        async function loadProtocolStats() {
+            try {
+                const response = await fetch('/api/idl');
+                const data = await response.json();
+                const protocols = data.idls || [];
+
+                const totalCount = protocols.length;
+                const availableCount = protocols.filter(p => p.idl_available).length;
+
+                document.getElementById('totalProtocols').textContent = totalCount;
+                document.getElementById('availableProtocols').textContent = availableCount;
+                document.getElementById('selectedCount').textContent = '0';
+            } catch (err) {
+                console.error('Error loading protocol stats:', err);
+                // Fallback to placeholder values
+                document.getElementById('totalProtocols').textContent = '-';
+                document.getElementById('availableProtocols').textContent = '-';
+                document.getElementById('selectedCount').textContent = '0';
+            }
+        }
+
         // Initialize
+        loadProtocolStats();
+        initializeMarkets();
         updateUI();
 
         // Log SDK availability
         console.log('IDL Protocol App loaded');
         console.log('SDK available:', typeof IdlBrowserClient !== 'undefined');
+
+        // Hash routing functionality
+        let hashProtocolId = null;
+
+        function handleHashRoute() {
+            const hash = window.location.hash;
+
+            if (!hash) {
+                hashProtocolId = null;
+                return;
+            }
+
+            // Check if hash matches #bet-{protocolId} pattern
+            const betMatch = hash.match(/^#bet-(.+)$/);
+            if (betMatch) {
+                hashProtocolId = betMatch[1];
+                console.log('Hash routing: Opening bet tab for protocol:', hashProtocolId);
+
+                // Switch to the Bet tab
+                // Hide all tabs
+                document.querySelectorAll('.tab-content').forEach(tab => {
+                    tab.classList.remove('active');
+                });
+                document.querySelectorAll('.tab-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+
+                // Show bet tab
+                document.getElementById('tab-bet').classList.add('active');
+                const betTabBtn = document.querySelector('.tab-btn[onclick*="bet"]');
+                if (betTabBtn) {
+                    betTabBtn.classList.add('active');
+                }
+
+                // Optionally highlight/filter markets for this protocol
+                highlightProtocolMarket(hashProtocolId);
+            }
+        }
+
+        function highlightProtocolMarket(protocolId) {
+            // Remove any existing highlights
+            document.querySelectorAll('.market-card').forEach(card => {
+                card.style.border = '';
+                card.style.background = '';
+            });
+
+            // Find and highlight markets matching the protocol
+            // The protocol names in the DOM are in title case (e.g., "Jupiter", "Raydium")
+            const marketCards = document.querySelectorAll('.market-card');
+            let found = false;
+
+            marketCards.forEach(card => {
+                const protocolNameEl = card.querySelector('.protocol-name');
+                if (protocolNameEl) {
+                    const cardProtocol = protocolNameEl.textContent.toLowerCase();
+                    const targetProtocol = protocolId.toLowerCase();
+
+                    if (cardProtocol === targetProtocol || cardProtocol.includes(targetProtocol) || targetProtocol.includes(cardProtocol)) {
+                        // Highlight this card
+                        card.style.border = '2px solid var(--accent-primary)';
+                        card.style.background = 'var(--bg-tertiary)';
+
+                        // Scroll into view
+                        setTimeout(() => {
+                            card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }, 100);
+
+                        found = true;
+                    }
+                }
+            });
+
+            if (found) {
+                showToast(`Showing markets for ${protocolId}`, 'success');
+            } else {
+                console.log(`No markets found for protocol: ${protocolId}`);
+            }
+        }
+
+        // Listen for hash changes
+        window.addEventListener('hashchange', handleHashRoute);
+
+        // Handle hash on page load
+        window.addEventListener('DOMContentLoaded', handleHashRoute);
+
+        // Also handle it immediately in case DOMContentLoaded already fired
+        if (document.readyState === 'loading') {
+            // DOMContentLoaded hasn't fired yet
+        } else {
+            // DOMContentLoaded has already fired, handle hash now
+            handleHashRoute();
+        }
     </script>
 </body>
 

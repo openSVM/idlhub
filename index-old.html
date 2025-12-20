@@ -1,0 +1,3346 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>idlhub.com - Solana IDL Registry</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="/src/theme.css">
+    <style>
+        /* Page-specific styles - global theme loaded from /src/theme.css */
+        :root {
+            /* Light Theme (Default) */
+            --bg-primary: #f5f5f5;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f6f8fa;
+            --text-primary: #24292f;
+            --text-secondary: #57606a;
+            --text-muted: #8b949e;
+            --border-primary: #24292f;
+            --border-secondary: #d0d7de;
+            --accent-primary: #0969da;
+            --accent-hover: #24292f;
+            --error-color: #cf222e;
+            --selection-bg: #0969da;
+            --checkbox-bg: #ffffff;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-tertiary: #21262d;
+            --text-primary: #c9d1d9;
+            --text-secondary: #8b949e;
+            --text-muted: #6e7681;
+            --border-primary: #30363d;
+            --border-secondary: #21262d;
+            --accent-primary: #58a6ff;
+            --accent-hover: #1f6feb;
+            --error-color: #f85149;
+            --selection-bg: #1f6feb;
+            --checkbox-bg: #161b22;
+        }
+
+        [data-theme="night"] {
+            --bg-primary: #0f0f23;
+            --bg-secondary: #1a1a3e;
+            --bg-tertiary: #252550;
+            --text-primary: #ccccff;
+            --text-secondary: #9999ff;
+            --text-muted: #6666cc;
+            --border-primary: #9966ff;
+            --border-secondary: #252550;
+            --accent-primary: #ff6ec7;
+            --accent-hover: #ffcc00;
+            --error-color: #ff3366;
+            --selection-bg: #ff6ec7;
+            --checkbox-bg: #1a1a3e;
+        }
+
+        [data-theme="terminal"] {
+            --bg-primary: #000000;
+            --bg-secondary: #0a0a0a;
+            --bg-tertiary: #121212;
+            --text-primary: #00ff00;
+            --text-secondary: #00cc00;
+            --text-muted: #008800;
+            --border-primary: #00ff00;
+            --border-secondary: #003300;
+            --accent-primary: #00ff00;
+            --accent-hover: #00ff00;
+            --error-color: #ff0000;
+            --selection-bg: #00aa00;
+            --checkbox-bg: #0a0a0a;
+        }
+
+        [data-theme="solarized"] {
+            --bg-primary: #002b36;
+            --bg-secondary: #073642;
+            --bg-tertiary: #094251;
+            --text-primary: #93a1a1;
+            --text-secondary: #839496;
+            --text-muted: #657b83;
+            --border-primary: #b58900;
+            --border-secondary: #094251;
+            --accent-primary: #b58900;
+            --accent-hover: #cb4b16;
+            --error-color: #dc322f;
+            --selection-bg: #b58900;
+            --checkbox-bg: #073642;
+        }
+
+        [data-theme="solarized-light"] {
+            --bg-primary: #fdf6e3;
+            --bg-secondary: #eee8d5;
+            --bg-tertiary: #e8e2d0;
+            --text-primary: #657b83;
+            --text-secondary: #839496;
+            --text-muted: #93a1a1;
+            --border-primary: #b58900;
+            --border-secondary: #e8e2d0;
+            --accent-primary: #b58900;
+            --accent-hover: #cb4b16;
+            --error-color: #dc322f;
+            --selection-bg: #b58900;
+            --checkbox-bg: #eee8d5;
+        }
+
+        [data-theme="monokai-light"] {
+            --bg-primary: #fafafa;
+            --bg-secondary: #f5f5f5;
+            --bg-tertiary: #eeeeee;
+            --text-primary: #272822;
+            --text-secondary: #75715e;
+            --text-muted: #999988;
+            --border-primary: #f92672;
+            --border-secondary: #eeeeee;
+            --accent-primary: #f92672;
+            --accent-hover: #fd971f;
+            --error-color: #f92672;
+            --selection-bg: #a6e22e;
+            --checkbox-bg: #f5f5f5;
+        }
+
+        [data-theme="dos"] {
+            --bg-primary: #0000aa;
+            --bg-secondary: #0000bb;
+            --bg-tertiary: #1111cc;
+            --text-primary: #ffff55;
+            --text-secondary: #ffffff;
+            --text-muted: #aaaaaa;
+            --border-primary: #ffff55;
+            --border-secondary: #5555ff;
+            --accent-primary: #00ffff;
+            --accent-hover: #ffff00;
+            --error-color: #ff5555;
+            --selection-bg: #00ffff;
+            --checkbox-bg: #0000bb;
+        }
+
+        [data-theme="dracula"] {
+            --bg-primary: #282a36;
+            --bg-secondary: #21222c;
+            --bg-tertiary: #343746;
+            --text-primary: #f8f8f2;
+            --text-secondary: #6272a4;
+            --text-muted: #44475a;
+            --border-primary: #bd93f9;
+            --border-secondary: #44475a;
+            --accent-primary: #ff79c6;
+            --accent-hover: #bd93f9;
+            --error-color: #ff5555;
+            --selection-bg: #bd93f9;
+            --checkbox-bg: #21222c;
+        }
+
+        [data-theme="nord"] {
+            --bg-primary: #2e3440;
+            --bg-secondary: #3b4252;
+            --bg-tertiary: #434c5e;
+            --text-primary: #eceff4;
+            --text-secondary: #d8dee9;
+            --text-muted: #4c566a;
+            --border-primary: #88c0d0;
+            --border-secondary: #434c5e;
+            --accent-primary: #88c0d0;
+            --accent-hover: #8fbcbb;
+            --error-color: #bf616a;
+            --selection-bg: #5e81ac;
+            --checkbox-bg: #3b4252;
+        }
+
+        [data-theme="onedark"] {
+            --bg-primary: #21252b;
+            --bg-secondary: #282c34;
+            --bg-tertiary: #2c313a;
+            --text-primary: #abb2bf;
+            --text-secondary: #5c6370;
+            --text-muted: #4b5263;
+            --border-primary: #98c379;
+            --border-secondary: #2c313a;
+            --accent-primary: #e5c07b;
+            --accent-hover: #e06c75;
+            --error-color: #e06c75;
+            --selection-bg: #528bff;
+            --checkbox-bg: #282c34;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 'Courier New', monospace;
+            background: var(--bg-primary);
+            min-height: 100vh;
+            padding: 0;
+            color: var(--text-primary);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--bg-secondary);
+            min-height: 100vh;
+            border-left: 1px solid var(--border-secondary);
+            border-right: 1px solid var(--border-secondary);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .header {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            padding: 16px 24px;
+            border-bottom: 2px solid var(--border-primary);
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .header h1 {
+            font-size: 16px;
+            margin: 0;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
+        }
+
+        .header h1::before {
+            content: '> ';
+            color: var(--accent-primary);
+        }
+
+        .header p {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin: 4px 0 0 0;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .theme-selector {
+            position: relative;
+        }
+
+        .theme-btn {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-primary);
+            color: var(--text-primary);
+            padding: 4px 12px;
+            border-radius: 0;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.1s;
+            font-weight: 600;
+            font-family: inherit;
+        }
+
+        .theme-btn:hover {
+            background: var(--accent-hover);
+            color: var(--bg-secondary);
+        }
+
+        .theme-btn::before {
+            content: '[';
+        }
+
+        .theme-btn::after {
+            content: ']';
+        }
+
+        .theme-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-primary);
+            margin-top: 4px;
+            min-width: 180px;
+            z-index: 1000;
+        }
+
+        .theme-dropdown.active {
+            display: block;
+        }
+
+        .theme-option {
+            padding: 8px 16px;
+            cursor: pointer;
+            font-size: 11px;
+            text-transform: uppercase;
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-secondary);
+            transition: all 0.1s;
+            color: var(--text-primary);
+        }
+
+        .theme-option:last-child {
+            border-bottom: none;
+        }
+
+        .theme-option:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .theme-option.selected {
+            background: var(--bg-tertiary);
+            border-left: 3px solid var(--accent-primary);
+            padding-left: 13px;
+        }
+
+        .bookmark-btn {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-primary);
+            color: var(--text-primary);
+            padding: 4px 12px;
+            border-radius: 0;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.1s;
+            font-weight: 600;
+            font-family: inherit;
+        }
+
+        .bookmark-btn:hover {
+            background: var(--accent-hover);
+            color: var(--bg-secondary);
+        }
+
+        .bookmark-btn.active {
+            background: var(--accent-hover);
+            color: var(--bg-secondary);
+        }
+        }
+
+        .bookmark-btn::before {
+            content: '[';
+        }
+
+        .bookmark-btn::after {
+            content: ']';
+        }
+
+        .stats {
+            display: flex;
+            gap: 32px;
+            padding: 12px 0 0 0;
+            font-size: 11px;
+        }
+
+        .stat {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+        }
+
+        .stat::before {
+            content: '|';
+            color: var(--border-secondary);
+            margin-right: 6px;
+        }
+
+        .stat:first-child::before {
+            content: '';
+            margin-right: 0;
+        }
+
+        .stat-number {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--accent-primary);
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+
+        .controls {
+            padding: 12px 24px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-secondary);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 6px 12px;
+            font-size: 12px;
+            border: 1px solid var(--border-primary);
+            border-radius: 0;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            transition: all 0.1s;
+            font-family: inherit;
+        }
+
+        .search-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .search-input:focus {
+            outline: none;
+            background: var(--bg-tertiary);
+            border-color: var(--accent-primary);
+        }
+
+        .filter-section {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 5px 12px;
+            font-size: 14px;
+            border: 1px solid var(--border-secondary);
+            background: var(--bg-secondary);
+            border-radius: 0px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .filter-btn:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--accent-primary);
+        }
+
+        .filter-btn.active {
+            background: var(--accent-primary);
+            color: var(--bg-secondary);
+            border-color: var(--accent-primary);
+        }
+
+        .action-bar {
+            padding: 12px 24px;
+            background: var(--bg-tertiary);
+            border-bottom: 1px solid var(--border-secondary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .selection-info {
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0;
+        }
+
+        .btn {
+            padding: 4px 16px;
+            border-radius: 0;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 700;
+            transition: all 0.1s;
+            border: 1px solid var(--border-primary);
+            font-family: inherit;
+            text-transform: uppercase;
+        }
+
+        .btn-primary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border-color: var(--border-primary);
+            border-left: none;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: var(--accent-hover);
+            color: var(--bg-secondary);
+        }
+
+        .btn-primary:disabled {
+            background: var(--bg-tertiary);
+            border-color: var(--border-secondary);
+            color: var(--text-muted);
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border-color: var(--border-primary);
+            border-right: none;
+        }
+
+        .btn-secondary:hover {
+            background: var(--accent-hover);
+            color: var(--bg-secondary);
+        }
+
+        .btn-secondary:first-child {
+            border-left: 1px solid var(--border-primary);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .protocols-list {
+            padding: 16px 24px 40px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .protocol-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            margin-bottom: 0;
+            background: var(--bg-secondary);
+            border-radius: 0;
+            transition: all 0.1s;
+            border: 1px solid var(--border-secondary);
+            border-top: none;
+        }
+
+        .protocol-item:first-child {
+            border-top: 1px solid var(--border-secondary);
+        }
+
+        .protocol-item:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .protocol-item.selected {
+            background: var(--bg-secondary);
+            border-left: 3px solid var(--selection-bg);
+            padding-left: 14px;
+        }
+
+        .protocol-item.bookmarked {
+            border-left: 3px solid var(--border-primary);
+            padding-left: 14px;
+        }
+
+        .protocol-item.bookmarked.selected {
+            border-left: 3px solid var(--selection-bg);
+        }
+
+        .protocol-checkbox {
+            width: 20px;
+            height: 20px;
+            margin-right: 16px;
+            cursor: pointer;
+        }
+
+        .protocol-info {
+            flex: 1;
+        }
+
+        .protocol-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 4px;
+        }
+
+        .protocol-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .protocol-badge {
+            padding: 2px 6px;
+            border-radius: 0;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            border: 1px solid;
+        }
+
+        .badge-available {
+            background: var(--bg-secondary);
+            color: var(--accent-primary);
+            border-color: var(--accent-primary);
+        }
+
+        .badge-placeholder {
+            background: var(--bg-secondary);
+            color: var(--text-muted);
+            border-color: var(--border-secondary);
+        }
+
+        .category-badge {
+            padding: 2px 6px;
+            border-radius: 0;
+            font-size: 10px;
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-secondary);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .protocol-description {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .protocol-meta {
+            font-size: 10px;
+            color: var(--text-muted);
+        }
+
+        .protocol-meta a {
+            color: var(--accent-primary);
+            text-decoration: none;
+        }
+
+        .protocol-meta a::before {
+            content: '<';
+        }
+
+        .protocol-meta a::after {
+            content: '>';
+        }
+
+        .protocol-meta a:hover {
+            text-decoration: underline;
+        }
+
+        .protocol-actions {
+            display: flex;
+            gap: 0;
+        }
+
+        .icon-btn {
+            padding: 4px 12px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-primary);
+            border-right: none;
+            border-radius: 0;
+            cursor: pointer;
+            transition: all 0.1s;
+            font-size: 10px;
+            color: var(--text-primary);
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .icon-btn:last-child {
+            border-right: 1px solid var(--border-primary);
+        }
+
+        .icon-btn:hover {
+            background: var(--accent-hover);
+            color: var(--bg-secondary);
+        }
+
+        .bookmark-icon {
+            padding: 4px 12px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-primary);
+            border-right: none;
+            border-radius: 0;
+            cursor: pointer;
+            transition: all 0.1s;
+            font-size: 14px;
+            color: var(--text-primary);
+        }
+
+        .bookmark-icon:hover {
+            background: var(--accent-hover);
+            color: var(--bg-secondary);
+        }
+
+        .bookmark-icon.bookmarked {
+            background: var(--accent-hover);
+            color: var(--bg-secondary);
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+            font-size: 12px;
+        }
+
+        .no-results h3 {
+            color: var(--text-primary);
+            margin: 10px 0;
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+            font-size: 12px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--bg-tertiary);
+            border-top: 3px solid var(--border-primary);
+            border-radius: 0;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .footer {
+            padding: 16px 24px;
+            background: var(--bg-secondary);
+            border-top: 2px solid var(--border-primary);
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 10px;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .footer a {
+            color: var(--accent-primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .footer a::before {
+            content: '[';
+            color: var(--border-primary);
+        }
+
+        .footer a::after {
+            content: ']';
+            color: var(--border-primary);
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        .protocol-checkbox {
+            width: 14px;
+            height: 14px;
+            margin-right: 12px;
+            cursor: pointer;
+            appearance: none;
+            border: 2px solid var(--border-primary);
+            background: var(--checkbox-bg);
+            position: relative;
+        }
+
+        .protocol-checkbox:checked::after {
+            content: 'X';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 10px;
+            font-weight: 900;
+            color: var(--text-primary);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 14px;
+            }
+
+            .stats {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .controls {
+                padding: 8px 16px;
+            }
+
+            .protocols-list {
+                padding: 12px 16px 24px;
+            }
+
+            .protocol-item {
+                padding: 8px 12px;
+            }
+
+            .filter-buttons {
+                font-size: 10px;
+            }
+
+            .action-buttons {
+                flex-wrap: wrap;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .stats {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .controls {
+                padding: 20px;
+            }
+
+            .protocols-list {
+                padding: 20px;
+            }
+
+            .action-bar {
+                padding: 15px 20px;
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+
+        /* Individual Protocol Page Styles */
+        .protocol-page {
+            display: none;
+            padding: 24px;
+        }
+
+        .protocol-page.active {
+            display: block;
+        }
+
+        .protocol-header-page {
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid var(--border-primary);
+        }
+
+        .protocol-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .protocol-address {
+            font-size: 11px;
+            color: var(--accent-primary);
+            background: var(--bg-tertiary);
+            padding: 8px 12px;
+            border: 1px solid var(--border-secondary);
+            margin: 12px 0;
+            word-break: break-all;
+            font-family: inherit;
+        }
+
+        .protocol-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+            margin: 16px 0;
+        }
+
+        .stat-box {
+            border: 1px solid var(--border-primary);
+            padding: 12px;
+            background: var(--bg-secondary);
+        }
+
+        .stat-box-label {
+            font-size: 10px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .stat-box-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .idl-viewer {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-primary);
+            padding: 16px;
+            margin-top: 24px;
+            max-height: 600px;
+            overflow: auto;
+        }
+
+        .idl-viewer pre {
+            font-size: 11px;
+            line-height: 1.5;
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            color: var(--text-primary);
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 6px 16px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-primary);
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .back-button:hover {
+            background: var(--accent-hover);
+            color: var(--bg-secondary);
+        }
+
+        .back-button::before {
+            content: '< ';
+        }
+
+        /* Keyboard navigation highlight */
+        .protocol-item.keyboard-focus {
+            outline: 2px solid var(--accent-primary);
+            outline-offset: -2px;
+        }
+
+        .main-view {
+            display: block;
+        }
+
+        .main-view.hidden {
+            display: none;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-primary);
+            max-width: 800px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-header {
+            padding: 20px 24px;
+            border-bottom: 2px solid var(--border-primary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            font-size: 18px;
+            margin: 0;
+            color: var(--text-primary);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close:hover {
+            color: var(--error-color);
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        .modal-tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 24px;
+            border-bottom: 2px solid var(--border-secondary);
+        }
+
+        .modal-tab {
+            padding: 8px 16px;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-family: inherit;
+            margin-bottom: -2px;
+        }
+
+        .modal-tab.active {
+            color: var(--accent-primary);
+            border-bottom-color: var(--accent-primary);
+        }
+
+        .modal-tab:hover {
+            color: var(--text-primary);
+        }
+
+        .modal-tab-content {
+            display: none;
+        }
+
+        .modal-tab-content.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="url"],
+        .form-group textarea {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--border-primary);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 14px;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+        }
+
+        .form-group textarea {
+            min-height: 200px;
+            resize: vertical;
+        }
+
+        .form-group input[type="file"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid var(--border-primary);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .form-hint {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border-secondary);
+        }
+
+        .btn-cancel {
+            padding: 8px 16px;
+            background: transparent;
+            border: 1px solid var(--border-primary);
+            color: var(--text-primary);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            font-family: inherit;
+        }
+
+        .btn-cancel:hover {
+            background: var(--bg-primary);
+        }
+
+        .btn-submit {
+            padding: 8px 16px;
+            background: var(--accent-primary);
+            border: 1px solid var(--accent-primary);
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            font-family: inherit;
+        }
+
+        .btn-submit:hover {
+            background: var(--accent-hover);
+            border-color: var(--accent-hover);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .idl-preview {
+            margin-top: 24px;
+            padding: 16px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-secondary);
+        }
+
+        .idl-preview h3 {
+            font-size: 14px;
+            margin: 0 0 12px 0;
+            color: var(--text-primary);
+        }
+
+        .idl-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .idl-stat {
+            padding: 8px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-secondary);
+        }
+
+        .idl-stat-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .idl-stat-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--accent-primary);
+        }
+
+        .idl-code {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-secondary);
+            padding: 12px;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+            font-size: 12px;
+            overflow-x: auto;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .error-message {
+            padding: 12px;
+            background: var(--error-color);
+            color: white;
+            border-radius: 4px;
+            margin-bottom: 16px;
+            font-size: 14px;
+        }
+
+        .success-message {
+            padding: 12px;
+            background: #2da44e;
+            color: white;
+            border-radius: 4px;
+            margin-bottom: 16px;
+            font-size: 14px;
+        }
+
+        .loading {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        /* ==================== ONBOARDING MODAL ==================== */
+        .onboarding-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            backdrop-filter: blur(4px);
+        }
+
+        .onboarding-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .onboarding-modal {
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-primary);
+            max-width: 600px;
+            width: 90%;
+            max-height: 85vh;
+            overflow: hidden;
+            position: relative;
+            transform: scale(0.9) translateY(20px);
+            transition: transform 0.3s ease;
+        }
+
+        .onboarding-overlay.active .onboarding-modal {
+            transform: scale(1) translateY(0);
+        }
+
+        .onboarding-header {
+            background: var(--bg-tertiary);
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-primary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .onboarding-header h2 {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .onboarding-header h2::before {
+            content: '> ';
+            color: var(--accent-primary);
+        }
+
+        .onboarding-close {
+            background: none;
+            border: 1px solid var(--border-primary);
+            color: var(--text-primary);
+            cursor: pointer;
+            font-size: 12px;
+            padding: 4px 10px;
+            font-family: inherit;
+            transition: all 0.1s;
+        }
+
+        .onboarding-close:hover {
+            background: var(--accent-hover);
+            color: var(--bg-secondary);
+        }
+
+        .onboarding-progress {
+            display: flex;
+            gap: 4px;
+            padding: 12px 20px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-secondary);
+        }
+
+        .progress-dot {
+            width: 8px;
+            height: 8px;
+            border: 1px solid var(--border-primary);
+            background: var(--bg-tertiary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .progress-dot.active {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+        }
+
+        .progress-dot.completed {
+            background: var(--accent-primary);
+            opacity: 0.5;
+        }
+
+        .onboarding-content {
+            padding: 24px 20px;
+            overflow-y: auto;
+            max-height: calc(85vh - 180px);
+        }
+
+        .onboarding-step {
+            display: none;
+            animation: fadeSlideIn 0.4s ease;
+        }
+
+        .onboarding-step.active {
+            display: block;
+        }
+
+        @keyframes fadeSlideIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .step-icon {
+            font-size: 48px;
+            text-align: center;
+            margin-bottom: 16px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .step-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .step-subtitle {
+            font-size: 12px;
+            color: var(--accent-primary);
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .step-description {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+
+        .step-highlight-box {
+            background: var(--bg-tertiary);
+            border-left: 3px solid var(--accent-primary);
+            padding: 12px 16px;
+            margin: 16px 0;
+            font-size: 12px;
+        }
+
+        .step-highlight-box strong {
+            color: var(--text-primary);
+        }
+
+        .step-features {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 16px 0;
+        }
+
+        .step-feature {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-secondary);
+            padding: 12px;
+            text-align: center;
+        }
+
+        .step-feature-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--accent-primary);
+            margin-bottom: 4px;
+        }
+
+        .step-feature-label {
+            font-size: 10px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+
+        .flow-diagram {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin: 16px 0;
+            font-size: 12px;
+        }
+
+        .flow-step {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-secondary);
+            animation: flowIn 0.4s ease backwards;
+        }
+
+        .flow-step:nth-child(1) { animation-delay: 0.1s; }
+        .flow-step:nth-child(2) { animation-delay: 0.2s; }
+        .flow-step:nth-child(3) { animation-delay: 0.3s; }
+        .flow-step:nth-child(4) { animation-delay: 0.4s; }
+        .flow-step:nth-child(5) { animation-delay: 0.5s; }
+
+        @keyframes flowIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .flow-icon {
+            font-size: 18px;
+            width: 28px;
+            text-align: center;
+        }
+
+        .flow-text {
+            flex: 1;
+            color: var(--text-secondary);
+        }
+
+        .flow-text strong {
+            color: var(--text-primary);
+        }
+
+        .flow-arrow {
+            color: var(--accent-primary);
+            font-weight: bold;
+        }
+
+        .virtuous-cycle {
+            position: relative;
+            padding: 20px;
+            margin: 16px 0;
+        }
+
+        .cycle-center {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 16px;
+        }
+
+        .cycle-items {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .cycle-item {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--accent-primary);
+            padding: 8px 14px;
+            font-size: 11px;
+            color: var(--text-primary);
+            animation: cycleIn 0.5s ease backwards;
+        }
+
+        .cycle-item:nth-child(1) { animation-delay: 0.1s; }
+        .cycle-item:nth-child(2) { animation-delay: 0.2s; }
+        .cycle-item:nth-child(3) { animation-delay: 0.3s; }
+        .cycle-item:nth-child(4) { animation-delay: 0.4s; }
+
+        .cycle-item:not(:last-child)::after {
+            content: ' +';
+            color: var(--accent-primary);
+            font-weight: bold;
+            margin-left: 4px;
+        }
+
+        @keyframes cycleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .onboarding-footer {
+            padding: 16px 20px;
+            border-top: 1px solid var(--border-secondary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--bg-secondary);
+        }
+
+        .onboarding-nav {
+            display: flex;
+            gap: 8px;
+        }
+
+        .onboarding-btn {
+            padding: 8px 16px;
+            border: 1px solid var(--border-primary);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            font-family: inherit;
+            transition: all 0.1s;
+        }
+
+        .onboarding-btn:hover {
+            background: var(--accent-hover);
+            color: var(--bg-secondary);
+        }
+
+        .onboarding-btn.primary {
+            background: var(--accent-primary);
+            color: var(--bg-secondary);
+            border-color: var(--accent-primary);
+        }
+
+        .onboarding-btn.primary:hover {
+            background: var(--accent-hover);
+            border-color: var(--accent-hover);
+        }
+
+        .onboarding-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .dont-show-again {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        .dont-show-again input {
+            cursor: pointer;
+        }
+
+        .help-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--accent-primary);
+            color: var(--bg-secondary);
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            font-weight: 700;
+            z-index: 9999;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .help-btn:hover {
+            transform: scale(1.1);
+            background: var(--accent-hover);
+        }
+
+        @media (max-width: 600px) {
+            .onboarding-modal {
+                width: 95%;
+                max-height: 90vh;
+            }
+
+            .step-features {
+                grid-template-columns: 1fr;
+            }
+
+            .onboarding-footer {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .dont-show-again {
+                order: 1;
+            }
+
+            .onboarding-nav {
+                order: 0;
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Onboarding Modal -->
+    <div class="onboarding-overlay" id="onboardingOverlay">
+        <div class="onboarding-modal">
+            <div class="onboarding-header">
+                <h2>Welcome to IDLHub</h2>
+                <button class="onboarding-close" onclick="closeOnboarding()">[X] Skip</button>
+            </div>
+            <div class="onboarding-progress">
+                <div class="progress-dot active" data-step="0" onclick="goToStep(0)"></div>
+                <div class="progress-dot" data-step="1" onclick="goToStep(1)"></div>
+                <div class="progress-dot" data-step="2" onclick="goToStep(2)"></div>
+                <div class="progress-dot" data-step="3" onclick="goToStep(3)"></div>
+                <div class="progress-dot" data-step="4" onclick="goToStep(4)"></div>
+            </div>
+            <div class="onboarding-content">
+                <!-- Step 1: What is IDLHub -->
+                <div class="onboarding-step active" data-step="0">
+                    <div class="step-icon">{ }</div>
+                    <div class="step-title">What is IDLHub?</div>
+                    <div class="step-subtitle">The API Directory for Solana</div>
+                    <div class="step-description">
+                        <strong>IDLHub</strong> is where developers and AI agents find the "instruction manuals" for Solana programs.
+                        Every DeFi protocol, NFT marketplace, and dApp has an IDL that describes how to interact with it.
+                    </div>
+                    <div class="step-highlight-box">
+                        <strong>Why it matters:</strong> Without IDLs, building on Solana is like coding blind.
+                        IDLHub makes 100+ protocol interfaces searchable, downloadable, and AI-readable - for free.
+                    </div>
+                    <div class="step-features">
+                        <div class="step-feature">
+                            <div class="step-feature-value">100+</div>
+                            <div class="step-feature-label">Protocols</div>
+                        </div>
+                        <div class="step-feature">
+                            <div class="step-feature-value">Free</div>
+                            <div class="step-feature-label">Forever</div>
+                        </div>
+                    </div>
+                    <div class="step-description" style="margin-top: 12px; font-size: 11px; text-align: center;">
+                        Jupiter, Orca, Drift, Kamino, Marinade, and many more...
+                    </div>
+                </div>
+
+                <!-- Step 2: The $IDL Token -->
+                <div class="onboarding-step" data-step="1">
+                    <div class="step-icon">$IDL</div>
+                    <div class="step-title">Introducing $IDL</div>
+                    <div class="step-subtitle">The Protocol Token</div>
+                    <div class="step-description">
+                        While the IDL registry stays free, <strong>$IDL</strong> unlocks a new game:
+                        <strong>prediction markets on Solana protocol metrics</strong>.
+                    </div>
+                    <div class="step-highlight-box">
+                        <strong>The idea:</strong> You follow Solana protocols. You have opinions on their growth.
+                        Now you can put your money where your mouth is - and earn if you're right.
+                    </div>
+                    <div class="step-features">
+                        <div class="step-feature">
+                            <div class="step-feature-value">1B</div>
+                            <div class="step-feature-label">Total Supply</div>
+                        </div>
+                        <div class="step-feature">
+                            <div class="step-feature-value">Solana</div>
+                            <div class="step-feature-label">Network</div>
+                        </div>
+                    </div>
+                    <div class="step-description" style="margin-top: 16px; font-size: 11px; text-align: center;">
+                        Token CA: <span onclick="navigator.clipboard.writeText('4GihJrYJGQ9pjqDySTjd57y1h3nNkEZNbzJxCbispump'); this.textContent='Copied!'; setTimeout(() => this.textContent='4GihJrYJGQ9pjqDySTjd57y1h3nNkEZNbzJxCbispump', 1500);" style="cursor: pointer; color: var(--accent-primary);" title="Click to copy">4GihJrYJGQ9pjqDySTjd57y1h3nNkEZNbzJxCbispump</span>
+                    </div>
+                </div>
+
+                <!-- Step 3: How It Works -->
+                <div class="onboarding-step" data-step="2">
+                    <div class="step-icon">&#x2192;</div>
+                    <div class="step-title">How It Works</div>
+                    <div class="step-subtitle">Stake, Predict, Earn</div>
+                    <div class="step-description">
+                        Three ways to participate in the IDL protocol:
+                    </div>
+                    <div class="flow-diagram">
+                        <div class="flow-step">
+                            <span class="flow-icon">1</span>
+                            <span class="flow-text"><strong>Stake $IDL</strong> - Earn 50% of all prediction market fees</span>
+                        </div>
+                        <div class="flow-step">
+                            <span class="flow-icon">2</span>
+                            <span class="flow-text"><strong>Predict</strong> - Bet on protocol TVL, volume, users, price targets</span>
+                        </div>
+                        <div class="flow-step">
+                            <span class="flow-icon">3</span>
+                            <span class="flow-text"><strong>Earn</strong> - Winners split the losers' pool (parimutuel)</span>
+                        </div>
+                    </div>
+                    <div class="step-highlight-box">
+                        <strong>Example market:</strong> "Will Jupiter's 24h volume exceed $500M by Dec 31?"
+                        <br><br>
+                        Bet YES or NO. Oracle resolves with real data. Winners take the pot.
+                    </div>
+                </div>
+
+                <!-- Step 4: Tokenomics -->
+                <div class="onboarding-step" data-step="3">
+                    <div class="step-icon">%</div>
+                    <div class="step-title">Tokenomics</div>
+                    <div class="step-subtitle">3% Fee on Winning Bets</div>
+                    <div class="step-description">
+                        Every winning prediction pays a 3% fee. Here's where it goes:
+                    </div>
+                    <div class="flow-diagram">
+                        <div class="flow-step">
+                            <span class="flow-icon">50%</span>
+                            <span class="flow-text"><strong>Stakers</strong> - Your passive yield for holding + staking</span>
+                        </div>
+                        <div class="flow-step">
+                            <span class="flow-icon">25%</span>
+                            <span class="flow-text"><strong>Market Creator</strong> - Reward for creating popular markets</span>
+                        </div>
+                        <div class="flow-step">
+                            <span class="flow-icon">15%</span>
+                            <span class="flow-text"><strong>Treasury</strong> - Funds ongoing development</span>
+                        </div>
+                        <div class="flow-step">
+                            <span class="flow-icon">10%</span>
+                            <span class="flow-text"><strong>Burned</strong> - Gone forever. Deflationary.</span>
+                        </div>
+                    </div>
+                    <div class="step-highlight-box">
+                        <strong>Staker bonus:</strong> Stakers get up to +50% effective bet size.
+                        Stake more = stronger bets = more potential winnings.
+                    </div>
+                </div>
+
+                <!-- Step 5: Get Started -->
+                <div class="onboarding-step" data-step="4">
+                    <div class="step-icon">&#x2713;</div>
+                    <div class="step-title">Get Started</div>
+                    <div class="step-subtitle">Join the IDL Protocol</div>
+                    <div class="step-description">
+                        IDLHub grows with Solana. More protocols = more markets = more fees = higher staker yield.
+                    </div>
+                    <div class="virtuous-cycle">
+                        <div class="cycle-items">
+                            <div class="cycle-item">IDLHub stays free</div>
+                            <div class="cycle-item">Prediction markets generate fees</div>
+                            <div class="cycle-item">Stakers earn real yield</div>
+                            <div class="cycle-item">10% of fees burned forever</div>
+                        </div>
+                    </div>
+                    <div class="step-highlight-box" style="text-align: center;">
+                        <strong>Ready to dive deeper?</strong>
+                        <br><br>
+                        <a href="tokenomics.html" style="color: var(--accent-primary); text-decoration: underline;">View full tokenomics</a>
+                        &nbsp;|&nbsp;
+                        <a href="https://pump.fun/coin/4GihJrYJGQ9pjqDySTjd57y1h3nNkEZNbzJxCbispump" target="_blank" rel="noopener noreferrer" style="color: var(--accent-primary); text-decoration: underline;">Buy $IDL on pump.fun</a>
+                    </div>
+                    <div class="step-features">
+                        <div class="step-feature">
+                            <div class="step-feature-value">veIDL</div>
+                            <div class="step-feature-label">Lock for voting power</div>
+                        </div>
+                        <div class="step-feature">
+                            <div class="step-feature-value">Badges</div>
+                            <div class="step-feature-label">Earn from volume</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="onboarding-footer">
+                <label class="dont-show-again">
+                    <input type="checkbox" id="dontShowAgain">
+                    Don't show again
+                </label>
+                <div class="onboarding-nav">
+                    <button class="onboarding-btn" id="prevBtn" onclick="prevStep()" disabled>Back</button>
+                    <button class="onboarding-btn primary" id="nextBtn" onclick="nextStep()">Next</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Help Button (always visible) -->
+    <button class="help-btn" onclick="openOnboarding()" title="Learn about IDLHub">?</button>
+
+    <div class="container">
+        <div class="header">
+            <div class="header-content">
+                <div class="header-left">
+                    <div>
+                        <h1>idlhub.com - Solana IDL Registry</h1>
+                        <p>A comprehensive collection of Interface Definition Language files for Solana protocols</p>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <a href="tokenomics.html" class="bookmark-btn" style="text-decoration: none;">
+                        <span>$IDL</span>
+                    </a>
+                    <button class="bookmark-btn" id="addIdlBtn" title="Add new IDL to registry">
+                        <span>+ Add IDL</span>
+                    </button>
+                    <a href="docs.html" class="bookmark-btn" style="text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+                        <span>API</span>
+                    </a>
+                    <button class="bookmark-btn" id="copyRulesBtn" title="Copy instructions for AI agents">
+                        <span>Copy Rules</span>
+                    </button>
+                    <div class="theme-selector">
+                        <button class="theme-btn" id="themeBtn">
+                            <span id="themeBtnText">Theme</span>
+                        </button>
+                        <div class="theme-dropdown" id="themeDropdown">
+                            <div class="theme-option" data-theme="light">Light</div>
+                            <div class="theme-option" data-theme="monokai-light">Monokai Light</div>
+                            <div class="theme-option" data-theme="solarized-light">Solarized Light</div>
+                            <div class="theme-option" data-theme="dark">Dark</div>
+                            <div class="theme-option" data-theme="solarized">Solarized Dark</div>
+                            <div class="theme-option" data-theme="night">Night</div>
+                            <div class="theme-option" data-theme="dracula">Dracula</div>
+                            <div class="theme-option" data-theme="nord">Nord</div>
+                            <div class="theme-option" data-theme="onedark">One Dark</div>
+                            <div class="theme-option" data-theme="terminal">Terminal</div>
+                            <div class="theme-option" data-theme="dos">DOS / Borland</div>
+                        </div>
+                    </div>
+                    <button class="bookmark-btn" id="showBookmarksBtn">
+                        <span id="bookmarkBtnText">Bookmarks</span>
+                        <span id="bookmarkCount" style="display: none;"></span>
+                    </button>
+                </div>
+            </div>
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-number" id="totalProtocols">-</div>
+                    <div class="stat-label">Total Protocols</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number" id="availableProtocols">-</div>
+                    <div class="stat-label">IDLs Available</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number" id="selectedCount">0</div>
+                    <div class="stat-label">Selected</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="search-bar">
+                <input type="text" id="searchInput" class="search-input"
+                    placeholder="Search by name, description, or program address...">
+            </div>
+            <div class="filter-section">
+                <span class="filter-label">Filter by:</span>
+                <div class="filter-buttons" id="filterButtons"></div>
+            </div>
+        </div>
+
+        <div class="action-bar">
+            <div class="selection-info">
+                <span id="selectionInfo">Select protocols to export their IDLs</span>
+            </div>
+            <div class="action-buttons">
+                <button class="btn btn-secondary" id="selectAllBtn">Select All Visible</button>
+                <button class="btn btn-secondary" id="clearBtn">Clear Selection</button>
+                <button class="btn btn-primary" id="exportBtn" disabled>Export Selected IDLs</button>
+            </div>
+        </div>
+
+        <div class="protocols-list" id="protocolsList">
+            <div class="loading">
+                <div class="spinner"></div>
+                <p>Loading protocols...</p>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>idlhub.com - Open source IDL registry for the Solana ecosystem • <a href="https://github.com/openSVM/idlhub"
+                    target="_blank">GitHub</a> • <a href="docs.html">Documentation</a></p>
+            <p style="margin-top: 10px; font-size: 12px;">Contributions welcome! Help us complete missing IDLs.</p>
+        </div>
+
+        <!-- Individual Protocol Page View -->
+        <div class="protocol-page" id="protocolPage">
+            <button class="back-button" onclick="navigateHome()">Back to List</button>
+            <div id="protocolPageContent"></div>
+        </div>
+    </div>
+
+    <!-- Add IDL Modal -->
+    <div class="modal-overlay" id="addIdlModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>+ Add New IDL</h2>
+                <button class="modal-close" id="closeModal">×</button>
+            </div>
+            <div class="modal-body">
+                <div id="modalMessage"></div>
+                
+                <div class="modal-tabs">
+                    <button class="modal-tab active" data-tab="upload">Upload JSON</button>
+                    <button class="modal-tab" data-tab="url">From URL</button>
+                    <button class="modal-tab" data-tab="github">From GitHub</button>
+                </div>
+
+                <!-- Upload Tab -->
+                <div class="modal-tab-content active" id="uploadTab">
+                    <div class="form-group">
+                        <label for="idlFile">Select IDL JSON File</label>
+                        <input type="file" id="idlFile" accept=".json" />
+                        <div class="form-hint">Upload a .json file containing the IDL definition</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="uploadProgramName">Program Name</label>
+                        <input type="text" id="uploadProgramName" placeholder="e.g., Jupiter Aggregator" />
+                    </div>
+                    <div class="form-group">
+                        <label for="uploadProgramId">Program ID (Optional)</label>
+                        <input type="text" id="uploadProgramId" placeholder="e.g., JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN" />
+                    </div>
+                </div>
+
+                <!-- URL Tab -->
+                <div class="modal-tab-content" id="urlTab">
+                    <div class="form-group">
+                        <label for="idlUrl">IDL URL</label>
+                        <input type="url" id="idlUrl" placeholder="https://example.com/path/to/idl.json" />
+                        <div class="form-hint">Direct link to a JSON file containing the IDL</div>
+                    </div>
+                    <div class="form-group">
+                        <button type="button" class="btn-fetch" id="fetchUrlBtn" style="width: 100%; padding: 8px 16px; background: var(--accent-primary); color: white; border: none; cursor: pointer; font-size: 12px; font-weight: 600; font-family: inherit;">Fetch IDL from URL</button>
+                    </div>
+                    <div class="form-group">
+                        <label for="urlProgramName">Program Name</label>
+                        <input type="text" id="urlProgramName" placeholder="e.g., Jupiter Aggregator" />
+                    </div>
+                    <div class="form-group">
+                        <label for="urlProgramId">Program ID (Optional)</label>
+                        <input type="text" id="urlProgramId" placeholder="e.g., JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN" />
+                    </div>
+                </div>
+
+                <!-- GitHub Tab -->
+                <div class="modal-tab-content" id="githubTab">
+                    <div class="form-group">
+                        <label for="githubOwner">GitHub Owner</label>
+                        <input type="text" id="githubOwner" placeholder="e.g., jup-ag" />
+                        <div class="form-hint">Repository owner or organization</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="githubRepo">Repository Name</label>
+                        <input type="text" id="githubRepo" placeholder="e.g., jupiter-core" />
+                    </div>
+                    <div class="form-group">
+                        <label for="githubPath">Path to IDL (Optional)</label>
+                        <input type="text" id="githubPath" placeholder="e.g., target/idl/jupiter.json" />
+                        <div class="form-hint">Leave empty to auto-detect IDL files in the repository</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="githubBranch">Branch (Optional)</label>
+                        <input type="text" id="githubBranch" placeholder="main" />
+                        <div class="form-hint">Default: main</div>
+                    </div>
+                    <div class="form-group">
+                        <button type="button" class="btn-fetch" id="fetchGithubBtn" style="width: 100%; padding: 8px 16px; background: var(--accent-primary); color: white; border: none; cursor: pointer; font-size: 12px; font-weight: 600; font-family: inherit;">Fetch IDL from GitHub</button>
+                    </div>
+                    <div class="form-group">
+                        <label for="githubProgramName">Program Name</label>
+                        <input type="text" id="githubProgramName" placeholder="e.g., Jupiter Aggregator" />
+                    </div>
+                    <div class="form-group">
+                        <label for="githubProgramId">Program ID (Optional)</label>
+                        <input type="text" id="githubProgramId" placeholder="e.g., JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN" />
+                    </div>
+                </div>
+
+                <!-- IDL Preview -->
+                <div id="idlPreview" style="display: none;" class="idl-preview">
+                    <h3>IDL Preview</h3>
+                    <div class="idl-stats" id="idlStats"></div>
+                    <div class="idl-code" id="idlCode"></div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" id="cancelBtn">Cancel</button>
+                    <button type="button" class="btn-submit" id="submitIdl" disabled>Add IDL</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let allProtocols = [];
+        let filteredProtocols = [];
+        let selectedProtocols = new Set();
+        let bookmarkedProtocols = new Set();
+        let currentCategory = 'all';
+        let showingBookmarks = false;
+        let keyboardFocusIndex = -1;
+        let protocolAddressMap = {}; // Map program addresses to protocol IDs
+        let currentTheme = 'light';
+
+        // Theme management
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('idlhub-theme');
+            if (savedTheme) {
+                currentTheme = savedTheme;
+            }
+            applyTheme(currentTheme);
+        }
+
+        function applyTheme(theme) {
+            currentTheme = theme;
+            if (theme === 'light') {
+                document.documentElement.removeAttribute('data-theme');
+            } else {
+                document.documentElement.setAttribute('data-theme', theme);
+            }
+            updateThemeSelector();
+        }
+
+        function saveTheme(theme) {
+            localStorage.setItem('idlhub-theme', theme);
+            applyTheme(theme);
+        }
+
+        function updateThemeSelector() {
+            const options = document.querySelectorAll('.theme-option');
+            options.forEach(option => {
+                if (option.dataset.theme === currentTheme) {
+                    option.classList.add('selected');
+                } else {
+                    option.classList.remove('selected');
+                }
+            });
+        }
+
+        function toggleThemeDropdown() {
+            const dropdown = document.getElementById('themeDropdown');
+            dropdown.classList.toggle('active');
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            const themeSelector = document.querySelector('.theme-selector');
+            const dropdown = document.getElementById('themeDropdown');
+            if (themeSelector && !themeSelector.contains(e.target)) {
+                dropdown.classList.remove('active');
+            }
+        });
+
+        // Navigation functions
+        function navigateHome() {
+            window.location.hash = '';
+        }
+
+        function navigateToProtocol(protocolIdOrAddress) {
+            window.location.hash = '#/' + protocolIdOrAddress;
+        }
+
+        // Handle hash-based routing
+        function handleRoute() {
+            const hash = window.location.hash;
+            if (hash.startsWith('#/')) {
+                const identifier = hash.substring(2);
+                showProtocolPage(identifier);
+            } else {
+                showMainView();
+            }
+        }
+
+        // Show main list view
+        function showMainView() {
+            document.querySelector('.container > div:not(.protocol-page)').style.display = 'block';
+            document.getElementById('protocolPage').classList.remove('active');
+        }
+
+        // Show individual protocol page
+        async function showProtocolPage(identifier) {
+            // Hide main view
+            document.querySelector('.container > div:not(.protocol-page)').style.display = 'none';
+
+            // Find protocol by ID or address
+            let protocol = allProtocols.find(p => p.id === identifier.toLowerCase());
+            if (!protocol && protocolAddressMap[identifier]) {
+                protocol = allProtocols.find(p => p.id === protocolAddressMap[identifier]);
+            }
+
+            if (!protocol) {
+                document.getElementById('protocolPageContent').innerHTML = `
+                    <div class="protocol-header-page">
+                        <h2 class="protocol-title">Protocol Not Found</h2>
+                        <p>Could not find protocol with identifier: ${identifier}</p>
+                    </div>
+                `;
+                document.getElementById('protocolPage').classList.add('active');
+                return;
+            }
+
+            // Load IDL via MCP API
+            try {
+                const idl = await getIDL(protocol.id);
+                const programAddress = idl.metadata?.address || 'N/A';
+
+                // Count instructions and accounts
+                const instructionCount = idl.instructions?.length || 0;
+                const accountCount = idl.accounts?.length || 0;
+                const typeCount = idl.types?.length || 0;
+
+                document.getElementById('protocolPageContent').innerHTML = `
+                    <div class="protocol-header-page">
+                        <h2 class="protocol-title">${protocol.name}</h2>
+                        <p>${protocol.description}</p>
+                        ${programAddress !== 'N/A' ? `
+                            <div class="protocol-address">
+                                <strong>Program Address:</strong> ${programAddress}
+                            </div>
+                        ` : ''}
+                        <div class="protocol-stats-grid">
+                            <div class="stat-box">
+                                <div class="stat-box-label">Status</div>
+                                <div class="stat-box-value">${protocol.status}</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-box-label">Category</div>
+                                <div class="stat-box-value">${protocol.category}</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-box-label">Instructions</div>
+                                <div class="stat-box-value">${instructionCount}</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-box-label">Accounts</div>
+                                <div class="stat-box-value">${accountCount}</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-box-label">Types</div>
+                                <div class="stat-box-value">${typeCount}</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-box-label">Version</div>
+                                <div class="stat-box-value">${protocol.version}</div>
+                            </div>
+                        </div>
+                        ${protocol.repo ? `
+                            <p style="margin-top: 16px;">
+                                <a href="${protocol.repo}" target="_blank" style="color: #0969da;">&lt;Repository&gt;</a>
+                            </p>
+                        ` : ''}
+                    </div>
+                    <div style="margin-top: 24px;">
+                        <h3 style="margin-bottom: 12px; font-size: 16px;">IDL Data</h3>
+                        <div class="idl-viewer">
+                            <pre>${JSON.stringify(idl, null, 2)}</pre>
+                        </div>
+                    </div>
+                `;
+            } catch (error) {
+                document.getElementById('protocolPageContent').innerHTML = `
+                    <div class="protocol-header-page">
+                        <h2 class="protocol-title">${protocol.name}</h2>
+                        <p style="color: #cf222e;">Error loading IDL: ${error.message}</p>
+                    </div>
+                `;
+            }
+
+            document.getElementById('protocolPage').classList.add('active');
+        }
+
+        // Load bookmarks from localStorage
+        function loadBookmarks() {
+            const saved = localStorage.getItem('bookmarkedProtocols');
+            if (saved) {
+                bookmarkedProtocols = new Set(JSON.parse(saved));
+            }
+            updateBookmarkCount();
+        }
+
+        // Save bookmarks to localStorage
+        function saveBookmarks() {
+            localStorage.setItem('bookmarkedProtocols', JSON.stringify([...bookmarkedProtocols]));
+            updateBookmarkCount();
+        }
+
+        // Toggle bookmark for a protocol
+        function toggleBookmark(protocolId) {
+            if (bookmarkedProtocols.has(protocolId)) {
+                bookmarkedProtocols.delete(protocolId);
+            } else {
+                bookmarkedProtocols.add(protocolId);
+            }
+            saveBookmarks();
+            renderProtocols();
+        }
+
+        // Update bookmark count in header
+        function updateBookmarkCount() {
+            const count = bookmarkedProtocols.size;
+            const countElement = document.getElementById('bookmarkCount');
+            if (count > 0) {
+                countElement.textContent = `(${count})`;
+                countElement.style.display = 'inline';
+            } else {
+                countElement.style.display = 'none';
+            }
+        }
+
+        // Toggle showing bookmarks
+        function toggleBookmarksView() {
+            showingBookmarks = !showingBookmarks;
+            const btn = document.getElementById('showBookmarksBtn');
+            if (showingBookmarks) {
+                btn.classList.add('active');
+                document.getElementById('bookmarkBtnText').textContent = 'Show All';
+                filteredProtocols = allProtocols.filter(p => bookmarkedProtocols.has(p.id));
+            } else {
+                btn.classList.remove('active');
+                document.getElementById('bookmarkBtnText').textContent = 'Bookmarks';
+                applyFilters();
+            }
+            renderProtocols();
+        }
+
+        // MCP API helpers
+        async function mcpCall(method, params = {}) {
+            const response = await fetch('/api/mcp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    jsonrpc: '2.0',
+                    method: method,
+                    params: params,
+                    id: Date.now()
+                })
+            });
+            const result = await response.json();
+            if (result.error) {
+                throw new Error(result.error.message);
+            }
+            return result.result;
+        }
+
+        async function getIDL(protocolId) {
+            const result = await mcpCall('get_schema', { protocol_id: protocolId });
+            return JSON.parse(result.content[0].text);
+        }
+
+        async function listSchemas(filters = {}) {
+            const result = await mcpCall('list_schemas', filters);
+            return JSON.parse(result.content[0].text);
+        }
+
+        // Load index.json and initialize
+        async function init() {
+            console.log('[IDLHub] Initializing...');
+            loadTheme();
+            loadBookmarks();
+            try {
+                // Use MCP API to load schemas
+                console.log('[IDLHub] Fetching schemas from MCP API...');
+                const data = await listSchemas();
+                console.log('[IDLHub] Loaded', data.total, 'protocols');
+                allProtocols = data.protocols;
+                filteredProtocols = allProtocols;
+
+                // Build program address map (disabled for performance)
+                await buildAddressMap();
+
+                updateStats();
+                renderFilters(data.categories);
+
+                // Handle initial route
+                handleRoute();
+
+                // Only render protocols if on main view
+                if (!window.location.hash.startsWith('#/')) {
+                    console.log('[IDLHub] Rendering protocols...');
+                    renderProtocols();
+                }
+
+                setupEventListeners();
+                console.log('[IDLHub] Initialization complete');
+            } catch (error) {
+                console.error('[IDLHub] Init error:', error);
+                document.getElementById('protocolsList').innerHTML = `
+                    <div class="no-results">
+                        <h3>Failed to load protocols</h3>
+                        <p>Error: ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Build map of program addresses to protocol IDs (disabled for performance)
+        async function buildAddressMap() {
+            // Skip building address map - causes slow page loads
+            // If needed, build lazily when searching by address
+            return;
+        }
+
+        function updateStats() {
+            const available = allProtocols.filter(p => p.status === 'available').length;
+            document.getElementById('totalProtocols').textContent = allProtocols.length;
+            document.getElementById('availableProtocols').textContent = available;
+            document.getElementById('selectedCount').textContent = selectedProtocols.size;
+        }
+
+        function renderFilters(categories) {
+            const filterButtons = document.getElementById('filterButtons');
+
+            const allBtn = document.createElement('button');
+            allBtn.className = 'filter-btn active';
+            allBtn.textContent = 'All';
+            allBtn.dataset.category = 'all';
+            filterButtons.appendChild(allBtn);
+
+            categories.forEach(category => {
+                const btn = document.createElement('button');
+                btn.className = 'filter-btn';
+                btn.textContent = category.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+                btn.dataset.category = category;
+                filterButtons.appendChild(btn);
+            });
+
+            filterButtons.addEventListener('click', (e) => {
+                if (e.target.classList.contains('filter-btn')) {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    e.target.classList.add('active');
+                    currentCategory = e.target.dataset.category;
+                    applyFilters();
+                }
+            });
+        }
+
+        function applyFilters() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+
+            filteredProtocols = allProtocols.filter(protocol => {
+                const matchesCategory = currentCategory === 'all' || protocol.category === currentCategory;
+                const matchesSearch = searchTerm === '' ||
+                    protocol.name.toLowerCase().includes(searchTerm) ||
+                    protocol.description.toLowerCase().includes(searchTerm) ||
+                    protocol.id.toLowerCase().includes(searchTerm) ||
+                    // Check if search term matches a program address
+                    Object.keys(protocolAddressMap).some(address =>
+                        address.toLowerCase().includes(searchTerm) &&
+                        protocolAddressMap[address] === protocol.id
+                    );
+
+                return matchesCategory && matchesSearch;
+            });
+
+            renderProtocols();
+        }
+
+        function renderProtocols() {
+            const container = document.getElementById('protocolsList');
+
+            if (filteredProtocols.length === 0) {
+                container.innerHTML = `
+                    <div class="no-results">
+                        <h3>No protocols found</h3>
+                        <p>Try adjusting your search or filters</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filteredProtocols.map(protocol => `
+                <div class="protocol-item ${selectedProtocols.has(protocol.id) ? 'selected' : ''} ${bookmarkedProtocols.has(protocol.id) ? 'bookmarked' : ''}" data-id="${protocol.id}">
+                    <input 
+                        type="checkbox" 
+                        class="protocol-checkbox" 
+                        ${selectedProtocols.has(protocol.id) ? 'checked' : ''}
+                        data-id="${protocol.id}"
+                    >
+                    <div class="protocol-info">
+                        <div class="protocol-header">
+                            <span class="protocol-name">${protocol.name}</span>
+                            <span class="protocol-badge badge-${protocol.status}">${protocol.status}</span>
+                            <span class="category-badge">${protocol.category}</span>
+                        </div>
+                        <div class="protocol-description">${protocol.description}</div>
+                        <div class="protocol-meta">
+                            ${protocol.repo ? `<a href="${protocol.repo}" target="_blank">Repository</a> • ` : ''}
+                            Version ${protocol.version} • Updated ${protocol.lastUpdated}
+                        </div>
+                    </div>
+                    <div class="protocol-actions">
+                        <button class="bookmark-icon ${bookmarkedProtocols.has(protocol.id) ? 'bookmarked' : ''}" onclick="toggleBookmark('${protocol.id}')" title="Bookmark">
+                            ${bookmarkedProtocols.has(protocol.id) ? '★' : '☆'}
+                        </button>
+                        <button class="icon-btn" onclick="navigateToProtocol('${protocol.id}')" title="View IDL">View</button>
+                        <button class="icon-btn" onclick="downloadSingle('${protocol.id}')" title="Download IDL">Download</button>
+                    </div>
+                </div>
+            `).join('');
+
+            // Add click listeners to checkboxes
+            document.querySelectorAll('.protocol-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', (e) => {
+                    const id = e.target.dataset.id;
+                    if (e.target.checked) {
+                        selectedProtocols.add(id);
+                    } else {
+                        selectedProtocols.delete(id);
+                    }
+                    updateSelection();
+                });
+            });
+
+            // Add click listeners to protocol items
+            document.querySelectorAll('.protocol-item').forEach(item => {
+                item.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('protocol-checkbox') ||
+                        e.target.classList.contains('icon-btn') ||
+                        e.target.classList.contains('bookmark-icon') ||
+                        e.target.tagName === 'A') {
+                        return;
+                    }
+                    const checkbox = item.querySelector('.protocol-checkbox');
+                    checkbox.checked = !checkbox.checked;
+                    checkbox.dispatchEvent(new Event('change'));
+                });
+            });
+        }
+
+        function updateSelection() {
+            updateStats();
+            document.getElementById('exportBtn').disabled = selectedProtocols.size === 0;
+
+            if (selectedProtocols.size > 0) {
+                document.getElementById('selectionInfo').textContent =
+                    `${selectedProtocols.size} protocol${selectedProtocols.size > 1 ? 's' : ''} selected`;
+            } else {
+                document.getElementById('selectionInfo').textContent = 'Select protocols to export their IDLs';
+            }
+
+            // Update visual state
+            document.querySelectorAll('.protocol-item').forEach(item => {
+                const id = item.dataset.id;
+                if (selectedProtocols.has(id)) {
+                    item.classList.add('selected');
+                } else {
+                    item.classList.remove('selected');
+                }
+            });
+        }
+
+        // Copy Rules for AI Agents
+        async function copyRulesToClipboard() {
+            const rulesText = `# IDLHub Usage Rules for AI Agents
+
+## What is IDLHub?
+
+IDLHub (https://idlhub.com) is a comprehensive registry of Solana program Interface Definition Language (IDL) files. It provides:
+- A searchable web interface to browse and export IDLs
+- REST API for programmatic access
+- GitHub integration for loading IDLs
+- Semantic search capabilities
+
+## Web Interface (https://idlhub.com)
+
+The main page provides:
+1. **Search**: Search by program name, description, or address
+2. **Filters**: Filter by categories (DeFi, DEX, Lending, NFT, etc.)
+3. **Selection**: Select multiple programs and export their IDLs
+4. **Bookmarks**: Save favorite programs for quick access
+5. **Themes**: Multiple color themes for comfortable viewing
+
+### How to Use:
+- Browse the list of Solana programs with IDLs
+- Click on any program to view full details
+- Select programs using checkboxes
+- Click "Export Selected IDLs" to download as JSON
+- Use search to find specific programs
+- Filter by category to narrow results
+
+## REST API (https://idlhub.com/api)
+
+### Quick Start Examples:
+
+**List all IDLs:**
+` + '```' + `bash
+curl "https://idlhub.com/api/idl?network=mainnet&limit=10"
+` + '```' + `
+
+**Get specific IDL:**
+` + '```' + `bash
+curl "https://idlhub.com/api/idl/JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN"
+` + '```' + `
+
+**Search IDLs:**
+` + '```' + `bash
+curl "https://idlhub.com/api/idl/search?q=jupiter+swap&network=mainnet"
+` + '```' + `
+
+**Load IDL from GitHub:**
+` + '```' + `bash
+curl -X POST "https://idlhub.com/api/idl/load-from-github" -H "Content-Type: application/json" -d '{"owner":"coral-xyz","repo":"anchor","path":"tests/example-program/idl.json","programId":"ExampleProgram11111111111111111111111111111","name":"Example Program","network":"mainnet"}'
+` + '```' + `
+
+### API Endpoints:
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | /api/idl | List all IDLs |
+| GET | /api/idl/:programId | Get specific IDL |
+| POST | /api/idl/upload | Upload new IDL |
+| POST | /api/idl/load-from-github | Load IDL from GitHub |
+| GET | /api/idl/search | Search IDLs |
+| DELETE | /api/idl/:programId | Delete IDL |
+
+### Query Parameters:
+- ` + '`' + `network` + '`' + `: mainnet/devnet/testnet (default: mainnet)
+- ` + '`' + `limit` + '`' + `: Results per page (1-100, default: 50)
+- ` + '`' + `offset` + '`' + `: Pagination offset
+- ` + '`' + `q` + '`' + `: Search query (for search endpoint)
+
+## Data Structure
+
+### IDL Format (Anchor Framework):
+` + '```' + `json
+{
+  "version": "0.1.0",
+  "name": "program_name",
+  "instructions": [
+    {
+      "name": "instruction_name",
+      "accounts": [...],
+      "args": [...]
+    }
+  ],
+  "accounts": [...],
+  "types": [...],
+  "errors": [...]
+}
+` + '```' + `
+
+### Program Metadata:
+` + '```' + `json
+{
+  "programId": "Base58EncodedAddress...",
+  "name": "Program Name",
+  "network": "mainnet",
+  "instructionCount": 25,
+  "createdAt": "2024-01-01T00:00:00Z",
+  "idl": { ... }
+}
+` + '```' + `
+
+## When to Use IDLHub:
+
+1. **Building Solana dApps**: Get IDLs to interact with programs
+2. **Program Analysis**: Study instruction patterns across protocols
+3. **Documentation**: Generate docs from IDL definitions
+4. **Testing**: Use IDLs to create test fixtures
+5. **Discovery**: Find similar programs or protocols
+
+## Best Practices:
+
+1. **Always specify network**: Use ` + '`' + `network=mainnet` + '`' + ` or ` + '`' + `network=devnet` + '`' + `
+2. **Use pagination**: Don't fetch all data at once
+3. **Cache responses**: IDLs don't change frequently
+4. **Validate program IDs**: Must be valid base58 Solana addresses (32-44 chars)
+5. **Handle errors**: Check response status and error messages
+
+## Examples for Common Tasks:
+
+### Task: Find all DEX programs
+1. Go to https://idlhub.com
+2. Click "DEX" filter button
+3. Browse results or select and export
+
+### Task: Get Jupiter IDL programmatically
+` + '```' + `javascript
+const response = await fetch(
+  'https://idlhub.com/api/idl/JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN'
+);
+const { idl } = await response.json();
+` + '```' + `
+
+### Task: Search for lending protocols
+` + '```' + `javascript
+const response = await fetch(
+  'https://idlhub.com/api/idl/search?q=lending&network=mainnet'
+);
+const { results } = await response.json();
+` + '```' + `
+
+## Additional Resources:
+
+- **Full Documentation**: https://idlhub.com/docs.html
+- **API Guide for Agents**: https://idlhub.com/llms.txt
+- **GitHub Repository**: https://github.com/openSVM/idlhub
+- **Quick Install**: \`curl -fsSL https://idlhub.com/mcp | sh\`
+
+## Notes:
+
+- No authentication required (currently)
+- Data stored in OpenSVM backend
+- Supports mainnet, devnet, and testnet
+- Regular updates from community contributions
+- Open source and community-driven
+
+---
+
+Use these instructions to help users interact with IDLHub effectively. The service provides both human-friendly web UI and machine-friendly API access to Solana program IDLs.
+
+## API Endpoints:
+
+- List all programs: ` + '`' + `GET /api/programs` + '`' + `
+- Get IDL for a program: ` + '`' + `GET /api/programs/:id/idl` + '`' + `
+- Add a new program: ` + '`' + `POST /api/programs` + '`' + `
+- Update IDL for a program: ` + '`' + `PUT /api/programs/:id/idl` + '`' + `
+- Delete a program: ` + '`' + `DELETE /api/programs/:id` + '`' + `
+
+(Replace ` + '`' + `:id` + '`' + ` with the actual program ID)
+`;
+            try {
+                await navigator.clipboard.writeText(rulesText);
+                const btn = document.getElementById('copyRulesBtn');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<span>[OK] Copied!</span>';
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                }, 2000);
+            } catch (err) {
+                console.error('Failed to copy:', err);
+                alert('Failed to copy to clipboard. Please try again.');
+            }
+        }
+
+        // Add IDL Modal Functionality
+        let currentIdlData = null;
+        let currentTab = 'upload';
+
+        function openAddIdlModal() {
+            document.getElementById('addIdlModal').classList.add('active');
+            resetModal();
+        }
+
+        function closeAddIdlModal() {
+            document.getElementById('addIdlModal').classList.remove('active');
+            resetModal();
+        }
+
+        function resetModal() {
+            // Clear all inputs
+            document.getElementById('idlFile').value = '';
+            document.getElementById('uploadProgramName').value = '';
+            document.getElementById('uploadProgramId').value = '';
+            document.getElementById('idlUrl').value = '';
+            document.getElementById('urlProgramName').value = '';
+            document.getElementById('urlProgramId').value = '';
+            document.getElementById('githubOwner').value = '';
+            document.getElementById('githubRepo').value = '';
+            document.getElementById('githubPath').value = '';
+            document.getElementById('githubBranch').value = '';
+            document.getElementById('githubProgramName').value = '';
+            document.getElementById('githubProgramId').value = '';
+            
+            // Hide preview
+            document.getElementById('idlPreview').style.display = 'none';
+            
+            // Reset submit button state
+            const submitBtn = document.getElementById('submitIdl');
+            submitBtn.disabled = true;
+            
+            // Clear message
+            document.getElementById('modalMessage').innerHTML = '';
+            
+            // Reset to first tab
+            switchTab('upload');
+            currentIdlData = null;
+        }
+
+        function switchTab(tabName) {
+            currentTab = tabName;
+            
+            // Update tab buttons
+            document.querySelectorAll('.modal-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+            
+            // Update tab content
+            document.querySelectorAll('.modal-tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(`${tabName}Tab`).classList.add('active');
+            
+            // Hide preview when switching tabs
+            document.getElementById('idlPreview').style.display = 'none';
+            document.getElementById('submitIdl').disabled = true;
+            currentIdlData = null;
+        }
+
+        function showMessage(message, type = 'error') {
+            const messageDiv = document.getElementById('modalMessage');
+            const wrapper = document.createElement('div');
+            wrapper.className = `${type}-message`;
+            wrapper.textContent = message;
+            messageDiv.textContent = '';
+            messageDiv.appendChild(wrapper);
+            setTimeout(() => {
+                messageDiv.textContent = '';
+            }, 5000);
+        }
+
+        function parseIdlStats(idl) {
+            const stats = {
+                instructions: idl.instructions?.length || 0,
+                accounts: idl.accounts?.length || 0,
+                types: idl.types?.length || 0,
+                errors: idl.errors?.length || 0
+            };
+            return stats;
+        }
+
+        function showIdlPreview(idl) {
+            currentIdlData = idl;
+            const stats = parseIdlStats(idl);
+            
+            // Show stats
+            const statsHtml = `
+                <div class="idl-stat">
+                    <div class="idl-stat-label">Instructions</div>
+                    <div class="idl-stat-value">${stats.instructions}</div>
+                </div>
+                <div class="idl-stat">
+                    <div class="idl-stat-label">Accounts</div>
+                    <div class="idl-stat-value">${stats.accounts}</div>
+                </div>
+                <div class="idl-stat">
+                    <div class="idl-stat-label">Types</div>
+                    <div class="idl-stat-value">${stats.types}</div>
+                </div>
+                <div class="idl-stat">
+                    <div class="idl-stat-label">Errors</div>
+                    <div class="idl-stat-value">${stats.errors}</div>
+                </div>
+            `;
+            document.getElementById('idlStats').innerHTML = statsHtml;
+            
+            // Show code with syntax highlighting (basic)
+            const codeHtml = syntaxHighlight(JSON.stringify(idl, null, 2));
+            document.getElementById('idlCode').innerHTML = codeHtml;
+            
+            // Show preview section
+            document.getElementById('idlPreview').style.display = 'block';
+            document.getElementById('submitIdl').disabled = false;
+        }
+
+        function syntaxHighlight(json) {
+            json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+                let cls = 'number';
+                if (/^"/.test(match)) {
+                    if (/:$/.test(match)) {
+                        cls = 'key';
+                        return '<span style="color: var(--accent-primary); font-weight: 600;">' + match + '</span>';
+                    } else {
+                        cls = 'string';
+                        return '<span style="color: #2da44e;">' + match + '</span>';
+                    }
+                } else if (/true|false/.test(match)) {
+                    return '<span style="color: #0969da;">' + match + '</span>';
+                } else if (/null/.test(match)) {
+                    return '<span style="color: #8b949e;">' + match + '</span>';
+                }
+                return '<span style="color: #cf222e;">' + match + '</span>';
+            });
+        }
+
+        // Handle file upload
+        async function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            try {
+                const text = await file.text();
+                const idl = JSON.parse(text);
+                showIdlPreview(idl);
+            } catch (error) {
+                showMessage('Invalid JSON file. Please upload a valid IDL JSON file.', 'error');
+            }
+        }
+
+        // Handle URL fetch
+        async function handleUrlFetch() {
+            const urlInput = document.getElementById('idlUrl').value.trim();
+            if (!urlInput) {
+                showMessage('Please enter a URL', 'error');
+                return;
+            }
+            
+            // Validate URL format
+            let url;
+            try {
+                url = new URL(urlInput);
+            } catch (e) {
+                showMessage('Invalid URL format. Please enter a valid URL.', 'error');
+                return;
+            }
+            
+            // Only allow HTTPS and GitHub raw URLs for security
+            const allowedDomains = ['raw.githubusercontent.com', 'gist.githubusercontent.com'];
+            const isGitHub = allowedDomains.some(domain => url.hostname === domain);
+            const isHttps = url.protocol === 'https:';
+            
+            if (!isHttps && !isGitHub) {
+                showMessage('Only HTTPS URLs are allowed for security reasons.', 'error');
+                return;
+            }
+            
+            try {
+                showMessage('Fetching IDL from URL...', 'loading');
+                const response = await fetch(url.href);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch IDL');
+                }
+                
+                // Check response size (limit to 5MB)
+                const contentLength = response.headers.get('content-length');
+                if (contentLength && parseInt(contentLength) > 5 * 1024 * 1024) {
+                    throw new Error('File too large (max 5MB)');
+                }
+                
+                const idl = await response.json();
+                document.getElementById('modalMessage').innerHTML = '';
+                showIdlPreview(idl);
+            } catch (error) {
+                showMessage('Failed to fetch IDL from URL. Please check the URL and try again. ' + error.message, 'error');
+            }
+        }
+
+        // Handle GitHub fetch
+        async function handleGithubFetch() {
+            const owner = document.getElementById('githubOwner').value.trim();
+            const repo = document.getElementById('githubRepo').value.trim();
+            const path = document.getElementById('githubPath').value.trim();
+            const branch = document.getElementById('githubBranch').value.trim() || 'main';
+            
+            if (!owner || !repo) {
+                showMessage('Please enter GitHub owner and repository name', 'error');
+                return;
+            }
+            
+            try {
+                showMessage('Fetching IDL from GitHub...', 'loading');
+                
+                // If path is provided, fetch directly
+                if (path) {
+                    const url = `https://raw.githubusercontent.com/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/${encodeURIComponent(branch)}/${encodeURIComponent(path)}`;
+                    const response = await fetch(url);
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch IDL');
+                    }
+                    const idl = await response.json();
+                    document.getElementById('modalMessage').innerHTML = '';
+                    showIdlPreview(idl);
+                } else {
+                    // Auto-detect IDL files
+                    showMessage('Auto-detection not implemented yet. Please provide the path to the IDL file.', 'error');
+                }
+            } catch (error) {
+                showMessage('Failed to fetch IDL from GitHub. Please check your inputs and try again.', 'error');
+            }
+        }
+
+        // Submit IDL
+        async function submitIdl() {
+            if (!currentIdlData) {
+                showMessage('Please load an IDL first', 'error');
+                return;
+            }
+            
+            let programName, programId;
+            
+            if (currentTab === 'upload') {
+                programName = document.getElementById('uploadProgramName').value.trim();
+                programId = document.getElementById('uploadProgramId').value.trim();
+            } else if (currentTab === 'url') {
+                programName = document.getElementById('urlProgramName').value.trim();
+                programId = document.getElementById('urlProgramId').value.trim();
+            } else if (currentTab === 'github') {
+                programName = document.getElementById('githubProgramName').value.trim();
+                programId = document.getElementById('githubProgramId').value.trim();
+            }
+            
+            if (!programName) {
+                showMessage('Please enter a program name', 'error');
+                return;
+            }
+            
+            try {
+                document.getElementById('submitIdl').disabled = true;
+                showMessage('Submitting IDL...', 'loading');
+                
+                // Here you would call your API to submit the IDL
+                // For now, we'll just show success
+                const payload = {
+                    programId: programId || currentIdlData.metadata?.address || 'unknown',
+                    name: programName,
+                    network: 'mainnet',
+                    idl: currentIdlData
+                };
+                
+                // Real API call
+                const response = await fetch('/api/submit-idl', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+                if (response.ok) {
+                    showMessage('IDL submitted successfully! The registry will be updated shortly.', 'success');
+                    setTimeout(() => {
+                        closeAddIdlModal();
+                    }, 2000);
+                } else {
+                    const errorText = await response.text();
+                    showMessage('Failed to submit IDL: ' + errorText, 'error');
+                    document.getElementById('submitIdl').disabled = false;
+                }
+                
+            } catch (error) {
+                showMessage('Failed to submit IDL. Please try again.', 'error');
+                document.getElementById('submitIdl').disabled = false;
+            }
+        }
+
+        function setupEventListeners() {
+            document.getElementById('searchInput').addEventListener('input', applyFilters);
+
+            document.getElementById('showBookmarksBtn').addEventListener('click', toggleBookmarksView);
+
+            document.getElementById('copyRulesBtn').addEventListener('click', copyRulesToClipboard);
+
+            // Add IDL Modal
+            document.getElementById('addIdlBtn').addEventListener('click', openAddIdlModal);
+            document.getElementById('closeModal').addEventListener('click', closeAddIdlModal);
+            document.getElementById('cancelBtn').addEventListener('click', closeAddIdlModal);
+            
+            // Modal tabs
+            document.querySelectorAll('.modal-tab').forEach(tab => {
+                tab.addEventListener('click', (e) => {
+                    switchTab(e.target.dataset.tab);
+                });
+            });
+            
+            // File upload
+            document.getElementById('idlFile').addEventListener('change', handleFileUpload);
+            
+            // URL fetch button
+            document.getElementById('fetchUrlBtn').addEventListener('click', handleUrlFetch);
+            
+            // GitHub fetch button
+            document.getElementById('fetchGithubBtn').addEventListener('click', handleGithubFetch);
+            
+            // Submit button
+            document.getElementById('submitIdl').addEventListener('click', submitIdl);
+            
+            // Close modal on overlay click
+            document.getElementById('addIdlModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeAddIdlModal();
+                }
+            });
+            
+            // Close modal on ESC key
+            document.addEventListener('keydown', function(e) {
+                const modal = document.getElementById('addIdlModal');
+                if (e.key === 'Escape' && modal.classList.contains('active')) {
+                    closeAddIdlModal();
+                }
+            });
+
+            // Theme selector
+            document.getElementById('themeBtn').addEventListener('click', toggleThemeDropdown);
+            
+            document.querySelectorAll('.theme-option').forEach(option => {
+                option.addEventListener('click', (e) => {
+                    const theme = e.target.dataset.theme;
+                    saveTheme(theme);
+                    document.getElementById('themeDropdown').classList.remove('active');
+                });
+            });
+
+            document.getElementById('selectAllBtn').addEventListener('click', () => {
+                filteredProtocols.forEach(p => selectedProtocols.add(p.id));
+                updateSelection();
+                renderProtocols();
+            });
+
+            document.getElementById('clearBtn').addEventListener('click', () => {
+                selectedProtocols.clear();
+                updateSelection();
+                renderProtocols();
+            });
+
+            document.getElementById('exportBtn').addEventListener('click', exportSelectedIDLs);
+
+            // Hash change listener for routing
+            window.addEventListener('hashchange', handleRoute);
+
+            // Keyboard navigation
+            document.addEventListener('keydown', handleKeyboardNavigation);
+        }
+
+        // Keyboard navigation handler
+        function handleKeyboardNavigation(e) {
+            // Only handle keyboard nav on main view
+            if (document.getElementById('protocolPage').classList.contains('active')) {
+                if (e.key === 'Escape') {
+                    navigateHome();
+                }
+                return;
+            }
+
+            const items = Array.from(document.querySelectorAll('.protocol-item'));
+            if (items.length === 0) return;
+
+            switch (e.key) {
+                case 'ArrowDown':
+                    e.preventDefault();
+                    keyboardFocusIndex = Math.min(keyboardFocusIndex + 1, items.length - 1);
+                    updateKeyboardFocus(items);
+                    break;
+                case 'ArrowUp':
+                    e.preventDefault();
+                    keyboardFocusIndex = Math.max(keyboardFocusIndex - 1, 0);
+                    updateKeyboardFocus(items);
+                    break;
+                case 'Enter':
+                    e.preventDefault();
+                    if (keyboardFocusIndex >= 0 && keyboardFocusIndex < items.length) {
+                        const protocolId = items[keyboardFocusIndex].dataset.id;
+                        navigateToProtocol(protocolId);
+                    }
+                    break;
+                case 'Escape':
+                    e.preventDefault();
+                    keyboardFocusIndex = -1;
+                    updateKeyboardFocus(items);
+                    break;
+                case ' ':
+                    // Space to select/deselect
+                    if (keyboardFocusIndex >= 0 && keyboardFocusIndex < items.length) {
+                        e.preventDefault();
+                        const checkbox = items[keyboardFocusIndex].querySelector('.protocol-checkbox');
+                        checkbox.checked = !checkbox.checked;
+                        checkbox.dispatchEvent(new Event('change'));
+                    }
+                    break;
+            }
+        }
+
+        function updateKeyboardFocus(items) {
+            items.forEach((item, index) => {
+                if (index === keyboardFocusIndex) {
+                    item.classList.add('keyboard-focus');
+                    item.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+                } else {
+                    item.classList.remove('keyboard-focus');
+                }
+            });
+        }
+
+        async function viewIDL(protocolId) {
+            const protocol = allProtocols.find(p => p.id === protocolId);
+            if (!protocol) return;
+
+            try {
+                const idl = await getIDL(protocolId);
+
+                const newWindow = window.open('', '_blank');
+                newWindow.document.write(`
+                    <html>
+                        <head>
+                            <title>${protocol.name} IDL</title>
+                            <style>
+                                body { font-family: monospace; padding: 20px; background: #1e1e1e; color: #d4d4d4; }
+                                pre { white-space: pre-wrap; word-wrap: break-word; }
+                            </style>
+                        </head>
+                        <body>
+                            <h1>${protocol.name} IDL</h1>
+                            <pre>${JSON.stringify(idl, null, 2)}</pre>
+                        </body>
+                    </html>
+                `);
+            } catch (error) {
+                alert(`Failed to load IDL: ${error.message}`);
+            }
+        }
+
+        async function downloadSingle(protocolId) {
+            const protocol = allProtocols.find(p => p.id === protocolId);
+            if (!protocol) return;
+
+            try {
+                const idl = await getIDL(protocolId);
+
+                const blob = new Blob([JSON.stringify(idl, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${protocol.id}-idl.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+            } catch (error) {
+                alert(`Failed to download IDL: ${error.message}`);
+            }
+        }
+
+        async function exportSelectedIDLs() {
+            if (selectedProtocols.size === 0) return;
+
+            const idls = {};
+            const errors = [];
+
+            for (const protocolId of selectedProtocols) {
+                const protocol = allProtocols.find(p => p.id === protocolId);
+                if (!protocol) continue;
+
+                try {
+                    const idl = await getIDL(protocolId);
+                    idls[protocolId] = idl;
+                } catch (error) {
+                    errors.push(`${protocol.name}: ${error.message}`);
+                }
+            }
+
+            if (errors.length > 0) {
+                alert(`Warning: Some IDLs failed to load:\n${errors.join('\n')}`);
+            }
+
+            const exportData = {
+                exportedAt: new Date().toISOString(),
+                totalProtocols: selectedProtocols.size,
+                protocols: idls
+            };
+
+            const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `solana-idls-export-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Initialize on page load
+        init();
+
+        // ==================== ONBOARDING LOGIC ====================
+        let currentOnboardingStep = 0;
+        const totalSteps = 5;
+
+        function checkOnboarding() {
+            const hasSeenOnboarding = localStorage.getItem('idlhub-onboarding-seen');
+            if (!hasSeenOnboarding) {
+                setTimeout(() => {
+                    openOnboarding();
+                }, 500);
+            }
+        }
+
+        function openOnboarding() {
+            currentOnboardingStep = 0;
+            updateOnboardingUI();
+            document.getElementById('onboardingOverlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeOnboarding() {
+            document.getElementById('onboardingOverlay').classList.remove('active');
+            document.body.style.overflow = '';
+
+            if (document.getElementById('dontShowAgain').checked) {
+                localStorage.setItem('idlhub-onboarding-seen', 'true');
+            }
+        }
+
+        function nextStep() {
+            if (currentOnboardingStep < totalSteps - 1) {
+                currentOnboardingStep++;
+                updateOnboardingUI();
+            } else {
+                closeOnboarding();
+                localStorage.setItem('idlhub-onboarding-seen', 'true');
+            }
+        }
+
+        function prevStep() {
+            if (currentOnboardingStep > 0) {
+                currentOnboardingStep--;
+                updateOnboardingUI();
+            }
+        }
+
+        function goToStep(step) {
+            currentOnboardingStep = step;
+            updateOnboardingUI();
+        }
+
+        function updateOnboardingUI() {
+            // Update steps visibility
+            document.querySelectorAll('.onboarding-step').forEach((el, i) => {
+                el.classList.toggle('active', i === currentOnboardingStep);
+            });
+
+            // Update progress dots
+            document.querySelectorAll('.progress-dot').forEach((el, i) => {
+                el.classList.remove('active', 'completed');
+                if (i === currentOnboardingStep) {
+                    el.classList.add('active');
+                } else if (i < currentOnboardingStep) {
+                    el.classList.add('completed');
+                }
+            });
+
+            // Update navigation buttons
+            document.getElementById('prevBtn').disabled = currentOnboardingStep === 0;
+
+            const nextBtn = document.getElementById('nextBtn');
+            if (currentOnboardingStep === totalSteps - 1) {
+                nextBtn.textContent = 'Explore IDLs';
+            } else {
+                nextBtn.textContent = 'Next';
+            }
+        }
+
+        // Close modal on overlay click
+        document.getElementById('onboardingOverlay').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('onboardingOverlay')) {
+                closeOnboarding();
+            }
+        });
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && document.getElementById('onboardingOverlay').classList.contains('active')) {
+                closeOnboarding();
+            }
+            // Arrow keys for navigation
+            if (document.getElementById('onboardingOverlay').classList.contains('active')) {
+                if (e.key === 'ArrowRight') {
+                    nextStep();
+                } else if (e.key === 'ArrowLeft') {
+                    prevStep();
+                }
+            }
+        });
+
+        // Check if we should show onboarding
+        checkOnboarding();
+    </script>
+</body>
+
+</html>
