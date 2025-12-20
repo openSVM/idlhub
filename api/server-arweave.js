@@ -10,8 +10,14 @@ import cors from 'cors';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { createRequire } from 'module';
 import * as arweaveUpload from './services/arweave-upload.js';
-import * as onchainMetrics from './services/onchain-metrics.js';
+import * as txMetrics from './services/tx-metrics.js';
+
+// Use require for CommonJS modules
+const require = createRequire(import.meta.url);
+const idlVerifier = require('./services/idl-verifier.js');
+const verificationScheduler = require('./services/verification-scheduler.js');
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -177,8 +183,8 @@ app.get('/api/idl', async (req, res) => {
     // Fetch metrics data
     let allMetrics = {};
     try {
-      allMetrics = await onchainMetrics.getCachedOnChainMetrics();
-      console.log('[API] Fetched metrics for', Object.keys(allMetrics).length, 'protocols');
+      allMetrics = await txMetrics.getCachedTxMetrics();
+      console.log('[API] Fetched transaction-based metrics for', Object.keys(allMetrics).length, 'protocols');
     } catch (metricsError) {
       console.warn('[API] Failed to fetch metrics:', metricsError.message);
     }
@@ -287,16 +293,17 @@ app.get('/api/idl/search', async (req, res) => {
 app.get('/api/metrics', async (req, res) => {
   try {
     console.log('[API] Fetching all protocol metrics...');
-    const metrics = await onchainMetrics.getCachedOnChainMetrics();
+    const metrics = await txMetrics.getCachedTxMetrics();
 
     res.json({
       protocols: metrics,
       totalProtocols: Object.keys(metrics).length,
       lastUpdated: Date.now(),
-      cacheTTL: '2 minutes'
+      cacheTTL: '5 minutes',
+      source: 'transaction-based'
     });
 
-    console.log('[API] Successfully returned metrics for', Object.keys(metrics).length, 'protocols');
+    console.log('[API] Successfully returned transaction-based metrics for', Object.keys(metrics).length, 'protocols');
   } catch (error) {
     console.error('[API] Error fetching metrics:', error.message);
     res.status(500).json({ error: 'Failed to fetch metrics', details: error.message });
@@ -309,7 +316,7 @@ app.get('/api/metrics/:protocolId', async (req, res) => {
     const { protocolId } = req.params;
     console.log(`[API] Fetching metrics for protocol: ${protocolId}`);
 
-    const metrics = await onchainMetrics.getOnChainMetrics(protocolId);
+    const metrics = await txMetrics.getTxMetrics(protocolId);
 
     if (!metrics) {
       return res.status(404).json({
@@ -578,12 +585,118 @@ app.get('/api/arweave/stats', (req, res) => {
   });
 });
 
+// ═══════════════════════════════════════════════════════════════════════════════
+// VERIFICATION & STATUS ENDPOINTS
+// ═══════════════════════════════════════════════════════════════════════════════
+
+// Status page - summary of all verification results
+app.get('/api/status', (req, res) => {
+  const summary = idlVerifier.getSummary();
+  const schedulerStatus = verificationScheduler.getSchedulerStatus();
+  const persisted = verificationScheduler.getPersistedData();
+
+  res.json({
+    service: 'IDLHub',
+    version: '4.0.0',
+    status: summary.status || 'operational',
+    verification: {
+      ...summary,
+      scheduler: schedulerStatus,
+    },
+    // Include historical data if available
+    history: persisted.history?.slice(0, 24) || summary.uptimeHistory || [],
+  });
+});
+
+// Detailed verification results for all protocols
+app.get('/api/status/protocols', (req, res) => {
+  const persisted = verificationScheduler.getPersistedData();
+  const latest = idlVerifier.getLatestResults();
+
+  res.json({
+    timestamp: persisted.results?.lastRun?.timestamp || latest.lastRun?.timestamp,
+    protocols: persisted.results?.protocolResults || latest.protocolResults || {},
+  });
+});
+
+// Verification result for a specific protocol
+app.get('/api/status/:protocolId', (req, res) => {
+  const { protocolId } = req.params;
+  const result = idlVerifier.getProtocolResult(protocolId);
+
+  if (!result) {
+    // Try to get from persisted data
+    const persisted = verificationScheduler.getPersistedData();
+    const persistedResult = persisted.results?.protocolResults?.[protocolId];
+
+    if (persistedResult) {
+      return res.json(persistedResult);
+    }
+
+    return res.status(404).json({
+      error: 'No verification data',
+      protocolId,
+      message: 'Protocol not yet verified or does not exist',
+    });
+  }
+
+  res.json(result);
+});
+
+// Verification history (last 24 hours / 168 runs)
+app.get('/api/status/history', (req, res) => {
+  const persisted = verificationScheduler.getPersistedData();
+  const inMemory = idlVerifier.getHistory();
+
+  res.json({
+    history: persisted.history || inMemory,
+    totalRuns: (persisted.history || inMemory).length,
+  });
+});
+
+// Trigger manual verification (admin endpoint)
+app.post('/api/status/verify', async (req, res) => {
+  try {
+    console.log('[API] Manual verification triggered');
+    const result = await verificationScheduler.triggerManualRun();
+    res.json({
+      success: true,
+      message: 'Verification run completed',
+      result: {
+        verified: result.verified,
+        total: result.totalProtocols,
+        durationMs: result.durationMs,
+      },
+    });
+  } catch (err) {
+    res.status(500).json({
+      error: 'Verification failed',
+      details: err.message,
+    });
+  }
+});
+
+// Scheduler control endpoints
+app.get('/api/status/scheduler', (req, res) => {
+  res.json(verificationScheduler.getSchedulerStatus());
+});
+
+app.post('/api/status/scheduler/start', (req, res) => {
+  const result = verificationScheduler.startScheduler(false); // Don't run immediately
+  res.json({ success: true, message: 'Scheduler started', ...result });
+});
+
+app.post('/api/status/scheduler/stop', (req, res) => {
+  verificationScheduler.stopScheduler();
+  res.json({ success: true, message: 'Scheduler stopped' });
+});
+
 // API documentation
 app.get('/api/docs', (req, res) => {
   res.json({
     title: 'IDLHub REST API',
-    version: '4.0.0',
-    description: 'REST API serving IDLs from Arweave permanent storage. Clients only need to interact with this API - all Arweave uploads are handled server-side.',
+    version: '4.1.0',
+    description: 'REST API serving IDLs from Arweave permanent storage with on-chain verification. Clients only need to interact with this API - all Arweave uploads are handled server-side.',
     backend: 'arweave',
     endpoints: {
       'GET /health': 'Health check with Arweave status',
@@ -599,6 +712,12 @@ app.get('/api/docs', (req, res) => {
       'POST /api/arweave/estimate': 'Estimate upload cost for an IDL',
       'GET /api/arweave/manifest': 'Get Arweave manifest',
       'GET /api/arweave/stats': 'Get Arweave upload stats',
+      'GET /api/status': 'Service status and verification summary',
+      'GET /api/status/protocols': 'All protocol verification results',
+      'GET /api/status/:protocolId': 'Verification status for specific protocol',
+      'GET /api/status/history': 'Verification history (last 7 days)',
+      'POST /api/status/verify': 'Trigger manual verification run',
+      'GET /api/status/scheduler': 'Get scheduler status',
       'GET /api/programs': 'List programs (legacy)',
       'GET /api/programs/:id': 'Get program (legacy)',
       'GET /api/programs/:id/idl': 'Get program IDL (legacy)',
@@ -626,8 +745,13 @@ app.listen(PORT, () => {
   const manifest = loadManifest();
   console.log(`\n🚀 IDLHub API Server (Arweave) on port ${PORT}`);
   console.log(`📚 Docs: http://localhost:${PORT}/api/docs`);
+  console.log(`📊 Status: http://localhost:${PORT}/api/status`);
   console.log(`🔗 Gateway: ${manifest.gateway}`);
-  console.log(`📦 IDLs in manifest: ${Object.keys(manifest.idls).length}\n`);
+  console.log(`📦 IDLs in manifest: ${Object.keys(manifest.idls).length}`);
+
+  // Start verification scheduler
+  console.log(`\n⏰ Starting verification scheduler (hourly)...`);
+  verificationScheduler.startScheduler(true); // Run immediately on startup
 });
 
 export default app;

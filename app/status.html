@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IDLHub Status</title>
+  <link rel="stylesheet" href="/src/theme.css">
+  <style>
+    :root {
+      --status-ok: #22c55e;
+      --status-warn: #f59e0b;
+      --status-error: #ef4444;
+      --status-unknown: #6b7280;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .status-badge.operational {
+      background: rgba(34, 197, 94, 0.1);
+      color: var(--status-ok);
+      border: 1px solid var(--status-ok);
+    }
+
+    .status-badge.degraded {
+      background: rgba(245, 158, 11, 0.1);
+      color: var(--status-warn);
+      border: 1px solid var(--status-warn);
+    }
+
+    .status-badge.down {
+      background: rgba(239, 68, 68, 0.1);
+      color: var(--status-error);
+      border: 1px solid var(--status-error);
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: currentColor;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .summary-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+    }
+
+    .summary-card h3 {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .summary-card .value {
+      font-size: 2rem;
+      font-weight: 700;
+    }
+
+    .summary-card .subtitle {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+    .uptime-chart {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .uptime-chart h2 {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .uptime-bars {
+      display: flex;
+      gap: 2px;
+      height: 40px;
+      align-items: flex-end;
+    }
+
+    .uptime-bar {
+      flex: 1;
+      min-width: 4px;
+      border-radius: 2px;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .uptime-bar:hover {
+      transform: scaleY(1.1);
+      opacity: 0.8;
+    }
+
+    .uptime-bar.ok { background: var(--status-ok); }
+    .uptime-bar.warn { background: var(--status-warn); }
+    .uptime-bar.error { background: var(--status-error); }
+    .uptime-bar.unknown { background: var(--status-unknown); }
+
+    .uptime-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 0.5rem;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+    .protocols-section {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+      overflow: hidden;
+    }
+
+    .protocols-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .protocols-header h2 {
+      font-size: 1rem;
+    }
+
+    .filter-tabs {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .filter-tab {
+      padding: 0.25rem 0.75rem;
+      border-radius: 0.25rem;
+      font-size: 0.75rem;
+      cursor: pointer;
+      border: 1px solid var(--border-color);
+      background: transparent;
+      color: var(--text-secondary);
+      transition: all 0.2s;
+    }
+
+    .filter-tab:hover, .filter-tab.active {
+      background: var(--accent-primary);
+      color: white;
+      border-color: var(--accent-primary);
+    }
+
+    .protocols-list {
+      max-height: 500px;
+      overflow-y: auto;
+    }
+
+    .protocol-row {
+      display: grid;
+      grid-template-columns: auto 1fr auto auto;
+      gap: 1rem;
+      padding: 0.75rem 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+      align-items: center;
+      transition: background 0.2s;
+    }
+
+    .protocol-row:hover {
+      background: var(--bg-tertiary);
+    }
+
+    .protocol-row:last-child {
+      border-bottom: none;
+    }
+
+    .protocol-status {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .protocol-status.verified { background: var(--status-ok); }
+    .protocol-status.placeholder { background: var(--status-unknown); }
+    .protocol-status.no_program_id { background: var(--status-warn); }
+    .protocol-status.program_not_found { background: var(--status-error); }
+    .protocol-status.rpc_error { background: var(--status-error); }
+
+    .protocol-name {
+      font-weight: 500;
+    }
+
+    .protocol-id {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+    .protocol-program {
+      font-size: 0.75rem;
+      font-family: monospace;
+      color: var(--text-secondary);
+      max-width: 150px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .protocol-badge {
+      font-size: 0.625rem;
+      padding: 0.125rem 0.5rem;
+      border-radius: 9999px;
+      text-transform: uppercase;
+    }
+
+    .protocol-badge.verified {
+      background: rgba(34, 197, 94, 0.1);
+      color: var(--status-ok);
+    }
+
+    .protocol-badge.placeholder {
+      background: rgba(107, 114, 128, 0.1);
+      color: var(--status-unknown);
+    }
+
+    .protocol-badge.no_program_id {
+      background: rgba(245, 158, 11, 0.1);
+      color: var(--status-warn);
+    }
+
+    .protocol-badge.program_not_found,
+    .protocol-badge.rpc_error {
+      background: rgba(239, 68, 68, 0.1);
+      color: var(--status-error);
+    }
+
+    .scheduler-info {
+      display: flex;
+      gap: 2rem;
+      margin-top: 2rem;
+      padding: 1rem 1.5rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+      font-size: 0.875rem;
+    }
+
+    .scheduler-info span {
+      color: var(--text-secondary);
+    }
+
+    .scheduler-info strong {
+      color: var(--text-primary);
+    }
+
+    .refresh-btn {
+      padding: 0.5rem 1rem;
+      background: var(--accent-primary);
+      color: white;
+      border: none;
+      border-radius: 0.25rem;
+      cursor: pointer;
+      font-size: 0.875rem;
+      transition: opacity 0.2s;
+    }
+
+    .refresh-btn:hover {
+      opacity: 0.9;
+    }
+
+    .refresh-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-secondary);
+    }
+
+    .error {
+      text-align: center;
+      padding: 2rem;
+      color: var(--status-error);
+    }
+
+    footer {
+      margin-top: 2rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border-color);
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+    footer a {
+      color: var(--accent-primary);
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>IDLHub Status</h1>
+      <div id="overall-status" class="status-badge">
+        <span class="status-dot"></span>
+        <span>Loading...</span>
+      </div>
+    </header>
+
+    <div class="summary-grid" id="summary-grid">
+      <div class="summary-card">
+        <h3>Verified Protocols</h3>
+        <div class="value" id="verified-count">-</div>
+        <div class="subtitle" id="verified-percent">-</div>
+      </div>
+      <div class="summary-card">
+        <h3>Total Protocols</h3>
+        <div class="value" id="total-count">-</div>
+        <div class="subtitle">In registry</div>
+      </div>
+      <div class="summary-card">
+        <h3>Placeholders</h3>
+        <div class="value" id="placeholder-count">-</div>
+        <div class="subtitle">Pending IDL</div>
+      </div>
+      <div class="summary-card">
+        <h3>Last Verification</h3>
+        <div class="value" id="last-run">-</div>
+        <div class="subtitle" id="last-run-time">-</div>
+      </div>
+    </div>
+
+    <div class="uptime-chart">
+      <h2>Verification History (Last 24 Hours)</h2>
+      <div class="uptime-bars" id="uptime-bars">
+        <!-- Bars will be inserted here -->
+      </div>
+      <div class="uptime-labels">
+        <span>24 hours ago</span>
+        <span>Now</span>
+      </div>
+    </div>
+
+    <div class="protocols-section">
+      <div class="protocols-header">
+        <h2>Protocol Status</h2>
+        <div class="filter-tabs">
+          <button class="filter-tab active" data-filter="all">All</button>
+          <button class="filter-tab" data-filter="verified">Verified</button>
+          <button class="filter-tab" data-filter="issues">Issues</button>
+          <button class="filter-tab" data-filter="placeholder">Placeholders</button>
+        </div>
+      </div>
+      <div class="protocols-list" id="protocols-list">
+        <div class="loading">Loading protocols...</div>
+      </div>
+    </div>
+
+    <div class="scheduler-info">
+      <div>
+        <span>Scheduler: </span>
+        <strong id="scheduler-status">-</strong>
+      </div>
+      <div>
+        <span>Next run: </span>
+        <strong id="next-run">-</strong>
+      </div>
+      <div>
+        <span>Interval: </span>
+        <strong id="interval">-</strong>
+      </div>
+      <button class="refresh-btn" id="refresh-btn" onclick="triggerVerification()">
+        Trigger Verification
+      </button>
+    </div>
+
+    <footer>
+      <p>
+        <a href="/">IDLHub</a> |
+        <a href="/api/docs">API Docs</a> |
+        <a href="/api/status">Status API</a> |
+        <a href="https://github.com/openSVM/idlhub">GitHub</a>
+      </p>
+      <p>Verification runs every hour. Data refreshes automatically.</p>
+    </footer>
+  </div>
+
+  <script>
+    const API_BASE = '/api';
+    let currentFilter = 'all';
+    let protocolsData = {};
+
+    async function fetchStatus() {
+      try {
+        const response = await fetch(`${API_BASE}/status`);
+        const data = await response.json();
+        updateStatus(data);
+      } catch (err) {
+        console.error('Failed to fetch status:', err);
+        document.getElementById('overall-status').innerHTML = `
+          <span class="status-dot"></span>
+          <span>Error loading status</span>
+        `;
+        document.getElementById('overall-status').className = 'status-badge down';
+      }
+    }
+
+    async function fetchProtocols() {
+      try {
+        const response = await fetch(`${API_BASE}/status/protocols`);
+        const data = await response.json();
+        protocolsData = data.protocols || {};
+        renderProtocols();
+      } catch (err) {
+        console.error('Failed to fetch protocols:', err);
+        document.getElementById('protocols-list').innerHTML = `
+          <div class="error">Failed to load protocols</div>
+        `;
+      }
+    }
+
+    function updateStatus(data) {
+      // Overall status
+      const statusBadge = document.getElementById('overall-status');
+      const status = data.status || 'unknown';
+      statusBadge.className = `status-badge ${status}`;
+      statusBadge.innerHTML = `
+        <span class="status-dot"></span>
+        <span>${status.charAt(0).toUpperCase() + status.slice(1)}</span>
+      `;
+
+      // Summary cards
+      const v = data.verification || {};
+      document.getElementById('verified-count').textContent = v.verified || 0;
+      document.getElementById('verified-percent').textContent = `${v.verifiedPercent || 0}% of total`;
+      document.getElementById('total-count').textContent = v.totalProtocols || 0;
+      document.getElementById('placeholder-count').textContent = v.placeholder || 0;
+
+      // Last run
+      if (v.lastRun) {
+        const lastRunDate = new Date(v.lastRun);
+        const now = new Date();
+        const diffMs = now - lastRunDate;
+        const diffMins = Math.floor(diffMs / 60000);
+
+        if (diffMins < 60) {
+          document.getElementById('last-run').textContent = `${diffMins}m ago`;
+        } else {
+          const diffHours = Math.floor(diffMins / 60);
+          document.getElementById('last-run').textContent = `${diffHours}h ago`;
+        }
+        document.getElementById('last-run-time').textContent = lastRunDate.toLocaleTimeString();
+      }
+
+      // Scheduler info
+      const scheduler = v.scheduler || {};
+      document.getElementById('scheduler-status').textContent = scheduler.running ? 'Running' : 'Stopped';
+      document.getElementById('interval').textContent = scheduler.intervalHuman || '-';
+
+      if (scheduler.nextRun) {
+        const nextRunDate = new Date(scheduler.nextRun);
+        document.getElementById('next-run').textContent = nextRunDate.toLocaleTimeString();
+      }
+
+      // Uptime chart
+      renderUptimeChart(data.history || []);
+    }
+
+    function renderUptimeChart(history) {
+      const container = document.getElementById('uptime-bars');
+
+      if (!history.length) {
+        container.innerHTML = '<div class="loading">No history data</div>';
+        return;
+      }
+
+      // Show last 24 data points (or fill with empty)
+      const bars = [];
+      for (let i = 0; i < 24; i++) {
+        const entry = history[23 - i];
+        if (entry) {
+          const percent = (entry.verified / entry.total) * 100;
+          let status = 'ok';
+          if (percent < 50) status = 'error';
+          else if (percent < 80) status = 'warn';
+
+          bars.push(`
+            <div class="uptime-bar ${status}"
+                 style="height: ${Math.max(10, percent)}%"
+                 title="${entry.verified}/${entry.total} verified at ${new Date(entry.timestamp).toLocaleString()}">
+            </div>
+          `);
+        } else {
+          bars.push(`<div class="uptime-bar unknown" style="height: 10%" title="No data"></div>`);
+        }
+      }
+
+      container.innerHTML = bars.join('');
+    }
+
+    function renderProtocols() {
+      const container = document.getElementById('protocols-list');
+      const protocols = Object.values(protocolsData);
+
+      if (!protocols.length) {
+        container.innerHTML = '<div class="loading">No verification data yet</div>';
+        return;
+      }
+
+      // Filter
+      let filtered = protocols;
+      if (currentFilter === 'verified') {
+        filtered = protocols.filter(p => p.status === 'verified');
+      } else if (currentFilter === 'issues') {
+        filtered = protocols.filter(p => ['program_not_found', 'rpc_error', 'no_program_id'].includes(p.status));
+      } else if (currentFilter === 'placeholder') {
+        filtered = protocols.filter(p => p.status === 'placeholder');
+      }
+
+      // Sort by status (issues first, then verified, then placeholders)
+      const statusOrder = { rpc_error: 0, program_not_found: 1, no_program_id: 2, verified: 3, placeholder: 4, pending: 5 };
+      filtered.sort((a, b) => (statusOrder[a.status] || 9) - (statusOrder[b.status] || 9));
+
+      const rows = filtered.map(p => `
+        <div class="protocol-row">
+          <div class="protocol-status ${p.status}"></div>
+          <div>
+            <div class="protocol-name">${p.protocolName || p.protocolId}</div>
+            <div class="protocol-id">${p.protocolId}</div>
+          </div>
+          <div class="protocol-program" title="${p.details?.programId || 'No program ID'}">
+            ${p.details?.programId ? p.details.programId.slice(0, 8) + '...' : '-'}
+          </div>
+          <span class="protocol-badge ${p.status}">${p.status.replace(/_/g, ' ')}</span>
+        </div>
+      `).join('');
+
+      container.innerHTML = rows || '<div class="loading">No protocols match filter</div>';
+    }
+
+    async function triggerVerification() {
+      const btn = document.getElementById('refresh-btn');
+      btn.disabled = true;
+      btn.textContent = 'Running...';
+
+      try {
+        const response = await fetch(`${API_BASE}/status/verify`, { method: 'POST' });
+        const result = await response.json();
+        console.log('Verification result:', result);
+
+        // Refresh data
+        await fetchStatus();
+        await fetchProtocols();
+      } catch (err) {
+        console.error('Verification failed:', err);
+        alert('Verification failed: ' + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Trigger Verification';
+      }
+    }
+
+    // Filter tabs
+    document.querySelectorAll('.filter-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        currentFilter = tab.dataset.filter;
+        renderProtocols();
+      });
+    });
+
+    // Initial load
+    fetchStatus();
+    fetchProtocols();
+
+    // Auto-refresh every 30 seconds
+    setInterval(() => {
+      fetchStatus();
+      fetchProtocols();
+    }, 30000);
+  </script>
+</body>
+</html>

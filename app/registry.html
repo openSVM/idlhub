@@ -368,6 +368,41 @@
             border-color: var(--border-secondary);
         }
 
+        /* Verification badges */
+        .verify-badge {
+            padding: 2px 6px;
+            border-radius: 0;
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+            border: 1px solid;
+            margin-left: 4px;
+        }
+
+        .verify-badge.verified {
+            background: rgba(34, 197, 94, 0.1);
+            color: #22c55e;
+            border-color: #22c55e;
+        }
+
+        .verify-badge.placeholder {
+            background: var(--bg-secondary);
+            color: var(--text-muted);
+            border-color: var(--border-secondary);
+        }
+
+        .verify-badge.warning {
+            background: rgba(245, 158, 11, 0.1);
+            color: #f59e0b;
+            border-color: #f59e0b;
+        }
+
+        .verify-badge.error {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border-color: #ef4444;
+        }
+
         .category-badge {
             padding: 2px 6px;
             border-radius: 0;
@@ -581,6 +616,7 @@
                     <nav class="nav-links">
                         <a href="/app/registry" class="nav-link active">Registry</a>
                         <a href="/app/" class="nav-link">Protocol</a>
+                        <a href="/app/status" class="nav-link">Status</a>
                         <a href="/docs" class="nav-link">Docs</a>
                         <a href="/tokenomics" class="nav-link">$IDL</a>
                     </nav>
@@ -708,11 +744,44 @@
             });
         });
 
+        // Verification status cache
+        let verificationStatus = {};
+
+        // Load verification status
+        async function loadVerificationStatus() {
+            try {
+                const response = await fetch('/api/status/protocols');
+                const data = await response.json();
+                verificationStatus = data.protocols || {};
+            } catch (error) {
+                console.error('Failed to load verification status:', error);
+            }
+        }
+
+        // Get verification badge HTML
+        function getVerificationBadge(protocolId) {
+            const status = verificationStatus[protocolId];
+            if (!status) return '';
+
+            const badges = {
+                verified: '<span class="verify-badge verified" title="On-chain verified">Verified</span>',
+                placeholder: '<span class="verify-badge placeholder" title="Placeholder IDL">Placeholder</span>',
+                no_program_id: '<span class="verify-badge warning" title="No program ID">No Program</span>',
+                program_not_found: '<span class="verify-badge error" title="Program not found on-chain">Not Found</span>',
+                rpc_error: '<span class="verify-badge error" title="RPC error during verification">RPC Error</span>',
+            };
+            return badges[status.status] || '';
+        }
+
         // Load protocols from API
         async function loadProtocols() {
             try {
-                const response = await fetch('/api/idl');
-                const data = await response.json();
+                // Load both protocols and verification status in parallel
+                const [protocolsRes, _] = await Promise.all([
+                    fetch('/api/idl'),
+                    loadVerificationStatus()
+                ]);
+                const data = await protocolsRes.json();
 
                 allProtocols = data.idls || [];
                 filteredProtocols = [...allProtocols];
@@ -838,6 +907,7 @@
                         <div class="protocol-header">
                             <span class="protocol-name">${protocol.name}</span>
                             <span class="protocol-badge badge-${protocol.status || 'placeholder'}">${protocol.status || 'placeholder'}</span>
+                            ${getVerificationBadge(protocol.id)}
                             <span class="category-badge">${protocol.category || 'Unknown'}</span>
                         </div>
                         <div class="protocol-description">${protocol.description || 'No description available'}</div>
