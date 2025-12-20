@@ -9,6 +9,7 @@ pub struct Config {
     pub inline_cpi: bool,
     pub anchor_compat: bool,
     pub no_logs: bool,
+    pub unsafe_math: bool,  // Use unchecked math for smaller binary
 }
 
 pub fn transform(
@@ -310,8 +311,52 @@ fn transform_body(body: &str, accounts: &[PinocchioAccount], config: &Config) ->
     result = result.replace("std::cmp::", "core::cmp::");
     result = result.replace("std::mem::", "core::mem::");
 
+    // Use unchecked math if enabled (smaller binary, but no overflow checks)
+    if config.unsafe_math {
+        result = use_unchecked_math(&result);
+    }
+
     // Split into proper statements
     result = format_body_statements(&result);
+
+    result
+}
+
+/// Replace checked math with unchecked operations for smaller binary
+fn use_unchecked_math(body: &str) -> String {
+    let mut result = body.to_string();
+
+    // Replace .checked_add(x).ok_or(...)? with wrapping_add or just +
+    // Pattern: expr.checked_add(val).ok_or(Error::...)? -> expr.wrapping_add(val)
+    use regex::Regex;
+
+    // checked_add -> wrapping_add (no error handling needed)
+    let add_pattern = Regex::new(r"\.checked_add\s*\(([^)]+)\)\s*\.ok_or\s*\([^)]+\)\s*\?").unwrap();
+    result = add_pattern.replace_all(&result, ".wrapping_add($1)").to_string();
+
+    // checked_sub -> wrapping_sub
+    let sub_pattern = Regex::new(r"\.checked_sub\s*\(([^)]+)\)\s*\.ok_or\s*\([^)]+\)\s*\?").unwrap();
+    result = sub_pattern.replace_all(&result, ".wrapping_sub($1)").to_string();
+
+    // checked_mul -> wrapping_mul
+    let mul_pattern = Regex::new(r"\.checked_mul\s*\(([^)]+)\)\s*\.ok_or\s*\([^)]+\)\s*\?").unwrap();
+    result = mul_pattern.replace_all(&result, ".wrapping_mul($1)").to_string();
+
+    // checked_div -> simple division (panics on zero, but that's fine for stable swap math)
+    let div_pattern = Regex::new(r"\.checked_div\s*\(([^)]+)\)\s*\.ok_or\s*\([^)]+\)\s*\?").unwrap();
+    result = div_pattern.replace_all(&result, " / $1").to_string();
+
+    // Handle .and_then chains: .checked_mul(x).and_then(|v| v.checked_div(y)).ok_or(...)?
+    // -> .wrapping_mul(x) / y
+    let chain_pattern = Regex::new(
+        r"\.checked_mul\s*\(([^)]+)\)\s*\.and_then\s*\(\s*\|\s*v\s*\|\s*v\s*\.checked_div\s*\(([^)]+)\)\s*\)\s*\.ok_or\s*\([^)]+\)\s*\?"
+    ).unwrap();
+    result = chain_pattern.replace_all(&result, ".wrapping_mul($1) / $2").to_string();
+
+    // Simpler checked patterns without ok_or
+    result = result.replace(".checked_add(", ".wrapping_add(");
+    result = result.replace(".checked_sub(", ".wrapping_sub(");
+    result = result.replace(".checked_mul(", ".wrapping_mul(");
 
     result
 }

@@ -54,6 +54,10 @@ struct Args {
     #[arg(long)]
     no_logs: bool,
 
+    /// Use unchecked math operations for smaller binary (unsafe but faster)
+    #[arg(long)]
+    unsafe_math: bool,
+
     /// Verify generated IDL against original Anchor IDL
     #[arg(long)]
     verify_idl: Option<PathBuf>,
@@ -101,6 +105,7 @@ fn main() -> Result<()> {
         inline_cpi: args.inline_cpi,
         anchor_compat: args.anchor_compat,
         no_logs: args.no_logs,
+        unsafe_math: args.unsafe_math,
     };
     let pinocchio_ir = transformer::transform(&anchor_program, &analysis, &config)?;
 

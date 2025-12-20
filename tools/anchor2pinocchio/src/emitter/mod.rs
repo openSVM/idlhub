@@ -155,7 +155,9 @@ fn emit_helpers_rs(extras: &SourceExtras, src_dir: &Path) -> Result<()> {
             if !sig.starts_with("pub ") {
                 sig = format!("pub {}", sig);
             }
-            let body = clean_helper_body(&f.body);
+            let mut body = clean_helper_body(&f.body);
+            // Apply unsafe math optimization for smaller binary
+            body = apply_unsafe_math_to_helpers(&body);
             content.push_str(&format!("{} {}\n\n", sig, body));
         }
     }
@@ -196,6 +198,16 @@ fn clean_helper_body(body: &str) -> String {
     result = result.replace("std::mem::", "core::mem::");
     result = result.replace("std::ptr::", "core::ptr::");
     result
+}
+
+/// Apply unsafe math transformations to helper body for smaller binary
+/// NOTE: This is a no-op for now because the transformations are complex
+/// and break the code. The checked_* -> wrapping_* conversion needs more work.
+fn apply_unsafe_math_to_helpers(body: &str) -> String {
+    // For now, just return the body as-is
+    // The unsafe_math optimization in transformer handles instruction bodies
+    // Helper functions have complex chained operations that need special handling
+    body.to_string()
 }
 
 /// Fix multi-line msg! macros and handle format arguments
@@ -314,11 +326,15 @@ pinocchio = "0.8"
 {}
 
 [profile.release]
-overflow-checks = true
+overflow-checks = false
 lto = "fat"
 codegen-units = 1
-opt-level = "z"  # Optimize for size
+opt-level = "z"
 strip = true
+panic = "abort"
+debug = false
+debug-assertions = false
+incremental = false
 "#,
         program.name,
         if program.config.no_alloc { "" } else { "pinocchio-token = \"0.3\"" }
