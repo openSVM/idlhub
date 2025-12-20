@@ -38,12 +38,14 @@
   status = 200
   force = true
 
+# Serve static JSON for fast list endpoint
 [[redirects]]
   from = "/api/idl"
-  to = "/.netlify/functions/idl"
+  to = "/api/idl.json"
   status = 200
   force = true
 
+# Individual IDL lookups still use function (for Arweave fetch)
 [[redirects]]
   from = "/api/idl/*"
   to = "/.netlify/functions/idl"
