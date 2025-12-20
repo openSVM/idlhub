@@ -1,0 +1,1146 @@
+% IDL Protocol Whitepaper - arXiv Compliant Version
+% Version 3.2, December 2024
+%
+% arXiv Requirements:
+% - Uses only standard LaTeX packages available on arXiv
+% - No custom fonts or proprietary packages
+% - All figures in EPS/PDF/PNG format
+% - Compiles with pdflatex
+%
+\documentclass[11pt,a4paper]{article}
+
+% ============================================================================
+% PACKAGES (arXiv-compatible only)
+% ============================================================================
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}                    % Latin Modern fonts (arXiv standard)
+\usepackage{amsmath,amssymb,amsthm}     % Mathematical typesetting
+\usepackage{mathtools}                  % Extended math tools
+\usepackage{algorithm}                  % Algorithm environment
+\usepackage{algpseudocode}              % Pseudocode
+\usepackage{graphicx}                   % Graphics
+\usepackage{booktabs}                   % Professional tables
+\usepackage{array}                      % Extended table options
+\usepackage{multirow}                   % Multi-row cells
+\usepackage{xcolor}                     % Colors
+\usepackage{hyperref}                   % Hyperlinks
+\usepackage{cleveref}                   % Smart references
+\usepackage{enumitem}                   % List customization
+\usepackage{listings}                   % Code listings
+\usepackage{fancyhdr}                   % Headers/footers
+\usepackage{geometry}                   % Page geometry
+\usepackage{caption}                    % Caption customization
+\usepackage{subcaption}                 % Subfigures
+\usepackage{tikz}                       % Diagrams
+\usetikzlibrary{arrows.meta,shapes,positioning,calc,fit}
+\usepackage{float}                      % Float positioning
+
+% ============================================================================
+% PAGE SETUP
+% ============================================================================
+\geometry{
+    a4paper,
+    left=25mm,
+    right=25mm,
+    top=30mm,
+    bottom=30mm
+}
+
+% ============================================================================
+% HYPERREF SETUP
+% ============================================================================
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue!70!black,
+    citecolor=green!50!black,
+    urlcolor=blue!70!black,
+    pdftitle={IDL Protocol: A Decentralized Prediction Market for Solana DeFi Metrics},
+    pdfauthor={IDL Protocol Team},
+    pdfsubject={Blockchain, DeFi, Prediction Markets, Solana},
+    pdfkeywords={Solana, DeFi, Prediction Markets, IDL, Staking, Oracle}
+}
+
+% ============================================================================
+% THEOREM ENVIRONMENTS
+% ============================================================================
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+\newtheorem{property}{Property}[section]
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}[section]
+
+% ============================================================================
+% CODE LISTING STYLE
+% ============================================================================
+\lstdefinestyle{solidity}{
+    language=Java,
+    basicstyle=\ttfamily\footnotesize,
+    keywordstyle=\color{blue!80!black}\bfseries,
+    commentstyle=\color{green!50!black}\itshape,
+    stringstyle=\color{red!70!black},
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    numbersep=8pt,
+    breaklines=true,
+    frame=single,
+    rulecolor=\color{gray!30},
+    backgroundcolor=\color{gray!5},
+    tabsize=2,
+    showstringspaces=false
+}
+
+\lstdefinestyle{rust}{
+    language=C,
+    basicstyle=\ttfamily\footnotesize,
+    keywordstyle=\color{blue!80!black}\bfseries,
+    commentstyle=\color{green!50!black}\itshape,
+    stringstyle=\color{red!70!black},
+    morekeywords={pub,fn,struct,impl,let,mut,const,use,mod,self,Self,Result,Ok,Err},
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    numbersep=8pt,
+    breaklines=true,
+    frame=single,
+    rulecolor=\color{gray!30},
+    backgroundcolor=\color{gray!5},
+    tabsize=2,
+    showstringspaces=false
+}
+
+\lstdefinestyle{typescript}{
+    language=Java,
+    basicstyle=\ttfamily\footnotesize,
+    keywordstyle=\color{blue!80!black}\bfseries,
+    commentstyle=\color{green!50!black}\itshape,
+    stringstyle=\color{red!70!black},
+    morekeywords={async,await,const,let,function,interface,type,export,import,from},
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    numbersep=8pt,
+    breaklines=true,
+    frame=single,
+    rulecolor=\color{gray!30},
+    backgroundcolor=\color{gray!5},
+    tabsize=2,
+    showstringspaces=false
+}
+
+% ============================================================================
+% CUSTOM COMMANDS
+% ============================================================================
+\newcommand{\IDL}{\textsc{IDL}}
+\newcommand{\veIDL}{\textsc{veIDL}}
+\newcommand{\SOL}{\textsc{SOL}}
+\newcommand{\USDC}{\textsc{USDC}}
+\newcommand{\TVL}{\textsc{TVL}}
+\newcommand{\RPC}{\textsc{RPC}}
+\newcommand{\TWAP}{\textsc{TWAP}}
+\newcommand{\PDA}{\textsc{PDA}}
+\newcommand{\AMM}{\textsc{AMM}}
+
+% ============================================================================
+% DOCUMENT START
+% ============================================================================
+\begin{document}
+
+% ============================================================================
+% TITLE PAGE
+% ============================================================================
+\begin{titlepage}
+\centering
+\vspace*{2cm}
+
+{\Huge\bfseries IDL Protocol}\\[0.5cm]
+{\Large A Decentralized Prediction Market for\\Solana DeFi Metrics}\\[2cm]
+
+{\large\textit{Whitepaper v3.2}}\\[0.5cm]
+{\large December 2025}\\[3cm]
+
+\textbf{Abstract}\\[0.5cm]
+\begin{minipage}{0.85\textwidth}
+\begin{abstract}
+We present IDL Protocol, a decentralized prediction market platform built on Solana that enables users to bet on verifiable DeFi protocol metrics such as Total Value Locked (TVL), trading volume, and user counts. The protocol introduces a novel on-chain metrics oracle that derives all resolution data from pure Solana RPC calls without relying on third-party APIs or centralized data providers. Our system employs a commit-reveal betting scheme to prevent front-running, a parimutuel pool structure for fair payouts, and a dual-token economic model with deflationary mechanics. We provide rigorous mathematical formulations for metric calculation under Solana's RPC constraints, including stratified sampling algorithms for high-volume protocols and HyperLogLog-based probabilistic counting for unique user estimation. The protocol incorporates social trading features including prediction battles, guild-based pooled betting, and a referral system, all secured by oracle bonding, slashing mechanisms, and timelocked governance. This paper presents the complete technical specification, security analysis, and economic model of the IDL Protocol ecosystem.
+\end{abstract}
+\end{minipage}
+
+\vfill
+
+{\small
+IDL Protocol Team\\
+\url{https://idlhub.io}\\
+\texttt{contact@idlhub.io}
+}
+
+\end{titlepage}
+
+% ============================================================================
+% TABLE OF CONTENTS
+% ============================================================================
+\tableofcontents
+\newpage
+
+% ============================================================================
+% SECTION 1: INTRODUCTION
+% ============================================================================
+\section{Introduction}
+\label{sec:introduction}
+
+\subsection{Motivation and Vision}
+
+The Solana ecosystem has experienced remarkable growth, hosting hundreds of decentralized applications spanning decentralized exchanges (DEXs), lending protocols, liquid staking derivatives, and NFT marketplaces. However, two critical infrastructure gaps remain:
+
+\begin{enumerate}[label=(\roman*)]
+    \item \textbf{Fragmented Interface Discovery:} Solana programs expose their interfaces through Interface Definition Language (IDL) files, yet these are scattered across GitHub repositories, often outdated, and inaccessible to automated agents.
+
+    \item \textbf{Prediction Market Vacuum:} While prediction markets have proven their utility for information aggregation and price discovery, no Solana-native solution exists for predicting DeFi-specific metrics.
+\end{enumerate}
+
+IDL Protocol addresses both gaps by combining a comprehensive IDL registry (IDLHub) with a prediction market system that allows users to bet on quantifiable DeFi metrics using only on-chain data sources.
+
+\subsection{Core Principles}
+
+The protocol adheres to five foundational principles:
+
+\begin{enumerate}
+    \item \textbf{Free Access:} The IDLHub registry remains freely accessible without token gating or paywalls.
+
+    \item \textbf{Real Yield:} Staking rewards derive from actual protocol revenue, not inflationary emissions.
+
+    \item \textbf{Deflationary Mechanics:} A portion of all protocol fees is permanently burned, reducing supply over time.
+
+    \item \textbf{Fair Launch:} No venture capital allocation, no presale---95\% of tokens distributed to the public.
+
+    \item \textbf{Community Governance:} Protocol parameters are controlled by vote-escrowed token (\veIDL{}) holders.
+\end{enumerate}
+
+\subsection{Contributions}
+
+This paper makes the following contributions:
+
+\begin{itemize}
+    \item A complete specification of a prediction market protocol optimized for DeFi metric resolution on Solana.
+
+    \item Novel algorithms for computing TVL, volume, and user counts using only pure Solana RPC methods, with formal error bounds.
+
+    \item A commit-reveal betting scheme with parimutuel payouts and dynamic odds adjustment.
+
+    \item Social trading primitives including 1v1 battles, guild-based pooled betting, and referral systems.
+
+    \item Security analysis covering oracle manipulation, front-running, flash loan attacks, and economic attack vectors.
+\end{itemize}
+
+% ============================================================================
+% SECTION 2: PROBLEM STATEMENT
+% ============================================================================
+\section{Problem Statement}
+\label{sec:problem}
+
+\subsection{The IDL Fragmentation Problem}
+
+Solana developers and AI agents seeking to integrate with existing protocols face a fragmented landscape:
+
+\begin{table}[H]
+\centering
+\caption{IDL Ecosystem Challenges}
+\label{tab:idl-challenges}
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Problem} & \textbf{Impact} \\
+\midrule
+IDLs scattered across repositories & Hours of manual searching \\
+Many IDLs outdated or incomplete & Integration failures \\
+No standardized registry & Each team builds from scratch \\
+AI agents cannot discover interfaces & Limits automation potential \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Prediction Market Limitations}
+
+Existing prediction market platforms exhibit significant limitations for DeFi users:
+
+\begin{table}[H]
+\centering
+\caption{Existing Prediction Market Limitations}
+\label{tab:prediction-limitations}
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Platform} & \textbf{Limitation} \\
+\midrule
+Polymarket & Ethereum-based, high fees, no DeFi focus \\
+Drift Markets & Limited to specific asset predictions \\
+Custom solutions & Fragmented liquidity, poor UX \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Token Economic Failures}
+
+Most DeFi governance tokens suffer from:
+
+\begin{itemize}
+    \item \textbf{Inflationary Emissions:} Continuous token minting dilutes holder value.
+    \item \textbf{Governance-Only Utility:} Tokens grant voting rights but generate no yield.
+    \item \textbf{Lack of Engagement:} Beyond speculation, users have no reason to hold tokens.
+\end{itemize}
+
+% ============================================================================
+% SECTION 3: SOLUTION OVERVIEW
+% ============================================================================
+\section{Solution Overview}
+\label{sec:solution}
+
+\subsection{IDLHub: The Registry}
+
+IDLHub serves as the canonical registry for Solana program interfaces, hosting over 100 protocol IDLs including major platforms such as Jupiter, Marinade, Drift, Jito, Raydium, Orca, and Tensor.
+
+Access is provided through multiple interfaces:
+
+\begin{itemize}
+    \item \textbf{Web Interface:} Human-readable browser at \url{https://idlhub.io}
+    \item \textbf{REST API:} Programmatic access via \texttt{/api/idl/\{program\}}
+    \item \textbf{MCP Server:} Model Context Protocol for AI agent integration
+    \item \textbf{JSON-RPC:} Standard RPC endpoint at \texttt{/api/mcp}
+\end{itemize}
+
+\subsection{Prediction Markets}
+
+The protocol enables betting on verifiable DeFi metrics:
+
+\begin{definition}[Prediction Market]
+\label{def:prediction-market}
+A prediction market $M$ is defined by the tuple:
+\begin{equation}
+M = (P, \mu, \theta, t_{\text{start}}, t_{\text{end}}, t_{\text{resolve}})
+\end{equation}
+where $P$ is the target protocol, $\mu \in \{\text{TVL}, \text{Volume}, \text{Users}\}$ is the metric type, $\theta$ is the threshold value, and $t_{\text{start}}, t_{\text{end}}, t_{\text{resolve}}$ define the betting window and resolution time.
+\end{definition}
+
+\subsection{Social Trading Layer}
+
+The protocol incorporates social features to enhance engagement:
+
+\begin{itemize}
+    \item \textbf{1v1 Battles:} Direct challenges between users on opposite sides of a prediction.
+    \item \textbf{Guilds:} Pooled betting groups with profit sharing.
+    \item \textbf{Leaderboards:} Rankings based on prediction accuracy.
+    \item \textbf{Referrals:} Perpetual 5\% fee share from referred users.
+    \item \textbf{Seasons:} Time-limited competitions with prize pools.
+\end{itemize}
+
+% ============================================================================
+% SECTION 4: TOKEN ECONOMICS
+% ============================================================================
+\section{Token Economics}
+\label{sec:tokenomics}
+
+\subsection{Token Overview}
+
+The \IDL{} token exists in two forms on Solana:
+
+\begin{table}[H]
+\centering
+\caption{Token Specifications}
+\label{tab:token-specs}
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Parameter} & \textbf{Value} \\
+\midrule
+Network & Solana \\
+Standard & SPL Token \\
+Decimals & 9 \\
+PUMP-IDL Address & \texttt{4GihJrYJGQ9pjqDySTjd57y1h3nNkEZNbzJxCbispump} \\
+BAGS-IDL Address & \texttt{8zdhHxthCFoigAGw4QRxWfXUWLY1KkMZ1r7CTcmiBAGS} \\
+Total Supply & 2,000,000,000 IDL \\
+Circulating Supply & $\sim$1,950,000,000 IDL (97.5\%) \\
+Team Allocation & $\sim$50,000,000 IDL (2.5\%) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Supply Distribution}
+
+\begin{equation}
+\text{Total Supply} = \underbrace{1\text{B (PUMP)}}_{\text{Active}} + \underbrace{1\text{B (BAGS)}}_{\text{Legacy}}
+\end{equation}
+
+The distribution follows a fair launch model:
+\begin{align}
+\text{PUMP-IDL:} \quad & 800\text{M} \text{ (Bonding Curve)} + 200\text{M} \text{ (Raydium Migration)} \\
+\text{BAGS-IDL:} \quad & 950\text{M} \text{ (Public)} + 50\text{M} \text{ (Team)}
+\end{align}
+
+\subsection{Token Utility}
+
+\begin{table}[H]
+\centering
+\caption{Token Utility Matrix}
+\label{tab:utility}
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Utility} & \textbf{Description} & \textbf{Requirement} \\
+\midrule
+Stake & Earn 50\% of protocol fees & Hold IDL \\
+Lock (\veIDL{}) & Governance voting power & Lock staked IDL \\
+Bet & Participate in predictions & Hold IDL \\
+Battle & 1v1 prediction challenges & Hold IDL \\
+Guild & Create pooled betting groups & 10 IDL fee \\
+Lootbox & Random reward system & 1--100 IDL per box \\
+VIP Tiers & Fee discounts & Stake thresholds \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Fee Distribution}
+
+Protocol fees follow a deterministic distribution:
+
+\begin{definition}[Fee Distribution]
+\label{def:fee-distribution}
+For a winning claim of value $W$, the fee $F = W \times \beta$ where $\beta = 0.03$ (3\%), distributed as:
+\begin{align}
+F_{\text{stakers}} &= 0.50 \times F \\
+F_{\text{creator}} &= 0.25 \times F \\
+F_{\text{treasury}} &= 0.15 \times F \\
+F_{\text{burn}} &= 0.10 \times F \\
+F_{\text{referrer}} &= 0.05 \times F_{\text{stakers}} \quad \text{(if applicable)}
+\end{align}
+\end{definition}
+
+\subsection{Deflationary Mechanics}
+
+Multiple burn mechanisms reduce circulating supply:
+
+\begin{enumerate}
+    \item \textbf{Prediction Market Fees:} 10\% of all fees permanently burned.
+    \item \textbf{Lootbox Purchases:} 50\% of purchase price burned.
+    \item \textbf{Guild Creation:} Portion of fee burned.
+    \item \textbf{Failed Stop Loss:} Small penalty burned.
+\end{enumerate}
+
+\begin{proposition}[Long-term Deflation]
+Given trading volume $V$ and fee rate $\beta$, the annual burn rate is:
+\begin{equation}
+B_{\text{annual}} = V \times 365 \times \beta \times 0.10
+\end{equation}
+\end{proposition}
+
+\subsection{Staking and VIP Tiers}
+
+\begin{table}[H]
+\centering
+\caption{VIP Tier Benefits}
+\label{tab:vip-tiers}
+\begin{tabular}{@{}lrrrp{4cm}@{}}
+\toprule
+\textbf{Tier} & \textbf{Stake} & \textbf{Fee Discount} & \textbf{Bet Bonus} & \textbf{Perks} \\
+\midrule
+Bronze & 100 IDL & 0.5\% & 5\% & Early access \\
+Silver & 1,000 IDL & 1.0\% & 10\% & + Exclusive markets \\
+Gold & 10,000 IDL & 1.5\% & 25\% & + Priority support \\
+Platinum & 100,000 IDL & 2.0\% & 50\% & + Whale chat \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The staking APY is calculated as:
+
+\begin{equation}
+\text{APY} = \frac{V_{\text{daily}} \times 365 \times \beta \times 0.50}{S_{\text{total}}} \times 100\%
+\end{equation}
+
+where $V_{\text{daily}}$ is daily volume and $S_{\text{total}}$ is total staked value.
+
+% ============================================================================
+% SECTION 5: CORE PROTOCOL
+% ============================================================================
+\section{Core Protocol Architecture}
+\label{sec:core-protocol}
+
+\subsection{Smart Contract Structure}
+
+The protocol consists of two primary Solana programs:
+
+\begin{enumerate}
+    \item \textbf{IDL Protocol} (\texttt{BSn7neicVV2kEzgaZmd6tZEBm4tdgzBRyELov65Lq7dt}): Core staking, betting, and social features.
+
+    \item \textbf{IDL StableSwap} (\texttt{EFsgmpbKifyA75ZY5NPHQxrtuAHHB6sYnoGkLi6xoTte}): Curve-style AMM for token swaps.
+\end{enumerate}
+
+\subsection{State Accounts}
+
+\begin{definition}[Protocol State]
+The global protocol state is maintained in a Program Derived Address (PDA):
+\begin{equation}
+\text{ProtocolState} = \{\text{authority}, \text{treasury}, \text{vault}, S_{\text{total}}, V_{\text{total}}, R_{\text{pool}}, F_{\text{collected}}, B_{\text{total}}, \text{paused}\}
+\end{equation}
+where $S_{\text{total}}$ is total staked, $V_{\text{total}}$ is veIDL supply, $R_{\text{pool}}$ is pending rewards, $F_{\text{collected}}$ is lifetime fees, and $B_{\text{total}}$ is lifetime burns.
+\end{definition}
+
+\begin{definition}[Staker Account]
+Each staker maintains an account:
+\begin{equation}
+\text{StakerAccount} = \{\text{owner}, s, r_{\text{paid}}, r_{\text{pending}}, t_{\text{last}}\}
+\end{equation}
+where $s$ is staked amount, $r_{\text{paid}}$ is reward-per-token checkpoint, $r_{\text{pending}}$ is claimable rewards, and $t_{\text{last}}$ is last stake timestamp.
+\end{definition}
+
+\begin{definition}[Vote-Escrow Position]
+Locked staking positions are tracked as:
+\begin{equation}
+\text{VePosition} = \{\text{owner}, s_{\text{locked}}, v_0, t_{\text{start}}, t_{\text{end}}, \Delta t\}
+\end{equation}
+where $v_0$ is initial veIDL amount, and $\Delta t = t_{\text{end}} - t_{\text{start}}$ is lock duration.
+\end{definition}
+
+% ============================================================================
+% SECTION 6: PREDICTION MARKETS
+% ============================================================================
+\section{Prediction Market Mechanism}
+\label{sec:prediction-markets}
+
+\subsection{Market Lifecycle}
+
+A prediction market progresses through four phases:
+
+\begin{enumerate}
+    \item \textbf{Creation:} Market creator specifies protocol, metric, threshold, and resolution time.
+    \item \textbf{Betting:} Users commit and reveal bets during the open window.
+    \item \textbf{Resolution:} Oracle commits and reveals the metric value at resolution time.
+    \item \textbf{Settlement:} Winners claim payouts; losers' stakes distributed.
+\end{enumerate}
+
+\subsection{Commit-Reveal Scheme}
+
+To prevent front-running, all bets use a two-phase commit-reveal mechanism:
+
+\begin{definition}[Bet Commitment]
+A bet commitment is computed as:
+\begin{equation}
+c = H(\text{amount} \| \text{side} \| \text{nonce} \| \text{salt})
+\end{equation}
+where $H$ is SHA-256, $\|$ denotes concatenation, and salt provides entropy.
+\end{definition}
+
+\begin{property}[Front-Running Resistance]
+Given commitment $c$, an adversary cannot determine the bet parameters $(amount, side)$ without knowledge of $(nonce, salt)$, which remain secret until reveal.
+\end{property}
+
+The betting flow proceeds as:
+
+\begin{enumerate}
+    \item \textbf{Commit Phase:} User submits $c$ to create BetCommitment account. No tokens transferred.
+    \item \textbf{Delay:} Minimum 5-minute wait before reveal.
+    \item \textbf{Reveal Phase:} User submits $(amount, side, nonce, salt)$. Contract verifies $H(\cdot) = c$, transfers tokens to pool.
+\end{enumerate}
+
+\subsection{Parimutuel Pool Structure}
+
+\begin{definition}[Parimutuel Payout]
+For a market with YES pool $P_Y$ and NO pool $P_N$, a winning YES bettor with stake $s$ receives:
+\begin{equation}
+\text{Payout} = s + \frac{s}{P_Y} \times P_N \times (1 - \beta)
+\end{equation}
+where $\beta$ is the fee rate.
+\end{definition}
+
+\begin{theorem}[Zero-Sum Property]
+The parimutuel system is zero-sum: total payouts equal total stakes minus fees.
+\begin{equation}
+\sum_{\text{winners}} \text{Payout}_i = (P_Y + P_N) \times (1 - \beta)
+\end{equation}
+\end{theorem}
+
+\subsection{Oracle System}
+
+Resolution requires bonded oracles:
+
+\begin{definition}[Oracle Bond]
+Before resolving a market, an oracle must deposit bond $B = 10$ IDL. The bond is:
+\begin{itemize}
+    \item \textbf{Released} if resolution is not disputed.
+    \item \textbf{Slashed} (50\%) if resolution is successfully disputed.
+\end{itemize}
+\end{definition}
+
+The resolution follows a commit-reveal pattern identical to betting, with a 1-hour dispute window after reveal.
+
+\subsection{Dynamic Odds}
+
+Market odds update with each bet:
+
+\begin{equation}
+\pi_Y^{(t+1)} = \min\left(\pi_Y^{(t)} + 0.05, \frac{P_Y + \delta}{P_Y + P_N + \delta}\right)
+\end{equation}
+
+where $\delta$ is the new bet amount and 5\% is the maximum per-update shift.
+
+% ============================================================================
+% SECTION 7: ADVANCED TRADING
+% ============================================================================
+\section{Advanced Trading Features}
+\label{sec:advanced-trading}
+
+\subsection{Limit Orders}
+
+Users can place orders that execute only at target odds:
+
+\begin{equation}
+\text{LimitOrder} = \{m, s, \text{side}, \pi_{\text{target}}, t_{\text{expiry}}\}
+\end{equation}
+
+A keeper monitors markets and calls \texttt{fill\_limit\_order()} when $\pi_{\text{current}} \leq \pi_{\text{target}}$.
+
+\subsection{Stop Loss}
+
+Automatic position exit when losing:
+
+\begin{equation}
+\text{Trigger Condition:} \quad \pi_{\text{your\_side}} < \theta_{\text{stop}}
+\end{equation}
+
+where $\theta_{\text{stop}} \in [0.10, 0.90]$ is the user-specified threshold.
+
+\subsection{Partial Cashout}
+
+Exit early at current market odds:
+
+\begin{equation}
+\text{Payout} = (s_{\text{cashout}} - F) \times \pi_{\text{current}}
+\end{equation}
+
+where $F = s_{\text{cashout}} \times \beta$ is the fee.
+
+\subsection{Conviction Betting}
+
+Lock bets for bonus payouts:
+
+\begin{table}[H]
+\centering
+\caption{Conviction Bonus Tiers}
+\label{tab:conviction}
+\begin{tabular}{@{}rr@{}}
+\toprule
+\textbf{Lock Duration} & \textbf{Win Bonus} \\
+\midrule
+1 day & 0.5\% \\
+7 days & 3.5\% \\
+14 days & 7.0\% \\
+30 days & 15.0\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ============================================================================
+% SECTION 8: SOCIAL LAYER
+% ============================================================================
+\section{Social Trading Layer}
+\label{sec:social}
+
+\subsection{Prediction Battles}
+
+\begin{definition}[Battle]
+A 1v1 battle is a pair of opposing bets:
+\begin{equation}
+\text{Battle} = \{m, s, \text{challenger}, \text{opponent}, \text{status}\}
+\end{equation}
+where both parties stake equal amounts $s$ on opposite sides.
+\end{definition}
+
+Battle payout for winner:
+\begin{equation}
+\text{Payout} = 2s \times (1 - \beta_{\text{battle}})
+\end{equation}
+where $\beta_{\text{battle}} = 0.025$ (2.5\%).
+
+\subsection{Guild System}
+
+Guilds enable pooled betting with profit sharing:
+
+\begin{definition}[Guild Treasury]
+A guild maintains a pooled treasury:
+\begin{equation}
+T = \sum_{i=1}^{n} c_i
+\end{equation}
+where $c_i$ is member $i$'s contribution.
+\end{definition}
+
+\begin{property}[Profit Distribution]
+When a guild bet wins with profit $\Pi$:
+\begin{align}
+\Pi_{\text{leader}} &= 0.10 \times \Pi \\
+\Pi_i &= 0.90 \times \Pi \times \frac{c_i}{T} \quad \text{for member } i
+\end{align}
+\end{property}
+
+\subsection{Referral System}
+
+Referrers earn perpetual fee share:
+
+\begin{equation}
+R_{\text{referrer}} = 0.05 \times F_{\text{stakers}} \quad \text{for each referred user bet}
+\end{equation}
+
+\subsection{Leaderboards and Seasons}
+
+Predictor statistics are tracked on-chain:
+
+\begin{equation}
+\text{Accuracy} = \frac{n_{\text{correct}}}{n_{\text{total}}} \times 100\%
+\end{equation}
+
+Seasons run for 30 days with prize pool distribution to top performers.
+
+% ============================================================================
+% SECTION 9: STABLESWAP AMM
+% ============================================================================
+\section{StableSwap AMM}
+\label{sec:stableswap}
+
+\subsection{Purpose}
+
+The StableSwap AMM provides near-zero slippage swaps between BAGS-IDL and PUMP-IDL tokens, which should trade at 1:1 parity.
+
+\subsection{Curve StableSwap Invariant}
+
+The AMM uses the Curve StableSwap invariant:
+
+\begin{equation}
+A n^n \sum_{i} x_i + D = A D n^n + \frac{D^{n+1}}{n^n \prod_i x_i}
+\label{eq:stableswap}
+\end{equation}
+
+where:
+\begin{itemize}
+    \item $A$ = Amplification coefficient (1000)
+    \item $n$ = Number of tokens (2)
+    \item $x_i$ = Token balances [BAGS, PUMP]
+    \item $D$ = Invariant (total value proxy)
+\end{itemize}
+
+\begin{theorem}[Slippage Reduction]
+For balanced pools, StableSwap provides $O(1/A)$ slippage compared to $O(1)$ for constant product AMMs.
+\end{theorem}
+
+\begin{table}[H]
+\centering
+\caption{Slippage Comparison: 1M Swap in 100M Pool}
+\label{tab:slippage}
+\begin{tabular}{@{}lrr@{}}
+\toprule
+\textbf{AMM Type} & \textbf{Output} & \textbf{Slippage} \\
+\midrule
+Constant Product & 990,099 & 0.99\% \\
+StableSwap ($A=100$) & 999,800 & 0.02\% \\
+StableSwap ($A=1000$) & 999,960 & 0.004\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{LP Token Economics}
+
+\begin{equation}
+\text{LP APY} = \frac{V_{\text{daily}} \times 365 \times 0.001337 \times 0.50}{\text{TVL}} \times 100\%
+\end{equation}
+
+where $0.001337$ is the swap fee rate (13.37 bps) and 50\% goes to LPs.
+
+% ============================================================================
+% SECTION 10: ON-CHAIN METRICS ORACLE
+% ============================================================================
+\section{On-Chain Metrics Oracle}
+\label{sec:oracle}
+
+\subsection{Design Constraints}
+
+The oracle operates under strict constraints, using only pure Solana RPC methods:
+
+\begin{property}[Pure RPC Oracle]
+All metric calculations use only:
+\begin{itemize}
+    \item \texttt{getAccountInfo(pubkey)}
+    \item \texttt{getProgramAccounts(programId, filters)}
+    \item \texttt{getMultipleAccounts(pubkeys[])}
+    \item \texttt{getTokenAccountsByOwner(owner, filter)}
+    \item \texttt{getSignaturesForAddress(address, options)}
+    \item \texttt{getTransaction(signature)}
+\end{itemize}
+No third-party APIs (DeFiLlama, Pyth, etc.) are used.
+\end{property}
+
+This constraint ensures decentralization, censorship resistance, and verifiability.
+
+\subsection{TVL Calculation}
+
+\begin{definition}[Total Value Locked]
+For protocol $P$ with vaults $\{V_1, \ldots, V_n\}$:
+\begin{equation}
+\text{TVL}(P) = \sum_{i=1}^{n} \text{balance}(V_i) \times \text{price}(\text{token}(V_i))
+\end{equation}
+\end{definition}
+
+\begin{algorithm}[H]
+\caption{TVL Computation via Pure RPC}
+\label{alg:tvl}
+\begin{algorithmic}[1]
+\Require Protocol program ID $P$, vault PDAs $\{V_1, \ldots, V_n\}$
+\Ensure TVL in USD
+\State $\text{tvl} \gets 0$
+\State $\text{accounts} \gets \texttt{getMultipleAccounts}([V_1, \ldots, V_n])$
+\For{each $(V_i, \text{data})$ in accounts}
+    \State $\text{balance} \gets \texttt{parseTokenAccount}(\text{data})$
+    \State $\text{mint} \gets \texttt{extractMint}(\text{data})$
+    \State $\text{price} \gets \texttt{getPriceFromPool}(\text{mint})$
+    \State $\text{tvl} \gets \text{tvl} + \text{balance} \times \text{price}$
+\EndFor
+\State \Return $\text{tvl}$
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Volume Calculation: Stratified Sampling}
+
+Volume calculation faces a pagination limit of 1000 signatures per query. For high-volume protocols, we employ stratified sampling:
+
+\begin{definition}[Stratified Volume Estimator]
+Partition the 24-hour window into $k$ strata $\{S_1, \ldots, S_k\}$. For each stratum $S_j$:
+\begin{equation}
+\hat{V}_j = \frac{V_{\text{sampled},j}}{r_j}
+\end{equation}
+where $r_j = n_{\text{sampled},j} / n_{\text{total},j}$ is the sampling ratio.
+\end{definition}
+
+\begin{theorem}[Unbiased Estimation]
+The stratified estimator $\hat{V} = \sum_j \hat{V}_j$ is unbiased:
+\begin{equation}
+\mathbb{E}[\hat{V}] = V_{\text{true}}
+\end{equation}
+\end{theorem}
+
+The 95\% confidence interval is:
+\begin{equation}
+\text{CI}_{95} = \hat{V} \pm 1.96 \sqrt{\sum_j \frac{\sigma_j^2}{n_j}}
+\end{equation}
+
+\subsection{User Count: HyperLogLog}
+
+Counting unique users requires deduplication across millions of transactions. We use the HyperLogLog probabilistic data structure:
+
+\begin{definition}[HyperLogLog Estimator]
+The cardinality estimate is:
+\begin{equation}
+\hat{n} = \alpha_m \cdot m^2 \cdot \left(\sum_{j=1}^{m} 2^{-M_j}\right)^{-1}
+\end{equation}
+where $m = 2^{14}$ is the register count, $M_j$ is register $j$'s value, and $\alpha_m \approx 0.7213$ is a bias correction constant.
+\end{definition}
+
+\begin{property}[HyperLogLog Error Bound]
+Standard error is $\sigma \approx 1.04 / \sqrt{m} \approx 0.81\%$ for $m = 2^{14}$.
+\end{property}
+
+Memory usage is only 16 KB for arbitrarily large user sets.
+
+\subsection{Price Discovery}
+
+On-chain price discovery uses TWAP from liquidity pools:
+
+\begin{definition}[Time-Weighted Average Price]
+\begin{equation}
+\text{TWAP}(t_0, t_1) = \frac{\sum_{i} p_i \times \Delta t_i}{\sum_{i} \Delta t_i}
+\end{equation}
+where $p_i$ is the price observation and $\Delta t_i$ is the time weight.
+\end{definition}
+
+Multi-pool aggregation for robustness:
+\begin{equation}
+p_{\text{final}} = \frac{\sum_{\text{pool}} p_{\text{pool}} \times L_{\text{pool}}}{\sum_{\text{pool}} L_{\text{pool}}}
+\end{equation}
+where $L_{\text{pool}}$ is liquidity depth (used as confidence weight).
+
+\subsection{Snapshot Consistency}
+
+Multi-slot consensus ensures data consistency:
+
+\begin{definition}[Multi-Slot Consensus]
+Metrics are computed over a window $[s_{\text{start}}, s_{\text{end}}]$ where $s_{\text{end}} - s_{\text{start}} \leq 10$ slots. A result is valid if:
+\begin{equation}
+\frac{|\{s : \text{valid}(s)\}|}{s_{\text{end}} - s_{\text{start}}} \geq 0.8
+\end{equation}
+\end{definition}
+
+\subsection{Confidence Scoring}
+
+Each resolution receives a confidence score:
+
+\begin{equation}
+C = w_1 C_{\text{data}} + w_2 C_{\text{price}} + w_3 C_{\text{freshness}} + w_4 C_{\text{coverage}}
+\end{equation}
+
+where weights $(w_1, w_2, w_3, w_4) = (0.30, 0.30, 0.20, 0.20)$.
+
+\begin{table}[H]
+\centering
+\caption{Confidence-Based Actions}
+\label{tab:confidence}
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Confidence} & \textbf{Action} \\
+\midrule
+$C \geq 0.90$ & Resolve immediately \\
+$0.80 \leq C < 0.90$ & Resolve with LOW\_CONFIDENCE flag \\
+$0.60 \leq C < 0.80$ & Delay 1 hour, retry \\
+$C < 0.60$ & Cancel market, refund bets \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ============================================================================
+% SECTION 11: SECURITY
+% ============================================================================
+\section{Security Analysis}
+\label{sec:security}
+
+\subsection{Smart Contract Security}
+
+The protocol implements multiple security measures:
+
+\begin{itemize}
+    \item \textbf{Commit-Reveal:} Prevents front-running of bets and resolutions.
+    \item \textbf{Oracle Bonding:} Economic accountability for resolution accuracy.
+    \item \textbf{48-Hour Timelock:} Authority actions require waiting period.
+    \item \textbf{Circuit Breaker:} Protocol can be paused in emergencies.
+    \item \textbf{TVL Caps:} Gradual rollout limits exposure.
+    \item \textbf{Insurance Fund:} Covers potential exploits.
+    \item \textbf{Checked Arithmetic:} Prevents overflow/underflow.
+\end{itemize}
+
+\subsection{Timing Constants}
+
+\begin{table}[H]
+\centering
+\caption{Security Timing Parameters}
+\label{tab:timing}
+\begin{tabular}{@{}lr@{}}
+\toprule
+\textbf{Parameter} & \textbf{Value} \\
+\midrule
+MIN\_RESOLUTION\_DELAY & 24 hours \\
+BETTING\_CLOSE\_WINDOW & 1 hour \\
+BET\_COMMIT\_WINDOW & 5 minutes \\
+BET\_REVEAL\_WINDOW & 1 hour \\
+ORACLE\_DISPUTE\_WINDOW & 1 hour \\
+AUTHORITY\_TIMELOCK & 48 hours \\
+MIN\_STAKE\_DURATION & 24 hours \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Attack Vector Analysis}
+
+\begin{table}[H]
+\centering
+\caption{Attack Vectors and Mitigations}
+\label{tab:attacks}
+\begin{tabular}{@{}p{3cm}p{1.5cm}p{6cm}@{}}
+\toprule
+\textbf{Attack} & \textbf{Severity} & \textbf{Mitigation} \\
+\midrule
+Oracle Manipulation & High & Bonding, slashing, dispute window \\
+Front-Running & High & Commit-reveal scheme \\
+Flash Loan & Medium & 24h minimum stake duration \\
+Contract Bugs & High & Audits, pausability, insurance \\
+Governance Attacks & Medium & Timelock, veIDL distribution \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Flash Loan Price Manipulation}
+
+\begin{definition}[Flash Loan Defense]
+Price readings are rejected if:
+\begin{equation}
+\frac{|p_{\text{spot}} - p_{\text{TWAP}}|}{p_{\text{TWAP}}} > 0.20
+\end{equation}
+where $p_{\text{TWAP}}$ is computed over minimum 10 slots.
+\end{definition}
+
+\subsection{Sandwich Attack Prevention}
+
+Resolution uses VRF-delayed execution:
+\begin{equation}
+s_{\text{resolve}} = s_{\text{commit}} + \text{VRF}(100, 200)
+\end{equation}
+where the resolution slot is unpredictable within the 100--200 slot range.
+
+% ============================================================================
+% SECTION 12: GOVERNANCE
+% ============================================================================
+\section{Governance}
+\label{sec:governance}
+
+\subsection{Vote-Escrow Mechanism}
+
+Voting power is determined by locked stake duration:
+
+\begin{definition}[veIDL Calculation]
+\begin{equation}
+\text{veIDL} = s \times \frac{\Delta t}{4 \text{ years}}
+\end{equation}
+where $s$ is staked IDL and $\Delta t$ is lock duration.
+\end{definition}
+
+\begin{property}[Linear Decay]
+veIDL decreases linearly as lock expires:
+\begin{equation}
+\text{veIDL}(t) = \text{veIDL}_0 \times \frac{t_{\text{end}} - t}{t_{\text{end}} - t_{\text{start}}}
+\end{equation}
+\end{property}
+
+\subsection{Proposal Lifecycle}
+
+\begin{enumerate}
+    \item \textbf{Discussion:} 3 days for community input.
+    \item \textbf{Voting:} 5 days for veIDL holders to vote.
+    \item \textbf{Timelock:} 2 days before execution.
+    \item \textbf{Execution:} Proposal enacted on-chain.
+\end{enumerate}
+
+Requirements:
+\begin{itemize}
+    \item \textbf{Quorum:} 20\% of veIDL supply must participate.
+    \item \textbf{Majority:} 50\%+1 of votes cast.
+\end{itemize}
+
+\subsection{Governable Parameters}
+
+\begin{table}[H]
+\centering
+\caption{Governance-Controlled Parameters}
+\label{tab:governance-params}
+\begin{tabular}{@{}lrrl@{}}
+\toprule
+\textbf{Parameter} & \textbf{Current} & \textbf{Range} & \textbf{Description} \\
+\midrule
+BET\_FEE\_BPS & 300 & 100--500 & Fee on winning bets \\
+STAKER\_FEE\_SHARE & 50\% & 30--70\% & Staker portion \\
+BURN\_FEE\_SHARE & 10\% & 5--20\% & Burn portion \\
+MIN\_BET\_AMOUNT & 0.001 & 0.001--1 & Minimum bet \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ============================================================================
+% SECTION 13: CONCLUSION
+% ============================================================================
+\section{Conclusion}
+\label{sec:conclusion}
+
+IDL Protocol presents a comprehensive solution for prediction markets on Solana, uniquely combining:
+
+\begin{enumerate}
+    \item A free, open IDL registry serving as infrastructure for the Solana ecosystem.
+
+    \item A prediction market system with provably fair parimutuel payouts and front-running resistance.
+
+    \item An on-chain metrics oracle that operates without third-party dependencies, using novel algorithms for TVL, volume, and user count computation.
+
+    \item Social trading features that enhance engagement and create network effects.
+
+    \item A deflationary token model with real yield from protocol revenue.
+\end{enumerate}
+
+The protocol's reliance on pure RPC data sources, while technically challenging, provides strong decentralization and censorship resistance guarantees that are essential for a trustworthy prediction market infrastructure.
+
+% ============================================================================
+% ACKNOWLEDGMENTS
+% ============================================================================
+\section*{Acknowledgments}
+
+We thank the Solana and Anchor development communities for their foundational work, and the early IDLHub users who contributed to the registry.
+
+% ============================================================================
+% APPENDIX
+% ============================================================================
+\appendix
+
+\section{Contract Addresses}
+\label{app:addresses}
+
+\begin{table}[H]
+\centering
+\caption{Deployed Contract Addresses}
+\label{tab:addresses}
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Contract} & \textbf{Address} \\
+\midrule
+\multicolumn{2}{l}{\textit{Devnet}} \\
+IDL Protocol & \texttt{BSn7neicVV2kEzgaZmd6tZEBm4tdgzBRyELov65Lq7dt} \\
+IDL StableSwap & \texttt{EFsgmpbKifyA75ZY5NPHQxrtuAHHB6sYnoGkLi6xoTte} \\
+\midrule
+\multicolumn{2}{l}{\textit{Token Mints}} \\
+PUMP-IDL & \texttt{4GihJrYJGQ9pjqDySTjd57y1h3nNkEZNbzJxCbispump} \\
+BAGS-IDL & \texttt{8zdhHxthCFoigAGw4QRxWfXUWLY1KkMZ1r7CTcmiBAGS} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Glossary}
+\label{app:glossary}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}lp{10cm}@{}}
+\toprule
+\textbf{Term} & \textbf{Definition} \\
+\midrule
+IDL & Interface Definition Language---JSON schema describing Solana program interfaces \\
+veIDL & Vote-escrowed IDL---locked staking tokens with governance power \\
+MCP & Model Context Protocol---AI agent API standard \\
+Parimutuel & Betting system where all bets pooled, winners split loser pool \\
+TVL & Total Value Locked---assets deposited in a protocol \\
+Commit-Reveal & Two-phase scheme preventing front-running \\
+StableSwap & AMM optimized for pegged assets (Curve-style) \\
+RPC & Remote Procedure Call---API for querying Solana blockchain state \\
+TWAP & Time-Weighted Average Price---price averaged over time \\
+HyperLogLog & Probabilistic algorithm for counting unique elements \\
+PDA & Program Derived Address---deterministic account addresses \\
+CLMM & Concentrated Liquidity Market Maker \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ============================================================================
+% REFERENCES
+% ============================================================================
+\bibliographystyle{plain}
+\begin{thebibliography}{99}
+
+\bibitem{solana}
+Yakovenko, A. (2018). Solana: A new architecture for a high performance blockchain. \textit{Solana Whitepaper}.
+
+\bibitem{anchor}
+Armani, A. (2021). Anchor: A framework for Solana programs. \url{https://anchor-lang.com}
+
+\bibitem{curve}
+Egorov, M. (2019). StableSwap---efficient mechanism for Stablecoin liquidity. \textit{Curve Finance Whitepaper}.
+
+\bibitem{hyperloglog}
+Flajolet, P., Fusy, É., Gandouet, O., \& Meunier, F. (2007). HyperLogLog: the analysis of a near-optimal cardinality estimation algorithm. \textit{Discrete Mathematics and Theoretical Computer Science}.
+
+\bibitem{veidl}
+Cronje, A. (2020). ve(3,3): Tokenomics with vote-escrowed tokens. \textit{Solidly Protocol}.
+
+\bibitem{parimutuel}
+Eisenberg, E. (1959). Aggregation of utility functions. \textit{Management Science}, 7(4), 337--350.
+
+\end{thebibliography}
+
+% ============================================================================
+% DOCUMENT END
+% ============================================================================
+\end{document}
