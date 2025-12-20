@@ -8,6 +8,7 @@ mod transformer;
 mod emitter;
 mod ir;
 mod cpi_helpers;
+mod idl;
 
 #[derive(ClapParser, Debug)]
 #[command(name = "anchor2pinocchio")]
@@ -33,13 +34,29 @@ struct Args {
     #[arg(long)]
     inline_cpi: bool,
 
-    /// Generate IDL-compatible discriminators (8-byte Anchor style)
-    #[arg(long)]
+    /// Generate IDL-compatible discriminators (8-byte Anchor style) - enabled by default
+    #[arg(long, default_value = "true")]
     anchor_compat: bool,
 
     /// Verbose output
     #[arg(short, long)]
     verbose: bool,
+
+    /// Generate IDL JSON file
+    #[arg(long)]
+    idl: bool,
+
+    /// Program ID for IDL metadata
+    #[arg(long)]
+    program_id: Option<String>,
+
+    /// Strip msg!() calls for smaller binary size
+    #[arg(long)]
+    no_logs: bool,
+
+    /// Verify generated IDL against original Anchor IDL
+    #[arg(long)]
+    verify_idl: Option<PathBuf>,
 }
 
 fn main() -> Result<()> {
@@ -83,6 +100,7 @@ fn main() -> Result<()> {
         lazy_entrypoint: args.lazy_entrypoint,
         inline_cpi: args.inline_cpi,
         anchor_compat: args.anchor_compat,
+        no_logs: args.no_logs,
     };
     let pinocchio_ir = transformer::transform(&anchor_program, &analysis, &config)?;
 
@@ -101,6 +119,40 @@ fn main() -> Result<()> {
         println!("\n[4/4] Emitting Pinocchio code...");
     }
     emitter::emit_with_extras(&pinocchio_ir, &args.output, Some(&extras))?;
+
+    // Phase 5: Generate IDL if requested
+    if args.idl || args.verify_idl.is_some() {
+        if args.verbose {
+            println!("\n[5/5] Generating IDL...");
+        }
+        let idl = idl::generate_idl(&pinocchio_ir, args.program_id.as_deref());
+        let idl_path = args.output.join("idl.json");
+        let idl_json = serde_json::to_string_pretty(&idl)?;
+        std::fs::write(&idl_path, &idl_json)?;
+        if args.verbose {
+            println!("  IDL written to {:?}", idl_path);
+        }
+
+        // Verify against original IDL if provided
+        if let Some(original_idl_path) = &args.verify_idl {
+            if args.verbose {
+                println!("\n[6/6] Verifying IDL compatibility...");
+            }
+            let verification = idl::verify_idl(&idl, original_idl_path)?;
+            if verification.is_compatible {
+                println!("\n✅ IDL VERIFICATION PASSED");
+                println!("  Instructions: {}/{} match", verification.matching_instructions, verification.total_instructions);
+                println!("  Accounts: {}/{} match", verification.matching_accounts, verification.total_accounts);
+                println!("  Errors: {}/{} match", verification.matching_errors, verification.total_errors);
+            } else {
+                println!("\n❌ IDL VERIFICATION FAILED");
+                for issue in &verification.issues {
+                    println!("  - {}", issue);
+                }
+                std::process::exit(1);
+            }
+        }
+    }
 
     println!("\nSuccess! Pinocchio program written to {:?}", args.output);
     println!("\nNext steps:");

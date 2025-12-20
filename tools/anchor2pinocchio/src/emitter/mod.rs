@@ -36,6 +36,30 @@ pub fn emit_with_extras(program: &PinocchioProgram, output_dir: &Path, extras: O
     // Emit src/instructions/
     emit_instructions(program, &src_dir)?;
 
+    // Emit security.json for program metadata
+    emit_security_json(program, output_dir)?;
+
+    Ok(())
+}
+
+fn emit_security_json(program: &PinocchioProgram, output_dir: &Path) -> Result<()> {
+    let security = serde_json::json!({
+        "name": program.name,
+        "project_url": "",
+        "contacts": [],
+        "policy": "",
+        "preferred_languages": ["en"],
+        "source_code": "",
+        "source_revision": "",
+        "source_release": "",
+        "encryption": "",
+        "auditors": [],
+        "acknowledgements": "",
+        "expiry": ""
+    });
+
+    let content = serde_json::to_string_pretty(&security)?;
+    fs::write(output_dir.join("security.json"), content)?;
     Ok(())
 }
 
@@ -65,7 +89,9 @@ fn emit_helpers_rs(extras: &SourceExtras, src_dir: &Path) -> Result<()> {
         content.push_str("use pinocchio::sysvars::{clock::Clock, Sysvar};\n");
         content.push_str("use pinocchio::account_info::AccountInfo;\n\n");
 
-        // Add token account helper
+        // Add token account helpers
+        content.push_str("use pinocchio::pubkey::Pubkey;\n\n");
+
         content.push_str("/// Get token account balance from account info\n");
         content.push_str("#[inline(always)]\n");
         content.push_str("pub fn get_token_balance(account: &AccountInfo) -> Result<u64, ProgramError> {\n");
@@ -75,6 +101,30 @@ fn emit_helpers_rs(extras: &SourceExtras, src_dir: &Path) -> Result<()> {
         content.push_str("    }\n");
         content.push_str("    // Token account amount is at offset 64 (after mint and owner pubkeys)\n");
         content.push_str("    Ok(u64::from_le_bytes(data[64..72].try_into().unwrap()))\n");
+        content.push_str("}\n\n");
+
+        content.push_str("/// Get token account mint from account info\n");
+        content.push_str("#[inline(always)]\n");
+        content.push_str("pub fn get_token_mint(account: &AccountInfo) -> Result<Pubkey, ProgramError> {\n");
+        content.push_str("    let data = account.try_borrow_data()?;\n");
+        content.push_str("    if data.len() < 32 {\n");
+        content.push_str("        return Err(ProgramError::InvalidAccountData);\n");
+        content.push_str("    }\n");
+        content.push_str("    // Token account mint is at offset 0\n");
+        content.push_str("    let bytes: [u8; 32] = data[0..32].try_into().unwrap();\n");
+        content.push_str("    Ok(Pubkey::from(bytes))\n");
+        content.push_str("}\n\n");
+
+        content.push_str("/// Get token account owner from account info\n");
+        content.push_str("#[inline(always)]\n");
+        content.push_str("pub fn get_token_owner(account: &AccountInfo) -> Result<Pubkey, ProgramError> {\n");
+        content.push_str("    let data = account.try_borrow_data()?;\n");
+        content.push_str("    if data.len() < 64 {\n");
+        content.push_str("        return Err(ProgramError::InvalidAccountData);\n");
+        content.push_str("    }\n");
+        content.push_str("    // Token account owner is at offset 32\n");
+        content.push_str("    let bytes: [u8; 32] = data[32..64].try_into().unwrap();\n");
+        content.push_str("    Ok(Pubkey::from(bytes))\n");
         content.push_str("}\n\n");
 
         // Add compute_hash helper (SHA256)
@@ -141,6 +191,10 @@ fn clean_helper_body(body: &str) -> String {
     // Fix other common spacing issues
     result = result.replace(" :: ", "::");
     result = result.replace(" . ", ".");
+    // Replace std:: with core:: for no_std compatibility
+    result = result.replace("std::cmp::", "core::cmp::");
+    result = result.replace("std::mem::", "core::mem::");
+    result = result.replace("std::ptr::", "core::ptr::");
     result
 }
 
@@ -277,12 +331,9 @@ strip = true
 fn emit_lib_rs(program: &PinocchioProgram, src_dir: &Path, has_helpers: bool) -> Result<()> {
     let mut content = String::new();
 
+    // Use no_std for smallest binary size
+    content.push_str("#![no_std]\n");
     content.push_str("#![allow(unexpected_cfgs)]\n\n");
-
-    // Header
-    if program.config.no_alloc {
-        content.push_str("#![no_std]\n\n");
-    }
 
     content.push_str("use pinocchio::{\n");
     content.push_str("    account_info::AccountInfo,\n");
@@ -328,17 +379,16 @@ fn emit_lib_rs(program: &PinocchioProgram, src_dir: &Path, has_helpers: bool) ->
         content.push_str("];\n\n");
     }
 
-    // Entrypoint - import the macro properly
+    // Entrypoint
     content.push_str("#[cfg(not(feature = \"no-entrypoint\"))]\n");
     content.push_str("use pinocchio::entrypoint;\n");
     content.push_str("#[cfg(not(feature = \"no-entrypoint\"))]\n");
     content.push_str("entrypoint!(process_instruction);\n\n");
 
-    // Allocator
-    if program.config.no_alloc {
-        content.push_str("pinocchio::no_allocator!();\n");
-        content.push_str("pinocchio::no_panic_handler!();\n\n");
-    }
+    // Panic handler for no_std
+    content.push_str("#[cfg(not(feature = \"no-entrypoint\"))]\n");
+    content.push_str("#[panic_handler]\n");
+    content.push_str("fn panic(_: &core::panic::PanicInfo) -> ! { loop {} }\n\n");
 
     // Discriminator constants
     content.push_str("// Instruction discriminators (Anchor-compatible)\n");
@@ -607,6 +657,35 @@ fn emit_instruction(
     }
     content.push_str("\n");
 
+    // Detect which instruction args are used in PDA seeds and parse them early
+    let mut args_used_in_pda: Vec<String> = Vec::new();
+    for validation in &inst.validations {
+        if let Validation::PdaCheck { seeds, .. } = validation {
+            for seed in seeds {
+                // Check if any instruction arg names appear in the seed
+                for arg in &inst.args {
+                    if seed.contains(&arg.name) && !args_used_in_pda.contains(&arg.name) {
+                        args_used_in_pda.push(arg.name.clone());
+                    }
+                }
+            }
+        }
+    }
+
+    // Parse args needed for PDA seeds BEFORE account validation
+    if !args_used_in_pda.is_empty() && !inst.args.is_empty() {
+        content.push_str("    // Parse instruction arguments needed for PDA verification\n");
+        let mut offset = 0usize;
+        for arg in &inst.args {
+            let (size, parse_code) = get_arg_parse_code(&arg.ty, offset, &arg.name);
+            if args_used_in_pda.contains(&arg.name) {
+                content.push_str(&format!("    {}\n", parse_code));
+            }
+            offset += size;
+        }
+        content.push_str("\n");
+    }
+
     // Emit validations
     let mut has_validations = false;
     for validation in &inst.validations {
@@ -692,14 +771,21 @@ fn emit_instruction(
         content.push_str("\n");
     }
 
-    // Parse instruction arguments if any
-    if !inst.args.is_empty() {
+    // Parse remaining instruction arguments (skip those already parsed for PDA seeds)
+    let remaining_args: Vec<_> = inst.args.iter()
+        .filter(|arg| !args_used_in_pda.contains(&arg.name))
+        .collect();
+
+    if !remaining_args.is_empty() {
         content.push_str("    // Parse instruction arguments\n");
 
         let mut offset = 0usize;
         for arg in &inst.args {
             let (size, parse_code) = get_arg_parse_code(&arg.ty, offset, &arg.name);
-            content.push_str(&format!("    {}\n", parse_code));
+            // Only emit if not already parsed for PDA seeds
+            if !args_used_in_pda.contains(&arg.name) {
+                content.push_str(&format!("    {}\n", parse_code));
+            }
             offset += size;
         }
         content.push_str("\n");
@@ -804,7 +890,27 @@ fn get_arg_parse_code(ty: &str, offset: usize, name: &str) -> (usize, String) {
             "let {}: &[u8; 32] = data.get({}..{}).ok_or(ProgramError::InvalidInstructionData)?.try_into().unwrap();",
             name, offset, offset + 32
         )),
+        // Fixed-size byte arrays
+        "[u8;32]" => (32, format!(
+            "let {}: [u8; 32] = data.get({}..{}).ok_or(ProgramError::InvalidInstructionData)?.try_into().unwrap();",
+            name, offset, offset + 32
+        )),
+        "[u8;64]" => (64, format!(
+            "let {}: [u8; 64] = data.get({}..{}).ok_or(ProgramError::InvalidInstructionData)?.try_into().unwrap();",
+            name, offset, offset + 64
+        )),
         _ => {
+            // Check for generic [u8; N] pattern
+            if ty_clean.starts_with("[u8;") && ty_clean.ends_with("]") {
+                if let Some(n_str) = ty_clean.strip_prefix("[u8;").and_then(|s| s.strip_suffix("]")) {
+                    if let Ok(n) = n_str.parse::<usize>() {
+                        return (n, format!(
+                            "let {}: [u8; {}] = data.get({}..{}).ok_or(ProgramError::InvalidInstructionData)?.try_into().unwrap();",
+                            name, n, offset, offset + n
+                        ));
+                    }
+                }
+            }
             // Default: assume it's a custom struct or unknown type
             (0, format!("// TODO: Parse {} of type {} at offset {}", name, ty, offset))
         }

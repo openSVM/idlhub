@@ -56,18 +56,21 @@ const PROTOCOL_FEE_ACCOUNTS = {
 };
 
 /**
- * Get transaction signatures for a program with pagination until 24h ago
+ * Get transaction signatures for a program with pagination until time window
+ * @param {string} programId - Program address
+ * @param {number} windowHours - Time window in hours (default 1 hour)
  */
-async function getProgramTransactions(programId) {
+async function getProgramTransactions(programId, windowHours = 1) {
     try {
         const pubkey = new PublicKey(programId);
         let allSignatures = [];
         let before = undefined;
         const limitPerRequest = 1000;
-        const oneDayAgo = Date.now() / 1000 - 86400;
+        const windowSeconds = windowHours * 3600;
+        const windowStart = Date.now() / 1000 - windowSeconds;
         let reachedOldTransactions = false;
 
-        // Fetch in batches until we reach transactions older than 24h
+        // Fetch in batches until we reach transactions older than time window
         while (!reachedOldTransactions && allSignatures.length < 100000000) { // Safety limit of 100M
             try {
                 const signatures = await connection.getSignaturesForAddress(pubkey, {
@@ -77,9 +80,9 @@ async function getProgramTransactions(programId) {
 
                 if (signatures.length === 0) break;
 
-                // Check if any signatures in this batch are older than 24h
+                // Check if any signatures in this batch are older than time window
                 for (const sig of signatures) {
-                    if (sig.blockTime && sig.blockTime < oneDayAgo) {
+                    if (sig.blockTime && sig.blockTime < windowStart) {
                         reachedOldTransactions = true;
                     }
                     allSignatures.push(sig);
@@ -106,7 +109,7 @@ async function getProgramTransactions(programId) {
             }
         }
 
-        console.log(`Fetched ${allSignatures.length} transaction signatures for ${programId} (reached 24h: ${reachedOldTransactions})`);
+        console.log(`Fetched ${allSignatures.length} transaction signatures for ${programId} (reached ${windowHours}h window: ${reachedOldTransactions})`);
         return allSignatures;
     } catch (error) {
         console.error(`Error fetching transactions for ${programId}:`, error.message);
@@ -115,15 +118,25 @@ async function getProgramTransactions(programId) {
 }
 
 /**
- * Parse transactions to get users, trades, and volume
+ * Parse transactions to get users, trades, volume, and advanced metrics
+ * @param {Array} signatures - Transaction signatures
+ * @param {string} programId - Program address
+ * @param {number} windowHours - Time window in hours
  */
-async function parseTransactions(signatures, programId) {
+async function parseTransactions(signatures, programId, windowHours = 1) {
     const uniqueUsers = new Set();
     let totalTrades = 0;
     let totalVolume = 0;
-    let last24hVolume = 0;
+    let windowVolume = 0;
 
-    const oneDayAgo = Date.now() / 1000 - 86400;
+    // Advanced metrics tracking
+    const userVolumes = new Map(); // Track volume per user for whale detection
+    const timestamps = []; // Track timestamps for bot detection
+    let failedTxVolume = 0;
+    let failedTxCount = 0;
+
+    const windowSeconds = windowHours * 3600;
+    const windowStart = Date.now() / 1000 - windowSeconds;
 
     // Process limited number of transactions individually to avoid payload size limits
     // Parse more transactions for better accuracy (200 recent transactions)
@@ -147,20 +160,40 @@ async function parseTransactions(signatures, programId) {
                 uniqueUsers.add(feePayer);
                 totalTrades++;
 
+                // Track timestamp for bot detection
+                if (sig.blockTime) {
+                    timestamps.push(sig.blockTime);
+                }
+
+                // Track failed transactions
+                if (tx.meta.err) {
+                    failedTxCount++;
+                }
+
                 // Calculate volume from pre/post balances
+                let txVolume = 0;
                 if (tx.meta.preBalances && tx.meta.postBalances) {
                     for (let k = 0; k < tx.meta.preBalances.length; k++) {
                         const diff = Math.abs(tx.meta.postBalances[k] - tx.meta.preBalances[k]);
                         if (diff > 0) {
                             const volumeInSOL = diff / 1e9;
                             totalVolume += volumeInSOL;
+                            txVolume += volumeInSOL;
 
-                            // Check if transaction is within last 24h
-                            if (sig.blockTime && sig.blockTime > oneDayAgo) {
-                                last24hVolume += volumeInSOL;
+                            // Check if transaction is within time window
+                            if (sig.blockTime && sig.blockTime > windowStart) {
+                                windowVolume += volumeInSOL;
                             }
                         }
                     }
+                }
+
+                // Track per-user volume for whale detection
+                userVolumes.set(feePayer, (userVolumes.get(feePayer) || 0) + txVolume);
+
+                // Track failed tx volume
+                if (tx.meta.err && txVolume > 0) {
+                    failedTxVolume += txVolume;
                 }
             }
         } catch (error) {
@@ -174,35 +207,110 @@ async function parseTransactions(signatures, programId) {
         }
     }
 
+    // Calculate advanced metrics
+    const advancedMetrics = calculateAdvancedMetrics(
+        userVolumes,
+        timestamps,
+        totalVolume,
+        failedTxVolume,
+        failedTxCount,
+        totalTrades
+    );
+
     return {
         uniqueUsers: uniqueUsers.size,
         totalTrades,
         totalVolume: Math.round(totalVolume * 100), // Convert to USD (~$100/SOL estimate)
-        volume24h: Math.round(last24hVolume * 100)
+        windowVolume: Math.round(windowVolume * 100), // Volume in current window
+        windowHours, // Track window size
+        ...advancedMetrics
+    };
+}
+
+/**
+ * Calculate advanced metrics: Honest Volume Ratio, Whale Dependency, Bot Detection
+ */
+function calculateAdvancedMetrics(userVolumes, timestamps, totalVolume, failedTxVolume, failedTxCount, totalTrades) {
+    // 1. Calculate Whale Dependency Index (Top 10 users)
+    const sortedUsers = Array.from(userVolumes.entries())
+        .sort((a, b) => b[1] - a[1]);
+
+    const top10Volume = sortedUsers.slice(0, 10)
+        .reduce((sum, [_, vol]) => sum + vol, 0);
+
+    const whaleDependency = totalVolume > 0 ? (top10Volume / totalVolume) : 0;
+
+    // 2. Bot Detection - Calculate timestamp standard deviation
+    let timestampStdDev = 0;
+    let botVolume = 0;
+
+    if (timestamps.length > 1) {
+        const mean = timestamps.reduce((a, b) => a + b, 0) / timestamps.length;
+        const variance = timestamps.reduce((sum, t) => sum + Math.pow(t - mean, 2), 0) / timestamps.length;
+        timestampStdDev = Math.sqrt(variance);
+
+        // If std dev < 1 second, likely bot activity
+        if (timestampStdDev < 1.0) {
+            botVolume = totalVolume * 0.3; // Estimate 30% is bot volume
+        }
+    }
+
+    // 3. Calculate Honest Volume Ratio
+    const whaleVolume = top10Volume;
+    const dishonestVolume = whaleVolume + failedTxVolume + botVolume;
+    const honestVolume = Math.max(0, totalVolume - dishonestVolume);
+    const honestRatio = totalVolume > 0 ? (honestVolume / totalVolume) : 0;
+
+    // 4. Success Rate
+    const successRate = totalTrades > 0 ? ((totalTrades - failedTxCount) / totalTrades) : 1.0;
+
+    return {
+        // Honest Volume Metrics
+        honestVolume: Math.round(honestVolume * 100), // USD
+        honestRatio: Math.round(honestRatio * 100), // Percentage
+        dishonestVolume: Math.round(dishonestVolume * 100), // USD
+
+        // Whale Metrics
+        whaleDependency: Math.round(whaleDependency * 100), // Percentage
+        whaleVolume: Math.round(whaleVolume * 100), // USD
+        isHealthy: whaleDependency < 0.30, // <30% = healthy
+
+        // Bot Detection
+        timestampStdDev: Math.round(timestampStdDev * 100) / 100, // Seconds
+        botVolume: Math.round(botVolume * 100), // USD
+        likelyBotActivity: timestampStdDev < 1.0,
+
+        // Success Rate
+        successRate: Math.round(successRate * 100), // Percentage
+        failedTxCount,
+        failedTxVolume: Math.round(failedTxVolume * 100) // USD
     };
 }
 
 /**
  * Get transaction-based metrics for a protocol
+ * @param {string} protocolId - Protocol ID
+ * @param {number} windowHours - Time window in hours (default 1 hour)
  */
-export async function getTxMetrics(protocolId) {
+export async function getTxMetrics(protocolId, windowHours = 1) {
     const protocol = PROTOCOL_FEE_ACCOUNTS[protocolId];
     if (!protocol) {
         return null;
     }
 
     try {
-        console.log(`Fetching tx history for ${protocolId}...`);
+        console.log(`Fetching ${windowHours}h tx history for ${protocolId}...`);
 
-        // Get all transactions from last 24h with automatic pagination
-        const signatures = await getProgramTransactions(protocol.programId);
+        // Get all transactions from time window with automatic pagination
+        const signatures = await getProgramTransactions(protocol.programId, windowHours);
 
         if (signatures.length === 0) {
             return {
                 users: 0,
                 trades: 0,
                 volume: 0,
-                volume24h: 0,
+                windowVolume: 0,
+                windowHours,
                 txCount: 0,
                 programId: protocol.programId,
                 source: 'transactions',
@@ -212,13 +320,29 @@ export async function getTxMetrics(protocolId) {
         }
 
         // Parse transactions
-        const metrics = await parseTransactions(signatures, protocol.programId);
+        const metrics = await parseTransactions(signatures, protocol.programId, windowHours);
 
         return {
             users: metrics.uniqueUsers,
             trades: metrics.totalTrades,
             volume: metrics.totalVolume,
-            volume24h: metrics.volume24h,
+            windowVolume: metrics.windowVolume,
+            windowHours: metrics.windowHours,
+
+            // Advanced Metrics
+            honestVolume: metrics.honestVolume,
+            honestRatio: metrics.honestRatio,
+            dishonestVolume: metrics.dishonestVolume,
+            whaleDependency: metrics.whaleDependency,
+            whaleVolume: metrics.whaleVolume,
+            isHealthy: metrics.isHealthy,
+            timestampStdDev: metrics.timestampStdDev,
+            botVolume: metrics.botVolume,
+            likelyBotActivity: metrics.likelyBotActivity,
+            successRate: metrics.successRate,
+            failedTxCount: metrics.failedTxCount,
+            failedTxVolume: metrics.failedTxVolume,
+
             tvl: 0, // Would need to query token accounts
             txCount: signatures.length,
             programId: protocol.programId,

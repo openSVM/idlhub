@@ -38,3 +38,6 @@ test-design*.js
 compare-pixels.js
 screenshot-*.png
 attack-framework/reports/
+
+# Local Netlify folder
+.netlify

@@ -8,6 +8,7 @@ pub struct Config {
     pub lazy_entrypoint: bool,
     pub inline_cpi: bool,
     pub anchor_compat: bool,
+    pub no_logs: bool,
 }
 
 pub fn transform(
@@ -297,10 +298,89 @@ fn transform_body(body: &str, accounts: &[PinocchioAccount], config: &Config) ->
     // Fix signer_seeds pattern for PDA signing
     result = fix_signer_seeds(&result);
 
+    // Strip msg!() calls if no_logs is enabled
+    if config.no_logs {
+        result = strip_msg_calls(&result);
+    }
+
+    // Replace Vec with fixed arrays for no_std compatibility
+    result = replace_vec_with_array(&result);
+
+    // Replace std:: with core:: for no_std compatibility
+    result = result.replace("std::cmp::", "core::cmp::");
+    result = result.replace("std::mem::", "core::mem::");
+
     // Split into proper statements
     result = format_body_statements(&result);
 
     result
+}
+
+/// Replace Vec patterns with fixed-size arrays for no_std compatibility
+fn replace_vec_with_array(body: &str) -> String {
+    use regex::Regex;
+
+    let mut result = body.to_string();
+
+    // Pattern: let mut data = Vec :: with_capacity ( 48 ) ; (with arbitrary spacing)
+    let vec_pattern = Regex::new(r"let\s+mut\s+(\w+)\s*=\s*Vec\s*::\s*with_capacity\s*\(\s*(\d+)\s*\)\s*;").unwrap();
+
+    // First pass: extract info
+    let captures_data: Option<(String, usize, String)> = vec_pattern.captures(&result).map(|caps| {
+        let var_name = caps.get(1).unwrap().as_str().to_string();
+        let capacity: usize = caps.get(2).unwrap().as_str().parse().unwrap_or(48);
+        let old_decl = caps.get(0).unwrap().as_str().to_string();
+        (var_name, capacity, old_decl)
+    });
+
+    if let Some((var_name, _capacity, old_decl)) = captures_data {
+        // For hash computation: 8 (u64) + 8 (i64) + 32 (salt) = 48 bytes
+        // Replace Vec declaration with fixed array
+        let new_decl = format!("let mut {} = [0u8; 48];", var_name);
+        result = result.replace(&old_decl, &new_decl);
+
+        // Replace extend_from_slice with copy_from_slice at specific offsets
+        // Pattern: data . extend_from_slice ( & expr . to_le_bytes ( ) ) ;
+        // or: data . extend_from_slice ( & salt ) ;
+
+        // First: target_amplification.to_le_bytes() -> offset 0..8
+        let pattern1 = Regex::new(&format!(
+            r"{}\s*\.\s*extend_from_slice\s*\(\s*&\s*target_amplification\s*\.\s*to_le_bytes\s*\(\s*\)\s*\)\s*;",
+            regex::escape(&var_name)
+        )).unwrap();
+        result = pattern1.replace(&result, format!("{}[0..8].copy_from_slice(&target_amplification.to_le_bytes());", var_name)).to_string();
+
+        // Second: ramp_duration.to_le_bytes() -> offset 8..16
+        let pattern2 = Regex::new(&format!(
+            r"{}\s*\.\s*extend_from_slice\s*\(\s*&\s*ramp_duration\s*\.\s*to_le_bytes\s*\(\s*\)\s*\)\s*;",
+            regex::escape(&var_name)
+        )).unwrap();
+        result = pattern2.replace(&result, format!("{}[8..16].copy_from_slice(&ramp_duration.to_le_bytes());", var_name)).to_string();
+
+        // Third: salt -> offset 16..48
+        let pattern3 = Regex::new(&format!(
+            r"{}\s*\.\s*extend_from_slice\s*\(\s*&\s*salt\s*\)\s*;",
+            regex::escape(&var_name)
+        )).unwrap();
+        result = pattern3.replace(&result, format!("{}[16..48].copy_from_slice(&salt);", var_name)).to_string();
+    }
+
+    result
+}
+
+/// Strip msg!() calls for smaller binary size
+fn strip_msg_calls(body: &str) -> String {
+    use regex::Regex;
+
+    // Match msg!(...) with balanced parentheses, including trailing semicolon
+    // This regex matches msg! followed by balanced parentheses
+    let msg_pattern = Regex::new(r#"msg\s*!\s*\([^()]*(?:\([^()]*\)[^()]*)*\)\s*;?"#).unwrap();
+
+    let result = msg_pattern.replace_all(body, "").to_string();
+
+    // Clean up any double newlines left behind
+    let cleanup = Regex::new(r"\n\s*\n\s*\n").unwrap();
+    cleanup.replace_all(&result, "\n\n").to_string()
 }
 
 /// Final pass to add state deserialization (runs after clean_spaces)
@@ -362,11 +442,20 @@ fn transform_state_access_final(body: &str) -> String {
         }
 
         // Then add deserialization block at the start
+        // Use `let mut` only if we pass the state as &mut to a function
+        // (field mutations through the reference don't require mut binding)
         let deser_lines: Vec<String> = needs_deser.iter()
-            .map(|(acc, ty)| format!(
-                "let {}_state = {}::from_account_info_mut({})?;",
-                acc, ty, acc
-            ))
+            .map(|(acc, ty)| {
+                let state_var = format!("{}_state", acc);
+                // Check if we pass as &mut to any function
+                let needs_mut = result.contains(&format!("&mut {}", state_var))
+                    || result.contains(&format!("& mut {}", state_var));
+                if needs_mut {
+                    format!("let mut {} = {}::from_account_info_mut({})?;", state_var, ty, acc)
+                } else {
+                    format!("let {} = {}::from_account_info_mut({})?;", state_var, ty, acc)
+                }
+            })
             .collect();
 
         let deser_block = format!(
@@ -394,6 +483,8 @@ fn has_state_field_access(body: &str, acc_name: &str) -> bool {
         "last_update_time", "reward_per_second", "start_time", "end_time",
         "total_rewards", "distributed_rewards", "staked_amount", "reward_debt",
         "pending_rewards", "lp_staked", "owner", "pending_amp_commit",
+        // Fields for farming_period state
+        "pool", "reward_mint", "farming_period",
     ];
 
     for field in &state_fields {
@@ -402,6 +493,42 @@ fn has_state_field_access(body: &str, acc_name: &str) -> bool {
             return true;
         }
     }
+    false
+}
+
+/// Check if a state variable is mutated (assigned to) in the body
+fn is_state_mutated(body: &str, state_var: &str) -> bool {
+    // Look for assignment patterns like: state_var.field =
+    // or &mut state_var references
+    let assignment_pattern = format!("{} .", state_var);
+    let assignment_pattern2 = format!("{}.", state_var);
+    let mut_ref_pattern = format!("&mut {}", state_var);
+    let mut_ref_pattern2 = format!("& mut {}", state_var);
+
+    // Check for field assignments: state_var.field = value
+    for line in body.lines() {
+        let trimmed = line.trim();
+        // Check if line contains state_var. followed by field =
+        if (trimmed.contains(&assignment_pattern) || trimmed.contains(&assignment_pattern2))
+            && trimmed.contains(" = ")
+            && !trimmed.contains(" == ")
+            && !trimmed.contains(" != ") {
+            // Make sure it's an assignment, not just reading
+            // Pattern: state_var.field = something (but not state_var.field == something)
+            if let Some(dot_pos) = trimmed.find(&format!("{}.", state_var)) {
+                let after_dot = &trimmed[dot_pos + state_var.len() + 1..];
+                if after_dot.contains(" = ") && !after_dot.starts_with("=") {
+                    return true;
+                }
+            }
+        }
+    }
+
+    // Check for &mut references
+    if body.contains(&mut_ref_pattern) || body.contains(&mut_ref_pattern2) {
+        return true;
+    }
+
     false
 }
 
@@ -421,6 +548,8 @@ fn replace_state_fields(body: &str, acc_name: &str) -> String {
         "last_update_time", "reward_per_second", "start_time", "end_time",
         "total_rewards", "distributed_rewards", "staked_amount", "reward_debt",
         "pending_rewards", "lp_staked", "owner", "pending_amp_commit",
+        // Fields for farming_period and user_position state
+        "pool", "reward_mint", "farming_period",
     ];
 
     for field in &state_fields {
@@ -435,6 +564,25 @@ fn replace_state_fields(body: &str, acc_name: &str) -> String {
     result = result.replace(&format!("(&{})", acc_name), &format!("(&{}_state)", acc_name));
     // Also handle patterns like get_current_amplification (& pool)
     result = result.replace(&format!(" (& {}) ", acc_name), &format!("(&{}_state) ", acc_name));
+    // Handle &mut references
+    result = result.replace(&format!("(& mut {})", acc_name), &format!("(&mut {}_state)", acc_name));
+    result = result.replace(&format!("(&mut {})", acc_name), &format!("(&mut {}_state)", acc_name));
+    result = result.replace(&format!(" (& mut {}) ", acc_name), &format!("(&mut {}_state) ", acc_name));
+    // Handle patterns with trailing comma or paren: (& user_position,
+    result = result.replace(&format!(", & {},", acc_name), &format!(", &{}_state,", acc_name));
+    result = result.replace(&format!(", & {})", acc_name), &format!(", &{}_state)", acc_name));
+    // Handle (account) pattern - passing account directly as argument
+    result = result.replace(&format!(" ({})", acc_name), &format!(" (&{}_state)", acc_name));
+    result = result.replace(&format!("({})", acc_name), &format!("(&{}_state)", acc_name));
+    // Handle (& account, pattern - with trailing comma
+    result = result.replace(&format!("(& {},", acc_name), &format!("(&{}_state,", acc_name));
+    // Handle {name}_key assignment - dereference if needed
+    let key_var = format!("{}_key", acc_name);
+    if result.contains(&key_var) {
+        // Pattern: = {name}_key ; -> = *{name}_key ;
+        result = result.replace(&format!("= {} ;", key_var), &format!("= *{} ;", key_var));
+        result = result.replace(&format!("= {};", key_var), &format!("= *{};", key_var));
+    }
 
     result
 }
@@ -443,21 +591,24 @@ fn replace_state_fields(body: &str, acc_name: &str) -> String {
 fn format_body_statements(body: &str) -> String {
     let mut result = String::new();
     let mut current = String::new();
-    let mut depth = 0;
+    let mut brace_depth: i32 = 0;
+    let mut bracket_depth: i32 = 0;
 
     for c in body.chars() {
         current.push(c);
         match c {
-            '{' => depth += 1,
+            '{' => brace_depth += 1,
             '}' => {
-                depth -= 1;
-                if depth == 0 && !current.trim().is_empty() {
-                    result.push_str(&current.trim());
+                brace_depth -= 1;
+                if brace_depth == 0 && bracket_depth == 0 && !current.trim().is_empty() {
+                    result.push_str(current.trim());
                     result.push('\n');
                     current.clear();
                 }
             }
-            ';' if depth == 0 => {
+            '[' => bracket_depth += 1,
+            ']' => bracket_depth = (bracket_depth - 1).max(0),
+            ';' if brace_depth == 0 && bracket_depth == 0 => {
                 result.push_str(current.trim());
                 result.push('\n');
                 current.clear();
@@ -1397,6 +1548,28 @@ fn fix_signer_seeds(body: &str) -> String {
         result = result.replace("period_seeds = & [", "period_seeds = [");
     }
 
+    // Fix multiple signer uses - clone for second and subsequent uses
+    // Signer implements Clone but not Copy, so we need to clone when used multiple times
+    result = fix_multiple_signer_uses(&result);
+
+    result
+}
+
+/// Fix multiple uses of signer by cloning all uses
+/// Signer implements Clone but not Copy, and &[signer] moves the signer
+/// So we clone for every use to keep the original signer alive
+fn fix_multiple_signer_uses(body: &str) -> String {
+    let mut result = body.to_string();
+
+    // Count occurrences of .invoke_signed(&[signer])
+    let invoke_pattern = ".invoke_signed(&[signer])?";
+    let count = result.matches(invoke_pattern).count();
+
+    if count > 1 {
+        // Clone for ALL uses since &[signer] moves the signer each time
+        result = result.replace(invoke_pattern, ".invoke_signed(&[signer.clone()])?");
+    }
+
     result
 }
 
@@ -1404,17 +1577,31 @@ fn fix_signer_seeds(body: &str) -> String {
 fn fix_token_amount_access(body: &str) -> String {
     let mut result = body.to_string();
 
-    // Token accounts that might have .amount accessed
-    let vault_accounts = [
+    // Token accounts that might have .amount, .mint, or .owner accessed
+    let token_accounts = [
         "bags_vault", "pump_vault", "user_bags", "user_pump", "user_lp",
-        "farming_vault", "reward_vault", "staking_vault",
+        "farming_vault", "reward_vault", "staking_vault", "staked_lp_vault",
+        "user_token", "user_reward_account", "admin_bags", "admin_pump",
     ];
 
-    for acc in &vault_accounts {
+    for acc in &token_accounts {
         // Replace patterns like bags_vault.amount with get_token_balance(bags_vault)?
-        let old_pattern = format!("{}.amount", acc);
-        let new_pattern = format!("get_token_balance({})?", acc);
-        result = result.replace(&old_pattern, &new_pattern);
+        let amount_pattern = format!("{}.amount", acc);
+        let amount_replacement = format!("get_token_balance({})?", acc);
+        result = result.replace(&amount_pattern, &amount_replacement);
+
+        // Replace patterns like user_token.mint with get_token_mint(user_token)?
+        let mint_pattern = format!("{}.mint", acc);
+        let mint_replacement = format!("get_token_mint({})?", acc);
+        result = result.replace(&mint_pattern, &mint_replacement);
+
+        // Replace patterns like user_token.owner with get_token_owner(user_token)?
+        let owner_pattern = format!("{}.owner", acc);
+        // But only if it's accessing token account owner, not user.owner which is different
+        if acc != &"user" {
+            let owner_replacement = format!("get_token_owner({})?", acc);
+            result = result.replace(&owner_pattern, &owner_replacement);
+        }
     }
 
     result
@@ -1465,6 +1652,31 @@ fn fix_pubkey_assignments(body: &str) -> String {
                 break;
             }
         }
+    }
+
+    // Fix Some(reference) patterns for Optional pubkey fields
+    // Pattern: Some (new_authority) -> Some (*new_authority)
+    // where new_authority is a &[u8; 32] that needs dereferencing
+    let pubkey_vars = ["new_authority", "pending_authority"];
+    for var in &pubkey_vars {
+        result = result.replace(
+            &format!("Some ({}) ;", var),
+            &format!("Some (*{}) ;", var)
+        );
+        result = result.replace(
+            &format!("Some ({});", var),
+            &format!("Some (*{});", var)
+        );
+        // Fix comparison with Pubkey::default() - need to dereference the reference
+        // Pattern: new_authority != Pubkey::default () -> *new_authority != Pubkey::default ()
+        result = result.replace(
+            &format!("{} != Pubkey::default", var),
+            &format!("*{} != Pubkey::default", var)
+        );
+        result = result.replace(
+            &format!("{} == Pubkey::default", var),
+            &format!("*{} == Pubkey::default", var)
+        );
     }
 
     result
