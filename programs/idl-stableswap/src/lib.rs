@@ -425,6 +425,8 @@ pub mod idl_stableswap {
     ) -> Result<()> {
         require!(!ctx.accounts.pool.paused, StableSwapError::PoolPaused);
         require!(amount > 0, StableSwapError::ZeroAmount);
+        // AUDIT FIX M-3: Minimum deposit to prevent dust/rounding attacks
+        require!(amount >= MIN_SWAP_AMOUNT, StableSwapError::AmountTooSmall);
 
         // AUDIT FIX H-3: Validate is_bags parameter matches actual token mint
         let pool = &ctx.accounts.pool;
@@ -540,6 +542,16 @@ pub mod idl_stableswap {
         let clock = Clock::get()?;
         require!(clock.unix_timestamp <= deadline, StableSwapError::TransactionExpired);
 
+        // AUDIT FIX M-4: Validate vault balances match tracked balances (donation attack prevention)
+        require!(
+            ctx.accounts.bags_vault.amount == ctx.accounts.pool.bags_balance,
+            StableSwapError::VaultBalanceMismatch
+        );
+        require!(
+            ctx.accounts.pump_vault.amount == ctx.accounts.pool.pump_balance,
+            StableSwapError::VaultBalanceMismatch
+        );
+
         // 1:1 swap with 0.1337% fee
         // fee = amount * 1337 / 1_000_000
         let fee = (amount_in as u128)
@@ -620,6 +632,16 @@ pub mod idl_stableswap {
 
         let clock = Clock::get()?;
         require!(clock.unix_timestamp <= deadline, StableSwapError::TransactionExpired);
+
+        // AUDIT FIX M-4: Validate vault balances match tracked balances (donation attack prevention)
+        require!(
+            ctx.accounts.bags_vault.amount == ctx.accounts.pool.bags_balance,
+            StableSwapError::VaultBalanceMismatch
+        );
+        require!(
+            ctx.accounts.pump_vault.amount == ctx.accounts.pool.pump_balance,
+            StableSwapError::VaultBalanceMismatch
+        );
 
         // 1:1 swap with 0.1337% fee
         let fee = (amount_in as u128)
@@ -749,9 +771,22 @@ pub mod idl_stableswap {
         require!(amount > 0, StableSwapError::ZeroAmount);
 
         let clock = Clock::get()?;
+        let now = clock.unix_timestamp;
+
+        // AUDIT FIX C-5: Cannot stake before farming period starts
+        require!(
+            now >= ctx.accounts.farming_period.start_time,
+            StableSwapError::FarmingNotStarted
+        );
+
+        // AUDIT FIX C-6: Cannot stake after farming period ends
+        require!(
+            now < ctx.accounts.farming_period.end_time,
+            StableSwapError::FarmingEnded
+        );
 
         // Update pool rewards first
-        update_farming_rewards(&mut ctx.accounts.farming_period, clock.unix_timestamp)?;
+        update_farming_rewards(&mut ctx.accounts.farming_period)?;
 
         // If user has existing stake, harvest pending rewards
         if ctx.accounts.user_position.lp_staked > 0 {
@@ -806,13 +841,11 @@ pub mod idl_stableswap {
         require!(amount > 0, StableSwapError::ZeroAmount);
         require!(ctx.accounts.user_position.lp_staked >= amount, StableSwapError::InsufficientStake);
 
-        let clock = Clock::get()?;
-
         // Capture values needed for signer seeds before mutable borrows
         let period_bump = ctx.accounts.farming_period.bump;
 
         // Update pool rewards
-        update_farming_rewards(&mut ctx.accounts.farming_period, clock.unix_timestamp)?;
+        update_farming_rewards(&mut ctx.accounts.farming_period)?;
 
         // Calculate and store pending rewards
         let pending = calculate_pending_rewards(&ctx.accounts.user_position, &ctx.accounts.farming_period)?;
@@ -867,14 +900,12 @@ pub mod idl_stableswap {
 
     /// Claim farming rewards
     pub fn claim_farming_rewards(ctx: Context<ClaimFarmingRewards>) -> Result<()> {
-        let clock = Clock::get()?;
-
         // Capture values needed for signer seeds before mutable borrows
         let period_bump = ctx.accounts.farming_period.bump;
         let period_start_time = ctx.accounts.farming_period.start_time;
 
         // Update pool rewards
-        update_farming_rewards(&mut ctx.accounts.farming_period, clock.unix_timestamp)?;
+        update_farming_rewards(&mut ctx.accounts.farming_period)?;
 
         // Calculate total pending rewards
         let pending_new = calculate_pending_rewards(&ctx.accounts.user_position, &ctx.accounts.farming_period)?;
@@ -1336,9 +1367,18 @@ pub mod idl_stableswap {
 // ═══════════════════════════════════════════════════════════════════════════════
 
 /// Update accumulated rewards per share
-fn update_farming_rewards(period: &mut FarmingPeriod, current_time: i64) -> Result<()> {
+/// AUDIT FIX H-5: Gets clock internally to prevent timestamp manipulation
+fn update_farming_rewards(period: &mut FarmingPeriod) -> Result<()> {
+    let clock = Clock::get()?;
+    let current_time = clock.unix_timestamp;
+
+    // Don't update before farming starts
+    if current_time < period.start_time {
+        return Ok(());
+    }
+
     if period.total_staked == 0 {
-        period.last_update_time = current_time;
+        period.last_update_time = std::cmp::max(current_time, period.start_time);
         return Ok(());
     }
 
@@ -1377,9 +1417,9 @@ fn calculate_pending_rewards(position: &UserFarmingPosition, period: &FarmingPer
         .and_then(|v| v.checked_div(REWARD_PRECISION))
         .ok_or(StableSwapError::MathOverflow)?;
 
-    let pending = accumulated
-        .checked_sub(position.reward_debt as u128)
-        .ok_or(StableSwapError::MathOverflow)?;
+    // AUDIT FIX C-4: Use saturating_sub to prevent underflow locking user funds
+    // If reward_debt > accumulated (due to rounding), just return 0
+    let pending = accumulated.saturating_sub(position.reward_debt as u128);
 
     Ok(pending as u64)
 }
@@ -2189,4 +2229,10 @@ pub enum StableSwapError {
 
     #[msg("No rewards to claim")]
     NoRewardsToClaim,
+
+    #[msg("Farming period has not started yet")]
+    FarmingNotStarted,
+
+    #[msg("Farming period has ended")]
+    FarmingEnded,
 }

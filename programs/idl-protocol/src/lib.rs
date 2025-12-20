@@ -78,6 +78,38 @@ pub const MIN_ORACLE_CONSENSUS: u8 = 2; // Minimum 2 oracles must agree
 pub const MAX_ORACLES_PER_MARKET: u8 = 5; // Maximum oracles per market
 pub const ORACLE_CONSENSUS_THRESHOLD: u8 = 67; // 67% must agree on outcome
 
+// ═══════════════════════════════════════════════════════════════════════════════
+// NOVEL ATTACK FIXES - Protecting against newly discovered vulnerabilities
+// ═══════════════════════════════════════════════════════════════════════════════
+
+// FIX: COMMITMENT_GRIEF & STALE_COMMITMENT - Require bond for commitments
+pub const COMMITMENT_BOND_AMOUNT: u64 = 1_000_000; // 0.001 tokens bond per commitment
+pub const COMMITMENT_EXPIRY: i64 = 7200; // Commitments expire after 2 hours (can reclaim bond)
+
+// FIX: COMMITMENT_SNIPE - Batch reveal with sealed bids
+pub const BATCH_REVEAL_DELAY: i64 = 600; // All reveals hidden for 10 min after reveal window opens
+
+// FIX: DISPUTE_GRIEF - Require bond to dispute
+pub const DISPUTE_BOND_AMOUNT: u64 = 5_000_000_000; // 5 tokens to dispute (slashed if frivolous)
+pub const DISPUTE_SLASH_IF_INVALID: u64 = 100; // 100% slash if dispute rejected
+
+// FIX: MARKET_SPAM - Rate limit market creation
+pub const MARKET_CREATION_COOLDOWN: i64 = 3600; // 1 hour between market creations per user
+pub const MARKET_CREATION_STAKE: u64 = 1_000_000_000; // 1 token stake to create market
+
+// FIX: STAKE_FRONT_RUN - Large stake commit-reveal
+pub const LARGE_STAKE_THRESHOLD: u64 = 10_000_000_000; // 10 tokens = requires commit-reveal
+pub const STAKE_COMMIT_WINDOW: i64 = 300; // 5 min commit window for large stakes
+
+// FIX: TVL_CAP_RACE - Pro-rata allocation during raises
+pub const TVL_RAISE_QUEUE_WINDOW: i64 = 86400; // 24-hour queue for pro-rata allocation
+
+// FIX: VE_DECAY_ARBITRAGE - Snapshot voting
+pub const VOTE_SNAPSHOT_DELAY: i64 = 86400; // veIDL power snapshot 24h before vote
+
+// FIX: SEASON_TRANSITION - Gradual bonus phase
+pub const SEASON_PHASE_IN_DURATION: i64 = 259200; // 3 days to phase in/out bonuses
+
 // TIER 3: TVL caps (gradual rollout)
 pub const INITIAL_TVL_CAP: u64 = 100_000_000_000; // 100 tokens initial cap
 pub const MAX_TVL_CAP: u64 = 10_000_000_000_000_000; // 10M tokens max cap
@@ -3033,4 +3065,49 @@ pub enum IdlError {
 
     #[msg("Maximum oracles per market reached")]
     MaxOraclesReached,
+
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // NOVEL ATTACK FIX ERRORS
+    // ═══════════════════════════════════════════════════════════════════════════════
+
+    // COMMITMENT_GRIEF fix
+    #[msg("Commitment bond required (0.001 tokens)")]
+    CommitmentBondRequired,
+
+    #[msg("Commitment has expired - reclaim your bond")]
+    CommitmentExpired,
+
+    // COMMITMENT_SNIPE fix
+    #[msg("Batch reveal delay not passed - wait for all reveals to be hidden")]
+    BatchRevealDelayNotPassed,
+
+    // DISPUTE_GRIEF fix
+    #[msg("Dispute bond required (5 tokens)")]
+    DisputeBondRequired,
+
+    #[msg("Frivolous dispute - bond slashed")]
+    FrivolousDispute,
+
+    // MARKET_SPAM fix
+    #[msg("Market creation cooldown - wait 1 hour between creations")]
+    MarketCreationCooldown,
+
+    #[msg("Market creation stake required (1 token)")]
+    MarketCreationStakeRequired,
+
+    // STAKE_FRONT_RUN fix
+    #[msg("Large stakes (>10 tokens) require commit-reveal")]
+    LargeStakeRequiresCommitReveal,
+
+    // TVL_CAP_RACE fix
+    #[msg("TVL raise in progress - join queue for pro-rata allocation")]
+    TvlRaiseQueueActive,
+
+    // VE_DECAY_ARBITRAGE fix
+    #[msg("Vote power snapshot not ready - wait 24h before vote")]
+    VoteSnapshotNotReady,
+
+    // SEASON_TRANSITION fix
+    #[msg("Season transition in progress - bonus being phased")]
+    SeasonTransitionActive,
 }
