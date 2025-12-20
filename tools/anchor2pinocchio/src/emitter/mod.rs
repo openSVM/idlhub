@@ -61,7 +61,21 @@ fn emit_helpers_rs(extras: &SourceExtras, src_dir: &Path) -> Result<()> {
         content.push_str("// Helper functions\n");
         content.push_str("use crate::state::*;\n");
         content.push_str("use crate::error::Error;\n");
-        content.push_str("use pinocchio::program_error::ProgramError;\n\n");
+        content.push_str("use pinocchio::program_error::ProgramError;\n");
+        content.push_str("use pinocchio::sysvars::{clock::Clock, Sysvar};\n");
+        content.push_str("use pinocchio::account_info::AccountInfo;\n\n");
+
+        // Add token account helper
+        content.push_str("/// Get token account balance from account info\n");
+        content.push_str("#[inline(always)]\n");
+        content.push_str("pub fn get_token_balance(account: &AccountInfo) -> Result<u64, ProgramError> {\n");
+        content.push_str("    let data = account.try_borrow_data()?;\n");
+        content.push_str("    if data.len() < 72 {\n");
+        content.push_str("        return Err(ProgramError::InvalidAccountData);\n");
+        content.push_str("    }\n");
+        content.push_str("    // Token account amount is at offset 64 (after mint and owner pubkeys)\n");
+        content.push_str("    Ok(u64::from_le_bytes(data[64..72].try_into().unwrap()))\n");
+        content.push_str("}\n\n");
 
         for f in &extras.helper_functions {
             // Clean up the signature and body
@@ -80,16 +94,131 @@ fn emit_helpers_rs(extras: &SourceExtras, src_dir: &Path) -> Result<()> {
 }
 
 fn clean_helper_signature(sig: &str) -> String {
-    sig.replace("Result < () >", "Result<(), ProgramError>")
-       .replace("Result<()>", "Result<(), ProgramError>")
-       .replace("& StablePool", "&StablePool")
+    let mut result = sig.to_string();
+    // Fix Result types
+    result = result.replace("Result < () >", "Result<(), ProgramError>");
+    result = result.replace("Result<()>", "Result<(), ProgramError>");
+    // Handle Result<T> -> Result<T, ProgramError>
+    // Pattern: Result < u64 > -> Result<u64, ProgramError>
+    result = result.replace("Result < u64 >", "Result<u64, ProgramError>");
+    result = result.replace("Result<u64>", "Result<u64, ProgramError>");
+    result = result.replace("Result < u128 >", "Result<u128, ProgramError>");
+    result = result.replace("Result<u128>", "Result<u128, ProgramError>");
+    // Fix type references
+    result = result.replace("& StablePool", "&StablePool");
+    result = result.replace("& mut ", "&mut ");
+    result
 }
 
 fn clean_helper_body(body: &str) -> String {
     let mut result = body.to_string();
     result = result.replace("StableSwapError :: ", "Error::");
     result = result.replace("StableSwapError::", "Error::");
+    // Fix spacing in Clock::get()
+    result = result.replace("Clock :: get () ?", "Clock::get()?");
+    result = result.replace("Clock :: get ()", "Clock::get()");
+    // Fix other common spacing issues
+    result = result.replace(" :: ", "::");
+    result = result.replace(" . ", ".");
     result
+}
+
+/// Fix multi-line msg! macros and handle format arguments
+/// In no_std pinocchio, msg! only supports simple strings, not format args
+fn fix_msg_macros(body: &str) -> String {
+    let mut result = String::new();
+    let mut i = 0;
+    let chars: Vec<char> = body.chars().collect();
+    let len = chars.len();
+
+    while i < len {
+        // Look for msg! or msg ! pattern
+        let remaining = &body[i..];
+        let msg_start = if remaining.starts_with("msg!(") {
+            Some(5)
+        } else if remaining.starts_with("msg ! (") {
+            Some(7)
+        } else {
+            None
+        };
+
+        if let Some(offset) = msg_start {
+            i += offset;
+
+            // Collect the entire msg! content until matching )
+            let mut msg_content = String::new();
+            let mut depth = 1;
+            while i < len && depth > 0 {
+                let c = chars[i];
+                match c {
+                    '(' => {
+                        depth += 1;
+                        msg_content.push(c);
+                    }
+                    ')' => {
+                        depth -= 1;
+                        if depth > 0 {
+                            msg_content.push(c);
+                        }
+                    }
+                    '\n' => {
+                        // Replace newlines with spaces
+                        if !msg_content.ends_with(' ') {
+                            msg_content.push(' ');
+                        }
+                    }
+                    _ => {
+                        // Skip leading whitespace after newlines
+                        if c.is_whitespace() && msg_content.ends_with(' ') {
+                            // Skip
+                        } else {
+                            msg_content.push(c);
+                        }
+                    }
+                }
+                i += 1;
+            }
+
+            // Check if the msg! has format arguments (contains a comma outside of string literals)
+            let has_format_args = has_comma_outside_strings(&msg_content);
+
+            if has_format_args {
+                // Comment out msg! with format args - pinocchio no_std doesn't support them
+                result.push_str("// msg!(");
+                result.push_str(&msg_content);
+                result.push(')');
+            } else {
+                result.push_str("msg!(");
+                result.push_str(&msg_content);
+                result.push(')');
+            }
+        } else {
+            result.push(chars[i]);
+            i += 1;
+        }
+    }
+
+    result
+}
+
+/// Check if a string has a comma outside of string literals
+fn has_comma_outside_strings(s: &str) -> bool {
+    let mut in_string = false;
+    let mut escape = false;
+
+    for c in s.chars() {
+        if escape {
+            escape = false;
+            continue;
+        }
+        match c {
+            '\\' => escape = true,
+            '"' => in_string = !in_string,
+            ',' if !in_string => return true,
+            _ => {}
+        }
+    }
+    false
 }
 
 fn emit_cargo_toml(program: &PinocchioProgram, output_dir: &Path) -> Result<()> {
@@ -106,7 +235,7 @@ no-entrypoint = []
 cpi = ["no-entrypoint"]
 
 [dependencies]
-pinocchio = "0.7"
+pinocchio = "0.8"
 {}
 
 [profile.release]
@@ -388,6 +517,7 @@ fn emit_instruction(
     content.push_str("#![allow(unused_variables, unused_imports)]\n\n");
     content.push_str("use pinocchio::{\n");
     content.push_str("    account_info::AccountInfo,\n");
+    content.push_str("    msg,\n");
     content.push_str("    program_error::ProgramError,\n");
     content.push_str("    pubkey::Pubkey,\n");
     content.push_str("    ProgramResult,\n");
@@ -561,7 +691,9 @@ fn emit_instruction(
     if !inst.body.is_empty() && inst.body != "{}" {
         content.push_str("    // Transformed instruction logic\n");
         // Add the transformed body (will have some TODO markers)
-        for line in inst.body.lines() {
+        // First, fix any multi-line msg! macros
+        let fixed_body = fix_msg_macros(&inst.body);
+        for line in fixed_body.lines() {
             let trimmed = line.trim();
             if !trimmed.is_empty() {
                 // Skip duplicate Ok(()) if body already has it
