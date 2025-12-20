@@ -102,6 +102,7 @@ export interface AttackParams {
   sandwichSlippage?: number;
   oracleValue?: bigint;
   numSybils?: number;
+  amountPerSybil?: number;  // Amount to stake per Sybil wallet
 
   // Custom params
   custom?: Record<string, any>;
