@@ -1,19 +1,1281 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IDLHub - Solana IDL Registry</title>
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-  <meta name="description" content="IDLHub - The comprehensive IDL registry for Solana protocols. Browse, search, and download IDLs.">
-  <meta name="keywords" content="Solana, IDL, Registry, DeFi, Anchor, Interface Definition Language">
-  <meta property="og:title" content="IDLHub - Solana IDL Registry">
-  <meta property="og:description" content="The comprehensive IDL registry for Solana protocols">
-  <meta property="og:type" content="website">
-  <meta http-equiv="refresh" content="0;url=/app/registry">
-  <script>window.location.href = '/app/registry';</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IDL Registry - Browse Protocols</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="/src/theme.css">
+    <style>
+        /* Page-specific styles - global theme loaded from /src/theme.css */
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--bg-secondary);
+            min-height: 100vh;
+            border-left: 1px solid var(--border-secondary);
+            border-right: 1px solid var(--border-secondary);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .header {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            padding: 16px 24px;
+            border-bottom: 2px solid var(--border-primary);
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .header h1 {
+            font-size: 16px;
+            margin: 0;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
+        }
+
+        .header h1::before {
+            content: '> ';
+            color: var(--accent-primary);
+        }
+
+        .header p {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin: 4px 0 0 0;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .nav-link {
+            padding: 4px 12px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.2s;
+            border: 1px solid var(--border-secondary);
+            background: var(--bg-secondary);
+        }
+
+        .nav-link:hover {
+            background: var(--accent-hover);
+            color: var(--bg-secondary);
+        }
+
+        .nav-link.active {
+            background: var(--accent-primary);
+            color: var(--bg-secondary);
+            border-color: var(--accent-primary);
+        }
+
+        .theme-selector {
+            position: relative;
+        }
+
+        .theme-btn {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-primary);
+            color: var(--text-primary);
+            padding: 4px 12px;
+            border-radius: 0;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.1s;
+            font-weight: 600;
+            font-family: inherit;
+        }
+
+        .theme-btn:hover {
+            background: var(--accent-hover);
+            color: var(--bg-secondary);
+        }
+
+        .theme-btn::before {
+            content: '[';
+        }
+
+        .theme-btn::after {
+            content: ']';
+        }
+
+        .theme-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-primary);
+            margin-top: 4px;
+            min-width: 180px;
+            z-index: 1000;
+        }
+
+        .theme-dropdown.active {
+            display: block;
+        }
+
+        .theme-option {
+            padding: 8px 16px;
+            cursor: pointer;
+            font-size: 11px;
+            text-transform: uppercase;
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-secondary);
+            transition: all 0.1s;
+            color: var(--text-primary);
+        }
+
+        .theme-option:last-child {
+            border-bottom: none;
+        }
+
+        .theme-option:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .theme-option.selected {
+            background: var(--bg-tertiary);
+            border-left: 3px solid var(--accent-primary);
+            padding-left: 13px;
+        }
+
+        .stats {
+            display: flex;
+            gap: 32px;
+            padding: 12px 0 0 0;
+            font-size: 11px;
+        }
+
+        .stat {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+        }
+
+        .stat::before {
+            content: '|';
+            color: var(--border-secondary);
+            margin-right: 6px;
+        }
+
+        .stat:first-child::before {
+            content: '';
+            margin-right: 0;
+        }
+
+        .stat-number {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--accent-primary);
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+
+        .controls {
+            padding: 12px 24px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-secondary);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 6px 12px;
+            font-size: 12px;
+            border: 1px solid var(--border-primary);
+            border-radius: 0;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            transition: all 0.1s;
+            font-family: inherit;
+        }
+
+        .search-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .search-input:focus {
+            outline: none;
+            background: var(--bg-tertiary);
+            border-color: var(--accent-primary);
+        }
+
+        .filter-section {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 5px 12px;
+            font-size: 14px;
+            border: 1px solid var(--border-secondary);
+            background: var(--bg-secondary);
+            border-radius: 0px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .filter-btn:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--accent-primary);
+        }
+
+        .filter-btn.active {
+            background: var(--accent-primary);
+            color: var(--bg-secondary);
+            border-color: var(--accent-primary);
+        }
+
+        .protocols-list {
+            padding: 16px 24px 40px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .protocol-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            margin-bottom: 0;
+            background: var(--bg-secondary);
+            border-radius: 0;
+            transition: all 0.1s;
+            border: 1px solid var(--border-secondary);
+            border-top: none;
+        }
+
+        .protocol-item:first-child {
+            border-top: 1px solid var(--border-secondary);
+        }
+
+        .protocol-item:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .protocol-checkbox {
+            width: 14px;
+            height: 14px;
+            margin-right: 12px;
+            cursor: pointer;
+            appearance: none;
+            border: 2px solid var(--border-primary);
+            background: var(--checkbox-bg);
+            position: relative;
+        }
+
+        .protocol-checkbox:checked::after {
+            content: 'X';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 10px;
+            font-weight: 900;
+            color: var(--text-primary);
+        }
+
+        .protocol-info {
+            flex: 1;
+        }
+
+        .protocol-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 4px;
+        }
+
+        .protocol-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .protocol-badge {
+            padding: 2px 6px;
+            border-radius: 0;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            border: 1px solid;
+        }
+
+        .badge-available {
+            background: var(--bg-secondary);
+            color: var(--accent-primary);
+            border-color: var(--accent-primary);
+        }
+
+        .badge-placeholder {
+            background: var(--bg-secondary);
+            color: var(--text-muted);
+            border-color: var(--border-secondary);
+        }
+
+        /* Verification badges */
+        .verify-badge {
+            padding: 2px 6px;
+            border-radius: 0;
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+            border: 1px solid;
+            margin-left: 4px;
+        }
+
+        .verify-badge.verified {
+            background: rgba(34, 197, 94, 0.1);
+            color: #22c55e;
+            border-color: #22c55e;
+        }
+
+        .verify-badge.placeholder {
+            background: var(--bg-secondary);
+            color: var(--text-muted);
+            border-color: var(--border-secondary);
+        }
+
+        .verify-badge.warning {
+            background: rgba(245, 158, 11, 0.1);
+            color: #f59e0b;
+            border-color: #f59e0b;
+        }
+
+        .verify-badge.error {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border-color: #ef4444;
+        }
+
+        .category-badge {
+            padding: 2px 6px;
+            border-radius: 0;
+            font-size: 10px;
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-secondary);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .protocol-description {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .protocol-meta {
+            font-size: 10px;
+            color: var(--text-muted);
+        }
+
+        .protocol-meta a {
+            color: var(--accent-primary);
+            text-decoration: none;
+        }
+
+        .protocol-meta a::before {
+            content: '<';
+        }
+
+        .protocol-meta a::after {
+            content: '>';
+        }
+
+        .protocol-meta a:hover {
+            text-decoration: underline;
+        }
+
+        .protocol-metrics {
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-top: 4px;
+            text-transform: uppercase;
+        }
+
+        .protocol-metrics .metric-value {
+            color: var(--accent-primary);
+            font-weight: 600;
+        }
+
+        .protocol-actions {
+            display: flex;
+            gap: 0;
+        }
+
+        .icon-btn {
+            padding: 4px 12px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-primary);
+            border-right: none;
+            border-radius: 0;
+            cursor: pointer;
+            transition: all 0.1s;
+            font-size: 10px;
+            color: var(--text-primary);
+            font-weight: 700;
+            text-transform: uppercase;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .icon-btn:last-child {
+            border-right: 1px solid var(--border-primary);
+        }
+
+        .icon-btn:hover {
+            background: var(--accent-hover);
+            color: var(--bg-secondary);
+        }
+
+        .icon-btn.btn-bet {
+            background: var(--accent-primary);
+            color: var(--bg-secondary);
+        }
+
+        .icon-btn.btn-bet:hover {
+            background: var(--accent-hover);
+        }
+
+        .protocol-item {
+            cursor: pointer;
+        }
+
+        .protocol-item.selected {
+            border-color: var(--accent-primary);
+            background: var(--bg-tertiary);
+        }
+
+        .protocol-detail {
+            padding: 16px 24px;
+            background: var(--bg-tertiary);
+            border-top: 2px solid var(--border-primary);
+            display: none;
+        }
+
+        .protocol-detail.active {
+            display: block;
+        }
+
+        .protocol-detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .protocol-detail-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .protocol-detail-title::before {
+            content: '// ';
+            color: var(--text-muted);
+        }
+
+        .protocol-detail-close {
+            padding: 4px 12px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-primary);
+            color: var(--text-primary);
+            cursor: pointer;
+            font-size: 10px;
+            font-weight: 700;
+            font-family: inherit;
+        }
+
+        .protocol-detail-close:hover {
+            background: var(--accent-hover);
+            color: var(--bg-secondary);
+        }
+
+        .protocol-detail-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        @media (max-width: 768px) {
+            .protocol-detail-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .detail-section {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-secondary);
+            padding: 12px;
+        }
+
+        .detail-section-title {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .detail-list {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .detail-item {
+            padding: 4px 0;
+            font-size: 11px;
+            color: var(--text-primary);
+            border-bottom: 1px solid var(--border-secondary);
+        }
+
+        .detail-item:last-child {
+            border-bottom: none;
+        }
+
+        .detail-item-name {
+            font-weight: 600;
+            color: var(--accent-primary);
+        }
+
+        .detail-item-type {
+            color: var(--text-secondary);
+            font-size: 10px;
+        }
+
+        .detail-code {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-secondary);
+            padding: 12px;
+            max-height: 300px;
+            overflow: auto;
+            font-size: 10px;
+            white-space: pre-wrap;
+            color: var(--text-primary);
+        }
+
+        .detail-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .detail-btn {
+            padding: 8px 16px;
+            background: var(--accent-primary);
+            color: var(--bg-secondary);
+            border: none;
+            cursor: pointer;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-family: inherit;
+        }
+
+        .detail-btn:hover {
+            background: var(--accent-hover);
+        }
+
+        .detail-btn.secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-primary);
+        }
+
+        .detail-btn.secondary:hover {
+            background: var(--accent-hover);
+            color: var(--bg-secondary);
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+            font-size: 12px;
+        }
+
+        .no-results h3 {
+            color: var(--text-primary);
+            margin: 10px 0;
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+            font-size: 12px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--bg-tertiary);
+            border-top: 3px solid var(--border-primary);
+            border-radius: 0;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .footer {
+            padding: 16px 24px;
+            background: var(--bg-secondary);
+            border-top: 2px solid var(--border-primary);
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 10px;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .footer a {
+            color: var(--accent-primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .footer a::before {
+            content: '[';
+            color: var(--border-primary);
+        }
+
+        .footer a::after {
+            content: ']';
+            color: var(--border-primary);
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 14px;
+            }
+
+            .stats {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .controls {
+                padding: 8px 16px;
+            }
+
+            .protocols-list {
+                padding: 12px 16px 24px;
+            }
+
+            .protocol-item {
+                padding: 8px 12px;
+            }
+
+            .filter-buttons {
+                font-size: 10px;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
 </head>
+
 <body>
-  <p>Redirecting to <a href="/app/registry">IDL Registry</a>...</p>
+    <div class="container">
+        <div class="header">
+            <div class="header-content">
+                <div class="header-left">
+                    <div>
+                        <h1>idlhub.com</h1>
+                        <p>Solana IDL Registry</p>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <nav class="nav-links">
+                        <a href="/app/registry" class="nav-link active">Registry</a>
+                        <a href="/app/" class="nav-link">Protocol</a>
+                        <a href="/app/status" class="nav-link">Status</a>
+                        <a href="/docs" class="nav-link">Docs</a>
+                        <a href="/tokenomics" class="nav-link">$IDL</a>
+                    </nav>
+                    <div class="theme-selector">
+                        <button class="theme-btn" onclick="toggleThemeDropdown()">
+                            <span id="currentTheme">Theme</span>
+                        </button>
+                        <div class="theme-dropdown" id="themeDropdown">
+                            <div class="theme-option selected" data-theme="light">Light</div>
+                            <div class="theme-option" data-theme="dark">Dark</div>
+                            <div class="theme-option" data-theme="solarized">Solarized</div>
+                            <div class="theme-option" data-theme="solarized-light">Solarized Light</div>
+                            <div class="theme-option" data-theme="monokai-light">Monokai Light</div>
+                            <div class="theme-option" data-theme="night">Night</div>
+                            <div class="theme-option" data-theme="dracula">Dracula</div>
+                            <div class="theme-option" data-theme="nord">Nord</div>
+                            <div class="theme-option" data-theme="onedark">One Dark</div>
+                            <div class="theme-option" data-theme="terminal">Terminal</div>
+                            <div class="theme-option" data-theme="dos">DOS / Borland</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-number" id="totalProtocols">-</div>
+                    <div class="stat-label">Total Protocols</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number" id="availableProtocols">-</div>
+                    <div class="stat-label">IDLs Available</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number" id="selectedCount">0</div>
+                    <div class="stat-label">Selected</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="search-bar">
+                <input type="text" id="searchInput" class="search-input"
+                    placeholder="Search by name, description, or category...">
+            </div>
+            <div class="filter-section">
+                <span class="filter-label">Filter by:</span>
+                <div class="filter-buttons" id="filterButtons"></div>
+            </div>
+        </div>
+
+        <div class="protocols-list" id="protocolsList">
+            <div class="loading">
+                <div class="spinner"></div>
+                <p>Loading protocols...</p>
+            </div>
+        </div>
+
+        <div class="protocol-detail" id="protocolDetail">
+            <div class="protocol-detail-header">
+                <span class="protocol-detail-title" id="detailTitle">Protocol Details</span>
+                <button class="protocol-detail-close" onclick="closeDetail()">Close [X]</button>
+            </div>
+            <div class="protocol-detail-content">
+                <div class="detail-section">
+                    <div class="detail-section-title">Instructions</div>
+                    <div class="detail-list" id="detailInstructions">Loading...</div>
+                </div>
+                <div class="detail-section">
+                    <div class="detail-section-title">Accounts</div>
+                    <div class="detail-list" id="detailAccounts">Loading...</div>
+                </div>
+                <div class="detail-section">
+                    <div class="detail-section-title">Types</div>
+                    <div class="detail-list" id="detailTypes">Loading...</div>
+                </div>
+                <div class="detail-section">
+                    <div class="detail-section-title">Errors</div>
+                    <div class="detail-list" id="detailErrors">Loading...</div>
+                </div>
+            </div>
+            <div class="detail-actions">
+                <button class="detail-btn" id="detailDownload">Download IDL</button>
+                <button class="detail-btn secondary" id="detailViewRaw">View Raw JSON</button>
+                <a class="detail-btn secondary" id="detailArweave" href="#" target="_blank">View on Arweave</a>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>idlhub.com - Open source IDL registry for the Solana ecosystem • <a href="https://github.com/openSVM/idlhub"
+                    target="_blank">GitHub</a> • <a href="/docs.html">Documentation</a></p>
+            <p style="margin-top: 10px; font-size: 12px;">Contributions welcome! Help us complete missing IDLs.</p>
+        </div>
+    </div>
+
+    <script>
+        let allProtocols = [];
+        let filteredProtocols = [];
+        let selectedProtocols = new Set();
+        let currentCategory = 'all';
+        let currentTheme = 'light';
+
+        // Theme management
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('idlhub-theme');
+            if (savedTheme) {
+                currentTheme = savedTheme;
+            }
+            applyTheme(currentTheme);
+        }
+
+        function applyTheme(theme) {
+            currentTheme = theme;
+            if (theme === 'light') {
+                document.documentElement.removeAttribute('data-theme');
+            } else {
+                document.documentElement.setAttribute('data-theme', theme);
+            }
+            updateThemeSelector();
+        }
+
+        function saveTheme(theme) {
+            localStorage.setItem('idlhub-theme', theme);
+            applyTheme(theme);
+        }
+
+        function updateThemeSelector() {
+            const options = document.querySelectorAll('.theme-option');
+            options.forEach(option => {
+                if (option.dataset.theme === currentTheme) {
+                    option.classList.add('selected');
+                } else {
+                    option.classList.remove('selected');
+                }
+            });
+        }
+
+        function toggleThemeDropdown() {
+            const dropdown = document.getElementById('themeDropdown');
+            dropdown.classList.toggle('active');
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            const themeSelector = document.querySelector('.theme-selector');
+            const dropdown = document.getElementById('themeDropdown');
+            if (themeSelector && !themeSelector.contains(e.target)) {
+                dropdown.classList.remove('active');
+            }
+        });
+
+        // Theme option click handlers
+        document.querySelectorAll('.theme-option').forEach(option => {
+            option.addEventListener('click', () => {
+                saveTheme(option.dataset.theme);
+            });
+        });
+
+        // Verification status cache
+        let verificationStatus = {};
+
+        // Load verification status
+        async function loadVerificationStatus() {
+            try {
+                const response = await fetch('/api/status/protocols');
+                const data = await response.json();
+                verificationStatus = data.protocols || {};
+            } catch (error) {
+                console.error('Failed to load verification status:', error);
+            }
+        }
+
+        // Get verification badge HTML
+        function getVerificationBadge(protocolId) {
+            const status = verificationStatus[protocolId];
+            if (!status) return '';
+
+            const badges = {
+                verified: '<span class="verify-badge verified" title="On-chain verified">Verified</span>',
+                placeholder: '<span class="verify-badge placeholder" title="Placeholder IDL">Placeholder</span>',
+                no_program_id: '<span class="verify-badge warning" title="No program ID">No Program</span>',
+                program_not_found: '<span class="verify-badge error" title="Program not found on-chain">Not Found</span>',
+                rpc_error: '<span class="verify-badge error" title="RPC error during verification">RPC Error</span>',
+            };
+            return badges[status.status] || '';
+        }
+
+        // Load protocols from API
+        async function loadProtocols() {
+            try {
+                // Load both protocols and verification status in parallel
+                const [protocolsRes, _] = await Promise.all([
+                    fetch('/api/idl'),
+                    loadVerificationStatus()
+                ]);
+                const data = await protocolsRes.json();
+
+                allProtocols = data.idls || [];
+                filteredProtocols = [...allProtocols];
+
+                updateStats();
+                createFilterButtons();
+                renderProtocols();
+            } catch (error) {
+                console.error('Failed to load protocols:', error);
+                document.getElementById('protocolsList').innerHTML = `
+                    <div class="no-results">
+                        <h3>Failed to Load Protocols</h3>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Update stats
+        function updateStats() {
+            document.getElementById('totalProtocols').textContent = allProtocols.length;
+            document.getElementById('availableProtocols').textContent =
+                allProtocols.filter(p => p.status === 'available').length;
+            document.getElementById('selectedCount').textContent = selectedProtocols.size;
+        }
+
+        // Create filter buttons
+        function createFilterButtons() {
+            const categories = new Set(['all']);
+            allProtocols.forEach(p => {
+                if (p.category) {
+                    categories.add(p.category.toLowerCase());
+                }
+            });
+
+            const filterContainer = document.getElementById('filterButtons');
+            filterContainer.innerHTML = Array.from(categories).map(cat => `
+                <button class="filter-btn ${cat === 'all' ? 'active' : ''}"
+                        data-category="${cat}">
+                    ${cat.charAt(0).toUpperCase() + cat.slice(1)}
+                </button>
+            `).join('');
+
+            // Add click handlers
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentCategory = btn.dataset.category;
+                    filterProtocols();
+                });
+            });
+        }
+
+        // Filter protocols
+        function filterProtocols() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+
+            filteredProtocols = allProtocols.filter(protocol => {
+                const matchesSearch = !searchTerm ||
+                    (protocol.name && protocol.name.toLowerCase().includes(searchTerm)) ||
+                    (protocol.description && protocol.description.toLowerCase().includes(searchTerm)) ||
+                    (protocol.category && protocol.category.toLowerCase().includes(searchTerm));
+
+                const matchesCategory = currentCategory === 'all' ||
+                    (protocol.category && protocol.category.toLowerCase() === currentCategory);
+
+                return matchesSearch && matchesCategory;
+            });
+
+            renderProtocols();
+        }
+
+        // Format metrics for display
+        function formatMetrics(metrics) {
+            if (!metrics) return '';
+
+            const parts = [];
+
+            if (metrics.users !== undefined && metrics.users !== null) {
+                parts.push(`Users: <span class="metric-value">${metrics.users.toLocaleString()}</span>`);
+            }
+
+            if (metrics.accounts !== undefined && metrics.accounts !== null) {
+                parts.push(`Accounts: <span class="metric-value">${metrics.accounts.toLocaleString()}</span>`);
+            }
+
+            if (metrics.tvl !== undefined && metrics.tvl !== null && metrics.tvl > 0) {
+                const formattedTVL = metrics.tvl >= 1000000
+                    ? `$${(metrics.tvl / 1000000).toFixed(2)}M`
+                    : `$${metrics.tvl.toLocaleString()}`;
+                parts.push(`TVL: <span class="metric-value">${formattedTVL}</span>`);
+            }
+
+            if (parts.length === 0) return '';
+
+            return `<div class="protocol-metrics">${parts.join(' | ')}</div>`;
+        }
+
+        // Render protocols
+        function renderProtocols() {
+            const container = document.getElementById('protocolsList');
+
+            if (filteredProtocols.length === 0) {
+                container.innerHTML = `
+                    <div class="no-results">
+                        <h3>No protocols found</h3>
+                        <p>Try adjusting your search or filters</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filteredProtocols.map(protocol => `
+                <div class="protocol-item" data-id="${protocol.id}" onclick="selectProtocol('${protocol.id}', event)">
+                    <input
+                        type="checkbox"
+                        class="protocol-checkbox"
+                        ${selectedProtocols.has(protocol.id) ? 'checked' : ''}
+                        data-id="${protocol.id}"
+                    >
+                    <div class="protocol-info">
+                        <div class="protocol-header">
+                            <span class="protocol-name">${protocol.name}</span>
+                            <span class="protocol-badge badge-${protocol.status || 'placeholder'}">${protocol.status || 'placeholder'}</span>
+                            ${getVerificationBadge(protocol.id)}
+                            <span class="category-badge">${protocol.category || 'Unknown'}</span>
+                        </div>
+                        <div class="protocol-description">${protocol.description || 'No description available'}</div>
+                        <div class="protocol-meta">
+                            ${protocol.repo ? `<a href="${protocol.repo}" target="_blank">Repository</a> • ` : ''}
+                            Version ${protocol.version || 'N/A'} • Updated ${protocol.lastUpdated || 'N/A'}
+                        </div>
+                        ${formatMetrics(protocol.metrics)}
+                    </div>
+                    <div class="protocol-actions">
+                        <button class="icon-btn" onclick="viewIDL('${protocol.id}')" title="View IDL">View IDL</button>
+                        <button class="icon-btn" onclick="downloadIDL('${protocol.id}')" title="Download IDL">Download</button>
+                        <a href="/app/#bet-${protocol.id}" class="icon-btn btn-bet" title="Bet on Metrics">Bet on Metrics</a>
+                    </div>
+                </div>
+            `).join('');
+
+            // Add click listeners to checkboxes
+            document.querySelectorAll('.protocol-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', (e) => {
+                    const id = e.target.dataset.id;
+                    if (e.target.checked) {
+                        selectedProtocols.add(id);
+                    } else {
+                        selectedProtocols.delete(id);
+                    }
+                    updateStats();
+                });
+            });
+        }
+
+        // Current selected protocol
+        let currentProtocolId = null;
+        let currentIdlData = null;
+
+        // View IDL (click on protocol row)
+        async function selectProtocol(protocolId, event) {
+            // Don't trigger if clicking on checkbox or buttons
+            if (event.target.classList.contains('protocol-checkbox') ||
+                event.target.classList.contains('icon-btn') ||
+                event.target.tagName === 'A') {
+                return;
+            }
+
+            // Toggle if same protocol
+            if (currentProtocolId === protocolId) {
+                closeDetail();
+                return;
+            }
+
+            // Update selected state
+            document.querySelectorAll('.protocol-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+
+            currentProtocolId = protocolId;
+            const protocol = allProtocols.find(p => p.id === protocolId);
+
+            // Show detail panel
+            const detailPanel = document.getElementById('protocolDetail');
+            detailPanel.classList.add('active');
+
+            // Update title
+            document.getElementById('detailTitle').textContent = protocol?.name || protocolId;
+
+            // Show loading state
+            document.getElementById('detailInstructions').innerHTML = '<div class="detail-item">Loading...</div>';
+            document.getElementById('detailAccounts').innerHTML = '<div class="detail-item">Loading...</div>';
+            document.getElementById('detailTypes').innerHTML = '<div class="detail-item">Loading...</div>';
+            document.getElementById('detailErrors').innerHTML = '<div class="detail-item">Loading...</div>';
+
+            // Load IDL data
+            try {
+                const response = await fetch(`/api/idl/${protocolId}`);
+                const data = await response.json();
+                currentIdlData = data;
+
+                const idl = data.idl || {};
+
+                // Render instructions
+                const instructions = idl.instructions || [];
+                document.getElementById('detailInstructions').innerHTML = instructions.length > 0
+                    ? instructions.map(ix => `
+                        <div class="detail-item">
+                            <span class="detail-item-name">${ix.name}</span>
+                            <span class="detail-item-type">${ix.args?.length || 0} args, ${ix.accounts?.length || 0} accounts</span>
+                        </div>
+                    `).join('')
+                    : '<div class="detail-item">No instructions</div>';
+
+                // Render accounts
+                const accounts = idl.accounts || [];
+                document.getElementById('detailAccounts').innerHTML = accounts.length > 0
+                    ? accounts.map(acc => `
+                        <div class="detail-item">
+                            <span class="detail-item-name">${acc.name}</span>
+                        </div>
+                    `).join('')
+                    : '<div class="detail-item">No accounts</div>';
+
+                // Render types
+                const types = idl.types || [];
+                document.getElementById('detailTypes').innerHTML = types.length > 0
+                    ? types.map(t => `
+                        <div class="detail-item">
+                            <span class="detail-item-name">${t.name}</span>
+                            <span class="detail-item-type">${t.type?.kind || 'type'}</span>
+                        </div>
+                    `).join('')
+                    : '<div class="detail-item">No types</div>';
+
+                // Render errors
+                const errors = idl.errors || [];
+                document.getElementById('detailErrors').innerHTML = errors.length > 0
+                    ? errors.map(e => `
+                        <div class="detail-item">
+                            <span class="detail-item-name">${e.code}: ${e.name}</span>
+                            <span class="detail-item-type">${e.msg || ''}</span>
+                        </div>
+                    `).join('')
+                    : '<div class="detail-item">No errors defined</div>';
+
+                // Update action buttons
+                document.getElementById('detailDownload').onclick = () => downloadIDL(protocolId);
+                document.getElementById('detailViewRaw').onclick = () => window.open(`/api/idl/${protocolId}`, '_blank');
+
+                // Arweave link
+                const arweaveLink = document.getElementById('detailArweave');
+                if (data.arweaveUrl) {
+                    arweaveLink.href = data.arweaveUrl;
+                    arweaveLink.style.display = 'inline-block';
+                } else {
+                    arweaveLink.style.display = 'none';
+                }
+
+                // Scroll detail into view
+                detailPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+            } catch (error) {
+                console.error('Failed to load IDL:', error);
+                document.getElementById('detailInstructions').innerHTML = `<div class="detail-item">Error: ${error.message}</div>`;
+            }
+        }
+
+        // Close detail panel
+        function closeDetail() {
+            document.getElementById('protocolDetail').classList.remove('active');
+            document.querySelectorAll('.protocol-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            currentProtocolId = null;
+            currentIdlData = null;
+        }
+
+        // View IDL in new tab
+        function viewIDL(protocolId) {
+            window.open(`/api/idl/${protocolId}`, '_blank');
+        }
+
+        // Download IDL
+        async function downloadIDL(protocolId) {
+            try {
+                const response = await fetch(`/api/idl/${protocolId}`);
+                const data = await response.json();
+
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${protocolId}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            } catch (error) {
+                console.error('Failed to download IDL:', error);
+                alert('Failed to download IDL: ' + error.message);
+            }
+        }
+
+        // Search input handler
+        document.getElementById('searchInput').addEventListener('input', filterProtocols);
+
+        // Initialize
+        loadTheme();
+        loadProtocols();
+    </script>
 </body>
+
 </html>
