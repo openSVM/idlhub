@@ -5,8 +5,13 @@ use std::path::Path;
 use std::fs;
 
 use crate::ir::*;
+use crate::parser::{SourceExtras, ConstantDef, HelperFunction};
 
 pub fn emit(program: &PinocchioProgram, output_dir: &Path) -> Result<()> {
+    emit_with_extras(program, output_dir, None)
+}
+
+pub fn emit_with_extras(program: &PinocchioProgram, output_dir: &Path, extras: Option<&SourceExtras>) -> Result<()> {
     fs::create_dir_all(output_dir)?;
 
     // Emit Cargo.toml
@@ -15,7 +20,7 @@ pub fn emit(program: &PinocchioProgram, output_dir: &Path) -> Result<()> {
     // Emit src/lib.rs
     let src_dir = output_dir.join("src");
     fs::create_dir_all(&src_dir)?;
-    emit_lib_rs(program, &src_dir)?;
+    emit_lib_rs(program, &src_dir, extras.is_some())?;
 
     // Emit src/state.rs
     emit_state_rs(program, &src_dir)?;
@@ -23,10 +28,68 @@ pub fn emit(program: &PinocchioProgram, output_dir: &Path) -> Result<()> {
     // Emit src/error.rs
     emit_error_rs(program, &src_dir)?;
 
+    // Emit src/helpers.rs (if we have extras)
+    if let Some(extras) = extras {
+        emit_helpers_rs(extras, &src_dir)?;
+    }
+
     // Emit src/instructions/
     emit_instructions(program, &src_dir)?;
 
     Ok(())
+}
+
+fn emit_helpers_rs(extras: &SourceExtras, src_dir: &Path) -> Result<()> {
+    let mut content = String::new();
+
+    content.push_str("//! Constants and helper functions extracted from original source\n\n");
+
+    // Emit constants
+    if !extras.constants.is_empty() {
+        content.push_str("// Constants\n");
+        for c in &extras.constants {
+            content.push_str(&format!(
+                "pub const {}: {} = {};\n",
+                c.name, c.ty, c.value
+            ));
+        }
+        content.push_str("\n");
+    }
+
+    // Emit helper functions
+    if !extras.helper_functions.is_empty() {
+        content.push_str("// Helper functions\n");
+        content.push_str("use crate::state::*;\n");
+        content.push_str("use crate::error::Error;\n");
+        content.push_str("use pinocchio::program_error::ProgramError;\n\n");
+
+        for f in &extras.helper_functions {
+            // Clean up the signature and body
+            let mut sig = clean_helper_signature(&f.signature);
+            // Make sure it's public
+            if !sig.starts_with("pub ") {
+                sig = format!("pub {}", sig);
+            }
+            let body = clean_helper_body(&f.body);
+            content.push_str(&format!("{} {}\n\n", sig, body));
+        }
+    }
+
+    fs::write(src_dir.join("helpers.rs"), content)?;
+    Ok(())
+}
+
+fn clean_helper_signature(sig: &str) -> String {
+    sig.replace("Result < () >", "Result<(), ProgramError>")
+       .replace("Result<()>", "Result<(), ProgramError>")
+       .replace("& StablePool", "&StablePool")
+}
+
+fn clean_helper_body(body: &str) -> String {
+    let mut result = body.to_string();
+    result = result.replace("StableSwapError :: ", "Error::");
+    result = result.replace("StableSwapError::", "Error::");
+    result
 }
 
 fn emit_cargo_toml(program: &PinocchioProgram, output_dir: &Path) -> Result<()> {
@@ -61,7 +124,7 @@ strip = true
     Ok(())
 }
 
-fn emit_lib_rs(program: &PinocchioProgram, src_dir: &Path) -> Result<()> {
+fn emit_lib_rs(program: &PinocchioProgram, src_dir: &Path, has_helpers: bool) -> Result<()> {
     let mut content = String::new();
 
     content.push_str("#![allow(unexpected_cfgs)]\n\n");
@@ -81,10 +144,17 @@ fn emit_lib_rs(program: &PinocchioProgram, src_dir: &Path) -> Result<()> {
     // Modules
     content.push_str("mod state;\n");
     content.push_str("mod error;\n");
+    if has_helpers {
+        content.push_str("mod helpers;\n");
+    }
     content.push_str("mod instructions;\n\n");
 
     content.push_str("pub use state::*;\n");
-    content.push_str("pub use error::*;\n\n");
+    content.push_str("pub use error::*;\n");
+    if has_helpers {
+        content.push_str("pub use helpers::*;\n");
+    }
+    content.push_str("\n");
 
     // Program ID as bytes (Pinocchio uses [u8; 32])
     if let Some(id) = &program.program_id {
@@ -332,6 +402,7 @@ fn emit_instruction(
     content.push_str("\n");
 
     content.push_str("use crate::error::Error;\n");
+    content.push_str("use crate::helpers::*;\n");
 
     // Import state structs if referenced
     for state in &program.state_structs {
@@ -411,29 +482,49 @@ fn emit_instruction(
                     acc.name
                 ));
             }
-            Validation::PdaCheck { account_idx, seeds, bump: _ } => {
+            Validation::PdaCheck { account_idx, seeds, bump } => {
                 if !has_validations {
                     content.push_str("    // Validate accounts\n");
                     has_validations = true;
                 }
                 let acc = &inst.accounts[*account_idx];
-                // Generate PDA validation
+                // Generate actual PDA validation code
                 let seeds_code: Vec<String> = seeds.iter()
                     .map(|s| {
                         if s.starts_with("b\"") {
-                            s.clone()
+                            format!("{}.as_ref()", s)
                         } else if s.contains(".key()") {
-                            format!("{}.as_ref()", s.replace(".key()", "").replace(".as_ref()", ""))
+                            let acc_name = s.replace(".key()", "").replace(".as_ref()", "").replace(" ", "");
+                            format!("{}.key().as_ref()", acc_name)
+                        } else if s.contains("as_ref") {
+                            s.clone()
                         } else {
-                            format!("&{}", s)
+                            format!("{}.as_ref()", s)
                         }
                     })
                     .collect();
+
+                // Generate the PDA verification code
                 content.push_str(&format!(
-                    "    // TODO: Verify PDA for {} with seeds: [{}]\n",
-                    acc.name,
+                    "    // Verify PDA for {}\n",
+                    acc.name
+                ));
+                content.push_str(&format!(
+                    "    let (expected_{}, _bump) = pinocchio::pubkey::find_program_address(\n",
+                    acc.name
+                ));
+                content.push_str(&format!(
+                    "        &[{}],\n",
                     seeds_code.join(", ")
                 ));
+                content.push_str("        program_id,\n");
+                content.push_str("    );\n");
+                content.push_str(&format!(
+                    "    if {}.key() != &expected_{} {{\n",
+                    acc.name, acc.name
+                ));
+                content.push_str("        return Err(ProgramError::InvalidSeeds);\n");
+                content.push_str("    }\n");
             }
             Validation::Custom { code } => {
                 if !has_validations {

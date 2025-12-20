@@ -163,27 +163,54 @@ pub const CONVICTION_BONUS_PER_DAY: u64 = 50; // 0.5% per day locked
 pub mod idl_protocol {
     use super::*;
 
-    /// Initialize the protocol with token mint and vault
-    pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
+    /// Step 1: Create protocol state
+    pub fn create_state(ctx: Context<CreateState>) -> Result<()> {
         let state = &mut ctx.accounts.state;
         state.authority = ctx.accounts.authority.key();
         state.treasury = ctx.accounts.treasury.key();
         state.idl_mint = ctx.accounts.idl_mint.key();
-        state.vault = ctx.accounts.vault.key();
+        state.vault = Pubkey::default(); // Set in init_vault
+        state.burn_vault = Pubkey::default(); // Set in init_burn_vault
         state.total_staked = 0;
         state.total_ve_supply = 0;
         state.reward_pool = 0;
         state.total_fees_collected = 0;
         state.total_burned = 0;
         state.bump = ctx.bumps.state;
-        state.vault_bump = ctx.bumps.vault;
-        state.paused = false;
-        // SECURITY FIX: Initialize checkpoint system
+        state.vault_bump = 0;
+        state.burn_vault_bump = 0;
+        state.paused = true; // Paused until fully initialized
         state.reward_per_token_stored = 0;
         state.last_reward_update = Clock::get()?.unix_timestamp;
-        // TIER 3: Initialize TVL cap and insurance fund
         state.tvl_cap = INITIAL_TVL_CAP;
         state.insurance_fund = 0;
+        state.pending_authority = None;
+        state.authority_transfer_time = None;
+
+        msg!("Protocol state created - call init_vault next");
+        Ok(())
+    }
+
+    /// Step 2: Initialize vault
+    pub fn init_vault(ctx: Context<InitVault>) -> Result<()> {
+        let state = &mut ctx.accounts.state;
+        require!(state.vault == Pubkey::default(), IdlError::AlreadyInitialized);
+
+        state.vault = ctx.accounts.vault.key();
+        state.vault_bump = ctx.bumps.vault;
+
+        msg!("Vault initialized - call init_burn_vault next");
+        Ok(())
+    }
+
+    /// Step 3: Initialize burn vault and activate protocol
+    pub fn init_burn_vault(ctx: Context<InitBurnVault>) -> Result<()> {
+        let state = &mut ctx.accounts.state;
+        require!(state.vault != Pubkey::default(), IdlError::VaultNotInitialized);
+
+        state.burn_vault = ctx.accounts.burn_vault.key();
+        state.burn_vault_bump = ctx.bumps.burn_vault;
+        state.paused = false; // Now ready
 
         msg!("IDL Protocol initialized. Vault: {}, TVL Cap: {}", state.vault, state.tvl_cap);
         Ok(())
@@ -1577,9 +1604,9 @@ pub fn get_voting_power(
 
 // ==================== ACCOUNTS ====================
 
-/// Stack-optimized with Box for large accounts
+/// Step 1: Create protocol state only
 #[derive(Accounts)]
-pub struct Initialize<'info> {
+pub struct CreateState<'info> {
     #[account(
         init,
         payer = authority,
@@ -1589,6 +1616,31 @@ pub struct Initialize<'info> {
     )]
     pub state: Box<Account<'info, ProtocolState>>,
 
+    pub idl_mint: Box<Account<'info, Mint>>,
+
+    /// CHECK: Treasury account
+    pub treasury: UncheckedAccount<'info>,
+
+    #[account(mut)]
+    pub authority: Signer<'info>,
+
+    pub system_program: Program<'info, System>,
+}
+
+/// Step 2: Initialize vault
+#[derive(Accounts)]
+pub struct InitVault<'info> {
+    #[account(
+        mut,
+        seeds = [b"state"],
+        bump = state.bump,
+        constraint = state.authority == authority.key() @ IdlError::Unauthorized
+    )]
+    pub state: Box<Account<'info, ProtocolState>>,
+
+    #[account(
+        constraint = idl_mint.key() == state.idl_mint @ IdlError::InvalidMint
+    )]
     pub idl_mint: Box<Account<'info, Mint>>,
 
     #[account(
@@ -1601,26 +1653,44 @@ pub struct Initialize<'info> {
     )]
     pub vault: Box<Account<'info, TokenAccount>>,
 
-    /// RICK FIX: Burn vault holds "burned" tokens (locked forever, effectively burned)
+    #[account(mut)]
+    pub authority: Signer<'info>,
+
+    pub token_program: Program<'info, Token>,
+    pub system_program: Program<'info, System>,
+}
+
+/// Step 3: Initialize burn vault and activate
+#[derive(Accounts)]
+pub struct InitBurnVault<'info> {
+    #[account(
+        mut,
+        seeds = [b"state"],
+        bump = state.bump,
+        constraint = state.authority == authority.key() @ IdlError::Unauthorized
+    )]
+    pub state: Box<Account<'info, ProtocolState>>,
+
+    #[account(
+        constraint = idl_mint.key() == state.idl_mint @ IdlError::InvalidMint
+    )]
+    pub idl_mint: Box<Account<'info, Mint>>,
+
     #[account(
         init,
         payer = authority,
         seeds = [b"burn_vault"],
         bump,
         token::mint = idl_mint,
-        token::authority = state,  // State owns it but will never transfer out
+        token::authority = state,
     )]
     pub burn_vault: Box<Account<'info, TokenAccount>>,
-
-    /// CHECK: Treasury account
-    pub treasury: UncheckedAccount<'info>,
 
     #[account(mut)]
     pub authority: Signer<'info>,
 
     pub token_program: Program<'info, Token>,
     pub system_program: Program<'info, System>,
-    pub rent: Sysvar<'info, Rent>,
 }
 
 #[derive(Accounts)]
@@ -2002,7 +2072,7 @@ pub struct WithdrawOracleBond<'info> {
 #[instruction(protocol_id: String, metric_type: MetricType, target_value: u64, resolution_timestamp: i64)]
 pub struct CreateMarket<'info> {
     #[account(seeds = [b"state"], bump = state.bump)]
-    pub state: Account<'info, ProtocolState>,
+    pub state: Box<Account<'info, ProtocolState>>,
 
     #[account(
         init,
@@ -2011,7 +2081,7 @@ pub struct CreateMarket<'info> {
         seeds = [b"market", protocol_id.as_bytes(), &resolution_timestamp.to_le_bytes()],
         bump
     )]
-    pub market: Account<'info, PredictionMarket>,
+    pub market: Box<Account<'info, PredictionMarket>>,
 
     #[account(
         init,
@@ -2021,9 +2091,9 @@ pub struct CreateMarket<'info> {
         token::mint = idl_mint,
         token::authority = market_pool,
     )]
-    pub market_pool: Account<'info, TokenAccount>,
+    pub market_pool: Box<Account<'info, TokenAccount>>,
 
-    pub idl_mint: Account<'info, Mint>,
+    pub idl_mint: Box<Account<'info, Mint>>,
 
     #[account(mut)]
     pub creator: Signer<'info>,
@@ -2601,6 +2671,7 @@ pub struct ProtocolState {
     pub treasury: Pubkey,
     pub idl_mint: Pubkey,
     pub vault: Pubkey,
+    pub burn_vault: Pubkey,  // Added for multi-step init
     pub total_staked: u64,
     pub total_ve_supply: u64,
     pub reward_pool: u64,
@@ -2608,6 +2679,7 @@ pub struct ProtocolState {
     pub total_burned: u64,
     pub bump: u8,
     pub vault_bump: u8,
+    pub burn_vault_bump: u8,  // Added for multi-step init
     pub paused: bool,
     // SECURITY FIX: Reward checkpoint for proper distribution
     pub reward_per_token_stored: u128,  // Scaled by 1e18 for precision
@@ -3185,4 +3257,11 @@ pub enum IdlError {
     // CONVICTION_CANCEL fix
     #[msg("Conviction lock not expired yet")]
     ConvictionLockNotExpired,
+
+    // Multi-step init errors
+    #[msg("Already initialized")]
+    AlreadyInitialized,
+
+    #[msg("Vault not initialized - call init_vault first")]
+    VaultNotInitialized,
 }

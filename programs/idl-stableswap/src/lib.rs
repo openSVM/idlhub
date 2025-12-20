@@ -148,19 +148,44 @@ pub mod idl_stableswap {
         Ok(())
     }
 
-    /// Step 2: Initialize vaults and LP mint
+    /// Step 2a: Initialize BAGS vault
     /// Must be called after create_pool
-    pub fn init_vaults(ctx: Context<InitVaults>) -> Result<()> {
+    pub fn init_bags_vault(ctx: Context<InitBagsVault>) -> Result<()> {
         let pool = &mut ctx.accounts.pool;
-
-        // Ensure vaults haven't been initialized yet
         require!(pool.bags_vault == Pubkey::default(), StableSwapError::AlreadyInitialized);
 
         pool.bags_vault = ctx.accounts.bags_vault.key();
-        pool.pump_vault = ctx.accounts.pump_vault.key();
-        pool.lp_mint = ctx.accounts.lp_mint.key();
         pool.bags_vault_bump = ctx.bumps.bags_vault;
+
+        msg!("BAGS vault initialized");
+        Ok(())
+    }
+
+    /// Step 2b: Initialize PUMP vault
+    /// Must be called after init_bags_vault
+    pub fn init_pump_vault(ctx: Context<InitPumpVault>) -> Result<()> {
+        let pool = &mut ctx.accounts.pool;
+        require!(pool.bags_vault != Pubkey::default(), StableSwapError::VaultsNotInitialized);
+        require!(pool.pump_vault == Pubkey::default(), StableSwapError::AlreadyInitialized);
+
+        pool.pump_vault = ctx.accounts.pump_vault.key();
         pool.pump_vault_bump = ctx.bumps.pump_vault;
+
+        msg!("PUMP vault initialized");
+        Ok(())
+    }
+
+    /// Step 3: Initialize LP mint and activate pool
+    /// Must be called after init_pump_vault
+    pub fn init_lp_mint(ctx: Context<InitLpMint>) -> Result<()> {
+        let pool = &mut ctx.accounts.pool;
+
+        // Ensure both vaults are initialized but LP mint is not
+        require!(pool.bags_vault != Pubkey::default(), StableSwapError::VaultsNotInitialized);
+        require!(pool.pump_vault != Pubkey::default(), StableSwapError::VaultsNotInitialized);
+        require!(pool.lp_mint == Pubkey::default(), StableSwapError::AlreadyInitialized);
+
+        pool.lp_mint = ctx.accounts.lp_mint.key();
         pool.lp_mint_bump = ctx.bumps.lp_mint;
         pool.paused = false; // Now ready for use
 
@@ -168,58 +193,6 @@ pub mod idl_stableswap {
         msg!("  BAGS Mint: {}", pool.bags_mint);
         msg!("  PUMP Mint: {}", pool.pump_mint);
         msg!("  Amplification: {}", pool.amplification);
-
-        Ok(())
-    }
-
-    /// Combined initialize (for backwards compatibility - may hit stack limits on some validators)
-    /// Prefer using create_pool + init_vaults instead
-    pub fn initialize(
-        ctx: Context<Initialize>,
-        amplification: u64,
-    ) -> Result<()> {
-        require!(
-            amplification >= MIN_AMPLIFICATION && amplification <= MAX_AMPLIFICATION,
-            StableSwapError::InvalidAmplification
-        );
-
-        let pool = &mut ctx.accounts.pool;
-
-        pool.authority = ctx.accounts.authority.key();
-        pool.bags_mint = ctx.accounts.bags_mint.key();
-        pool.pump_mint = ctx.accounts.pump_mint.key();
-        pool.bags_vault = ctx.accounts.bags_vault.key();
-        pool.pump_vault = ctx.accounts.pump_vault.key();
-        pool.lp_mint = ctx.accounts.lp_mint.key();
-        pool.amplification = amplification;
-        pool.initial_amplification = amplification;
-        pool.target_amplification = amplification;
-        pool.ramp_start_time = 0;
-        pool.ramp_stop_time = 0;
-        pool.swap_fee_bps = SWAP_FEE_BPS;
-        pool.admin_fee_percent = ADMIN_FEE_PERCENT;
-        pool.bags_balance = 0;
-        pool.pump_balance = 0;
-        pool.lp_supply = 0;
-        pool.admin_fees_bags = 0;
-        pool.admin_fees_pump = 0;
-        pool.total_volume_bags = 0;
-        pool.total_volume_pump = 0;
-        pool.paused = false;
-        pool.bump = ctx.bumps.pool;
-        pool.bags_vault_bump = ctx.bumps.bags_vault;
-        pool.pump_vault_bump = ctx.bumps.pump_vault;
-        pool.lp_mint_bump = ctx.bumps.lp_mint;
-        pool.pending_authority = None;
-        pool.authority_transfer_time = None;
-        // AUDIT FIX: Initialize commit-reveal fields
-        pool.pending_amp_commit = None;
-        pool.amp_commit_time = None;
-
-        msg!("IDL StableSwap initialized");
-        msg!("  BAGS Mint: {}", pool.bags_mint);
-        msg!("  PUMP Mint: {}", pool.pump_mint);
-        msg!("  Amplification: {}", amplification);
 
         Ok(())
     }
@@ -1858,9 +1831,9 @@ pub struct CreatePool<'info> {
     pub system_program: Program<'info, System>,
 }
 
-/// Step 2: Initialize vaults and LP mint
+/// Step 2a: Initialize BAGS vault only
 #[derive(Accounts)]
-pub struct InitVaults<'info> {
+pub struct InitBagsVault<'info> {
     #[account(
         mut,
         seeds = [b"pool"],
@@ -1869,8 +1842,10 @@ pub struct InitVaults<'info> {
     )]
     pub pool: Box<Account<'info, StablePool>>,
 
+    #[account(
+        constraint = bags_mint.key() == pool.bags_mint @ StableSwapError::InvalidMint
+    )]
     pub bags_mint: Box<Account<'info, Mint>>,
-    pub pump_mint: Box<Account<'info, Mint>>,
 
     #[account(
         init,
@@ -1882,58 +1857,28 @@ pub struct InitVaults<'info> {
     )]
     pub bags_vault: Box<Account<'info, TokenAccount>>,
 
-    #[account(
-        init,
-        payer = authority,
-        seeds = [b"pump_vault"],
-        bump,
-        token::mint = pump_mint,
-        token::authority = pool,
-    )]
-    pub pump_vault: Box<Account<'info, TokenAccount>>,
-
-    #[account(
-        init,
-        payer = authority,
-        seeds = [b"lp_mint"],
-        bump,
-        mint::decimals = TOKEN_DECIMALS,
-        mint::authority = pool,
-    )]
-    pub lp_mint: Box<Account<'info, Mint>>,
-
     #[account(mut)]
     pub authority: Signer<'info>,
 
     pub token_program: Program<'info, Token>,
     pub system_program: Program<'info, System>,
-    pub rent: Sysvar<'info, Rent>,
 }
 
-/// Combined initialization (for backwards compatibility - may hit stack limits)
+/// Step 2b: Initialize PUMP vault only
 #[derive(Accounts)]
-pub struct Initialize<'info> {
+pub struct InitPumpVault<'info> {
     #[account(
-        init,
-        payer = authority,
-        space = 8 + StablePool::INIT_SPACE,
+        mut,
         seeds = [b"pool"],
-        bump
+        bump = pool.bump,
+        constraint = pool.authority == authority.key() @ StableSwapError::Unauthorized
     )]
     pub pool: Box<Account<'info, StablePool>>,
 
-    pub bags_mint: Box<Account<'info, Mint>>,
-    pub pump_mint: Box<Account<'info, Mint>>,
-
     #[account(
-        init,
-        payer = authority,
-        seeds = [b"bags_vault"],
-        bump,
-        token::mint = bags_mint,
-        token::authority = pool,
+        constraint = pump_mint.key() == pool.pump_mint @ StableSwapError::InvalidMint
     )]
-    pub bags_vault: Box<Account<'info, TokenAccount>>,
+    pub pump_mint: Box<Account<'info, Mint>>,
 
     #[account(
         init,
@@ -1944,6 +1889,24 @@ pub struct Initialize<'info> {
         token::authority = pool,
     )]
     pub pump_vault: Box<Account<'info, TokenAccount>>,
+
+    #[account(mut)]
+    pub authority: Signer<'info>,
+
+    pub token_program: Program<'info, Token>,
+    pub system_program: Program<'info, System>,
+}
+
+/// Step 3: Initialize LP mint and activate pool
+#[derive(Accounts)]
+pub struct InitLpMint<'info> {
+    #[account(
+        mut,
+        seeds = [b"pool"],
+        bump = pool.bump,
+        constraint = pool.authority == authority.key() @ StableSwapError::Unauthorized
+    )]
+    pub pool: Box<Account<'info, StablePool>>,
 
     #[account(
         init,
@@ -1960,7 +1923,6 @@ pub struct Initialize<'info> {
 
     pub token_program: Program<'info, Token>,
     pub system_program: Program<'info, System>,
-    pub rent: Sysvar<'info, Rent>,
 }
 
 #[derive(Accounts)]
@@ -2552,4 +2514,7 @@ pub enum StableSwapError {
 
     #[msg("Pool already initialized")]
     AlreadyInitialized,
+
+    #[msg("Vaults not initialized - call init_vaults first")]
+    VaultsNotInitialized,
 }

@@ -15,17 +15,17 @@ const connection = new Connection(RPC_ENDPOINT, 'confirmed');
 const PROTOCOL_FEE_ACCOUNTS = {
     'jupiter': {
         name: 'Jupiter Aggregator',
-        feeAccount: 'JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN', // Jupiter fee account
+        feeAccount: 'pQjN9gGZYxoutMizeToKKKzUgb1PU31nLrThK1hxZWs', // Real: Referral fee account
         programId: 'JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4'
     },
     'raydium': {
         name: 'Raydium AMM',
-        feeAccount: '7YttLkHDoNj9wyDur5pM1ejNaAvT9X4eqaYcHQqtj2G5', // Raydium authority
+        feeAccount: 'CHynyGLd4fDo35VP4yftAZ9724Gt49uXYXuqmdWtt68F', // Real: CLMM Treasury USDC
         programId: '675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8'
     },
     'orca': {
         name: 'Orca',
-        feeAccount: 'orcaEKTdK7LKz57vaAYr9QeNsVEPfiu6QeMU1kektZE', // Orca fee vault
+        feeAccount: 'DWo8SNtdBDuebAEeVDf7cWBQ6DUvoDbS7K4QTrQvYS1S', // Real: Fee Treasury
         programId: '9W959DqEETiGZocYWCQPaJ6sBmUzgfxXfqGeTEdp3aQP'
     },
     'marinade': {
@@ -56,15 +56,58 @@ const PROTOCOL_FEE_ACCOUNTS = {
 };
 
 /**
- * Get transaction signatures for a program
+ * Get transaction signatures for a program with pagination until 24h ago
  */
-async function getProgramTransactions(programId, limit = 1000) {
+async function getProgramTransactions(programId) {
     try {
         const pubkey = new PublicKey(programId);
-        const signatures = await connection.getSignaturesForAddress(pubkey, {
-            limit: limit
-        });
-        return signatures;
+        let allSignatures = [];
+        let before = undefined;
+        const limitPerRequest = 1000;
+        const oneDayAgo = Date.now() / 1000 - 86400;
+        let reachedOldTransactions = false;
+
+        // Fetch in batches until we reach transactions older than 24h
+        while (!reachedOldTransactions && allSignatures.length < 100000000) { // Safety limit of 100M
+            try {
+                const signatures = await connection.getSignaturesForAddress(pubkey, {
+                    limit: limitPerRequest,
+                    before: before
+                });
+
+                if (signatures.length === 0) break;
+
+                // Check if any signatures in this batch are older than 24h
+                for (const sig of signatures) {
+                    if (sig.blockTime && sig.blockTime < oneDayAgo) {
+                        reachedOldTransactions = true;
+                    }
+                    allSignatures.push(sig);
+                }
+
+                // If we got less than the limit, we've reached the end
+                if (signatures.length < limitPerRequest) break;
+
+                // Set 'before' to the last signature for next page
+                before = signatures[signatures.length - 1].signature;
+
+                // Small delay to avoid rate limiting
+                await new Promise(resolve => setTimeout(resolve, 200));
+
+                // Log progress every 5000 signatures
+                if (allSignatures.length % 5000 === 0) {
+                    console.log(`  Fetched ${allSignatures.length} signatures so far...`);
+                }
+            } catch (error) {
+                // If RPC fails, return what we've fetched so far instead of nothing
+                console.error(`Error during pagination for ${programId}:`, error.message);
+                console.log(`  Returning ${allSignatures.length} signatures fetched before error`);
+                break;
+            }
+        }
+
+        console.log(`Fetched ${allSignatures.length} transaction signatures for ${programId} (reached 24h: ${reachedOldTransactions})`);
+        return allSignatures;
     } catch (error) {
         console.error(`Error fetching transactions for ${programId}:`, error.message);
         return [];
@@ -82,54 +125,52 @@ async function parseTransactions(signatures, programId) {
 
     const oneDayAgo = Date.now() / 1000 - 86400;
 
-    // Process in batches to avoid rate limits
-    const batchSize = 50;
-    for (let i = 0; i < Math.min(signatures.length, 200); i += batchSize) {
-        const batch = signatures.slice(i, i + batchSize);
+    // Process limited number of transactions individually to avoid payload size limits
+    // Parse more transactions for better accuracy (200 recent transactions)
+    const maxTransactions = 200;
+    for (let i = 0; i < Math.min(signatures.length, maxTransactions); i++) {
+        const sig = signatures[i];
 
         try {
-            const txs = await connection.getTransactions(
-                batch.map(sig => sig.signature),
-                {
-                    maxSupportedTransactionVersion: 0,
-                    commitment: 'confirmed'
-                }
-            );
+            const tx = await connection.getTransaction(sig.signature, {
+                maxSupportedTransactionVersion: 0,
+                commitment: 'confirmed'
+            });
 
-            for (let j = 0; j < txs.length; j++) {
-                const tx = txs[j];
-                const sig = batch[j];
+            if (!tx || !tx.meta) continue;
 
-                if (!tx || !tx.meta) continue;
+            // Get fee payer (user)
+            const feePayer = tx.transaction.message.staticAccountKeys?.[0]?.toString() ||
+                            tx.transaction.message.accountKeys?.[0]?.toString();
 
-                // Get fee payer (user)
-                const feePayer = tx.transaction.message.staticAccountKeys?.[0]?.toString() ||
-                                tx.transaction.message.accountKeys?.[0]?.toString();
+            if (feePayer) {
+                uniqueUsers.add(feePayer);
+                totalTrades++;
 
-                if (feePayer) {
-                    uniqueUsers.add(feePayer);
-                    totalTrades++;
+                // Calculate volume from pre/post balances
+                if (tx.meta.preBalances && tx.meta.postBalances) {
+                    for (let k = 0; k < tx.meta.preBalances.length; k++) {
+                        const diff = Math.abs(tx.meta.postBalances[k] - tx.meta.preBalances[k]);
+                        if (diff > 0) {
+                            const volumeInSOL = diff / 1e9;
+                            totalVolume += volumeInSOL;
 
-                    // Calculate volume from pre/post balances
-                    if (tx.meta.preBalances && tx.meta.postBalances) {
-                        for (let k = 0; k < tx.meta.preBalances.length; k++) {
-                            const diff = Math.abs(tx.meta.postBalances[k] - tx.meta.preBalances[k]);
-                            if (diff > 0) {
-                                const volumeInSOL = diff / 1e9;
-                                totalVolume += volumeInSOL;
-
-                                // Check if transaction is within last 24h
-                                if (sig.blockTime && sig.blockTime > oneDayAgo) {
-                                    last24hVolume += volumeInSOL;
-                                }
+                            // Check if transaction is within last 24h
+                            if (sig.blockTime && sig.blockTime > oneDayAgo) {
+                                last24hVolume += volumeInSOL;
                             }
                         }
                     }
                 }
             }
         } catch (error) {
-            console.error(`Error parsing transaction batch:`, error.message);
+            // Skip failed transactions silently
             continue;
+        }
+
+        // Small delay to avoid rate limiting (every 5 transactions)
+        if (i % 5 === 0 && i > 0) {
+            await new Promise(resolve => setTimeout(resolve, 100));
         }
     }
 
@@ -153,8 +194,8 @@ export async function getTxMetrics(protocolId) {
     try {
         console.log(`Fetching tx history for ${protocolId}...`);
 
-        // Get recent transactions
-        const signatures = await getProgramTransactions(protocol.programId, 1000);
+        // Get all transactions from last 24h with automatic pagination
+        const signatures = await getProgramTransactions(protocol.programId);
 
         if (signatures.length === 0) {
             return {
@@ -207,8 +248,8 @@ export async function getAllTxMetrics() {
             console.log(`  ${protocolId}: ${data.users} users, ${data.trades} trades, $${data.volume24h} 24h volume`);
         }
 
-        // Small delay to avoid rate limiting
-        await new Promise(resolve => setTimeout(resolve, 100));
+        // Delay to avoid rate limiting
+        await new Promise(resolve => setTimeout(resolve, 500));
     }
 
     return metrics;

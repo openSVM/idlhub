@@ -2,16 +2,73 @@
 
 use anyhow::{Context, Result};
 use std::path::Path;
-use syn::{parse_file, Attribute, Item, ItemMod, ItemStruct, Field, Type};
+use syn::{parse_file, Attribute, Item, ItemMod, ItemStruct, Field, Type, ItemConst, ItemFn};
 use quote::ToTokens;
 
 use crate::ir::*;
+
+/// Extracted constants and helper functions from the source
+#[derive(Debug, Clone, Default)]
+pub struct SourceExtras {
+    pub constants: Vec<ConstantDef>,
+    pub helper_functions: Vec<HelperFunction>,
+}
+
+#[derive(Debug, Clone)]
+pub struct ConstantDef {
+    pub name: String,
+    pub ty: String,
+    pub value: String,
+}
+
+#[derive(Debug, Clone)]
+pub struct HelperFunction {
+    pub name: String,
+    pub signature: String,
+    pub body: String,
+}
 
 pub fn parse_anchor_file(path: &Path) -> Result<AnchorProgram> {
     let content = std::fs::read_to_string(path)
         .with_context(|| format!("Failed to read {:?}", path))?;
 
     parse_anchor_source(&content)
+}
+
+/// Parse source and extract constants and helper functions
+pub fn parse_extras(path: &Path) -> Result<SourceExtras> {
+    let content = std::fs::read_to_string(path)
+        .with_context(|| format!("Failed to read {:?}", path))?;
+
+    let file = parse_file(&content)
+        .with_context(|| "Failed to parse Rust source")?;
+
+    let mut extras = SourceExtras::default();
+
+    for item in &file.items {
+        match item {
+            Item::Const(c) => {
+                extras.constants.push(ConstantDef {
+                    name: c.ident.to_string(),
+                    ty: type_to_string(&c.ty),
+                    value: tokens_to_string(&c.expr),
+                });
+            }
+            Item::Fn(f) => {
+                // Only include non-instruction helper functions
+                if !matches!(f.vis, syn::Visibility::Public(_)) {
+                    extras.helper_functions.push(HelperFunction {
+                        name: f.sig.ident.to_string(),
+                        signature: tokens_to_string(&f.sig),
+                        body: tokens_to_string(&f.block),
+                    });
+                }
+            }
+            _ => {}
+        }
+    }
+
+    Ok(extras)
 }
 
 pub fn parse_anchor_source(source: &str) -> Result<AnchorProgram> {

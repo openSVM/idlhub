@@ -86,11 +86,21 @@ fn main() -> Result<()> {
     };
     let pinocchio_ir = transformer::transform(&anchor_program, &analysis, &config)?;
 
+    // Phase 3.5: Extract constants and helpers
+    if args.verbose {
+        println!("\n[3.5/4] Extracting constants and helpers...");
+    }
+    let extras = parser::parse_extras(&args.input)?;
+    if args.verbose {
+        println!("  Constants: {}", extras.constants.len());
+        println!("  Helper functions: {}", extras.helper_functions.len());
+    }
+
     // Phase 4: Emit Pinocchio code
     if args.verbose {
         println!("\n[4/4] Emitting Pinocchio code...");
     }
-    emitter::emit(&pinocchio_ir, &args.output)?;
+    emitter::emit_with_extras(&pinocchio_ir, &args.output, Some(&extras))?;
 
     println!("\nSuccess! Pinocchio program written to {:?}", args.output);
     println!("\nNext steps:");

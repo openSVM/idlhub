@@ -1,5 +1,50 @@
 [
   {
+    "timestamp": "2025-12-20T14:31:09.395Z",
+    "verified": 0,
+    "total": 102,
+    "placeholder": 0,
+    "noProgram": 0,
+    "rpcError": 0,
+    "durationMs": 5291
+  },
+  {
+    "timestamp": "2025-12-20T14:17:04.340Z",
+    "verified": 28,
+    "total": 102,
+    "placeholder": 43,
+    "noProgram": 1,
+    "rpcError": 0,
+    "durationMs": 53929
+  },
+  {
+    "timestamp": "2025-12-20T14:11:43.722Z",
+    "verified": 28,
+    "total": 102,
+    "placeholder": 43,
+    "noProgram": 1,
+    "rpcError": 0,
+    "durationMs": 53391
+  },
+  {
+    "timestamp": "2025-12-20T13:29:17.032Z",
+    "verified": 37,
+    "total": 102,
+    "placeholder": 43,
+    "noProgram": 22,
+    "rpcError": 0,
+    "durationMs": 46867
+  },
+  {
+    "timestamp": "2025-12-20T13:23:05.407Z",
+    "verified": 37,
+    "total": 102,
+    "placeholder": 43,
+    "noProgram": 22,
+    "rpcError": 0,
+    "durationMs": 46650
+  },
+  {
     "timestamp": "2025-12-20T13:20:57.775Z",
     "verified": 37,
     "total": 102,

@@ -211,12 +211,21 @@ fn transform_body(body: &str, accounts: &[PinocchioAccount], config: &Config) ->
     // Replace ctx.bumps.X with bump variables
     for acc in accounts {
         if acc.is_pda {
+            // Handle various spacing patterns
+            result = result.replace(
+                &format!("ctx . bumps . {}", acc.name),
+                &format!("{}_bump", acc.name)
+            );
             result = result.replace(
                 &format!("ctx.bumps.{}", acc.name),
                 &format!("{}_bump", acc.name)
             );
         }
     }
+
+    // Also handle any generic ctx.bumps references
+    result = result.replace("ctx . bumps . ", "_bump_");
+    result = result.replace("ctx.bumps.", "_bump_");
 
     // Replace ctx.program_id with program_id
     result = result.replace("ctx.program_id", "program_id");
@@ -259,11 +268,119 @@ fn transform_body(body: &str, accounts: &[PinocchioAccount], config: &Config) ->
     // Replace emit! macro (events)
     result = transform_emit_macro(&result);
 
-    // Clean up the entire body
+    // Clean up the entire body first so patterns are normalized
     result = clean_spaces(&result);
+
+    // NOW do state access transformation (after clean_spaces normalizes patterns)
+    result = transform_state_access_final(&result);
 
     // Split into proper statements
     result = format_body_statements(&result);
+
+    result
+}
+
+/// Final pass to add state deserialization (runs after clean_spaces)
+fn transform_state_access_final(body: &str) -> String {
+    let mut result = body.to_string();
+
+    // Patterns for state accounts and their types
+    let state_patterns = [
+        ("pool", "StablePool"),
+        ("farming_period", "FarmingPeriod"),
+        ("user_position", "UserFarmingPosition"),
+        ("stake_position", "UserFarmingPosition"),
+    ];
+
+    // Check which state accounts need deserialization
+    let mut needs_deser: Vec<(&str, &str)> = Vec::new();
+
+    for (acc_name, state_type) in &state_patterns {
+        // Look for field access patterns like pool.bags_balance
+        let field_pattern = format!("{}.", acc_name);
+        if result.contains(&field_pattern) {
+            // Don't add if it's only method calls like pool.key() or pool.is_writable()
+            let has_field_access = has_state_field_access(&result, acc_name);
+            if has_field_access {
+                needs_deser.push((acc_name, state_type));
+            }
+        }
+    }
+
+    // If we have state accounts, insert deserialization and rename fields
+    if !needs_deser.is_empty() {
+        // First replace field accesses
+        for (acc_name, _) in &needs_deser {
+            result = replace_state_fields(&result, acc_name);
+        }
+
+        // Then add deserialization block at the start
+        let deser_lines: Vec<String> = needs_deser.iter()
+            .map(|(acc, ty)| format!(
+                "let {}_state = {}::from_account_info_mut({})?;",
+                acc, ty, acc
+            ))
+            .collect();
+
+        let deser_block = format!(
+            "// Deserialize state accounts\n{}\n\n",
+            deser_lines.join("\n")
+        );
+
+        result = format!("{}{}", deser_block, result);
+    }
+
+    result
+}
+
+fn has_state_field_access(body: &str, acc_name: &str) -> bool {
+    let state_fields = [
+        "authority", "bags_mint", "pump_mint", "bags_vault", "pump_vault",
+        "lp_mint", "bags_balance", "pump_balance", "lp_supply", "bump",
+        "paused", "swap_fee_bps", "admin_fee_percent", "amplification",
+        "pending_authority", "authority_transfer_time", "admin_fees_bags",
+        "admin_fees_pump", "total_volume_bags", "total_volume_pump",
+        "ramp_start_time", "ramp_stop_time", "initial_amplification",
+        "target_amplification", "amp_commit_hash", "amp_commit_time",
+        "bags_vault_bump", "pump_vault_bump", "lp_mint_bump",
+        "total_staked", "accumulated_reward_per_share", "acc_reward_per_share",
+        "last_update_time", "reward_per_second", "start_time", "end_time",
+        "total_rewards", "distributed_rewards", "staked_amount", "reward_debt",
+        "pending_rewards", "lp_staked", "owner",
+    ];
+
+    for field in &state_fields {
+        let pattern = format!("{}.{}", acc_name, field);
+        if body.contains(&pattern) {
+            return true;
+        }
+    }
+    false
+}
+
+fn replace_state_fields(body: &str, acc_name: &str) -> String {
+    let mut result = body.to_string();
+
+    let state_fields = [
+        "authority", "bags_mint", "pump_mint", "bags_vault", "pump_vault",
+        "lp_mint", "bags_balance", "pump_balance", "lp_supply", "bump",
+        "paused", "swap_fee_bps", "admin_fee_percent", "amplification",
+        "pending_authority", "authority_transfer_time", "admin_fees_bags",
+        "admin_fees_pump", "total_volume_bags", "total_volume_pump",
+        "ramp_start_time", "ramp_stop_time", "initial_amplification",
+        "target_amplification", "amp_commit_hash", "amp_commit_time",
+        "bags_vault_bump", "pump_vault_bump", "lp_mint_bump",
+        "total_staked", "accumulated_reward_per_share", "acc_reward_per_share",
+        "last_update_time", "reward_per_second", "start_time", "end_time",
+        "total_rewards", "distributed_rewards", "staked_amount", "reward_debt",
+        "pending_rewards", "lp_staked", "owner",
+    ];
+
+    for field in &state_fields {
+        let old_pattern = format!("{}.{}", acc_name, field);
+        let new_pattern = format!("{}_state.{}", acc_name, field);
+        result = result.replace(&old_pattern, &new_pattern);
+    }
 
     result
 }
@@ -311,34 +428,100 @@ fn transform_state_access(body: &str, accounts: &[PinocchioAccount]) -> String {
         // Pattern: account.load_mut()?
         result = result.replace(
             &format!("{}.load_mut()?", acc.name),
-            &format!("// Access {} as mutable\n    let {}_data = {}::from_account_info_mut(&{})?", acc.name, acc.name, get_state_type(&acc.name), acc.name)
+            &format!("// Access {} as mutable\n    let {}_state = {}::from_account_info_mut(&{})?", acc.name, acc.name, get_state_type(&acc.name), acc.name)
         );
         // Pattern: account.load()?
         result = result.replace(
             &format!("{}.load()?", acc.name),
-            &format!("// Access {} as readonly\n    let {}_data = {}::from_account_info(&{})?", acc.name, acc.name, get_state_type(&acc.name), acc.name)
+            &format!("// Access {} as readonly\n    let {}_state = {}::from_account_info(&{})?", acc.name, acc.name, get_state_type(&acc.name), acc.name)
         );
     }
 
-    // Add comments for accounts that need state access
-    // These patterns suggest the instruction body is accessing state fields
-    let state_accounts = ["pool", "farming_period", "user_position", "stake_position"];
-    for acc in &state_accounts {
-        // Check if body references acc.field_name patterns
-        let pattern = format!("{}.", acc);
-        if result.contains(&pattern) {
-            // Insert state access at the beginning if not already present
-            let state_type = get_state_type(acc);
-            let access_line = format!(
-                "    // NOTE: Deserialize {} state from account\n    \
-                // let {}_state = {}::from_account_info_mut(&{})?;\n    \
-                // Then use {}_state.field instead of {}.field\n",
-                acc, acc, state_type, acc, acc, acc
-            );
-            if !result.contains(&access_line) {
-                result = format!("{}{}", access_line, result);
+    // Detect state accounts that need deserialization
+    // Common state account patterns
+    let state_account_patterns = [
+        ("pool", "StablePool", true),
+        ("farming_period", "FarmingPeriod", true),
+        ("user_position", "UserFarmingPosition", true),
+        ("stake_position", "UserFarmingPosition", true),
+    ];
+
+    let mut deserializations = Vec::new();
+
+    for (acc_name, state_type, is_mutable) in &state_account_patterns {
+        // Check if body accesses this account's fields
+        let field_pattern = format!("{}.", acc_name);
+        if result.contains(&field_pattern) {
+            // Check if we already have deserialization
+            let deser_check = format!("{}_state", acc_name);
+            if !result.contains(&deser_check) {
+                let deser_code = if *is_mutable {
+                    format!(
+                        "let {}_state = {}::from_account_info_mut({})?;",
+                        acc_name, state_type, acc_name
+                    )
+                } else {
+                    format!(
+                        "let {}_state = {}::from_account_info({})?;",
+                        acc_name, state_type, acc_name
+                    )
+                };
+                deserializations.push(deser_code);
+
+                // Replace account.field with account_state.field
+                // But NOT account.key() or account.is_signer() etc.
+                result = replace_state_field_access(&result, acc_name);
             }
         }
+    }
+
+    // Insert deserializations at the beginning
+    if !deserializations.is_empty() {
+        let deser_block = format!(
+            "// Deserialize state accounts\n    {}\n\n    ",
+            deserializations.join("\n    ")
+        );
+        result = format!("{}{}", deser_block, result);
+    }
+
+    result
+}
+
+/// Replace account.field with account_state.field, but not account.key() etc.
+fn replace_state_field_access(body: &str, acc_name: &str) -> String {
+    let mut result = body.to_string();
+
+    // List of AccountInfo methods that should NOT be replaced
+    let account_info_methods = [
+        "key", "owner", "lamports", "data", "is_signer", "is_writable",
+        "try_borrow_data", "try_borrow_mut_data", "try_borrow_lamports",
+        "try_borrow_mut_lamports", "to_account_info", "clone",
+    ];
+
+    // Common state fields that SHOULD be replaced
+    let state_fields = [
+        "authority", "bags_mint", "pump_mint", "bags_vault", "pump_vault",
+        "lp_mint", "bags_balance", "pump_balance", "lp_supply", "bump",
+        "paused", "swap_fee_bps", "admin_fee_percent", "amplification",
+        "initial_amp", "target_amp", "amp_ramp_start", "amp_ramp_end",
+        "pending_authority", "authority_transfer_time", "amp_commit_hash",
+        "amp_commit_time", "admin_fees_bags", "admin_fees_pump",
+        "bags_vault_bump", "pump_vault_bump", "lp_mint_bump",
+        "total_volume_bags", "total_volume_pump", "total_staked",
+        "accumulated_reward_per_share", "last_update_time", "reward_per_second",
+        "start_time", "end_time", "total_rewards", "distributed_rewards",
+        "staked_amount", "reward_debt", "pending_rewards",
+    ];
+
+    for field in &state_fields {
+        // Replace acc.field with acc_state.field
+        let old_pattern = format!("{}. {}", acc_name, field);
+        let new_pattern = format!("{}_state.{}", acc_name, field);
+        result = result.replace(&old_pattern, &new_pattern);
+
+        // Also handle without space
+        let old_pattern2 = format!("{}.{}", acc_name, field);
+        result = result.replace(&old_pattern2, &new_pattern);
     }
 
     result
@@ -528,18 +711,26 @@ fn transform_single_transfer(call: &str, with_signer: bool) -> String {
             let to = extract_field(transfer_body, "to");
             let authority = extract_field(transfer_body, "authority");
 
+            // Extract amount from after the Transfer struct
+            // Pattern: }, signer_seeds,), amount,)?
+            // or: },), amount,)?
+            let rest_of_call = &call[transfer_start + brace_end..];
+            let amount = extract_transfer_amount(rest_of_call);
+
             if with_signer {
                 return format!(
                     "// Token transfer with PDA signer\n    \
                     Transfer {{\n        \
                         from: {},\n        \
                         to: {},\n        \
-                        authority: {},\n    \
+                        authority: {},\n        \
+                        amount: {},\n    \
                     }}.invoke_signed(\n        \
                         &[{}.clone(), {}.clone(), {}.clone()],\n        \
                         signer_seeds,\n    \
                     )?",
                     clean_account_ref(&from), clean_account_ref(&to), clean_account_ref(&authority),
+                    amount,
                     clean_account_name(&from), clean_account_name(&to), clean_account_name(&authority)
                 );
             } else {
@@ -548,11 +739,13 @@ fn transform_single_transfer(call: &str, with_signer: bool) -> String {
                     Transfer {{\n        \
                         from: {},\n        \
                         to: {},\n        \
-                        authority: {},\n    \
+                        authority: {},\n        \
+                        amount: {},\n    \
                     }}.invoke(\n        \
                         &[{}.clone(), {}.clone(), {}.clone()],\n    \
                     )?",
                     clean_account_ref(&from), clean_account_ref(&to), clean_account_ref(&authority),
+                    amount,
                     clean_account_name(&from), clean_account_name(&to), clean_account_name(&authority)
                 );
             }
@@ -561,6 +754,43 @@ fn transform_single_transfer(call: &str, with_signer: bool) -> String {
 
     // If parsing fails, return a TODO comment
     format!("// TODO: Transform CPI: {}", call.chars().take(100).collect::<String>())
+}
+
+/// Extract the amount from a token::transfer call
+/// The amount is the last argument before the closing )?
+fn extract_transfer_amount(rest: &str) -> String {
+    // Pattern: }, signer_seeds,), amount_in,)?
+    // or: },), amount_in,)?
+    // We need to find the last argument before )?
+
+    // Find the last comma-separated value before )?
+    let trimmed = rest.trim();
+
+    // Look for pattern: ), amount)?
+    // The amount is between the last ), and )?
+    if let Some(last_paren) = trimmed.rfind(") ?") {
+        let before_end = &trimmed[..last_paren];
+        // Find the previous comma
+        if let Some(comma_pos) = before_end.rfind(',') {
+            let amount = before_end[comma_pos + 1..].trim().trim_end_matches(')').trim();
+            if !amount.is_empty() && !amount.contains("signer") {
+                return clean_spaces_simple(amount);
+            }
+        }
+    }
+
+    // Fallback: look for common amount variable names
+    for var in ["amount_in", "amount_out", "amount", "lp_amount", "amount_out_after_fee"] {
+        if rest.contains(var) {
+            return var.to_string();
+        }
+    }
+
+    "amount".to_string() // Default fallback
+}
+
+fn clean_spaces_simple(s: &str) -> String {
+    s.replace(" ", "").replace(",", "")
 }
 
 fn find_matching_brace(s: &str) -> Option<usize> {
@@ -600,9 +830,14 @@ fn extract_amount(s: &str) -> String {
 }
 
 fn clean_account_ref(s: &str) -> String {
-    // Convert account.to_account_info() to account.key()
-    s.replace(".to_account_info ()", ".key()")
-     .replace(".to_account_info()", ".key()")
+    // In Pinocchio, we just pass the account key directly
+    // Remove .to_account_info() calls and use .key() instead
+    let mut result = s.to_string();
+    result = result.replace(".to_account_info ()", ".key()");
+    result = result.replace(".to_account_info()", ".key()");
+    result = result.replace(". to_account_info ()", ".key()");
+    result = result.replace(". to_account_info()", ".key()");
+    result
 }
 
 fn clean_account_name(s: &str) -> String {
@@ -676,23 +911,54 @@ fn transform_single_mint(call: &str) -> String {
             let to = extract_field(mint_body, "to");
             let authority = extract_field(mint_body, "authority");
 
+            // Extract amount from after the MintTo struct
+            let rest_of_call = &call[mint_start + brace_end..];
+            let amount = extract_mint_amount(rest_of_call);
+
             return format!(
                 "// Mint tokens with PDA signer\n    \
                 MintTo {{\n        \
                     mint: {},\n        \
                     to: {},\n        \
-                    authority: {},\n    \
+                    authority: {},\n        \
+                    amount: {},\n    \
                 }}.invoke_signed(\n        \
                     &[{}.clone(), {}.clone(), {}.clone()],\n        \
                     signer_seeds,\n    \
                 )?",
                 clean_account_ref(&mint), clean_account_ref(&to), clean_account_ref(&authority),
+                amount,
                 clean_account_name(&mint), clean_account_name(&to), clean_account_name(&authority)
             );
         }
     }
 
     format!("// TODO: Transform mint CPI: {}", call.chars().take(80).collect::<String>())
+}
+
+/// Extract amount from mint_to call
+fn extract_mint_amount(rest: &str) -> String {
+    // Similar to transfer amount extraction
+    let trimmed = rest.trim();
+
+    if let Some(last_paren) = trimmed.rfind(") ?") {
+        let before_end = &trimmed[..last_paren];
+        if let Some(comma_pos) = before_end.rfind(',') {
+            let amount = before_end[comma_pos + 1..].trim().trim_end_matches(')').trim();
+            if !amount.is_empty() && !amount.contains("signer") {
+                return clean_spaces_simple(amount);
+            }
+        }
+    }
+
+    // Fallback
+    for var in ["lp_amount", "amount", "mint_amount"] {
+        if rest.contains(var) {
+            return var.to_string();
+        }
+    }
+
+    "amount".to_string()
 }
 
 /// Transform token::burn CPI
