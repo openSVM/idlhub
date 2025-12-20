@@ -842,8 +842,8 @@
 
             filteredProtocols = allProtocols.filter(protocol => {
                 const matchesSearch = !searchTerm ||
-                    protocol.name.toLowerCase().includes(searchTerm) ||
-                    protocol.description.toLowerCase().includes(searchTerm) ||
+                    (protocol.name && protocol.name.toLowerCase().includes(searchTerm)) ||
+                    (protocol.description && protocol.description.toLowerCase().includes(searchTerm)) ||
                     (protocol.category && protocol.category.toLowerCase().includes(searchTerm));
 
                 const matchesCategory = currentCategory === 'all' ||
