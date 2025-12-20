@@ -1,4 +1,4 @@
-# IDL Protocol Whitepaper v3.1
+# IDL Protocol Whitepaper v3.2
 
 ```
      ██╗██████╗ ██╗         ██████╗ ██████╗  ██████╗ ████████╗ ██████╗  ██████╗ ██████╗ ██╗
@@ -2555,7 +2555,447 @@ CU budget per dispute type:
   - MISSING_ACCOUNT: ~150,000 CU (PDA derivation + existence)
 ```
 
-### 15.17 Security Considerations for On-Chain Oracles
+### 15.17 Latency and Cost Analysis
+
+```
+COMPUTATION TIME BENCHMARKS
+═══════════════════════════
+
+Measured on standard VPS (4 vCPU, 8GB RAM) against public RPC:
+
+┌────────────────────────┬────────────────┬────────────────┬──────────────┐
+│ Metric                 │ RPC Calls      │ Time (p50)     │ Time (p99)   │
+├────────────────────────┼────────────────┼────────────────┼──────────────┤
+│ Single Token Price     │ 2-5            │ 0.3s           │ 1.2s         │
+│ Protocol TVL (10 vault)│ 15-25          │ 2.1s           │ 5.8s         │
+│ Protocol TVL (100 vlt) │ 120-150        │ 18s            │ 45s          │
+│ 24h Volume (sampled)   │ 2,426          │ 4.2 min        │ 8.5 min      │
+│ 24h Volume (full scan) │ 50,000+        │ 45+ min        │ 2+ hours     │
+│ Unique Users (1M tx)   │ 11,000         │ 12 min         │ 28 min       │
+└────────────────────────┴────────────────┴────────────────┴──────────────┘
+
+Note: HLL doesn't reduce RPC calls, only memory usage.
+
+
+RATE LIMIT IMPACT
+─────────────────
+
+At 10 req/s rate limit:
+
+  TVL (100 vaults): 150 calls / 10 = 15 seconds minimum
+  Volume (sampled): 2,426 calls / 10 = 4.04 minutes minimum
+  Users (1M tx): 11,000 calls / 10 = 18.3 minutes minimum
+
+Parallelization limited by rate limits, not by network bandwidth.
+
+
+COST ANALYSIS (Per Resolution)
+──────────────────────────────
+
+Using paid RPC tier ($100/month for 100M requests):
+
+┌────────────────────────┬────────────────┬────────────────┐
+│ Metric                 │ Requests       │ Cost           │
+├────────────────────────┼────────────────┼────────────────┤
+│ TVL Resolution         │ ~200           │ $0.0002        │
+│ Volume Resolution      │ ~3,000         │ $0.003         │
+│ User Count Resolution  │ ~15,000        │ $0.015         │
+├────────────────────────┼────────────────┼────────────────┤
+│ Monthly (100 markets)  │ ~1.8M          │ $1.80          │
+│ Monthly (1000 markets) │ ~18M           │ $18.00         │
+└────────────────────────┴────────────────┴────────────────┘
+
+Public RPC: Free but rate-limited and less reliable.
+```
+
+### 15.18 Transaction Parsing: Handling Complexity
+
+```
+CHALLENGE: IDENTIFYING SWAP TRANSACTIONS
+════════════════════════════════════════
+
+Jupiter v6 has 20+ instruction types. Only some are swaps:
+
+┌───────────────────────┬──────────────────────┬──────────┬─────────────────┐
+│ Instruction           │ Discriminator        │ Is Swap? │ Has Volume?     │
+├───────────────────────┼──────────────────────┼──────────┼─────────────────┤
+│ Route                 │ 0xe4, 0x45, 0xa5...  │ YES      │ YES             │
+│ SharedAccountsRoute   │ 0xc1, 0xe5, 0x72...  │ YES      │ YES             │
+│ ExactOutRoute         │ 0xd0, 0x33, 0x8c...  │ YES      │ YES             │
+│ SetTokenLedger        │ 0x7b, 0x3a, 0x9c...  │ NO       │ NO              │
+│ CreateOpenOrders      │ 0x12, 0x4e, 0x87...  │ NO       │ NO              │
+│ ClaimToken            │ 0x5c, 0x91, 0x2f...  │ NO       │ NO (just claim) │
+└───────────────────────┴──────────────────────┴──────────┴─────────────────┘
+
+
+ALGORITHM: ParseSwapTransaction
+───────────────────────────────
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                                                                             │
+│  function parseSwapTransaction(tx):                                         │
+│                                                                             │
+│      // Step 1: Check transaction succeeded                                 │
+│      if tx.meta.err != null:                                                │
+│          return null  // Failed tx, no volume                               │
+│                                                                             │
+│      // Step 2: Find swap instruction in outer instructions                 │
+│      for ix in tx.transaction.message.instructions:                         │
+│          if ix.programId == JUPITER_PROGRAM:                                │
+│              discriminator = ix.data[0:8]                                   │
+│              if discriminator in SWAP_DISCRIMINATORS:                       │
+│                  return parseSwapData(ix, tx.meta)                          │
+│                                                                             │
+│      // Step 3: Check inner instructions (CPI calls)                        │
+│      for innerGroup in tx.meta.innerInstructions:                           │
+│          for ix in innerGroup.instructions:                                 │
+│              if ix.programId == JUPITER_PROGRAM:                            │
+│                  discriminator = ix.data[0:8]                               │
+│                  if discriminator in SWAP_DISCRIMINATORS:                   │
+│                      return parseSwapData(ix, tx.meta)                      │
+│                                                                             │
+│      return null  // No swap found                                          │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+
+EXTRACTING SWAP AMOUNTS
+───────────────────────
+
+Amounts are in token balance changes, not instruction data:
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                                                                             │
+│  function extractSwapAmounts(tx):                                           │
+│                                                                             │
+│      user = tx.transaction.message.accountKeys[0]  // Fee payer = user      │
+│                                                                             │
+│      in_amount = 0                                                          │
+│      out_amount = 0                                                         │
+│      in_mint = null                                                         │
+│      out_mint = null                                                        │
+│                                                                             │
+│      for i, balance in enumerate(tx.meta.postTokenBalances):                │
+│          if balance.owner == user:                                          │
+│              pre = tx.meta.preTokenBalances[i].uiTokenAmount.amount         │
+│              post = balance.uiTokenAmount.amount                            │
+│              delta = post - pre                                             │
+│                                                                             │
+│              if delta < 0:  // User spent this token                        │
+│                  in_amount = abs(delta)                                     │
+│                  in_mint = balance.mint                                     │
+│              elif delta > 0:  // User received this token                   │
+│                  out_amount = delta                                         │
+│                  out_mint = balance.mint                                    │
+│                                                                             │
+│      return {in_mint, in_amount, out_mint, out_amount}                      │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+
+HANDLING INNER INSTRUCTIONS (CPI)
+─────────────────────────────────
+
+Jupiter routes through multiple DEXes via CPI:
+
+  User → Jupiter.Route → Raydium.Swap → Orca.Swap → User
+
+The outer instruction is Jupiter, but actual swaps happen in inner instructions.
+
+For volume counting:
+  - Count only the Jupiter outer instruction value
+  - DO NOT sum inner DEX calls (would double-count)
+
+For TVL:
+  - Inner instruction balance changes are reflected in postTokenBalances
+  - No special handling needed
+```
+
+### 15.19 SOL/USD Price Bootstrap Problem
+
+```
+CHALLENGE: PRICING THE BASE ASSET
+═════════════════════════════════
+
+All prices ultimately need USD denomination.
+Token → SOL is easy (on-chain pools).
+SOL → USD requires external price.
+
+WITHOUT PYTH/SWITCHBOARD:
+─────────────────────────
+
+Option 1: USDC/USDT Pools
+─────────────────────────
+
+Assume USDC ≈ $1.00 (stablecoin peg)
+
+SOL/USDC pools exist on-chain:
+  - Raydium SOL/USDC: ~$50M liquidity
+  - Orca SOL/USDC: ~$30M liquidity
+
+price(SOL, USD) ≈ price(SOL, USDC) × 1.00
+
+Risk: USDC depeg event (e.g., March 2023: USDC → $0.87)
+
+Mitigation:
+  - Cross-reference SOL/USDC with SOL/USDT
+  - If |price_USDC - price_USDT| / price_USDC > 5%:
+      → Flag for manual review
+      → Use geometric mean: √(price_USDC × price_USDT)
+
+
+Option 2: Multi-Stablecoin Median
+─────────────────────────────────
+
+stablecoins = [USDC, USDT, USDH, UXD, PAI]
+prices = [getPoolPrice(SOL, s) for s in stablecoins]
+sol_usd = median(prices)
+
+More robust but requires more RPC calls.
+
+
+Option 3: Wrapped Asset Triangulation
+─────────────────────────────────────
+
+wBTC exists on Solana with known BTC/USD external price.
+
+If we trust one external price (BTC from Binance/Coinbase API):
+  SOL/USD = SOL/wBTC × BTC/USD
+
+But this breaks "pure RPC" constraint.
+
+
+RECOMMENDED APPROACH:
+─────────────────────
+
+Primary: SOL/USDC with minimum $10M pool liquidity
+Fallback: Geometric mean of SOL/USDC and SOL/USDT
+Circuit breaker: If stablecoins diverge >5%, halt resolution
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                                                                             │
+│  function getSOLPrice():                                                    │
+│                                                                             │
+│      usdc_price = getPoolPrice(SOL_MINT, USDC_MINT)                         │
+│      usdt_price = getPoolPrice(SOL_MINT, USDT_MINT)                         │
+│                                                                             │
+│      // Check stablecoin divergence                                         │
+│      divergence = abs(usdc_price - usdt_price) / usdc_price                 │
+│                                                                             │
+│      if divergence > 0.05:                                                  │
+│          // Stablecoin crisis - use geometric mean with warning             │
+│          log.warn("Stablecoin divergence detected: " + divergence)          │
+│          return {                                                           │
+│              price: sqrt(usdc_price × usdt_price),                          │
+│              confidence: LOW,                                               │
+│              flag: STABLECOIN_DIVERGENCE                                    │
+│          }                                                                  │
+│                                                                             │
+│      // Normal case - use USDC (higher liquidity)                           │
+│      return {                                                               │
+│          price: usdc_price,                                                 │
+│          confidence: HIGH,                                                  │
+│          flag: null                                                         │
+│      }                                                                      │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+### 15.20 Data Freshness and Staleness Detection
+
+```
+PROBLEM: DETECTING STALE RPC DATA
+═════════════════════════════════
+
+RPC nodes may return cached/outdated data due to:
+  - Load balancer routing to lagging nodes
+  - Network partitions
+  - Node synchronization delays
+
+STALENESS DETECTION:
+────────────────────
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                                                                             │
+│  function checkDataFreshness(response, expected_slot):                      │
+│                                                                             │
+│      // Get current slot from RPC                                           │
+│      current_slot = getSlot()                                               │
+│                                                                             │
+│      // Check response context slot                                         │
+│      response_slot = response.context.slot                                  │
+│                                                                             │
+│      // Calculate lag                                                       │
+│      lag_slots = current_slot - response_slot                               │
+│      lag_seconds = lag_slots × 0.4                                          │
+│                                                                             │
+│      // Apply thresholds by metric type                                     │
+│      if metric_type == TVL:                                                 │
+│          max_lag = 100 slots (40 seconds)                                   │
+│      elif metric_type == VOLUME:                                            │
+│          max_lag = 50 slots (20 seconds)  // More time-sensitive            │
+│      elif metric_type == PRICE:                                             │
+│          max_lag = 25 slots (10 seconds)  // Most time-sensitive            │
+│                                                                             │
+│      if lag_slots > max_lag:                                                │
+│          return {fresh: false, lag: lag_seconds}                            │
+│                                                                             │
+│      return {fresh: true, lag: lag_seconds}                                 │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+
+FRESHNESS THRESHOLDS BY METRIC
+──────────────────────────────
+
+┌────────────────┬───────────────┬──────────────────────────────────────────┐
+│ Metric         │ Max Staleness │ Reasoning                                │
+├────────────────┼───────────────┼──────────────────────────────────────────┤
+│ Token Price    │ 10 seconds    │ Prices move fast, arbitrage-sensitive    │
+│ Pool Liquidity │ 30 seconds    │ Large moves happen in seconds            │
+│ Account Balance│ 60 seconds    │ Moderate sensitivity                     │
+│ TVL Aggregate  │ 5 minutes     │ Aggregate is naturally smoothed          │
+│ 24h Volume     │ 10 minutes    │ Already a trailing window                │
+│ User Count     │ 30 minutes    │ Slow-moving metric                       │
+└────────────────┴───────────────┴──────────────────────────────────────────┘
+
+
+SLOT DRIFT DETECTION
+────────────────────
+
+Compare slots across multiple RPC endpoints:
+
+  slot_1 = rpc1.getSlot()  // 250,000,000
+  slot_2 = rpc2.getSlot()  // 249,999,950
+  slot_3 = rpc3.getSlot()  // 250,000,010
+
+  median_slot = 250,000,000
+  max_drift = max(|slotᵢ - median|) = 50 slots
+
+If max_drift > 100 slots:
+  - One or more RPCs are lagging
+  - Exclude lagging RPCs from queries
+  - Log alert for infrastructure team
+
+
+BLOCKHASH VALIDATION
+────────────────────
+
+For critical resolutions, verify slot authenticity:
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                                                                             │
+│  function validateSlot(claimed_slot, claimed_blockhash):                    │
+│                                                                             │
+│      // Fetch block for claimed slot                                        │
+│      block = getBlock(claimed_slot)                                         │
+│                                                                             │
+│      if block == null:                                                      │
+│          // Slot doesn't exist or was skipped                               │
+│          return {valid: false, reason: "SLOT_NOT_FOUND"}                    │
+│                                                                             │
+│      if block.blockhash != claimed_blockhash:                               │
+│          // Blockhash mismatch - possible fabrication                       │
+│          return {valid: false, reason: "BLOCKHASH_MISMATCH"}                │
+│                                                                             │
+│      return {valid: true}                                                   │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+### 15.21 Confidence Scoring Formula
+
+```
+FORMAL CONFIDENCE MODEL
+═══════════════════════
+
+Each metric resolution has a confidence score C ∈ [0, 1].
+
+COMPONENTS:
+───────────
+
+C = w₁·C_data + w₂·C_price + w₃·C_freshness + w₄·C_coverage
+
+Where:
+  w₁ = 0.30 (data quality weight)
+  w₂ = 0.30 (price reliability weight)
+  w₃ = 0.20 (data freshness weight)
+  w₄ = 0.20 (coverage completeness weight)
+
+
+C_data: DATA QUALITY SCORE
+──────────────────────────
+
+For sampled metrics (volume):
+  C_data = 1 - (CI_width / estimate)
+
+  Where CI_width = 1.96 × σ / √n (95% confidence interval width)
+
+Example:
+  Estimate = $69.5M, CI = ±$9M
+  C_data = 1 - (18/69.5) = 0.74
+
+
+C_price: PRICE RELIABILITY SCORE
+────────────────────────────────
+
+C_price = Σᵢ (liquidityᵢ / Σ liquidity) × reliabilityᵢ
+
+Where reliabilityᵢ based on pool liquidity:
+  - >$1M: 1.0
+  - $100K-$1M: 0.8
+  - $10K-$100K: 0.5
+  - <$10K: 0.0 (excluded)
+
+
+C_freshness: DATA FRESHNESS SCORE
+─────────────────────────────────
+
+C_freshness = max(0, 1 - lag_seconds / max_allowed_lag)
+
+Example:
+  lag = 15 seconds, max_allowed = 60 seconds
+  C_freshness = 1 - 15/60 = 0.75
+
+
+C_coverage: COVERAGE COMPLETENESS SCORE
+───────────────────────────────────────
+
+C_coverage = accounts_successfully_fetched / accounts_attempted
+
+Example:
+  Attempted 150 vaults, 145 succeeded, 5 failed
+  C_coverage = 145/150 = 0.967
+
+
+FINAL CONFIDENCE CALCULATION
+────────────────────────────
+
+Example for TVL resolution:
+  C_data = 0.95 (low variance)
+  C_price = 0.88 (some low-liquidity tokens)
+  C_freshness = 0.92 (8 second lag)
+  C_coverage = 0.967
+
+  C = 0.30×0.95 + 0.30×0.88 + 0.20×0.92 + 0.20×0.967
+    = 0.285 + 0.264 + 0.184 + 0.193
+    = 0.926 (92.6% confidence)
+
+
+CONFIDENCE THRESHOLDS FOR RESOLUTION
+────────────────────────────────────
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Confidence     │ Action                                                    │
+├────────────────┼───────────────────────────────────────────────────────────┤
+│ C ≥ 0.90       │ Resolve immediately                                       │
+│ 0.80 ≤ C < 0.90│ Resolve with "LOW_CONFIDENCE" flag, extended dispute      │
+│ 0.60 ≤ C < 0.80│ Delay resolution 1 hour, retry measurement                │
+│ C < 0.60       │ Cancel market, refund all bets                            │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+### 15.22 Security Considerations for On-Chain Oracles
 
 ```
 ATTACK VECTORS AND DEFENSES
@@ -2622,6 +3062,1053 @@ Defense:
     - Extended dispute window (24 hours vs 1 hour)
 ```
 
+### 15.23 Unverifiable Programs and Closed-Source Protocols
+
+```
+HANDLING CLOSED-SOURCE PROGRAMS
+═══════════════════════════════
+
+Problem: Many Solana programs are closed-source with no published IDL.
+         Without the IDL, we cannot:
+           - Parse account data structures
+           - Identify vault accounts vs user accounts
+           - Interpret transaction instructions
+
+PROTOCOL CLASSIFICATION
+───────────────────────
+
+┌───────────────────┬─────────────────────────────────────────────────────────┐
+│ Category          │ Approach                                                │
+├───────────────────┼─────────────────────────────────────────────────────────┤
+│ Full IDL          │ Parse directly using Anchor/Shank schema                │
+│ Partial IDL       │ Combine IDL with heuristics for missing types           │
+│ Reverse-engineered│ Community-contributed layouts (verified by consensus)   │
+│ Unknown           │ Balance-only mode: sum all token accounts owned by pgm  │
+└───────────────────┴─────────────────────────────────────────────────────────┘
+
+
+BALANCE-ONLY FALLBACK MODE
+──────────────────────────
+
+When no IDL is available, use conservative balance estimation:
+
+function estimateTVL_balanceOnly(programId: PublicKey): number {
+  // Find all token accounts where owner authority is the program
+  const tokenAccounts = await connection.getTokenAccountsByOwner(
+    programId,
+    { programId: TOKEN_PROGRAM_ID }
+  );
+
+  // Also check for native SOL in PDAs
+  const pdaAccounts = await findProgramPDAs(programId);
+
+  let tvl = 0;
+
+  // Token accounts
+  for (const acc of tokenAccounts) {
+    const balance = parseTokenAmount(acc.data);
+    const price = getTokenPrice(acc.mint);
+    tvl += balance * price;
+  }
+
+  // Native SOL in PDAs (subtract rent exemption)
+  for (const pda of pdaAccounts) {
+    const lamports = pda.lamports - RENT_EXEMPTION_LAMPORTS;
+    if (lamports > 0) {
+      tvl += lamports * solPrice / 1e9;
+    }
+  }
+
+  return tvl;
+}
+
+Limitations of balance-only mode:
+  - Cannot distinguish user deposits from protocol reserves
+  - May include operational accounts (fee collectors, etc.)
+  - No insight into locked vs available liquidity
+
+
+CONFIDENCE PENALTY FOR UNKNOWN PROGRAMS
+───────────────────────────────────────
+
+Markets on unknown protocols receive reduced confidence:
+
+C_final = C_measured × IDL_factor
+
+where:
+  IDL_factor = 1.0    for full IDL
+  IDL_factor = 0.85   for partial/heuristic IDL
+  IDL_factor = 0.70   for reverse-engineered layouts
+  IDL_factor = 0.50   for balance-only mode
+
+Markets with C_final < 0.60 are automatically flagged as "EXPERIMENTAL".
+```
+
+### 15.24 LP Tokens and Recursive TVL
+
+```
+THE LP TOKEN PROBLEM
+════════════════════
+
+LP tokens represent share of liquidity pool. Naive counting leads to errors:
+
+Problem 1: DOUBLE COUNTING
+──────────────────────────
+
+Scenario:
+  - User deposits 100 USDC + 100 SOL into Raydium → receives 100 RAY-LP
+  - User stakes 100 RAY-LP into yield farm
+
+Naive counting:
+  TVL = pool_value(USDC + SOL) + farm_value(RAY-LP)
+      = $200 + $200 = $400  ← WRONG! Should be $200
+
+
+RECURSIVE TVL UNWRAPPING
+────────────────────────
+
+function computeRealTVL(protocol: Protocol): number {
+  const directAssets = getDirectAssets(protocol);
+  const lpTokens = getLPTokens(protocol);
+
+  let tvl = 0;
+  const visited = new Set<string>();  // Prevent cycles
+
+  // Direct assets (SOL, USDC, etc.)
+  for (const asset of directAssets) {
+    if (!isLPToken(asset.mint)) {
+      tvl += asset.balance * getPrice(asset.mint);
+    }
+  }
+
+  // Recursively unwrap LP tokens
+  for (const lp of lpTokens) {
+    if (visited.has(lp.mint)) continue;
+    visited.add(lp.mint);
+
+    const poolInfo = getPoolInfo(lp.mint);
+    const shareRatio = lp.balance / poolInfo.totalSupply;
+
+    // Get underlying assets
+    for (const underlying of poolInfo.underlyingAssets) {
+      if (isLPToken(underlying.mint)) {
+        // Recursive case: LP of LP (e.g., Curve meta-pools)
+        tvl += computeUnderlyingValue(underlying, visited);
+      } else {
+        tvl += underlying.balance * shareRatio * getPrice(underlying.mint);
+      }
+    }
+  }
+
+  return tvl;
+}
+
+
+LP TOKEN IDENTIFICATION
+───────────────────────
+
+Heuristics to identify LP tokens:
+
+1. Token name contains "LP", "Pool", "Share"
+2. Token authority is a known AMM program
+3. Token metadata contains pool address reference
+4. Token is minted by AMM in response to addLiquidity
+
+Known LP token patterns:
+┌──────────────────────────────────────────────────────────────────────┐
+│ AMM         │ LP Token Pattern                                      │
+├─────────────┼────────────────────────────────────────────────────────┤
+│ Raydium     │ Mint authority = AMM pool PDA                         │
+│ Orca        │ Token name = "Orca LP: {TOKEN_A}/{TOKEN_B}"           │
+│ Meteora     │ Mint authority = pool address                          │
+│ Phoenix     │ LP token embedded in market account                    │
+└──────────────────────────────────────────────────────────────────────┘
+
+
+CYCLE DETECTION
+───────────────
+
+Some DeFi structures create cycles:
+
+  Protocol A deposits LP-B tokens
+  Protocol B deposits LP-A tokens
+
+Resolution:
+  - Track visited protocols in recursion
+  - Report cycle if detected
+  - Use snapshot values to break cycle (value at first visit)
+  - Flag affected protocols with reduced confidence
+
+Cycle detection algorithm:
+
+function detectTVLCycles(protocolGraph: Graph): Cycle[] {
+  const cycles = [];
+  const visiting = new Set();
+  const visited = new Set();
+
+  function dfs(node, path) {
+    if (visiting.has(node)) {
+      cycles.push(path.slice(path.indexOf(node)));
+      return;
+    }
+    if (visited.has(node)) return;
+
+    visiting.add(node);
+    path.push(node);
+
+    for (const neighbor of protocolGraph.getDeposits(node)) {
+      dfs(neighbor, path);
+    }
+
+    path.pop();
+    visiting.delete(node);
+    visited.add(node);
+  }
+
+  for (const protocol of protocolGraph.nodes()) {
+    dfs(protocol, []);
+  }
+
+  return cycles;
+}
+```
+
+### 15.25 Multi-Hop Swaps and Aggregator Volume
+
+```
+AGGREGATOR VOLUME ATTRIBUTION
+═════════════════════════════
+
+Aggregators like Jupiter route through multiple DEXes:
+
+  User swap: 100 USDC → SOL
+
+  Jupiter route:
+    Step 1: 100 USDC → 50 BONK (Raydium)
+    Step 2: 50 BONK → SOL (Orca)
+
+Question: Who gets the volume credit?
+  - Jupiter: $100 (user-facing volume)?
+  - Raydium: $100 (executed swap)?
+  - Orca: ~$100 (executed swap)?
+
+This would count $300 total volume for a $100 swap!
+
+
+VOLUME ATTRIBUTION RULES
+────────────────────────
+
+Rule 1: USER-FACING VOLUME
+  Count only the initial user transaction value
+  Attribution: aggregator that initiated the swap
+
+Rule 2: EXECUTION VOLUME
+  Count each DEX's executed leg
+  Attribution: individual DEXes
+  Flag as "routed" vs "direct" volume
+
+We implement BOTH metrics with clear labeling:
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Metric                  │ What it measures                                  │
+├─────────────────────────┼───────────────────────────────────────────────────┤
+│ Gross Volume            │ Sum of all swap executions (includes routing)     │
+│ Net Volume              │ User-initiated value only (deduplicated)          │
+│ Direct Volume           │ Swaps directly on DEX (not via aggregator)        │
+│ Routed Volume           │ Swaps routed through aggregator                   │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+
+AGGREGATOR DETECTION
+────────────────────
+
+Identify aggregator transactions:
+
+function isAggregatorRouted(tx: Transaction): boolean {
+  // Check if outer instruction is from known aggregator
+  const AGGREGATORS = [
+    JUPITER_V6_PROGRAM,
+    PRISM_PROGRAM,
+    DFLOW_PROGRAM,
+  ];
+
+  const outerProgram = tx.instructions[0].programId;
+  if (AGGREGATORS.includes(outerProgram)) {
+    return true;
+  }
+
+  // Check for shared accounts pattern (aggregator uses intermediate accounts)
+  const accountOverlap = detectIntermediateAccounts(tx);
+  if (accountOverlap > 2) {
+    return true;  // Likely routed
+  }
+
+  return false;
+}
+
+function extractRoutingPath(tx: Transaction): SwapLeg[] {
+  const legs = [];
+
+  for (const ix of tx.innerInstructions) {
+    if (isSwapInstruction(ix)) {
+      legs.push({
+        dex: ix.programId,
+        tokenIn: extractTokenIn(ix),
+        tokenOut: extractTokenOut(ix),
+        amountIn: extractAmountIn(tx, ix),
+        amountOut: extractAmountOut(tx, ix),
+      });
+    }
+  }
+
+  return legs;
+}
+
+
+MARKET DEFINITION CLARITY
+─────────────────────────
+
+Markets must specify volume type:
+
+interface VolumeMarket {
+  protocol: PublicKey;
+  metricType: 'GROSS_VOLUME' | 'NET_VOLUME' | 'DIRECT_VOLUME';
+  period: number;  // seconds
+
+  // For prediction resolution
+  includeAggregatorRouted: boolean;
+}
+
+Example market definitions:
+  "Jupiter 24h Volume" → NET_VOLUME (user-initiated only)
+  "Raydium 24h Volume" → GROSS_VOLUME (includes Jupiter routing)
+  "Orca Direct Volume" → DIRECT_VOLUME (excludes aggregator traffic)
+```
+
+### 15.26 Emergency Procedures and Oracle Failure
+
+```
+ORACLE FAILURE MODES
+════════════════════
+
+Mode 1: COMPLETE DATA UNAVAILABILITY
+  - All RPCs return errors
+  - Network partition
+  - Solana halt/restart
+
+Mode 2: PARTIAL DATA CORRUPTION
+  - Some accounts return invalid data
+  - Mismatch between RPC sources
+  - Slot desync > 50 slots
+
+Mode 3: RESOLUTION DEADLINE BREACH
+  - Oracle cannot compute in time
+  - Dispute raised but unresolved
+
+Mode 4: ECONOMIC ATTACK DETECTED
+  - Flash loan signature in resolution slot
+  - Price deviation exceeds safety threshold
+
+
+EMERGENCY RESPONSE PROTOCOL
+───────────────────────────
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Phase      │ Action                                                         │
+├────────────┼────────────────────────────────────────────────────────────────┤
+│ Detection  │ Monitor fails → alert oracle operators                        │
+│ Grace      │ 15-minute window for automatic recovery                        │
+│ Extension  │ If unresolved, extend deadline by 1 hour                       │
+│ Escalation │ If still unresolved, multi-sig takes control                   │
+│ Fallback   │ Multi-sig votes on resolution OR cancels market                │
+│ Refund     │ If cancelled, all bets refunded minus gas                      │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+
+ON-CHAIN EMERGENCY STATE
+────────────────────────
+
+#[account]
+pub struct OracleState {
+    pub status: OracleStatus,
+    pub last_healthy_slot: u64,
+    pub consecutive_failures: u32,
+    pub emergency_council: [Pubkey; 5],
+}
+
+#[derive(AnchorSerialize, AnchorDeserialize)]
+pub enum OracleStatus {
+    Healthy,
+    Degraded { reason: [u8; 32] },
+    Emergency { initiated_at: i64 },
+    Halted,
+}
+
+// Emergency pause instruction (requires 3-of-5 council)
+pub fn emergency_pause(ctx: Context<EmergencyPause>) -> Result<()> {
+    let oracle = &mut ctx.accounts.oracle_state;
+
+    require!(
+        oracle.consecutive_failures >= 3 ||
+        ctx.accounts.emergency_override.is_some(),
+        OracleError::NotEmergency
+    );
+
+    oracle.status = OracleStatus::Emergency {
+        initiated_at: Clock::get()?.unix_timestamp,
+    };
+
+    emit!(EmergencyPauseEvent {
+        slot: Clock::get()?.slot,
+        reason: "Oracle failure",
+    });
+
+    Ok(())
+}
+
+
+AUTOMATIC CIRCUIT BREAKERS
+──────────────────────────
+
+Trigger conditions for automatic market pause:
+
+1. RPC Response Failure
+   consecutive_rpc_errors >= 10 → PAUSE
+
+2. Data Inconsistency
+   |value_rpc1 - value_rpc2| / value_avg > 0.30 → PAUSE
+
+3. Stale Data
+   current_slot - last_update_slot > 100 → PAUSE
+
+4. Price Anomaly
+   |price_now - price_1h_ago| / price_1h_ago > 0.50 → PAUSE
+
+5. Volume Anomaly
+   volume_last_5min / volume_avg_5min > 100 → PAUSE
+
+
+RECOVERY PROCEDURE
+──────────────────
+
+After emergency resolved:
+
+1. Council reviews root cause
+2. Oracle software patched if needed
+3. Test resolution on expired markets (historical validation)
+4. Council votes to resume (3-of-5)
+5. Markets resume with extended betting windows
+6. Post-mortem published on-chain (IPFS hash in account)
+
+// Resume from emergency
+pub fn emergency_resume(ctx: Context<EmergencyResume>) -> Result<()> {
+    let oracle = &mut ctx.accounts.oracle_state;
+
+    require!(
+        matches!(oracle.status, OracleStatus::Emergency { .. }),
+        OracleError::NotInEmergency
+    );
+
+    // Require sufficient council signatures
+    require!(
+        ctx.accounts.council_votes.count() >= 3,
+        OracleError::InsufficientVotes
+    );
+
+    oracle.status = OracleStatus::Healthy;
+    oracle.consecutive_failures = 0;
+    oracle.last_healthy_slot = Clock::get()?.slot;
+
+    Ok(())
+}
+```
+
+### 15.27 Historical Data and Trend Predictions
+
+```
+THE HISTORICAL DATA PROBLEM
+═══════════════════════════
+
+Prediction types requiring historical context:
+
+  "Jupiter TVL will increase by 10% this week"
+  "Raydium volume will exceed last month's average"
+  "Marinade will gain 5% market share"
+
+Problem: Solana RPC provides NO historical queries!
+  - getAccountInfo() → current state only
+  - getSignaturesForAddress() → tx hashes, not balances
+  - No time-travel or archive queries
+
+
+SOLUTION: INCREMENTAL SNAPSHOTS
+───────────────────────────────
+
+Oracle maintains off-chain snapshot database:
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Table: protocol_snapshots                                                   │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ protocol_id │ slot      │ timestamp   │ tvl_usd    │ volume_24h │ users_24h│
+├─────────────┼───────────┼─────────────┼────────────┼────────────┼──────────┤
+│ jupiter     │ 250000000 │ 2024-01-01  │ 50,000,000 │ 10,000,000 │ 50,000   │
+│ jupiter     │ 250050000 │ 2024-01-01  │ 50,100,000 │ 10,200,000 │ 51,000   │
+│ ...         │ ...       │ ...         │ ...        │ ...        │ ...      │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+Snapshot frequency:
+  - Every 1000 slots (~6.7 minutes) for top 20 protocols
+  - Every 5000 slots (~33 minutes) for others
+  - Every 100 slots (~40 seconds) during market resolution window
+
+
+SNAPSHOT ANCHORING TO CHAIN
+───────────────────────────
+
+Each snapshot includes on-chain anchor for verification:
+
+interface Snapshot {
+  slot: number;
+  blockhash: string;          // Verifiable on-chain
+  merkleRoot: string;         // Merkle root of all account states
+  metrics: ProtocolMetrics;
+  signature: string;          // Oracle operator signature
+}
+
+Verification (anyone can challenge):
+
+function verifyHistoricalSnapshot(snapshot: Snapshot): boolean {
+  // 1. Verify blockhash existed at claimed slot
+  const blockInfo = await connection.getBlock(snapshot.slot);
+  if (blockInfo.blockhash !== snapshot.blockhash) {
+    return false;  // Snapshot slot mismatch
+  }
+
+  // 2. Verify oracle signature
+  if (!verifySignature(snapshot, oraclePublicKey)) {
+    return false;  // Invalid oracle signature
+  }
+
+  // 3. Merkle proof verification (if challenged)
+  // Challenger provides account data, we verify against merkleRoot
+
+  return true;
+}
+
+
+TREND MARKET RESOLUTION
+───────────────────────
+
+For percentage-change markets:
+
+Market: "Jupiter TVL increases 10% this week"
+Start: Slot 250,000,000 (TVL = $50M)
+End: Slot 251,200,000 (7 days later)
+
+Resolution formula:
+  TVL_start = snapshot_at(250,000,000).tvl
+  TVL_end = current_tvl()  // Live query at resolution time
+
+  change_pct = (TVL_end - TVL_start) / TVL_start * 100
+
+  outcome = change_pct >= 10.0 ? YES : NO
+
+
+HANDLING MISSING SNAPSHOTS
+──────────────────────────
+
+If snapshot missing for exact slot:
+
+function getSnapshotAtSlot(protocol: string, targetSlot: number): Snapshot {
+  // Find nearest snapshots
+  const before = db.query(`
+    SELECT * FROM snapshots
+    WHERE protocol_id = ? AND slot <= ?
+    ORDER BY slot DESC LIMIT 1
+  `, [protocol, targetSlot]);
+
+  const after = db.query(`
+    SELECT * FROM snapshots
+    WHERE protocol_id = ? AND slot > ?
+    ORDER BY slot ASC LIMIT 1
+  `, [protocol, targetSlot]);
+
+  if (!before && !after) {
+    throw new Error("No snapshots available");
+  }
+
+  // Use nearest snapshot (prefer before)
+  if (before && (targetSlot - before.slot) < 1000) {
+    return before;  // Within ~6 minutes, acceptable
+  }
+
+  // Interpolate only for TVL (volume/users not interpolatable)
+  if (before && after &&
+      (after.slot - before.slot) < 10000) {  // Gap < 1 hour
+    return interpolateSnapshot(before, after, targetSlot);
+  }
+
+  // Gap too large - flag with reduced confidence
+  return {
+    ...before,
+    confidence: 0.70,
+    interpolated: true,
+  };
+}
+
+
+DATA RETENTION POLICY
+─────────────────────
+
+Storage constraints require rotation:
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Period           │ Resolution      │ Storage per protocol │ Total (100 pgm)│
+├──────────────────┼─────────────────┼──────────────────────┼────────────────┤
+│ Last 24 hours    │ Every 1000 slots│ 210 snapshots/day    │ 21,000         │
+│ Last 7 days      │ Hourly          │ 168 snapshots        │ 16,800         │
+│ Last 30 days     │ Daily           │ 30 snapshots         │ 3,000          │
+│ Last 365 days    │ Weekly          │ 52 snapshots         │ 5,200          │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+Total: ~46,000 snapshots × 1KB ≈ 46MB per year (highly compressible)
+```
+
+### 15.28 Cross-Chain Assets and Bridges
+
+```
+BRIDGE TVL CHALLENGES
+═════════════════════
+
+Wrapped assets from other chains:
+
+  wETH (Wormhole Ethereum)
+  wBTC (Wormhole Bitcoin)
+  USDCet (Ethereum USDC via Wormhole)
+  USDCpo (Polygon USDC via Wormhole)
+
+Problem: How to price cross-chain assets?
+  - They should trade 1:1 with native... but don't always
+  - Bridge exploits can cause depegs
+  - No native Solana liquidity for price discovery
+
+
+CROSS-CHAIN ASSET PRICING
+─────────────────────────
+
+Strategy 1: ASSUME PEG (Naive)
+  wETH price = ETH price (from Solana ETH/USDC pools)
+
+  Risk: If bridge is exploited, wETH != ETH but we don't detect it
+
+Strategy 2: LOCAL LIQUIDITY PRICING
+  wETH price = wETH/USDC pool price on Solana
+
+  Risk: Low liquidity = easy manipulation
+
+Strategy 3: HYBRID (Recommended)
+  base_price = native_asset_price  // From largest pools
+  local_price = wrapped_pool_price  // From Solana pools
+
+  deviation = |local_price - base_price| / base_price
+
+  if deviation < 0.02:  // Within 2%
+    price = local_price  // Use local (more current)
+  elif deviation < 0.05:  // 2-5% deviation
+    price = (local_price + base_price) / 2  // Average
+    flag = "MINOR_DEPEG"
+  else:  // >5% deviation
+    price = base_price  // Use peg assumption
+    flag = "MAJOR_DEPEG"  // Alert operators
+
+
+BRIDGE PROGRAM IDENTIFICATION
+─────────────────────────────
+
+Known bridge programs on Solana:
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Bridge        │ Program ID                                    │ Assets      │
+├───────────────┼───────────────────────────────────────────────┼─────────────┤
+│ Wormhole      │ worm2ZoG2kUd4vFXhvjh93UUH596ayRfgQ2MgjNMTth  │ wETH,wBTC...│
+│ DeBridge      │ DEbrdGj3HsRsAzx6uH4MKyREKxVAfBydijLUF3ygsFfh │ deETH...    │
+│ Allbridge     │ BrdgN2RPzEMWF96ZbnnJaUtQDQx7VRXYaHHbYCBvceWB │ abETH...    │
+│ Portal(WH)    │ Portal111111111111111111111111111111111111111 │ Portal*     │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+
+BRIDGE EXPLOIT DETECTION
+────────────────────────
+
+Automated detection for market safety:
+
+interface BridgeHealth {
+  bridge: string;
+  lastVerified: number;  // slot
+  pegDeviation: number;
+  liquidityDepth: number;
+  status: 'HEALTHY' | 'WARNING' | 'CIRCUIT_BREAKER';
+}
+
+function monitorBridgeHealth(bridge: string): BridgeHealth {
+  const wrappedAssets = getWrappedAssets(bridge);
+
+  for (const asset of wrappedAssets) {
+    const localPrice = getLocalPrice(asset);
+    const pegPrice = getPegPrice(asset);
+    const deviation = Math.abs(localPrice - pegPrice) / pegPrice;
+
+    if (deviation > 0.10) {  // 10% depeg
+      return {
+        bridge,
+        status: 'CIRCUIT_BREAKER',
+        pegDeviation: deviation,
+        ...
+      };
+    }
+  }
+
+  return { bridge, status: 'HEALTHY', ... };
+}
+
+// Circuit breaker: pause markets involving depegged assets
+if (bridgeHealth.status === 'CIRCUIT_BREAKER') {
+  pauseMarketsWithAsset(bridgeHealth.affectedAssets);
+}
+
+
+TVL COUNTING FOR BRIDGES
+────────────────────────
+
+Bridge TVL should be counted once:
+
+  wETH locked in bridge = $10M
+  wETH deposited in Marinade = $5M (subset of locked wETH)
+
+Correct: Total wETH TVL on Solana = $10M (bridge custody)
+Wrong: $10M + $5M = $15M (double counting)
+
+Rule: Count at the bridge level, not in downstream protocols
+  - Bridge TVL = sum of all wrapped tokens issued
+  - Protocol TVL excludes wrapped tokens (counts as "external")
+  - OR protocol TVL includes wrapped tokens, marked separately
+
+interface ProtocolTVL {
+  nativeAssets: number;      // SOL, USDC, etc.
+  wrappedAssets: number;     // wETH, wBTC, etc.
+  lpTokens: number;          // Already handled in 15.24
+  totalTVL: number;          // Sum
+  nativeOnlyTVL: number;     // Excludes bridge exposure
+}
+```
+
+### 15.29 Token Decimals and Balance Normalization
+
+```
+THE DECIMALS PROBLEM
+════════════════════
+
+Solana tokens have varying decimal places:
+
+┌────────────────────────────────────────────────────────────────────────┐
+│ Token    │ Decimals │ Raw Balance      │ Actual Balance               │
+├──────────┼──────────┼──────────────────┼──────────────────────────────┤
+│ SOL      │ 9        │ 1000000000       │ 1.0 SOL                      │
+│ USDC     │ 6        │ 1000000          │ 1.0 USDC                     │
+│ BONK     │ 5        │ 100000           │ 1.0 BONK                     │
+│ wBTC     │ 8        │ 100000000        │ 1.0 wBTC                     │
+│ RAY      │ 6        │ 1000000          │ 1.0 RAY                      │
+└────────────────────────────────────────────────────────────────────────┘
+
+Critical: Mixing up decimals → 1000x errors in TVL!
+
+
+DECIMAL DISCOVERY
+─────────────────
+
+function getTokenDecimals(mint: PublicKey): number {
+  // 1. Try SPL token mint account
+  const mintInfo = await getMint(connection, mint);
+  if (mintInfo) {
+    return mintInfo.decimals;
+  }
+
+  // 2. Try Token-2022 mint
+  const mint2022 = await getMint(connection, mint, undefined, TOKEN_2022_PROGRAM);
+  if (mint2022) {
+    return mint2022.decimals;
+  }
+
+  // 3. Fallback: known token registry
+  const known = TOKEN_REGISTRY.get(mint.toString());
+  if (known) {
+    return known.decimals;
+  }
+
+  // 4. Unknown token - assume 9 (SOL standard) and flag
+  console.warn(`Unknown decimals for ${mint}, assuming 9`);
+  return 9;
+}
+
+
+BALANCE NORMALIZATION
+─────────────────────
+
+function normalizeBalance(rawBalance: bigint, decimals: number): number {
+  // Avoid floating point errors with BigInt
+  const divisor = BigInt(10 ** decimals);
+  const wholePart = rawBalance / divisor;
+  const fractionalPart = rawBalance % divisor;
+
+  // Combine with precision
+  return Number(wholePart) + Number(fractionalPart) / Number(divisor);
+}
+
+// Example usage in TVL calculation
+function computeTokenValue(account: TokenAccount): number {
+  const decimals = getTokenDecimals(account.mint);
+  const balance = normalizeBalance(account.amount, decimals);
+  const price = getTokenPrice(account.mint);
+
+  return balance * price;
+}
+
+
+EDGE CASES
+──────────
+
+1. Token-2022 with interest-bearing extension
+   - Raw balance ≠ actual balance
+   - Must apply interest calculation
+
+   function getInterestBearingBalance(account: TokenAccount): bigint {
+     const extension = getInterestBearingExtension(account.mint);
+     const elapsed = currentTime - account.lastUpdate;
+     const interest = account.amount * extension.rate * elapsed / YEAR_SECONDS;
+     return account.amount + interest;
+   }
+
+2. Tokens with transfer fees (Token-2022)
+   - TVL should use gross balance (before fees)
+   - Volume should reflect net transferred amount
+
+3. Tokens with permanent delegate
+   - Balance may be seized at any time
+   - Flag with "CUSTODY_RISK" in TVL
+
+4. Wrapped vs Native representation
+   - wSOL (wrapped SOL) has 9 decimals
+   - Native SOL in PDA also has 9 decimals
+   - Ensure not double-counted
+
+
+VALIDATION CHECKS
+─────────────────
+
+function validateTokenValue(
+  mint: PublicKey,
+  rawBalance: bigint,
+  computedValue: number
+): ValidationResult {
+  const decimals = getTokenDecimals(mint);
+  const price = getTokenPrice(mint);
+
+  // Sanity check 1: Value should be positive
+  if (computedValue < 0) {
+    return { valid: false, error: "Negative value" };
+  }
+
+  // Sanity check 2: Decimal calculation consistency
+  const expectedValue = Number(rawBalance) / (10 ** decimals) * price;
+  if (Math.abs(computedValue - expectedValue) / expectedValue > 0.001) {
+    return { valid: false, error: "Decimal mismatch" };
+  }
+
+  // Sanity check 3: Reasonable total supply
+  const totalSupply = getTotalSupply(mint);
+  if (rawBalance > totalSupply) {
+    return { valid: false, error: "Balance exceeds supply" };
+  }
+
+  return { valid: true };
+}
+```
+
+### 15.30 Compute Budget and Transaction Limits
+
+```
+SOLANA TRANSACTION CONSTRAINTS
+══════════════════════════════
+
+Resolution transactions must fit within Solana's limits:
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Constraint           │ Limit                        │ Impact                │
+├──────────────────────┼──────────────────────────────┼───────────────────────┤
+│ Compute units        │ 1,400,000 CU per tx          │ Complex math limited  │
+│ Transaction size     │ 1,232 bytes                  │ Few accounts per tx   │
+│ Account inputs       │ 64 accounts max              │ Can't read many vaults│
+│ Stack depth          │ 64 frames                    │ No deep recursion     │
+│ Heap size            │ 32 KB                        │ Small data structures │
+│ Cross-program invoke │ 4 levels deep                │ Limited CPI chains    │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+
+MULTI-TRANSACTION RESOLUTION
+────────────────────────────
+
+For complex metrics requiring many account reads:
+
+Phase 1: ACCUMULATION TRANSACTIONS
+  - Multiple txs each reading subset of accounts
+  - Results stored in accumulator PDA
+
+Phase 2: FINALIZATION TRANSACTION
+  - Reads accumulator PDA
+  - Computes final metric
+  - Resolves market
+
+#[account]
+pub struct MetricAccumulator {
+    pub market: Pubkey,
+    pub metric_type: MetricType,
+    pub partial_results: Vec<PartialResult>,
+    pub accounts_processed: u32,
+    pub accounts_total: u32,
+    pub created_slot: u64,
+    pub expires_slot: u64,
+}
+
+// Example: TVL across 200 vaults
+// Each tx processes 30 vaults (account limit)
+// 7 accumulation txs + 1 finalization tx
+
+pub fn accumulate_tvl(ctx: Context<AccumulateTVL>) -> Result<()> {
+    let accumulator = &mut ctx.accounts.accumulator;
+
+    // Sum balances from this batch
+    let mut batch_sum: u64 = 0;
+    for account in ctx.remaining_accounts {
+        let balance = parse_token_account(account)?;
+        batch_sum = batch_sum.checked_add(balance)
+            .ok_or(OracleError::Overflow)?;
+    }
+
+    accumulator.partial_results.push(PartialResult {
+        slot: Clock::get()?.slot,
+        value: batch_sum,
+        accounts_in_batch: ctx.remaining_accounts.len() as u32,
+    });
+
+    accumulator.accounts_processed += ctx.remaining_accounts.len() as u32;
+
+    Ok(())
+}
+
+pub fn finalize_tvl(ctx: Context<FinalizeTVL>) -> Result<()> {
+    let accumulator = &ctx.accounts.accumulator;
+    let market = &mut ctx.accounts.market;
+
+    // Verify all accounts processed
+    require!(
+        accumulator.accounts_processed >= accumulator.accounts_total,
+        OracleError::IncompleteAccumulation
+    );
+
+    // Sum all partial results
+    let total: u64 = accumulator.partial_results
+        .iter()
+        .map(|r| r.value)
+        .sum();
+
+    // Convert to USD and resolve
+    let tvl_usd = apply_price_and_decimals(total, ...);
+    market.resolve(tvl_usd)?;
+
+    // Close accumulator, reclaim rent
+    close_account(accumulator)?;
+
+    Ok(())
+}
+
+
+COMPUTE OPTIMIZATION TECHNIQUES
+───────────────────────────────
+
+1. PRE-COMPUTED ACCOUNT LISTS
+   - Off-chain: identify all relevant accounts
+   - Store as Merkle tree root on-chain
+   - Verify subset membership in each tx
+
+2. PARALLEL TRANSACTION SUBMISSION
+   - Split account batches across multiple txs
+   - Submit all accumulation txs in same slot
+   - Finalization waits for all to confirm
+
+3. INSTRUCTION PACKING
+   - Combine multiple read operations in one tx
+   - Use remaining_accounts for dynamic inputs
+
+4. ARITHMETIC OPTIMIZATION
+   - Use fixed-point instead of floating point
+   - Batch multiplications before divisions
+   - Avoid large exponents in on-chain math
+
+Example fixed-point TVL:
+
+// All values in basis points (1/10000)
+pub fn compute_tvl_fixed(
+    balances: &[u64],      // Raw token balances
+    prices: &[u64],        // Prices in basis points (1 USD = 10000)
+    decimals: &[u8],       // Token decimals
+) -> Result<u64> {
+    let mut total_bps: u128 = 0;
+
+    for i in 0..balances.len() {
+        // Normalize balance to 6 decimals (USDC standard)
+        let normalized = normalize_to_6_decimals(balances[i], decimals[i]);
+
+        // Multiply by price (in bps)
+        let value_bps = (normalized as u128) * (prices[i] as u128) / 10000;
+
+        total_bps = total_bps.checked_add(value_bps)
+            .ok_or(OracleError::Overflow)?;
+    }
+
+    // Return in USD (6 decimals)
+    Ok((total_bps / 10000) as u64)
+}
+
+
+TRANSACTION SIZE ESTIMATION
+───────────────────────────
+
+Pre-compute transaction feasibility:
+
+function estimateTransactionSize(accounts: PublicKey[]): TxEstimate {
+  // Base overhead
+  let size = 232;  // Signatures, header, recent blockhash
+
+  // Account keys (32 bytes each)
+  size += accounts.length * 32;
+
+  // Instruction data (varies by program)
+  size += ORACLE_INSTRUCTION_SIZE;  // ~100 bytes typical
+
+  const fits = size <= 1232;
+  const computeUnits = estimateComputeUnits(accounts.length);
+
+  return {
+    fits,
+    size,
+    computeUnits,
+    accountCount: accounts.length,
+    needsSplit: accounts.length > 30,  // Conservative threshold
+    recommendedBatchSize: Math.min(30, Math.floor(1232 / 32)),
+  };
+}
+```
+
 ---
 
 ## 16. Appendix
@@ -2676,6 +4163,18 @@ DexScreener:      https://dexscreener.com/solana/4GihJrYJGQ9pjqDySTjd57y1h3nNkEZ
 ### 16.4 Changelog
 
 ```
+v3.2.0 (December 2024)
+- Added closed-source program handling (balance-only fallback mode)
+- LP token unwrapping and recursive TVL calculation
+- Cycle detection for interdependent protocol TVL
+- Multi-hop swap attribution and aggregator volume deduplication
+- Emergency procedures and oracle failure modes
+- Historical snapshot system for trend predictions
+- Cross-chain asset pricing and bridge exploit detection
+- Token decimals normalization with Token-2022 edge cases
+- Compute budget optimization and multi-tx resolution
+- Expanded security considerations and circuit breakers
+
 v3.1.0 (December 2024)
 - Added comprehensive on-chain metrics oracle documentation
 - Pure Solana RPC architecture (no third-party APIs)
@@ -2736,7 +4235,7 @@ v1.0.0 (November 2024)
 ---
 
 ```
-Document Version: 3.0.0
+Document Version: 3.2.0
 Last Updated:     December 2024
 Authors:          IDL Protocol Team
 License:          MIT
