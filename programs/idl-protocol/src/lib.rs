@@ -574,14 +574,35 @@ pub mod idl_protocol {
             0
         };
 
+        // CONVICTION FIX: Apply conviction bonus if provided and lock expired
+        let conviction_bonus_bps = if let Some(ref conviction) = ctx.accounts.conviction_bet {
+            // Require lock to have expired
+            require!(
+                clock.unix_timestamp >= conviction.lock_end,
+                IdlError::ConvictionLockNotExpired
+            );
+            conviction.bonus_bps
+        } else {
+            0
+        };
+
         // SECURITY FIX: Verify pool has enough balance before transfer
         let pool_balance = ctx.accounts.market_pool.amount;
-        let gross_winnings = bet.amount
+        let base_winnings = bet.amount
             .checked_add(winnings_share)
             .ok_or(IdlError::MathOverflow)?;
 
+        // Apply conviction bonus to winnings (0.5% per day locked, max 15% for 30 days)
+        let conviction_bonus = (base_winnings as u128 * conviction_bonus_bps as u128 / 10000) as u64;
+        let gross_winnings = base_winnings.saturating_add(conviction_bonus);
+
         // Cap gross_winnings to available pool balance pro-rata
         let gross_winnings = std::cmp::min(gross_winnings, pool_balance);
+
+        // Mark conviction as claimed if used
+        if let Some(ref mut conviction) = ctx.accounts.conviction_bet {
+            conviction.claimed = true;
+        }
 
         let fee = (gross_winnings as u128 * BET_FEE_BPS as u128 / 10000) as u64;
         let net_winnings = gross_winnings.saturating_sub(fee);
@@ -679,6 +700,19 @@ pub mod idl_protocol {
         // SECURITY FIX: Update reward checkpoint before adding to pool
         update_reward_per_token(state, staker_fee);
 
+        // REFERRAL FIX: Credit referral fees if user has a referrer
+        // 5% of total fee goes to referrer's pending_fees (not transferred, just credited)
+        let referral_fee = if let Some(ref mut user_referral) = ctx.accounts.user_referral {
+            let referral_amount = (fee as u128 * REFERRAL_FEE_BPS as u128 / 10000) as u64;
+            user_referral.pending_fees = user_referral.pending_fees
+                .checked_add(referral_amount)
+                .ok_or(IdlError::MathOverflow)?;
+            msg!("Referral fee credited: {} to {}", referral_amount, user_referral.referrer);
+            referral_amount
+        } else {
+            0
+        };
+
         // Update state tracking
         state.reward_pool = state.reward_pool
             .checked_add(staker_fee)
@@ -694,7 +728,8 @@ pub mod idl_protocol {
             .checked_add(insurance_fee)
             .ok_or(IdlError::MathOverflow)?;
 
-        msg!("Claimed {} (fee: {}, stakers: {}, burned: {}, insurance: {})", net_winnings, fee, staker_fee, burn_amount, insurance_fee);
+        msg!("Claimed {} (fee: {}, stakers: {}, burned: {}, insurance: {}, referral: {})",
+             net_winnings, fee, staker_fee, burn_amount, insurance_fee, referral_fee);
         Ok(())
     }
 
@@ -1273,12 +1308,19 @@ pub mod idl_protocol {
     /// Register a referral relationship
     /// User is referred by referrer, referrer earns 5% of user's fees forever
     pub fn register_referral(ctx: Context<RegisterReferral>) -> Result<()> {
+        // SECURITY FIX: Prevent self-referral
+        require!(
+            ctx.accounts.referrer.key() != ctx.accounts.user.key(),
+            IdlError::SelfReferralNotAllowed
+        );
+
         let referral = &mut ctx.accounts.referral_account;
         let clock = Clock::get()?;
 
         referral.user = ctx.accounts.user.key();
         referral.referrer = ctx.accounts.referrer.key();
         referral.total_fees_earned = 0;
+        referral.pending_fees = 0;  // SECURITY FIX: Initialize pending fees
         referral.registered_at = clock.unix_timestamp;
         referral.bump = ctx.bumps.referral_account;
 
@@ -1451,12 +1493,17 @@ pub mod idl_protocol {
     }
 
     /// Claim referral fees earned
-    pub fn claim_referral_fees(ctx: Context<ClaimReferralFees>, amount: u64) -> Result<()> {
-        // This would be called with accumulated referral fees
-        // For now, just update the tracking
+    /// SECURITY FIX: Only allows claiming pending_fees that were properly accumulated
+    pub fn claim_referral_fees(ctx: Context<ClaimReferralFees>) -> Result<()> {
         let referral = &mut ctx.accounts.referral_account;
 
+        // SECURITY FIX: Only claim what's actually pending, not user-provided amount
+        let amount = referral.pending_fees;
         require!(amount > 0, IdlError::NoRewardsToClaim);
+
+        // SECURITY FIX: Zero out pending before transfer (CEI pattern)
+        referral.pending_fees = 0;
+        referral.total_fees_earned = referral.total_fees_earned.saturating_add(amount);
 
         let state_bump = ctx.accounts.state.bump;
         let seeds = &[b"state".as_ref(), &[state_bump]];
@@ -1475,8 +1522,6 @@ pub mod idl_protocol {
             ),
             amount
         )?;
-
-        referral.total_fees_earned = referral.total_fees_earned.saturating_add(amount);
 
         msg!("Claimed {} referral fees", amount);
         Ok(())
@@ -2185,6 +2230,26 @@ pub struct ClaimWinnings<'info> {
     )]
     pub burn_vault: Box<Account<'info, TokenAccount>>,
 
+    /// CONVICTION FIX: Optional conviction bet for bonus winnings
+    /// If provided, applies bonus_bps to winnings (if lock has expired)
+    #[account(
+        mut,
+        seeds = [b"conviction", bet.key().as_ref()],
+        bump = conviction_bet.bump,
+        constraint = conviction_bet.owner == user.key() @ IdlError::Unauthorized,
+        constraint = conviction_bet.bet == bet.key() @ IdlError::Unauthorized
+    )]
+    pub conviction_bet: Option<Account<'info, ConvictionBet>>,
+
+    /// REFERRAL FIX: Optional referral account to credit fees
+    /// If user has a referrer, 5% of fees goes to referrer's pending_fees
+    #[account(
+        mut,
+        seeds = [b"referral", user.key().as_ref()],
+        bump = user_referral.bump
+    )]
+    pub user_referral: Option<Account<'info, ReferralAccount>>,
+
     #[account(mut)]
     pub user: Signer<'info>,
 
@@ -2720,8 +2785,10 @@ pub struct ReferralAccount {
     pub user: Pubkey,
     /// The referrer who gets fees
     pub referrer: Pubkey,
-    /// Total fees earned by referrer from this user
+    /// Total fees earned by referrer from this user (historical)
     pub total_fees_earned: u64,
+    /// SECURITY FIX: Pending fees available to claim
+    pub pending_fees: u64,
     /// Timestamp of referral registration
     pub registered_at: i64,
     pub bump: u8,
@@ -3110,4 +3177,12 @@ pub enum IdlError {
     // SEASON_TRANSITION fix
     #[msg("Season transition in progress - bonus being phased")]
     SeasonTransitionActive,
+
+    // REFERRAL_LOOP fix
+    #[msg("Cannot refer yourself")]
+    SelfReferralNotAllowed,
+
+    // CONVICTION_CANCEL fix
+    #[msg("Conviction lock not expired yet")]
+    ConvictionLockNotExpired,
 }

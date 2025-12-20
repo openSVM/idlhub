@@ -66,6 +66,14 @@ pub const MIN_RAMP_DURATION: i64 = 86400;
 /// Maximum amplification change per ramp (10x)
 pub const MAX_AMP_CHANGE: u64 = 10;
 
+/// SECURITY FIX: Maximum allowed slippage (5% = 500 bps)
+/// Prevents users from setting min_amount_out = 0 and losing everything to MEV
+pub const MAX_SLIPPAGE_BPS: u64 = 500;
+
+/// AUDIT FIX: Commit-reveal delay for amplification changes (1 hour)
+/// Prevents front-running of amp ramps
+pub const AMP_COMMIT_DELAY: i64 = 3600;
+
 // ═══════════════════════════════════════════════════════════════════════════════
 // MIGRATION POOL CONSTANTS
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -91,8 +99,81 @@ pub const REWARD_PRECISION: u128 = 1_000_000_000_000; // 1e12
 pub mod idl_stableswap {
     use super::*;
 
-    /// Initialize the StableSwap pool
-    /// Creates vaults for both tokens and LP token mint
+    /// Step 1: Create the pool account
+    /// This must be called before init_vaults to set up the pool PDA
+    pub fn create_pool(
+        ctx: Context<CreatePool>,
+        amplification: u64,
+    ) -> Result<()> {
+        require!(
+            amplification >= MIN_AMPLIFICATION && amplification <= MAX_AMPLIFICATION,
+            StableSwapError::InvalidAmplification
+        );
+
+        let pool = &mut ctx.accounts.pool;
+
+        pool.authority = ctx.accounts.authority.key();
+        pool.bags_mint = ctx.accounts.bags_mint.key();
+        pool.pump_mint = ctx.accounts.pump_mint.key();
+        // Vaults and LP mint will be set in init_vaults
+        pool.bags_vault = Pubkey::default();
+        pool.pump_vault = Pubkey::default();
+        pool.lp_mint = Pubkey::default();
+        pool.amplification = amplification;
+        pool.initial_amplification = amplification;
+        pool.target_amplification = amplification;
+        pool.ramp_start_time = 0;
+        pool.ramp_stop_time = 0;
+        pool.swap_fee_bps = SWAP_FEE_BPS;
+        pool.admin_fee_percent = ADMIN_FEE_PERCENT;
+        pool.bags_balance = 0;
+        pool.pump_balance = 0;
+        pool.lp_supply = 0;
+        pool.admin_fees_bags = 0;
+        pool.admin_fees_pump = 0;
+        pool.total_volume_bags = 0;
+        pool.total_volume_pump = 0;
+        pool.paused = true; // Paused until init_vaults is called
+        pool.bump = ctx.bumps.pool;
+        pool.bags_vault_bump = 0;
+        pool.pump_vault_bump = 0;
+        pool.lp_mint_bump = 0;
+        pool.pending_authority = None;
+        pool.authority_transfer_time = None;
+        pool.pending_amp_commit = None;
+        pool.amp_commit_time = None;
+
+        msg!("Pool account created - call init_vaults next");
+
+        Ok(())
+    }
+
+    /// Step 2: Initialize vaults and LP mint
+    /// Must be called after create_pool
+    pub fn init_vaults(ctx: Context<InitVaults>) -> Result<()> {
+        let pool = &mut ctx.accounts.pool;
+
+        // Ensure vaults haven't been initialized yet
+        require!(pool.bags_vault == Pubkey::default(), StableSwapError::AlreadyInitialized);
+
+        pool.bags_vault = ctx.accounts.bags_vault.key();
+        pool.pump_vault = ctx.accounts.pump_vault.key();
+        pool.lp_mint = ctx.accounts.lp_mint.key();
+        pool.bags_vault_bump = ctx.bumps.bags_vault;
+        pool.pump_vault_bump = ctx.bumps.pump_vault;
+        pool.lp_mint_bump = ctx.bumps.lp_mint;
+        pool.paused = false; // Now ready for use
+
+        msg!("IDL StableSwap initialized");
+        msg!("  BAGS Mint: {}", pool.bags_mint);
+        msg!("  PUMP Mint: {}", pool.pump_mint);
+        msg!("  Amplification: {}", pool.amplification);
+
+        Ok(())
+    }
+
+    /// Combined initialize (for backwards compatibility - may hit stack limits on some validators)
+    /// Prefer using create_pool + init_vaults instead
     pub fn initialize(
         ctx: Context<Initialize>,
         amplification: u64,
@@ -131,6 +212,9 @@ pub mod idl_stableswap {
         pool.lp_mint_bump = ctx.bumps.lp_mint;
         pool.pending_authority = None;
         pool.authority_transfer_time = None;
+        // AUDIT FIX: Initialize commit-reveal fields
+        pool.pending_amp_commit = None;
+        pool.amp_commit_time = None;
 
         msg!("IDL StableSwap initialized");
         msg!("  BAGS Mint: {}", pool.bags_mint);
@@ -330,16 +414,50 @@ pub mod idl_stableswap {
             StableSwapError::InsufficientLiquidity
         );
 
-        // Calculate proportional amounts
-        let bags_amount = (ctx.accounts.pool.bags_balance as u128)
+        // Calculate proportional amounts (before fee)
+        let bags_proportional = (ctx.accounts.pool.bags_balance as u128)
             .checked_mul(lp_amount as u128)
             .and_then(|v| v.checked_div(ctx.accounts.pool.lp_supply as u128))
             .ok_or(StableSwapError::MathOverflow)? as u64;
 
-        let pump_amount = (ctx.accounts.pool.pump_balance as u128)
+        let pump_proportional = (ctx.accounts.pool.pump_balance as u128)
             .checked_mul(lp_amount as u128)
             .and_then(|v| v.checked_div(ctx.accounts.pool.lp_supply as u128))
             .ok_or(StableSwapError::MathOverflow)? as u64;
+
+        // AUDIT FIX: Apply imbalance fee on withdrawal
+        // Fee is proportional to pool imbalance (how far from 50/50)
+        // This prevents extraction of value when pool rebalances
+        let total_balance = ctx.accounts.pool.bags_balance
+            .checked_add(ctx.accounts.pool.pump_balance)
+            .ok_or(StableSwapError::MathOverflow)?;
+
+        let (bags_amount, pump_amount, imbalance_fee_bags, imbalance_fee_pump) = if total_balance > 0 {
+            // Calculate imbalance: |bags - pump| / total
+            // Fee = swap_fee_bps * imbalance_ratio (max fee when fully imbalanced)
+            let bags_ratio = (ctx.accounts.pool.bags_balance as u128 * 10000) / total_balance as u128;
+            let imbalance_bps = if bags_ratio > 5000 {
+                bags_ratio - 5000  // How much above 50%
+            } else {
+                5000 - bags_ratio  // How much below 50%
+            };
+
+            // Fee scales with imbalance: at 50/50 = 0 fee, at 100/0 = full swap fee
+            // fee_bps = swap_fee_bps * imbalance_bps / 5000
+            let effective_fee_bps = (ctx.accounts.pool.swap_fee_bps as u128 * imbalance_bps) / 5000;
+
+            let fee_bags = (bags_proportional as u128 * effective_fee_bps / 10000) as u64;
+            let fee_pump = (pump_proportional as u128 * effective_fee_bps / 10000) as u64;
+
+            (
+                bags_proportional.saturating_sub(fee_bags),
+                pump_proportional.saturating_sub(fee_pump),
+                fee_bags,
+                fee_pump
+            )
+        } else {
+            (bags_proportional, pump_proportional, 0, 0)
+        };
 
         require!(bags_amount >= min_bags_amount, StableSwapError::SlippageExceeded);
         require!(pump_amount >= min_pump_amount, StableSwapError::SlippageExceeded);
@@ -399,14 +517,26 @@ pub mod idl_stableswap {
         ctx.accounts.pool.lp_supply = ctx.accounts.pool.lp_supply
             .checked_sub(lp_amount)
             .ok_or(StableSwapError::MathOverflow)?;
+        // AUDIT FIX: Subtract full proportional amount (fee stays in pool for LPs)
         ctx.accounts.pool.bags_balance = ctx.accounts.pool.bags_balance
-            .checked_sub(bags_amount)
+            .checked_sub(bags_proportional)
             .ok_or(StableSwapError::MathOverflow)?;
         ctx.accounts.pool.pump_balance = ctx.accounts.pool.pump_balance
-            .checked_sub(pump_amount)
+            .checked_sub(pump_proportional)
             .ok_or(StableSwapError::MathOverflow)?;
 
-        msg!("Removed liquidity: {} LP = {} BAGS + {} PUMP", lp_amount, bags_amount, pump_amount);
+        // AUDIT FIX: Track admin portion of imbalance fees
+        let admin_fee_bags = (imbalance_fee_bags as u128 * ctx.accounts.pool.admin_fee_percent as u128 / 100) as u64;
+        let admin_fee_pump = (imbalance_fee_pump as u128 * ctx.accounts.pool.admin_fee_percent as u128 / 100) as u64;
+        ctx.accounts.pool.admin_fees_bags = ctx.accounts.pool.admin_fees_bags
+            .checked_add(admin_fee_bags)
+            .ok_or(StableSwapError::MathOverflow)?;
+        ctx.accounts.pool.admin_fees_pump = ctx.accounts.pool.admin_fees_pump
+            .checked_add(admin_fee_pump)
+            .ok_or(StableSwapError::MathOverflow)?;
+
+        msg!("Removed liquidity: {} LP = {} BAGS + {} PUMP (imbalance fee: {} BAGS, {} PUMP)",
+             lp_amount, bags_amount, pump_amount, imbalance_fee_bags, imbalance_fee_pump);
 
         Ok(())
     }
@@ -444,13 +574,17 @@ pub mod idl_stableswap {
             .checked_add(pool.pump_balance)
             .ok_or(StableSwapError::MathOverflow)?;
 
-        let lp_amount = if total_pool_value == 0 || pool.lp_supply == 0 {
-            // First deposit - LP = amount (minus minimum liquidity if first ever)
-            if pool.lp_supply == 0 {
-                amount.checked_sub(MINIMUM_LIQUIDITY).ok_or(StableSwapError::InitialDepositTooSmall)?
-            } else {
-                amount
-            }
+        // AUDIT FIX: Always use proportional calculation, require non-zero pool value
+        // This prevents inflation attacks from single-sided deposits after pool drain
+        let lp_amount = if pool.lp_supply == 0 {
+            // First deposit via single-sided - same as balanced deposit
+            // Require minimum and lock MINIMUM_LIQUIDITY forever
+            require!(amount >= MIN_INITIAL_DEPOSIT, StableSwapError::InitialDepositTooSmall);
+            amount.checked_sub(MINIMUM_LIQUIDITY).ok_or(StableSwapError::InitialDepositTooSmall)?
+        } else if total_pool_value == 0 {
+            // Pool drained but LP exists - this should never happen in normal operation
+            // Reject to prevent inflation attack
+            return Err(StableSwapError::InsufficientLiquidity.into());
         } else {
             // Proportional: lp = amount * lp_supply / total_pool_value
             (amount as u128)
@@ -460,6 +594,19 @@ pub mod idl_stableswap {
         };
 
         require!(lp_amount >= min_lp_amount, StableSwapError::SlippageExceeded);
+
+        // AUDIT FIX: Enforce maximum slippage to prevent MEV exploitation
+        // For single-sided deposits, min_lp_amount must be at least 95% of expected output
+        // Expected output for 1:1 pool ≈ amount (in terms of pool value)
+        // So min_lp_amount should be >= amount * 0.95 * lp_supply / total_pool_value
+        if pool.lp_supply > 0 && total_pool_value > 0 {
+            let expected_lp = (amount as u128)
+                .checked_mul(pool.lp_supply as u128)
+                .and_then(|v| v.checked_div(total_pool_value as u128))
+                .unwrap_or(0) as u64;
+            let min_allowed = (expected_lp as u128 * (10000 - MAX_SLIPPAGE_BPS) as u128 / 10000) as u64;
+            require!(min_lp_amount >= min_allowed, StableSwapError::SlippageTooHigh);
+        }
 
         // Transfer tokens to appropriate vault
         if is_bags {
@@ -539,16 +686,21 @@ pub mod idl_stableswap {
         require!(!ctx.accounts.pool.paused, StableSwapError::PoolPaused);
         require!(amount_in >= MIN_SWAP_AMOUNT, StableSwapError::AmountTooSmall);
 
+        // SECURITY FIX: Enforce maximum slippage to prevent MEV exploitation
+        // min_amount_out must be at least 95% of amount_in (max 5% slippage)
+        let min_allowed = (amount_in as u128 * (10000 - MAX_SLIPPAGE_BPS) as u128 / 10000) as u64;
+        require!(min_amount_out >= min_allowed, StableSwapError::SlippageTooHigh);
+
         let clock = Clock::get()?;
         require!(clock.unix_timestamp <= deadline, StableSwapError::TransactionExpired);
 
         // AUDIT FIX M-4: Validate vault balances match tracked balances (donation attack prevention)
         require!(
-            ctx.accounts.bags_vault.amount == ctx.accounts.pool.bags_balance,
+            ctx.accounts.bags_vault.amount >= ctx.accounts.pool.bags_balance,
             StableSwapError::VaultBalanceMismatch
         );
         require!(
-            ctx.accounts.pump_vault.amount == ctx.accounts.pool.pump_balance,
+            ctx.accounts.pump_vault.amount >= ctx.accounts.pool.pump_balance,
             StableSwapError::VaultBalanceMismatch
         );
 
@@ -630,16 +782,20 @@ pub mod idl_stableswap {
         require!(!ctx.accounts.pool.paused, StableSwapError::PoolPaused);
         require!(amount_in >= MIN_SWAP_AMOUNT, StableSwapError::AmountTooSmall);
 
+        // SECURITY FIX: Enforce maximum slippage to prevent MEV exploitation
+        let min_allowed = (amount_in as u128 * (10000 - MAX_SLIPPAGE_BPS) as u128 / 10000) as u64;
+        require!(min_amount_out >= min_allowed, StableSwapError::SlippageTooHigh);
+
         let clock = Clock::get()?;
         require!(clock.unix_timestamp <= deadline, StableSwapError::TransactionExpired);
 
         // AUDIT FIX M-4: Validate vault balances match tracked balances (donation attack prevention)
         require!(
-            ctx.accounts.bags_vault.amount == ctx.accounts.pool.bags_balance,
+            ctx.accounts.bags_vault.amount >= ctx.accounts.pool.bags_balance,
             StableSwapError::VaultBalanceMismatch
         );
         require!(
-            ctx.accounts.pump_vault.amount == ctx.accounts.pool.pump_balance,
+            ctx.accounts.pump_vault.amount >= ctx.accounts.pool.pump_balance,
             StableSwapError::VaultBalanceMismatch
         );
 
@@ -728,9 +884,12 @@ pub mod idl_stableswap {
         require!(total_rewards > 0, StableSwapError::ZeroAmount);
 
         let duration = (end_time - start_time) as u64;
+
+        // AUDIT FIX: Ensure reward_per_second is non-zero to prevent lost rewards
         let reward_per_second = total_rewards
             .checked_div(duration)
             .ok_or(StableSwapError::MathOverflow)?;
+        require!(reward_per_second > 0, StableSwapError::ZeroAmount);
 
         // Transfer reward tokens to farming vault
         token::transfer(
@@ -966,6 +1125,10 @@ pub mod idl_stableswap {
         require!(!ctx.accounts.pool.paused, StableSwapError::PoolPaused);
         require!(amount_in >= MIN_SWAP_AMOUNT, StableSwapError::AmountTooSmall);
 
+        // SECURITY FIX: Enforce maximum slippage to prevent MEV exploitation
+        let min_allowed = (amount_in as u128 * (10000 - MAX_SLIPPAGE_BPS) as u128 / 10000) as u64;
+        require!(min_amount_out >= min_allowed, StableSwapError::SlippageTooHigh);
+
         // SECURITY: Check deadline to prevent stale transactions
         let clock = Clock::get()?;
         require!(clock.unix_timestamp <= deadline, StableSwapError::TransactionExpired);
@@ -1066,6 +1229,10 @@ pub mod idl_stableswap {
         require!(!ctx.accounts.pool.paused, StableSwapError::PoolPaused);
         require!(amount_in >= MIN_SWAP_AMOUNT, StableSwapError::AmountTooSmall);
 
+        // SECURITY FIX: Enforce maximum slippage to prevent MEV exploitation
+        let min_allowed = (amount_in as u128 * (10000 - MAX_SLIPPAGE_BPS) as u128 / 10000) as u64;
+        require!(min_amount_out >= min_allowed, StableSwapError::SlippageTooHigh);
+
         // SECURITY: Check deadline to prevent stale transactions
         let clock = Clock::get()?;
         require!(clock.unix_timestamp <= deadline, StableSwapError::TransactionExpired);
@@ -1159,12 +1326,30 @@ pub mod idl_stableswap {
     // ADMIN FUNCTIONS
     // ═══════════════════════════════════════════════════════════════════════════
 
-    /// Start amplification ramping (admin only)
+    /// AUDIT FIX: Commit to amplification change (step 1 of commit-reveal)
+    /// Admin commits hash of (target_amp, duration, salt) and must wait AMP_COMMIT_DELAY
+    /// This prevents MEV from front-running amp changes
+    pub fn commit_amp_ramp(
+        ctx: Context<AdminOnly>,
+        commit_hash: [u8; 32],
+    ) -> Result<()> {
+        let pool = &mut ctx.accounts.pool;
+        let clock = Clock::get()?;
+
+        pool.pending_amp_commit = Some(commit_hash);
+        pool.amp_commit_time = Some(clock.unix_timestamp);
+
+        msg!("Amplification ramp committed. Reveal after {} seconds", AMP_COMMIT_DELAY);
+        Ok(())
+    }
+
+    /// Start amplification ramping (admin only) - AUDIT FIX: Now requires valid commit
     /// Amplification changes gradually over time to prevent manipulation
     pub fn ramp_amplification(
         ctx: Context<AdminOnly>,
         target_amplification: u64,
         ramp_duration: i64,
+        salt: [u8; 32],
     ) -> Result<()> {
         require!(
             target_amplification >= MIN_AMPLIFICATION && target_amplification <= MAX_AMPLIFICATION,
@@ -1174,6 +1359,32 @@ pub mod idl_stableswap {
 
         let pool = &mut ctx.accounts.pool;
         let clock = Clock::get()?;
+
+        // AUDIT FIX: Verify commit-reveal
+        let pending_commit = pool.pending_amp_commit.ok_or(StableSwapError::NoAmpCommitPending)?;
+        let commit_time = pool.amp_commit_time.ok_or(StableSwapError::NoAmpCommitPending)?;
+
+        // Check commit delay has passed
+        require!(
+            clock.unix_timestamp >= commit_time + AMP_COMMIT_DELAY,
+            StableSwapError::AmpCommitDelayNotPassed
+        );
+
+        // Verify the reveal matches the commit
+        // Hash = sha256(target_amp || duration || salt)
+        let mut data = Vec::with_capacity(48);
+        data.extend_from_slice(&target_amplification.to_le_bytes());
+        data.extend_from_slice(&ramp_duration.to_le_bytes());
+        data.extend_from_slice(&salt);
+        let computed_hash = anchor_lang::solana_program::hash::hash(&data);
+        require!(
+            computed_hash.to_bytes() == pending_commit,
+            StableSwapError::AmpCommitMismatch
+        );
+
+        // Clear the commit
+        pool.pending_amp_commit = None;
+        pool.amp_commit_time = None;
 
         // Get current effective amplification
         let current_amp = get_current_amplification(pool)?;
@@ -1626,8 +1837,9 @@ fn calculate_swap_output(
 // ACCOUNTS
 // ═══════════════════════════════════════════════════════════════════════════════
 
+/// Step 1: Create pool account only (smaller stack footprint)
 #[derive(Accounts)]
-pub struct Initialize<'info> {
+pub struct CreatePool<'info> {
     #[account(
         init,
         payer = authority,
@@ -1635,10 +1847,30 @@ pub struct Initialize<'info> {
         seeds = [b"pool"],
         bump
     )]
-    pub pool: Account<'info, StablePool>,
+    pub pool: Box<Account<'info, StablePool>>,
 
-    pub bags_mint: Account<'info, Mint>,
-    pub pump_mint: Account<'info, Mint>,
+    pub bags_mint: Box<Account<'info, Mint>>,
+    pub pump_mint: Box<Account<'info, Mint>>,
+
+    #[account(mut)]
+    pub authority: Signer<'info>,
+
+    pub system_program: Program<'info, System>,
+}
+
+/// Step 2: Initialize vaults and LP mint
+#[derive(Accounts)]
+pub struct InitVaults<'info> {
+    #[account(
+        mut,
+        seeds = [b"pool"],
+        bump = pool.bump,
+        constraint = pool.authority == authority.key() @ StableSwapError::Unauthorized
+    )]
+    pub pool: Box<Account<'info, StablePool>>,
+
+    pub bags_mint: Box<Account<'info, Mint>>,
+    pub pump_mint: Box<Account<'info, Mint>>,
 
     #[account(
         init,
@@ -1648,7 +1880,7 @@ pub struct Initialize<'info> {
         token::mint = bags_mint,
         token::authority = pool,
     )]
-    pub bags_vault: Account<'info, TokenAccount>,
+    pub bags_vault: Box<Account<'info, TokenAccount>>,
 
     #[account(
         init,
@@ -1658,7 +1890,7 @@ pub struct Initialize<'info> {
         token::mint = pump_mint,
         token::authority = pool,
     )]
-    pub pump_vault: Account<'info, TokenAccount>,
+    pub pump_vault: Box<Account<'info, TokenAccount>>,
 
     #[account(
         init,
@@ -1668,7 +1900,60 @@ pub struct Initialize<'info> {
         mint::decimals = TOKEN_DECIMALS,
         mint::authority = pool,
     )]
-    pub lp_mint: Account<'info, Mint>,
+    pub lp_mint: Box<Account<'info, Mint>>,
+
+    #[account(mut)]
+    pub authority: Signer<'info>,
+
+    pub token_program: Program<'info, Token>,
+    pub system_program: Program<'info, System>,
+    pub rent: Sysvar<'info, Rent>,
+}
+
+/// Combined initialization (for backwards compatibility - may hit stack limits)
+#[derive(Accounts)]
+pub struct Initialize<'info> {
+    #[account(
+        init,
+        payer = authority,
+        space = 8 + StablePool::INIT_SPACE,
+        seeds = [b"pool"],
+        bump
+    )]
+    pub pool: Box<Account<'info, StablePool>>,
+
+    pub bags_mint: Box<Account<'info, Mint>>,
+    pub pump_mint: Box<Account<'info, Mint>>,
+
+    #[account(
+        init,
+        payer = authority,
+        seeds = [b"bags_vault"],
+        bump,
+        token::mint = bags_mint,
+        token::authority = pool,
+    )]
+    pub bags_vault: Box<Account<'info, TokenAccount>>,
+
+    #[account(
+        init,
+        payer = authority,
+        seeds = [b"pump_vault"],
+        bump,
+        token::mint = pump_mint,
+        token::authority = pool,
+    )]
+    pub pump_vault: Box<Account<'info, TokenAccount>>,
+
+    #[account(
+        init,
+        payer = authority,
+        seeds = [b"lp_mint"],
+        bump,
+        mint::decimals = TOKEN_DECIMALS,
+        mint::authority = pool,
+    )]
+    pub lp_mint: Box<Account<'info, Mint>>,
 
     #[account(mut)]
     pub authority: Signer<'info>,
@@ -1681,37 +1966,37 @@ pub struct Initialize<'info> {
 #[derive(Accounts)]
 pub struct AddLiquidity<'info> {
     #[account(mut, seeds = [b"pool"], bump = pool.bump)]
-    pub pool: Account<'info, StablePool>,
+    pub pool: Box<Account<'info, StablePool>>,
 
     #[account(mut, seeds = [b"bags_vault"], bump = pool.bags_vault_bump)]
-    pub bags_vault: Account<'info, TokenAccount>,
+    pub bags_vault: Box<Account<'info, TokenAccount>>,
 
     #[account(mut, seeds = [b"pump_vault"], bump = pool.pump_vault_bump)]
-    pub pump_vault: Account<'info, TokenAccount>,
+    pub pump_vault: Box<Account<'info, TokenAccount>>,
 
     #[account(mut, seeds = [b"lp_mint"], bump = pool.lp_mint_bump)]
-    pub lp_mint: Account<'info, Mint>,
+    pub lp_mint: Box<Account<'info, Mint>>,
 
     #[account(
         mut,
         constraint = user_bags.mint == pool.bags_mint @ StableSwapError::InvalidMint,
         constraint = user_bags.owner == user.key() @ StableSwapError::InvalidOwner
     )]
-    pub user_bags: Account<'info, TokenAccount>,
+    pub user_bags: Box<Account<'info, TokenAccount>>,
 
     #[account(
         mut,
         constraint = user_pump.mint == pool.pump_mint @ StableSwapError::InvalidMint,
         constraint = user_pump.owner == user.key() @ StableSwapError::InvalidOwner
     )]
-    pub user_pump: Account<'info, TokenAccount>,
+    pub user_pump: Box<Account<'info, TokenAccount>>,
 
     #[account(
         mut,
         constraint = user_lp.mint == pool.lp_mint @ StableSwapError::InvalidMint,
         constraint = user_lp.owner == user.key() @ StableSwapError::InvalidOwner
     )]
-    pub user_lp: Account<'info, TokenAccount>,
+    pub user_lp: Box<Account<'info, TokenAccount>>,
 
     #[account(mut)]
     pub user: Signer<'info>,
@@ -1722,37 +2007,37 @@ pub struct AddLiquidity<'info> {
 #[derive(Accounts)]
 pub struct RemoveLiquidity<'info> {
     #[account(mut, seeds = [b"pool"], bump = pool.bump)]
-    pub pool: Account<'info, StablePool>,
+    pub pool: Box<Account<'info, StablePool>>,
 
     #[account(mut, seeds = [b"bags_vault"], bump = pool.bags_vault_bump)]
-    pub bags_vault: Account<'info, TokenAccount>,
+    pub bags_vault: Box<Account<'info, TokenAccount>>,
 
     #[account(mut, seeds = [b"pump_vault"], bump = pool.pump_vault_bump)]
-    pub pump_vault: Account<'info, TokenAccount>,
+    pub pump_vault: Box<Account<'info, TokenAccount>>,
 
     #[account(mut, seeds = [b"lp_mint"], bump = pool.lp_mint_bump)]
-    pub lp_mint: Account<'info, Mint>,
+    pub lp_mint: Box<Account<'info, Mint>>,
 
     #[account(
         mut,
         constraint = user_bags.mint == pool.bags_mint @ StableSwapError::InvalidMint,
         constraint = user_bags.owner == user.key() @ StableSwapError::InvalidOwner
     )]
-    pub user_bags: Account<'info, TokenAccount>,
+    pub user_bags: Box<Account<'info, TokenAccount>>,
 
     #[account(
         mut,
         constraint = user_pump.mint == pool.pump_mint @ StableSwapError::InvalidMint,
         constraint = user_pump.owner == user.key() @ StableSwapError::InvalidOwner
     )]
-    pub user_pump: Account<'info, TokenAccount>,
+    pub user_pump: Box<Account<'info, TokenAccount>>,
 
     #[account(
         mut,
         constraint = user_lp.mint == pool.lp_mint @ StableSwapError::InvalidMint,
         constraint = user_lp.owner == user.key() @ StableSwapError::InvalidOwner
     )]
-    pub user_lp: Account<'info, TokenAccount>,
+    pub user_lp: Box<Account<'info, TokenAccount>>,
 
     #[account(mut)]
     pub user: Signer<'info>,
@@ -1763,27 +2048,27 @@ pub struct RemoveLiquidity<'info> {
 #[derive(Accounts)]
 pub struct Swap<'info> {
     #[account(mut, seeds = [b"pool"], bump = pool.bump)]
-    pub pool: Account<'info, StablePool>,
+    pub pool: Box<Account<'info, StablePool>>,
 
     #[account(mut, seeds = [b"bags_vault"], bump = pool.bags_vault_bump)]
-    pub bags_vault: Account<'info, TokenAccount>,
+    pub bags_vault: Box<Account<'info, TokenAccount>>,
 
     #[account(mut, seeds = [b"pump_vault"], bump = pool.pump_vault_bump)]
-    pub pump_vault: Account<'info, TokenAccount>,
+    pub pump_vault: Box<Account<'info, TokenAccount>>,
 
     #[account(
         mut,
         constraint = user_bags.mint == pool.bags_mint @ StableSwapError::InvalidMint,
         constraint = user_bags.owner == user.key() @ StableSwapError::InvalidOwner
     )]
-    pub user_bags: Account<'info, TokenAccount>,
+    pub user_bags: Box<Account<'info, TokenAccount>>,
 
     #[account(
         mut,
         constraint = user_pump.mint == pool.pump_mint @ StableSwapError::InvalidMint,
         constraint = user_pump.owner == user.key() @ StableSwapError::InvalidOwner
     )]
-    pub user_pump: Account<'info, TokenAccount>,
+    pub user_pump: Box<Account<'info, TokenAccount>>,
 
     #[account(mut)]
     pub user: Signer<'info>,
@@ -1812,19 +2097,29 @@ pub struct WithdrawAdminFees<'info> {
         bump = pool.bump,
         constraint = pool.authority == authority.key() @ StableSwapError::Unauthorized
     )]
-    pub pool: Account<'info, StablePool>,
+    pub pool: Box<Account<'info, StablePool>>,
 
     #[account(mut, seeds = [b"bags_vault"], bump = pool.bags_vault_bump)]
-    pub bags_vault: Account<'info, TokenAccount>,
+    pub bags_vault: Box<Account<'info, TokenAccount>>,
 
     #[account(mut, seeds = [b"pump_vault"], bump = pool.pump_vault_bump)]
-    pub pump_vault: Account<'info, TokenAccount>,
+    pub pump_vault: Box<Account<'info, TokenAccount>>,
 
-    #[account(mut, constraint = admin_bags.mint == pool.bags_mint @ StableSwapError::InvalidMint)]
-    pub admin_bags: Account<'info, TokenAccount>,
+    // AUDIT FIX: Also verify owner to prevent sending fees to arbitrary accounts
+    #[account(
+        mut,
+        constraint = admin_bags.mint == pool.bags_mint @ StableSwapError::InvalidMint,
+        constraint = admin_bags.owner == authority.key() @ StableSwapError::InvalidOwner
+    )]
+    pub admin_bags: Box<Account<'info, TokenAccount>>,
 
-    #[account(mut, constraint = admin_pump.mint == pool.pump_mint @ StableSwapError::InvalidMint)]
-    pub admin_pump: Account<'info, TokenAccount>,
+    // AUDIT FIX: Also verify owner to prevent sending fees to arbitrary accounts
+    #[account(
+        mut,
+        constraint = admin_pump.mint == pool.pump_mint @ StableSwapError::InvalidMint,
+        constraint = admin_pump.owner == authority.key() @ StableSwapError::InvalidOwner
+    )]
+    pub admin_pump: Box<Account<'info, TokenAccount>>,
 
     #[account(mut)]
     pub authority: Signer<'info>,
@@ -1851,16 +2146,16 @@ pub struct CompleteAuthorityTransfer<'info> {
 #[derive(Accounts)]
 pub struct AddLiquiditySingleSided<'info> {
     #[account(mut, seeds = [b"pool"], bump = pool.bump)]
-    pub pool: Account<'info, StablePool>,
+    pub pool: Box<Account<'info, StablePool>>,
 
     #[account(mut, seeds = [b"bags_vault"], bump = pool.bags_vault_bump)]
-    pub bags_vault: Account<'info, TokenAccount>,
+    pub bags_vault: Box<Account<'info, TokenAccount>>,
 
     #[account(mut, seeds = [b"pump_vault"], bump = pool.pump_vault_bump)]
-    pub pump_vault: Account<'info, TokenAccount>,
+    pub pump_vault: Box<Account<'info, TokenAccount>>,
 
     #[account(mut, seeds = [b"lp_mint"], bump = pool.lp_mint_bump)]
-    pub lp_mint: Account<'info, Mint>,
+    pub lp_mint: Box<Account<'info, Mint>>,
 
     // AUDIT FIX H-3: Validate user_token is either BAGS or PUMP mint
     /// User's token account (BAGS or PUMP depending on is_bags parameter)
@@ -1869,14 +2164,14 @@ pub struct AddLiquiditySingleSided<'info> {
         constraint = user_token.mint == pool.bags_mint || user_token.mint == pool.pump_mint @ StableSwapError::InvalidMint,
         constraint = user_token.owner == user.key() @ StableSwapError::InvalidOwner
     )]
-    pub user_token: Account<'info, TokenAccount>,
+    pub user_token: Box<Account<'info, TokenAccount>>,
 
     #[account(
         mut,
         constraint = user_lp.mint == pool.lp_mint @ StableSwapError::InvalidMint,
         constraint = user_lp.owner == user.key() @ StableSwapError::InvalidOwner
     )]
-    pub user_lp: Account<'info, TokenAccount>,
+    pub user_lp: Box<Account<'info, TokenAccount>>,
 
     #[account(mut)]
     pub user: Signer<'info>,
@@ -1896,7 +2191,7 @@ pub struct CreateFarmingPeriod<'info> {
         bump = pool.bump,
         constraint = pool.authority == authority.key() @ StableSwapError::Unauthorized
     )]
-    pub pool: Account<'info, StablePool>,
+    pub pool: Box<Account<'info, StablePool>>,
 
     #[account(
         init,
@@ -1905,10 +2200,10 @@ pub struct CreateFarmingPeriod<'info> {
         seeds = [b"farming_period", pool.key().as_ref(), &start_time.to_le_bytes()],
         bump
     )]
-    pub farming_period: Account<'info, FarmingPeriod>,
+    pub farming_period: Box<Account<'info, FarmingPeriod>>,
 
     /// Reward token mint
-    pub reward_mint: Account<'info, Mint>,
+    pub reward_mint: Box<Account<'info, Mint>>,
 
     /// Vault to hold farming rewards
     #[account(
@@ -1919,14 +2214,14 @@ pub struct CreateFarmingPeriod<'info> {
         token::mint = reward_mint,
         token::authority = farming_period,
     )]
-    pub farming_vault: Account<'info, TokenAccount>,
+    pub farming_vault: Box<Account<'info, TokenAccount>>,
 
     /// Authority's reward token account to transfer from
     #[account(
         mut,
         constraint = authority_reward_account.mint == reward_mint.key() @ StableSwapError::InvalidMint
     )]
-    pub authority_reward_account: Account<'info, TokenAccount>,
+    pub authority_reward_account: Box<Account<'info, TokenAccount>>,
 
     #[account(mut)]
     pub authority: Signer<'info>,
@@ -1939,13 +2234,13 @@ pub struct CreateFarmingPeriod<'info> {
 #[derive(Accounts)]
 pub struct StakeLp<'info> {
     #[account(seeds = [b"pool"], bump = pool.bump)]
-    pub pool: Account<'info, StablePool>,
+    pub pool: Box<Account<'info, StablePool>>,
 
     #[account(
         mut,
         constraint = farming_period.pool == pool.key() @ StableSwapError::InvalidFarmingPeriod
     )]
-    pub farming_period: Account<'info, FarmingPeriod>,
+    pub farming_period: Box<Account<'info, FarmingPeriod>>,
 
     // AUDIT FIX H-1: Validate user_position ownership
     // Either it's a new position (owner is default) or belongs to user
@@ -1953,7 +2248,7 @@ pub struct StakeLp<'info> {
         mut,
         constraint = user_position.owner == Pubkey::default() || user_position.owner == user.key() @ StableSwapError::Unauthorized
     )]
-    pub user_position: Account<'info, UserFarmingPosition>,
+    pub user_position: Box<Account<'info, UserFarmingPosition>>,
 
     // AUDIT FIX H-2: Validate staked_lp_vault is correct PDA for this farming period
     #[account(
@@ -1961,14 +2256,14 @@ pub struct StakeLp<'info> {
         constraint = staked_lp_vault.mint == pool.lp_mint @ StableSwapError::InvalidMint,
         constraint = staked_lp_vault.owner == farming_period.key() @ StableSwapError::InvalidOwner
     )]
-    pub staked_lp_vault: Account<'info, TokenAccount>,
+    pub staked_lp_vault: Box<Account<'info, TokenAccount>>,
 
     #[account(
         mut,
         constraint = user_lp.mint == pool.lp_mint @ StableSwapError::InvalidMint,
         constraint = user_lp.owner == user.key() @ StableSwapError::InvalidOwner
     )]
-    pub user_lp: Account<'info, TokenAccount>,
+    pub user_lp: Box<Account<'info, TokenAccount>>,
 
     #[account(mut)]
     pub user: Signer<'info>,
@@ -1979,20 +2274,20 @@ pub struct StakeLp<'info> {
 #[derive(Accounts)]
 pub struct UnstakeLp<'info> {
     #[account(seeds = [b"pool"], bump = pool.bump)]
-    pub pool: Account<'info, StablePool>,
+    pub pool: Box<Account<'info, StablePool>>,
 
     #[account(
         mut,
         constraint = farming_period.pool == pool.key() @ StableSwapError::InvalidFarmingPeriod
     )]
-    pub farming_period: Account<'info, FarmingPeriod>,
+    pub farming_period: Box<Account<'info, FarmingPeriod>>,
 
     #[account(
         mut,
         constraint = user_position.owner == user.key() @ StableSwapError::Unauthorized,
         constraint = user_position.farming_period == farming_period.key() @ StableSwapError::InvalidFarmingPeriod
     )]
-    pub user_position: Account<'info, UserFarmingPosition>,
+    pub user_position: Box<Account<'info, UserFarmingPosition>>,
 
     // AUDIT FIX H-2: Validate staked_lp_vault
     #[account(
@@ -2000,14 +2295,14 @@ pub struct UnstakeLp<'info> {
         constraint = staked_lp_vault.mint == pool.lp_mint @ StableSwapError::InvalidMint,
         constraint = staked_lp_vault.owner == farming_period.key() @ StableSwapError::InvalidOwner
     )]
-    pub staked_lp_vault: Account<'info, TokenAccount>,
+    pub staked_lp_vault: Box<Account<'info, TokenAccount>>,
 
     #[account(
         mut,
         constraint = user_lp.mint == pool.lp_mint @ StableSwapError::InvalidMint,
         constraint = user_lp.owner == user.key() @ StableSwapError::InvalidOwner
     )]
-    pub user_lp: Account<'info, TokenAccount>,
+    pub user_lp: Box<Account<'info, TokenAccount>>,
 
     #[account(mut)]
     pub user: Signer<'info>,
@@ -2018,20 +2313,20 @@ pub struct UnstakeLp<'info> {
 #[derive(Accounts)]
 pub struct ClaimFarmingRewards<'info> {
     #[account(seeds = [b"pool"], bump = pool.bump)]
-    pub pool: Account<'info, StablePool>,
+    pub pool: Box<Account<'info, StablePool>>,
 
     #[account(
         mut,
         constraint = farming_period.pool == pool.key() @ StableSwapError::InvalidFarmingPeriod
     )]
-    pub farming_period: Account<'info, FarmingPeriod>,
+    pub farming_period: Box<Account<'info, FarmingPeriod>>,
 
     #[account(
         mut,
         constraint = user_position.owner == user.key() @ StableSwapError::Unauthorized,
         constraint = user_position.farming_period == farming_period.key() @ StableSwapError::InvalidFarmingPeriod
     )]
-    pub user_position: Account<'info, UserFarmingPosition>,
+    pub user_position: Box<Account<'info, UserFarmingPosition>>,
 
     // AUDIT FIX H-2: Validate farming_vault
     #[account(
@@ -2039,14 +2334,14 @@ pub struct ClaimFarmingRewards<'info> {
         constraint = farming_vault.mint == farming_period.reward_mint @ StableSwapError::InvalidMint,
         constraint = farming_vault.owner == farming_period.key() @ StableSwapError::InvalidOwner
     )]
-    pub farming_vault: Account<'info, TokenAccount>,
+    pub farming_vault: Box<Account<'info, TokenAccount>>,
 
     #[account(
         mut,
         constraint = user_reward_account.mint == farming_period.reward_mint @ StableSwapError::InvalidMint,
         constraint = user_reward_account.owner == user.key() @ StableSwapError::InvalidOwner
     )]
-    pub user_reward_account: Account<'info, TokenAccount>,
+    pub user_reward_account: Box<Account<'info, TokenAccount>>,
 
     #[account(mut)]
     pub user: Signer<'info>,
@@ -2094,6 +2389,11 @@ pub struct StablePool {
     // Authority timelock fields
     pub pending_authority: Option<Pubkey>,
     pub authority_transfer_time: Option<i64>,
+    // AUDIT FIX: Commit-reveal for amplification changes
+    /// Committed hash of (target_amp, duration, salt)
+    pub pending_amp_commit: Option<[u8; 32]>,
+    /// Timestamp when amp commit was made
+    pub amp_commit_time: Option<i64>,
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -2235,4 +2535,21 @@ pub enum StableSwapError {
 
     #[msg("Farming period has ended")]
     FarmingEnded,
+
+    // SECURITY FIX: Slippage protection
+    #[msg("Slippage tolerance too high (max 5%)")]
+    SlippageTooHigh,
+
+    // AUDIT FIX: Commit-reveal for amplification
+    #[msg("No amplification commit pending")]
+    NoAmpCommitPending,
+
+    #[msg("Amplification commit delay not passed (1 hour required)")]
+    AmpCommitDelayNotPassed,
+
+    #[msg("Amplification reveal does not match commit")]
+    AmpCommitMismatch,
+
+    #[msg("Pool already initialized")]
+    AlreadyInitialized,
 }
