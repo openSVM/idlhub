@@ -1,0 +1,121 @@
+.docs-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+.page-title {
+  font-size: var(--font-2xl);
+  font-weight: 700;
+  margin: 0;
+  color: var(--text-primary);
+  text-transform: uppercase;
+}
+
+.page-title::before {
+  content: '// ';
+  color: var(--accent-primary);
+}
+
+.doc-section {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-secondary);
+  padding: var(--section-padding);
+}
+
+.doc-section h2 {
+  font-size: var(--font-xl);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 var(--space-md);
+  text-transform: uppercase;
+}
+
+.doc-section h2::before {
+  content: '## ';
+  color: var(--accent-primary);
+}
+
+.doc-section h3 {
+  font-size: var(--font-lg);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: var(--space-lg) 0 var(--space-sm);
+}
+
+.doc-section h3::before {
+  content: '### ';
+  color: var(--accent-primary);
+}
+
+.doc-section p {
+  font-size: var(--font-lg);
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0 0 var(--space-md);
+}
+
+.doc-section ul,
+.doc-section ol {
+  padding-left: var(--space-xl);
+  margin: 0 0 var(--space-md);
+}
+
+.doc-section li {
+  font-size: var(--font-lg);
+  color: var(--text-secondary);
+  line-height: 1.8;
+}
+
+.doc-section strong {
+  color: var(--text-primary);
+}
+
+.doc-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: var(--space-md) 0;
+}
+
+.doc-table th,
+.doc-table td {
+  text-align: left;
+  padding: var(--space-md);
+  border: 1px solid var(--border-secondary);
+}
+
+.doc-table th {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: var(--font-sm);
+}
+
+.doc-table td {
+  color: var(--text-secondary);
+  font-size: var(--font-md);
+}
+
+.code-block {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-secondary);
+  padding: var(--space-lg);
+  font-family: 'SF Mono', 'Monaco', monospace;
+  font-size: var(--font-md);
+  color: var(--text-primary);
+  overflow-x: auto;
+  line-height: 1.5;
+  margin: 0;
+}
+
+@media (max-width: 640px) {
+  .doc-table {
+    font-size: var(--font-sm);
+  }
+
+  .doc-table th,
+  .doc-table td {
+    padding: var(--space-sm);
+  }
+}

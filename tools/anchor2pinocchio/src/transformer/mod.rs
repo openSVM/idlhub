@@ -255,8 +255,17 @@ fn transform_body(body: &str, accounts: &[PinocchioAccount], config: &Config) ->
     // Replace anchor error types
     result = result.replace("anchor_lang::error::Error", "ProgramError");
     result = result.replace("anchor_lang::error!", "return Err(");
-    // Comment out anchor_lang hashing - needs manual replacement
-    result = result.replace("anchor_lang::solana_program::hash::hash", "/* TODO: implement hash */ compute_hash");
+    // Replace anchor_lang hashing with a helper function call
+    // We'll add compute_hash to helpers.rs
+    // Handle both spaced and non-spaced versions
+    result = result.replace(
+        "anchor_lang::solana_program::hash::hash",
+        "crate::helpers::compute_hash"
+    );
+    result = result.replace(
+        "anchor_lang :: solana_program :: hash :: hash",
+        "crate::helpers::compute_hash"
+    );
 
     // Replace program-specific error enum names with generic Error
     // Common Anchor error naming conventions (with and without spaces)
@@ -832,13 +841,31 @@ fn extract_transfer_amount(rest: &str) -> String {
     }
 
     // Fallback: look for common amount variable names (most specific first)
-    for var in ["bags_amount", "pump_amount", "lp_amount", "total_rewards", "amount_in", "amount_out", "amount_out_after_fee"] {
+    // These are common variable names used in Anchor programs for transfer amounts
+    for var in [
+        "total_pending",       // Farming rewards claims
+        "bags_to_withdraw",    // Admin fee withdrawal
+        "pump_to_withdraw",    // Admin fee withdrawal
+        "bags_amount",
+        "pump_amount",
+        "lp_amount",
+        "staked_amount",
+        "unstake_amount",
+        "reward_amount",
+        "total_rewards",
+        "amount_in",
+        "amount_out",
+        "amount_out_after_fee",
+        "transfer_amount",
+    ] {
         if rest.contains(var) {
             return var.to_string();
         }
     }
 
-    "amount".to_string() // Default fallback
+    // If we still can't find the amount, try to parse it from the call structure
+    // Look for pattern like: ), amount)?  where amount is the last argument
+    "amount".to_string() // Default fallback - will cause compile error if wrong
 }
 
 fn clean_spaces_simple(s: &str) -> String {
@@ -1317,9 +1344,11 @@ fn fix_signer_seeds(body: &str) -> String {
         "let signer = pinocchio::instruction::Signer::from(&pool_seeds);"
     );
 
-    // Pattern 2: Period PDA signer (more complex)
-    // For now, just fix the bump reference and leave a TODO
+    // Pattern 2: Period PDA signer (farming_period PDA)
+    // This pattern: let period_seeds = &[...]; followed by invoke_signed(&[signer])
+    // Need to create signer from period_seeds
     result = result.replace("& [period_bump]", "&[farming_period_state.bump]");
+
 
     // Also handle pool_state.bump pattern
     result = result.replace("& [pool_bump]", "&[pool_state.bump]");
@@ -1329,13 +1358,43 @@ fn fix_signer_seeds(body: &str) -> String {
     // Convert: .invoke_signed(signer_seeds)? to .invoke_signed(&[signer])?
     result = result.replace(".invoke_signed(signer_seeds)?", ".invoke_signed(&[signer])?");
 
-    // Also handle case where signer_seeds is still referenced for complex PDAs
-    // Replace let signer_seeds = & [& period_seeds [..]] with TODO
+    // Handle farming_period PDA signer pattern
+    // Replace let signer_seeds = & [& period_seeds [..]] with proper signer creation
     if result.contains("& [& period_seeds [..]]") {
         result = result.replace(
             "let signer_seeds = & [& period_seeds [..]] ;",
-            "// TODO: Convert period signer - complex PDA pattern"
+            "let signer = pinocchio::instruction::Signer::from(&period_seeds);"
         );
+    }
+
+    // Fix period_seeds to use pinocchio Seed format
+    // Convert raw byte slices to Seed::from() wrapped values
+    // Pattern: let period_seeds = [b"farming_period".as_ref (), pool_key.as_ref (), start_time_bytes.as_ref (), &[bump],] ;
+    use regex::Regex;
+    // Pattern has "& [" with space after &
+    if result.contains("let period_seeds = & [b\"farming_period\"") || result.contains("let period_seeds = [b\"farming_period\"") {
+        // Find and replace the period_seeds pattern with proper Seed::from() wrapping
+        // Pattern has:
+        // - Optional & before [
+        // - .as_ref () with space before closing paren
+        // - Spaces before commas
+        let period_pattern = Regex::new(
+            r#"let period_seeds = &?\s*\[b"farming_period"\.as_ref \(\s*\)\s*,\s*pool_key\.as_ref \(\s*\)\s*,\s*start_time_bytes\.as_ref \(\s*\)\s*,\s*&\[([^\]]+)\]\s*,?\s*\]\s*;"#
+        ).unwrap();
+
+        if let Some(caps) = period_pattern.captures(&result) {
+            let bump_var = caps.get(1).map_or("farming_period_state.bump", |m| m.as_str());
+            let replacement = format!(
+                "let period_bump_bytes = [{}];\n    let period_seeds = [\n        pinocchio::instruction::Seed::from(b\"farming_period\" as &[u8]),\n        pinocchio::instruction::Seed::from(pool_key.as_ref()),\n        pinocchio::instruction::Seed::from(start_time_bytes.as_ref()),\n        pinocchio::instruction::Seed::from(&period_bump_bytes as &[u8]),\n    ];",
+                bump_var
+            );
+            result = period_pattern.replace(&result, replacement.as_str()).to_string();
+        }
+    }
+
+    // Also handle the simpler pattern without outer &
+    if result.contains("period_seeds = & [") {
+        result = result.replace("period_seeds = & [", "period_seeds = [");
     }
 
     result

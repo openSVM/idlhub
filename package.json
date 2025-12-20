@@ -44,7 +44,11 @@
     "attack:quick": "npx ts-node attack-framework/index.ts --rounds=5 --mock",
     "attack:full": "npx ts-node attack-framework/index.ts --rounds=20 --parallel",
     "attack:mev": "npx ts-node attack-framework/index.ts --vectors=SANDWICH_ATTACK,JIT_LIQUIDITY,ORACLE_FRONT_RUN",
-    "attack:flash": "npx ts-node attack-framework/index.ts --vectors=FLASH_LOAN_STAKE,FLASH_LOAN_VOTE,LIQUIDITY_DRAIN"
+    "attack:flash": "npx ts-node attack-framework/index.ts --vectors=FLASH_LOAN_STAKE,FLASH_LOAN_VOTE,LIQUIDITY_DRAIN",
+    "bot:telegram": "npx ts-node bots/telegram-bot.ts",
+    "bot:twitter": "npx ts-node bots/twitter-bot.ts",
+    "bot:market-maker": "npx ts-node bots/ai-market-maker.ts",
+    "bot:all": "npm-run-all --parallel bot:telegram bot:twitter bot:market-maker"
   },
   "bin": {
     "idlhub-mcp": "./mcp-server/src/index.js"
@@ -59,22 +63,35 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0",
     "@irys/sdk": "^0.2.0",
     "@modelcontextprotocol/sdk": "^1.19.1",
     "@qdrant/js-client-rest": "^1.13.0",
     "axios": "^1.6.2",
     "bs58": "^5.0.0",
+    "canvas": "^2.11.2",
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "got": "^11.8.6",
-    "ws": "^8.18.3"
+    "node-telegram-bot-api": "^0.66.0",
+    "twitter-api-v2": "^1.18.2",
+    "ws": "^8.18.3",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.21.0"
   },
   "devDependencies": {
     "@coral-xyz/anchor": "^0.29.0",
     "@playwright/test": "^1.57.0",
     "@solana/spl-token": "^0.3.9",
     "@solana/web3.js": "^1.98.4",
+    "@types/canvas": "^2.0.4",
     "@types/node": "^20.10.5",
+    "@types/node-telegram-bot-api": "^0.64.7",
+    "@types/react": "^18.2.45",
+    "@types/react-dom": "^18.2.18",
+    "@vitejs/plugin-react": "^4.2.1",
+    "npm-run-all": "^4.1.5",
     "pixelmatch": "^7.1.0",
     "playwright": "^1.57.0",
     "pngjs": "^7.0.0",

@@ -77,6 +77,27 @@ fn emit_helpers_rs(extras: &SourceExtras, src_dir: &Path) -> Result<()> {
         content.push_str("    Ok(u64::from_le_bytes(data[64..72].try_into().unwrap()))\n");
         content.push_str("}\n\n");
 
+        // Add compute_hash helper (SHA256)
+        content.push_str("/// Hash result type\n");
+        content.push_str("pub struct Hash {\n");
+        content.push_str("    bytes: [u8; 32],\n");
+        content.push_str("}\n\n");
+        content.push_str("impl Hash {\n");
+        content.push_str("    pub fn to_bytes(&self) -> [u8; 32] {\n");
+        content.push_str("        self.bytes\n");
+        content.push_str("    }\n");
+        content.push_str("}\n\n");
+        content.push_str("/// Compute SHA256 hash of data using solana syscall\n");
+        content.push_str("#[inline(always)]\n");
+        content.push_str("pub fn compute_hash(data: &[u8]) -> Hash {\n");
+        content.push_str("    use pinocchio::syscalls::sol_sha256;\n");
+        content.push_str("    let mut hash_result = [0u8; 32];\n");
+        content.push_str("    unsafe {\n");
+        content.push_str("        sol_sha256(data.as_ptr(), data.len() as u64, hash_result.as_mut_ptr());\n");
+        content.push_str("    }\n");
+        content.push_str("    Hash { bytes: hash_result }\n");
+        content.push_str("}\n\n");
+
         for f in &extras.helper_functions {
             // Clean up the signature and body
             let mut sig = clean_helper_signature(&f.signature);
@@ -640,8 +661,8 @@ fn emit_instruction(
                     acc.name
                 ));
                 content.push_str(&format!(
-                    "    let (expected_{}, _bump) = pinocchio::pubkey::find_program_address(\n",
-                    acc.name
+                    "    let (expected_{}, {}_bump) = pinocchio::pubkey::find_program_address(\n",
+                    acc.name, acc.name
                 ));
                 content.push_str(&format!(
                     "        &[{}],\n",

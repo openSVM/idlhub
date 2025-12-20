@@ -1,6 +1,52 @@
 /* ==================== CSS THEME VARIABLES ==================== */
 
 :root {
+    /* Spacing System */
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 16px;
+    --space-lg: 24px;
+    --space-xl: 32px;
+    --space-2xl: 48px;
+
+    /* Font Sizes */
+    --font-xs: 10px;
+    --font-sm: 11px;
+    --font-md: 12px;
+    --font-lg: 14px;
+    --font-xl: 16px;
+    --font-2xl: 18px;
+    --font-3xl: 24px;
+    --font-4xl: 28px;
+
+    /* Layout */
+    --container-max: 1200px;
+    --border-radius: 0;
+    --header-padding: 16px 24px;
+    --section-padding: 24px;
+    --card-padding: 20px;
+
+    /* Component Sizes */
+    --btn-padding: 10px 16px;
+    --input-padding: 12px;
+    --badge-padding: 2px 8px;
+
+    /* Grid Gaps */
+    --grid-gap-sm: 8px;
+    --grid-gap-md: 16px;
+    --grid-gap-lg: 20px;
+
+    /* Accent Colors (Protocol-specific) */
+    --accent-green: #3fb950;
+    --accent-purple: #a371f7;
+    --accent-orange: #d29922;
+    --accent-pink: #db61a2;
+    --battle-red: #f85149;
+    --battle-blue: #58a6ff;
+    --gold: #ffd700;
+    --silver: #c0c0c0;
+    --bronze: #cd7f32;
+
     /* Light Theme (Default) */
     --bg-primary: #f5f5f5;
     --bg-secondary: #ffffff;

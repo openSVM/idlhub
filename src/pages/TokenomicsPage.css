@@ -1,0 +1,233 @@
+.tokenomics-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+.page-title {
+  font-size: var(--font-2xl);
+  font-weight: 700;
+  margin: 0;
+  color: var(--text-primary);
+  text-transform: uppercase;
+}
+
+.page-title::before {
+  content: '// ';
+  color: var(--accent-primary);
+}
+
+.token-overview {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--grid-gap-md);
+}
+
+.token-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-secondary);
+  padding: var(--card-padding);
+  text-align: center;
+}
+
+.token-card h2 {
+  font-size: var(--font-sm);
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  margin: 0 0 var(--space-sm);
+}
+
+.token-value {
+  font-size: var(--font-4xl);
+  font-weight: 700;
+  color: var(--accent-primary);
+}
+
+.token-label {
+  font-size: var(--font-sm);
+  color: var(--text-secondary);
+  margin-top: var(--space-xs);
+}
+
+.section-title {
+  font-size: var(--font-lg);
+  font-weight: 700;
+  margin: 0 0 var(--space-lg);
+  color: var(--text-primary);
+  text-transform: uppercase;
+}
+
+.section-title::before {
+  content: '// ';
+  color: var(--accent-primary);
+}
+
+.distribution {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-secondary);
+  padding: var(--section-padding);
+}
+
+.distribution-grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.dist-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.dist-bar {
+  height: 24px;
+  min-width: 20px;
+  transition: width 0.5s;
+}
+
+.dist-label {
+  flex: 1;
+  font-size: var(--font-md);
+  color: var(--text-primary);
+}
+
+.dist-value {
+  font-size: var(--font-lg);
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.utility-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--grid-gap-md);
+}
+
+.utility-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-secondary);
+  padding: var(--card-padding);
+}
+
+.utility-card h3 {
+  font-size: var(--font-lg);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 var(--space-sm);
+}
+
+.utility-card p {
+  font-size: var(--font-md);
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.deflationary {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-secondary);
+  padding: var(--section-padding);
+}
+
+.mechanics-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.mechanics-table th,
+.mechanics-table td {
+  text-align: left;
+  padding: var(--space-md);
+  border: 1px solid var(--border-secondary);
+}
+
+.mechanics-table th {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: var(--font-sm);
+}
+
+.mechanics-table td {
+  color: var(--text-secondary);
+  font-size: var(--font-md);
+}
+
+.tier-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: var(--grid-gap-md);
+}
+
+.tier-card {
+  background: var(--bg-secondary);
+  border: 2px solid var(--border-secondary);
+  padding: var(--card-padding);
+  text-align: center;
+}
+
+.tier-card.bronze { border-color: var(--bronze); }
+.tier-card.silver { border-color: var(--silver); }
+.tier-card.gold { border-color: var(--gold); }
+.tier-card.platinum { border-color: var(--accent-primary); }
+.tier-card.diamond { border-color: var(--accent-purple); }
+
+.tier-card h3 {
+  font-size: var(--font-xl);
+  font-weight: 700;
+  margin: 0 0 var(--space-sm);
+}
+
+.tier-card.bronze h3 { color: var(--bronze); }
+.tier-card.silver h3 { color: var(--silver); }
+.tier-card.gold h3 { color: var(--gold); }
+.tier-card.platinum h3 { color: var(--accent-primary); }
+.tier-card.diamond h3 { color: var(--accent-purple); }
+
+.tier-stake {
+  font-size: var(--font-lg);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--space-md);
+}
+
+.tier-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+}
+
+.tier-card li {
+  font-size: var(--font-sm);
+  color: var(--text-secondary);
+  padding: var(--space-xs) 0;
+}
+
+.tier-card li::before {
+  content: '+ ';
+  color: var(--accent-green);
+}
+
+@media (max-width: 1024px) {
+  .token-overview {
+    grid-template-columns: 1fr;
+  }
+
+  .utility-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .tier-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .utility-grid,
+  .tier-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -766,6 +766,322 @@ export class IdlProtocolClient {
     const amounts = [0, BADGE_VEIDL_BRONZE, BADGE_VEIDL_SILVER, BADGE_VEIDL_GOLD, BADGE_VEIDL_PLATINUM, BADGE_VEIDL_DIAMOND];
     return amounts[tier] || 0;
   }
+
+  // ==================== BATTLE FUNCTIONS ====================
+
+  /**
+   * Derive PDA for a prediction battle
+   */
+  deriveBattlePDA(challenger: PublicKey, battleNonce: number): [PublicKey, number] {
+    const nonceBuf = Buffer.alloc(8);
+    nonceBuf.writeBigUInt64LE(BigInt(battleNonce));
+    return PublicKey.findProgramAddressSync(
+      [Buffer.from('battle'), challenger.toBuffer(), nonceBuf],
+      PROGRAM_ID
+    );
+  }
+
+  /**
+   * Fetch all active battles from chain
+   */
+  async getActiveBattles(): Promise<Battle[]> {
+    const accounts = await this.connection.getProgramAccounts(PROGRAM_ID, {
+      filters: [
+        { dataSize: BATTLE_ACCOUNT_SIZE },
+        { memcmp: { offset: 8 + 32 + 32 + 32 + 8, bytes: '2' } } // Status = Active (1)
+      ],
+      commitment: this.commitment
+    });
+
+    return accounts.map(({ pubkey, account }) => ({
+      address: pubkey,
+      ...parseBattle(account.data)
+    }));
+  }
+
+  /**
+   * Fetch pending battles for a specific user
+   */
+  async getPendingBattlesFor(user: PublicKey): Promise<Battle[]> {
+    const accounts = await this.connection.getProgramAccounts(PROGRAM_ID, {
+      filters: [
+        { dataSize: BATTLE_ACCOUNT_SIZE },
+        { memcmp: { offset: 8 + 32, bytes: user.toBase58() } } // opponent field
+      ],
+      commitment: this.commitment
+    });
+
+    return accounts
+      .map(({ pubkey, account }) => ({
+        address: pubkey,
+        ...parseBattle(account.data)
+      }))
+      .filter(b => b.status === BattleStatus.Pending);
+  }
+
+  /**
+   * Create a new prediction battle challenge
+   */
+  async createBattle(
+    opponent: PublicKey,
+    market: PublicKey,
+    amount: number | bigint,
+    challengerSide: boolean, // true = YES, false = NO
+    battleNonce: number
+  ): Promise<string> {
+    const [battlePDA] = this.deriveBattlePDA(this.wallet.publicKey, battleNonce);
+    const [statePDA] = deriveStatePDA();
+
+    const data = Buffer.concat([
+      computeDiscriminator('create_battle'),
+      opponent.toBuffer(),
+      market.toBuffer(),
+      encodeU64(amount),
+      encodeBool(challengerSide),
+      encodeU64(battleNonce)
+    ]);
+
+    const instruction = new TransactionInstruction({
+      keys: [
+        { pubkey: this.wallet.publicKey, isSigner: true, isWritable: true },
+        { pubkey: opponent, isSigner: false, isWritable: false },
+        { pubkey: battlePDA, isSigner: false, isWritable: true },
+        { pubkey: market, isSigner: false, isWritable: false },
+        { pubkey: statePDA, isSigner: false, isWritable: true },
+        { pubkey: SystemProgram.programId, isSigner: false, isWritable: false }
+      ],
+      programId: PROGRAM_ID,
+      data
+    });
+
+    const tx = new Transaction().add(instruction);
+    return sendAndConfirmTransaction(this.connection, tx, [this.wallet], { commitment: this.commitment });
+  }
+
+  /**
+   * Accept a pending battle challenge
+   */
+  async acceptBattle(battleAddress: PublicKey): Promise<string> {
+    const [statePDA] = deriveStatePDA();
+
+    const data = computeDiscriminator('accept_battle');
+
+    const instruction = new TransactionInstruction({
+      keys: [
+        { pubkey: this.wallet.publicKey, isSigner: true, isWritable: true },
+        { pubkey: battleAddress, isSigner: false, isWritable: true },
+        { pubkey: statePDA, isSigner: false, isWritable: true },
+        { pubkey: SystemProgram.programId, isSigner: false, isWritable: false }
+      ],
+      programId: PROGRAM_ID,
+      data
+    });
+
+    const tx = new Transaction().add(instruction);
+    return sendAndConfirmTransaction(this.connection, tx, [this.wallet], { commitment: this.commitment });
+  }
+
+  // ==================== GUILD FUNCTIONS ====================
+
+  /**
+   * Derive PDA for a guild
+   */
+  deriveGuildPDA(name: string): [PublicKey, number] {
+    return PublicKey.findProgramAddressSync(
+      [Buffer.from('guild'), Buffer.from(name)],
+      PROGRAM_ID
+    );
+  }
+
+  /**
+   * Derive PDA for a guild member
+   */
+  deriveGuildMemberPDA(guild: PublicKey, member: PublicKey): [PublicKey, number] {
+    return PublicKey.findProgramAddressSync(
+      [Buffer.from('guild_member'), guild.toBuffer(), member.toBuffer()],
+      PROGRAM_ID
+    );
+  }
+
+  /**
+   * Fetch all guilds from chain
+   */
+  async getAllGuilds(): Promise<Guild[]> {
+    const accounts = await this.connection.getProgramAccounts(PROGRAM_ID, {
+      filters: [
+        { dataSize: GUILD_ACCOUNT_SIZE }
+      ],
+      commitment: this.commitment
+    });
+
+    return accounts.map(({ pubkey, account }) => ({
+      address: pubkey,
+      ...parseGuild(account.data)
+    }));
+  }
+
+  /**
+   * Fetch guild members
+   */
+  async getGuildMembers(guildAddress: PublicKey): Promise<GuildMember[]> {
+    const accounts = await this.connection.getProgramAccounts(PROGRAM_ID, {
+      filters: [
+        { dataSize: GUILD_MEMBER_ACCOUNT_SIZE },
+        { memcmp: { offset: 8, bytes: guildAddress.toBase58() } }
+      ],
+      commitment: this.commitment
+    });
+
+    return accounts.map(({ pubkey, account }) => ({
+      address: pubkey,
+      ...parseGuildMember(account.data)
+    }));
+  }
+
+  /**
+   * Create a new guild
+   */
+  async createGuild(name: string): Promise<string> {
+    const [guildPDA] = this.deriveGuildPDA(name);
+    const [statePDA] = deriveStatePDA();
+
+    const data = Buffer.concat([
+      computeDiscriminator('create_guild'),
+      encodeString(name)
+    ]);
+
+    const instruction = new TransactionInstruction({
+      keys: [
+        { pubkey: this.wallet.publicKey, isSigner: true, isWritable: true },
+        { pubkey: guildPDA, isSigner: false, isWritable: true },
+        { pubkey: statePDA, isSigner: false, isWritable: true },
+        { pubkey: SystemProgram.programId, isSigner: false, isWritable: false }
+      ],
+      programId: PROGRAM_ID,
+      data
+    });
+
+    const tx = new Transaction().add(instruction);
+    return sendAndConfirmTransaction(this.connection, tx, [this.wallet], { commitment: this.commitment });
+  }
+
+  /**
+   * Join an existing guild
+   */
+  async joinGuild(guildAddress: PublicKey): Promise<string> {
+    const [memberPDA] = this.deriveGuildMemberPDA(guildAddress, this.wallet.publicKey);
+
+    const data = computeDiscriminator('join_guild');
+
+    const instruction = new TransactionInstruction({
+      keys: [
+        { pubkey: this.wallet.publicKey, isSigner: true, isWritable: true },
+        { pubkey: guildAddress, isSigner: false, isWritable: true },
+        { pubkey: memberPDA, isSigner: false, isWritable: true },
+        { pubkey: SystemProgram.programId, isSigner: false, isWritable: false }
+      ],
+      programId: PROGRAM_ID,
+      data
+    });
+
+    const tx = new Transaction().add(instruction);
+    return sendAndConfirmTransaction(this.connection, tx, [this.wallet], { commitment: this.commitment });
+  }
+}
+
+// ==================== BATTLE TYPES ====================
+
+export enum BattleStatus {
+  Pending = 0,
+  Active = 1,
+  Resolved = 2,
+  Cancelled = 3
+}
+
+export interface Battle {
+  address?: PublicKey;
+  challenger: PublicKey;
+  opponent: PublicKey;
+  market: PublicKey;
+  stakeAmount: bigint;
+  challengerSide: boolean;
+  status: BattleStatus;
+  winner: PublicKey | null;
+  createdAt: bigint;
+  acceptedAt: bigint | null;
+  bump: number;
+}
+
+export interface Guild {
+  address?: PublicKey;
+  name: string;
+  leader: PublicKey;
+  memberCount: number;
+  totalWinnings: bigint;
+  createdAt: bigint;
+  bump: number;
+}
+
+export interface GuildMember {
+  address?: PublicKey;
+  guild: PublicKey;
+  member: PublicKey;
+  contribution: bigint;
+  joinedAt: bigint;
+  bump: number;
+}
+
+// Account sizes for filtering
+const BATTLE_ACCOUNT_SIZE = 8 + 32 + 32 + 32 + 8 + 1 + 1 + 33 + 8 + 9 + 1;
+const GUILD_ACCOUNT_SIZE = 8 + 4 + 32 + 32 + 4 + 8 + 8 + 1;
+const GUILD_MEMBER_ACCOUNT_SIZE = 8 + 32 + 32 + 8 + 8 + 1;
+
+// ==================== BATTLE/GUILD PARSING ====================
+
+function parseBattle(data: Buffer): Omit<Battle, 'address'> {
+  let offset = 8;
+  const challenger = new PublicKey(data.slice(offset, offset + 32)); offset += 32;
+  const opponent = new PublicKey(data.slice(offset, offset + 32)); offset += 32;
+  const market = new PublicKey(data.slice(offset, offset + 32)); offset += 32;
+  const stakeAmount = data.readBigUInt64LE(offset); offset += 8;
+  const challengerSide = data[offset] === 1; offset += 1;
+  const status = data[offset] as BattleStatus; offset += 1;
+
+  const hasWinner = data[offset] === 1; offset += 1;
+  const winner = hasWinner ? new PublicKey(data.slice(offset, offset + 32)) : null; if (hasWinner) offset += 32;
+
+  const createdAt = data.readBigInt64LE(offset); offset += 8;
+
+  const hasAcceptedAt = data[offset] === 1; offset += 1;
+  const acceptedAt = hasAcceptedAt ? data.readBigInt64LE(offset) : null; if (hasAcceptedAt) offset += 8;
+
+  const bump = data[offset];
+
+  return { challenger, opponent, market, stakeAmount, challengerSide, status, winner, createdAt, acceptedAt, bump };
+}
+
+function parseGuild(data: Buffer): Omit<Guild, 'address'> {
+  let offset = 8;
+  const nameLen = data.readUInt32LE(offset); offset += 4;
+  const name = data.slice(offset, offset + nameLen).toString('utf8'); offset += nameLen;
+  const leader = new PublicKey(data.slice(offset, offset + 32)); offset += 32;
+  const memberCount = data.readUInt32LE(offset); offset += 4;
+  const totalWinnings = data.readBigUInt64LE(offset); offset += 8;
+  const createdAt = data.readBigInt64LE(offset); offset += 8;
+  const bump = data[offset];
+
+  return { name, leader, memberCount, totalWinnings, createdAt, bump };
+}
+
+function parseGuildMember(data: Buffer): Omit<GuildMember, 'address'> {
+  let offset = 8;
+  const guild = new PublicKey(data.slice(offset, offset + 32)); offset += 32;
+  const member = new PublicKey(data.slice(offset, offset + 32)); offset += 32;
+  const contribution = data.readBigUInt64LE(offset); offset += 8;
+  const joinedAt = data.readBigInt64LE(offset); offset += 8;
+  const bump = data[offset];
+
+  return { guild, member, contribution, joinedAt, bump };
 }
 
 // ==================== EXPORTS ====================
@@ -782,4 +1098,7 @@ export {
   parsePredictionMarket,
   parseBet,
   parseVolumeBadge,
+  parseBattle,
+  parseGuild,
+  parseGuildMember,
 };

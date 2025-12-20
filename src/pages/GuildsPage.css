@@ -1,0 +1,236 @@
+.guilds-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+.page-title {
+  font-size: var(--font-2xl);
+  font-weight: 700;
+  margin: 0;
+  color: var(--text-primary);
+  text-transform: uppercase;
+}
+
+.page-title::before {
+  content: '// ';
+  color: var(--accent-primary);
+}
+
+.connect-prompt {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--accent-primary);
+  padding: var(--space-lg);
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.create-guild {
+  background: var(--bg-secondary);
+  border: 2px solid var(--accent-purple);
+  padding: var(--section-padding);
+}
+
+.create-guild h2 {
+  font-size: var(--font-lg);
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  margin: 0 0 var(--space-lg);
+}
+
+.create-guild h2::before {
+  content: '[ ';
+  color: var(--accent-purple);
+}
+
+.create-guild h2::after {
+  content: ' ]';
+  color: var(--accent-purple);
+}
+
+.guild-form {
+  display: flex;
+  gap: var(--grid-gap-md);
+  align-items: end;
+}
+
+.form-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.form-group label {
+  font-size: var(--font-sm);
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.form-group input {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-secondary);
+  color: var(--text-primary);
+  padding: var(--input-padding);
+  font-size: var(--font-lg);
+  font-family: inherit;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--accent-purple);
+}
+
+.btn-create {
+  background: var(--accent-purple);
+  color: white;
+  border: none;
+  padding: var(--input-padding) var(--space-xl);
+  font-size: var(--font-lg);
+  font-weight: 700;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-family: inherit;
+  white-space: nowrap;
+}
+
+.btn-create:hover {
+  background: #8a61d7;
+}
+
+.section-title {
+  font-size: var(--font-lg);
+  font-weight: 700;
+  margin: 0;
+  color: var(--text-primary);
+  text-transform: uppercase;
+}
+
+.section-title::before {
+  content: '// ';
+  color: var(--accent-primary);
+}
+
+.guilds-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--grid-gap-lg);
+}
+
+.guild-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-secondary);
+  padding: var(--card-padding);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.guild-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.guild-name {
+  font-size: var(--font-xl);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.guild-members {
+  font-size: var(--font-sm);
+  color: var(--accent-purple);
+  font-weight: 600;
+}
+
+.guild-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.guild-stat {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--font-md);
+}
+
+.guild-stat .label {
+  color: var(--text-secondary);
+}
+
+.guild-stat .value {
+  color: var(--text-primary);
+  font-weight: 600;
+  font-family: monospace;
+}
+
+.guild-stat .value.highlight {
+  color: var(--accent-green);
+}
+
+.btn-join {
+  background: transparent;
+  color: var(--accent-purple);
+  border: 1px solid var(--accent-purple);
+  padding: var(--btn-padding);
+  font-size: var(--font-md);
+  font-weight: 700;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+
+.btn-join:hover {
+  background: var(--accent-purple);
+  color: white;
+}
+
+.loading,
+.empty-state {
+  text-align: center;
+  padding: var(--space-2xl);
+  color: var(--text-secondary);
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-secondary);
+}
+
+.error-banner {
+  background: var(--error-color);
+  color: white;
+  padding: var(--space-md);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.error-banner button {
+  background: white;
+  color: var(--error-color);
+  border: none;
+  padding: var(--space-sm) var(--space-md);
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+@media (max-width: 1024px) {
+  .guilds-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .guild-form {
+    flex-direction: column;
+  }
+
+  .guilds-grid {
+    grid-template-columns: 1fr;
+  }
+}
