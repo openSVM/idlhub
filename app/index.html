@@ -2407,14 +2407,238 @@
             }
         }
 
-        // Generate prediction markets from metrics
+        // Generate DEX WARS and engaging markets from metrics
         function generateMarketsFromMetrics(metrics) {
             const marketsContainer = document.getElementById('marketsContainer');
 
             // Filter protocols with real metrics (users > 0)
             const activeProtocols = metrics.filter(m =>
-                m.users && m.users > 0
+                m.windowVolume && m.windowVolume > 0
             );
+
+            if (activeProtocols.length === 0) {
+                marketsContainer.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">
+                        <p>Loading live markets... Fetching on-chain data!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const markets = [];
+
+            // 1. DEX WARS - Top engaging market
+            markets.push(createDEXWar(activeProtocols));
+
+            // 2. Whale Exposure markets
+            markets.push(...createWhaleExposureMarkets(activeProtocols));
+
+            // 3. Health check binaries
+            markets.push(...createHealthCheckMarkets(activeProtocols));
+
+            // Render all markets
+            marketsContainer.innerHTML = markets.join('');
+        }
+
+        // DEX WARS - Tribal competition
+        function createDEXWar(protocols) {
+            // Pick top 2 protocols by volume for the war
+            const sorted = protocols
+                .sort((a, b) => (b.windowVolume || 0) - (a.windowVolume || 0))
+                .slice(0, 2);
+
+            if (sorted.length < 2) return '';
+
+            const team1 = sorted[0];
+            const team2 = sorted[1];
+
+            // Calculate current "score" (retail participation + honest ratio)
+            const score1 = (team1.retailParticipation || 50) + (team1.honestRatio || 50);
+            const score2 = (team2.retailParticipation || 50) + (team2.honestRatio || 50);
+
+            const winning = score1 > score2 ? team1 : team2;
+            const losing = score1 > score2 ? team2 : team1;
+
+            // Time until next hour
+            const now = new Date();
+            const nextHour = new Date(now);
+            nextHour.setHours(now.getHours() + 1, 0, 0, 0);
+            const timeLeft = Math.floor((nextHour - now) / 1000);
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+
+            return `
+                <div class="market-card" style="grid-column: 1/-1; border: 2px solid var(--accent-primary);">
+                    <div class="market-header" style="border-bottom: 2px solid var(--border-primary); padding-bottom: 12px; margin-bottom: 16px;">
+                        <div style="font-size: 18px; font-weight: 700; color: var(--accent-primary);">
+                            DEX WAR THIS HOUR
+                        </div>
+                        <div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">
+                            Hourly Competition - Winner Takes Glory
+                        </div>
+                    </div>
+
+                    <div class="market-question" style="font-size: 16px; font-weight: 700; margin-bottom: 20px;">
+                        Which DEX is healthier this hour?
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr auto 1fr; gap: 16px; margin-bottom: 20px;">
+                        <!-- Team 1 -->
+                        <div style="text-align: right;">
+                            <div style="font-size: 20px; font-weight: 700; color: var(--text-primary);">
+                                ${team1.name || team1.id}
+                            </div>
+                            <div style="font-size: 24px; font-weight: 700; color: ${score1 > score2 ? '#00ff00' : '#ff0000'}; margin: 8px 0;">
+                                ${score1.toFixed(0)}
+                            </div>
+                            <div style="font-size: 11px; color: var(--text-secondary);">
+                                ${team1.users || 0} users<br/>
+                                ${team1.honestRatio || 0}% honest<br/>
+                                ${team1.retailParticipation || 0}% retail
+                            </div>
+                            <div style="margin-top: 12px; font-size: 11px; ${score1 > score2 ? 'color: #00ff00;' : 'color: #ff0000;'}">
+                                ${score1 > score2 ? 'WINNING' : 'LOSING'}
+                            </div>
+                        </div>
+
+                        <!-- VS -->
+                        <div style="display: flex; align-items: center; font-size: 24px; font-weight: 700; color: var(--text-muted);">
+                            VS
+                        </div>
+
+                        <!-- Team 2 -->
+                        <div style="text-align: left;">
+                            <div style="font-size: 20px; font-weight: 700; color: var(--text-primary);">
+                                ${team2.name || team2.id}
+                            </div>
+                            <div style="font-size: 24px; font-weight: 700; color: ${score2 > score1 ? '#00ff00' : '#ff0000'}; margin: 8px 0;">
+                                ${score2.toFixed(0)}
+                            </div>
+                            <div style="font-size: 11px; color: var(--text-secondary);">
+                                ${team2.users || 0} users<br/>
+                                ${team2.honestRatio || 0}% honest<br/>
+                                ${team2.retailParticipation || 0}% retail
+                            </div>
+                            <div style="margin-top: 12px; font-size: 11px; ${score2 > score1 ? 'color: #00ff00;' : 'color: #ff0000;'}">
+                                ${score2 > score1 ? 'WINNING' : 'LOSING'}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="text-align: center; padding: 12px; background: var(--bg-secondary); border: 1px solid var(--border-primary);">
+                        <div style="font-size: 11px; color: var(--text-secondary); margin-bottom: 4px;">
+                            RESETS IN
+                        </div>
+                        <div style="font-size: 16px; font-weight: 700; color: var(--accent-primary);">
+                            ${minutes}:${seconds.toString().padStart(2, '0')}
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                        <button class="bet-button" style="background: var(--accent-primary); color: var(--bg-primary); padding: 12px; font-weight: 700; font-size: 13px; border: none; cursor: pointer;">
+                            BET ON ${team1.name || team1.id}
+                        </button>
+                        <button class="bet-button" style="background: var(--accent-primary); color: var(--bg-primary); padding: 12px; font-weight: 700; font-size: 13px; border: none; cursor: pointer;">
+                            BET ON ${team2.name || team2.id}
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Whale Exposure Markets - Drama!
+        function createWhaleExposureMarkets(protocols) {
+            return protocols
+                .filter(p => p.whaleDependency && p.whaleDependency > 40) // Only sus protocols
+                .slice(0, 2)
+                .map(protocol => {
+                    const isExposed = protocol.whaleDependency > 50;
+                    const yesOdds = Math.min(85, protocol.whaleDependency + 10);
+                    const noOdds = 100 - yesOdds;
+
+                    return `
+                        <div class="market-card">
+                            <div class="market-header">
+                                <div style="font-size: 14px; font-weight: 700; color: ${isExposed ? '#ff0000' : '#ffaa00'};">
+                                    ${isExposed ? 'EXPOSED' : 'SUSPICIOUS'}
+                                </div>
+                            </div>
+
+                            <div class="market-question">
+                                ${protocol.name || protocol.id} controlled by whales?
+                            </div>
+
+                            <div style="margin: 12px 0; padding: 12px; background: var(--bg-secondary); border-left: 3px solid ${isExposed ? '#ff0000' : '#ffaa00'};">
+                                <div style="font-size: 11px; color: var(--text-secondary);">EVIDENCE:</div>
+                                <div style="font-size: 12px; margin-top: 4px;">
+                                    Whale Control: ${protocol.whaleDependency}%<br/>
+                                    Top 10 Users: $${(protocol.whaleVolume || 0).toLocaleString()}
+                                </div>
+                            </div>
+
+                            <div class="market-options">
+                                <button class="market-option">
+                                    <div class="option-label">YES - EXPOSED</div>
+                                    <div class="option-odds">${yesOdds}%</div>
+                                </button>
+                                <button class="market-option">
+                                    <div class="option-label">NO - CLEAN</div>
+                                    <div class="option-odds">${noOdds}%</div>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+        }
+
+        // Health Check Markets
+        function createHealthCheckMarkets(protocols) {
+            return protocols
+                .filter(p => p.isHealthy !== undefined)
+                .slice(0, 3)
+                .map(protocol => {
+                    const threshold = 30;
+                    const current = protocol.whaleDependency || 0;
+                    const isHealthy = current < threshold;
+                    const yesOdds = isHealthy ? 70 : 30;
+                    const noOdds = 100 - yesOdds;
+
+                    return `
+                        <div class="market-card">
+                            <div class="market-header">
+                                <div style="font-size: 12px; font-weight: 700; color: var(--text-secondary);">
+                                    HEALTH CHECK
+                                </div>
+                            </div>
+
+                            <div class="market-question">
+                                ${protocol.name || protocol.id} whale-resistant?
+                            </div>
+
+                            <div style="margin: 12px 0; font-size: 12px; color: var(--text-secondary);">
+                                Current: ${current}% whale control<br/>
+                                Target: &lt;${threshold}% for healthy
+                            </div>
+
+                            <div class="market-options">
+                                <button class="market-option">
+                                    <div class="option-label">YES - HEALTHY</div>
+                                    <div class="option-odds">${yesOdds}%</div>
+                                </button>
+                                <button class="market-option">
+                                    <div class="option-label">NO - CENTRALIZED</div>
+                                    <div class="option-odds">${noOdds}%</div>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+        }
+
+        // Keep old market generation for fallback
+        function generateMarketsFromMetrics_OLD(metrics) {
+            const marketsContainer = document.getElementById('marketsContainer');
+            const activeProtocols = metrics.filter(m => m.users && m.users > 0);
 
             if (activeProtocols.length === 0) {
                 marketsContainer.innerHTML = `

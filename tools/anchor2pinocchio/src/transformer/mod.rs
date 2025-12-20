@@ -323,42 +323,18 @@ fn transform_body(body: &str, accounts: &[PinocchioAccount], config: &Config) ->
 }
 
 /// Replace checked math with unchecked operations for smaller binary
+/// NOTE: Currently disabled - regex approach breaks complex type-cast chains.
+/// Future: implement proper AST-level transformation
 fn use_unchecked_math(body: &str) -> String {
-    let mut result = body.to_string();
-
-    // Replace .checked_add(x).ok_or(...)? with wrapping_add or just +
-    // Pattern: expr.checked_add(val).ok_or(Error::...)? -> expr.wrapping_add(val)
-    use regex::Regex;
-
-    // checked_add -> wrapping_add (no error handling needed)
-    let add_pattern = Regex::new(r"\.checked_add\s*\(([^)]+)\)\s*\.ok_or\s*\([^)]+\)\s*\?").unwrap();
-    result = add_pattern.replace_all(&result, ".wrapping_add($1)").to_string();
-
-    // checked_sub -> wrapping_sub
-    let sub_pattern = Regex::new(r"\.checked_sub\s*\(([^)]+)\)\s*\.ok_or\s*\([^)]+\)\s*\?").unwrap();
-    result = sub_pattern.replace_all(&result, ".wrapping_sub($1)").to_string();
-
-    // checked_mul -> wrapping_mul
-    let mul_pattern = Regex::new(r"\.checked_mul\s*\(([^)]+)\)\s*\.ok_or\s*\([^)]+\)\s*\?").unwrap();
-    result = mul_pattern.replace_all(&result, ".wrapping_mul($1)").to_string();
-
-    // checked_div -> simple division (panics on zero, but that's fine for stable swap math)
-    let div_pattern = Regex::new(r"\.checked_div\s*\(([^)]+)\)\s*\.ok_or\s*\([^)]+\)\s*\?").unwrap();
-    result = div_pattern.replace_all(&result, " / $1").to_string();
-
-    // Handle .and_then chains: .checked_mul(x).and_then(|v| v.checked_div(y)).ok_or(...)?
-    // -> .wrapping_mul(x) / y
-    let chain_pattern = Regex::new(
-        r"\.checked_mul\s*\(([^)]+)\)\s*\.and_then\s*\(\s*\|\s*v\s*\|\s*v\s*\.checked_div\s*\(([^)]+)\)\s*\)\s*\.ok_or\s*\([^)]+\)\s*\?"
-    ).unwrap();
-    result = chain_pattern.replace_all(&result, ".wrapping_mul($1) / $2").to_string();
-
-    // Simpler checked patterns without ok_or
-    result = result.replace(".checked_add(", ".wrapping_add(");
-    result = result.replace(".checked_sub(", ".wrapping_sub(");
-    result = result.replace(".checked_mul(", ".wrapping_mul(");
-
-    result
+    // The regex-based approach breaks expressions like:
+    //   (val as u128).checked_mul(x).and_then(...).ok_or(...)? as u64
+    // because it creates type mismatches.
+    //
+    // Main size wins come from Cargo.toml settings instead:
+    // - overflow-checks = false (compiler handles this globally)
+    // - panic = "abort" (no unwinding code)
+    // - lto = "fat" (cross-crate optimization)
+    body.to_string()
 }
 
 /// Replace Vec patterns with fixed-size arrays for no_std compatibility

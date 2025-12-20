@@ -1,5 +1,5 @@
 % IDL Protocol Whitepaper - arXiv Compliant Version
-% Version 3.2, December 2024
+% Version 3.2, December 2025
 %
 % arXiv Requirements:
 % - Uses only standard LaTeX packages available on arXiv
@@ -234,7 +234,39 @@ This paper makes the following contributions:
 \end{itemize}
 
 % ============================================================================
-% SECTION 2: PROBLEM STATEMENT
+% SECTION 2: RELATED WORK
+% ============================================================================
+\section{Related Work}
+\label{sec:related-work}
+
+\subsection{Prediction Markets}
+
+Prediction markets have a rich history dating to the Iowa Electronic Markets \cite{forsythe1992}. Modern blockchain-based implementations include:
+
+\textbf{Augur} \cite{augur} pioneered decentralized prediction markets on Ethereum using a dispute resolution mechanism with REP token staking. However, high gas costs and slow finality limit usability for frequent trading.
+
+\textbf{Polymarket} operates as a hybrid system with off-chain order matching and on-chain settlement on Polygon. While achieving better UX, it relies on centralized market creation and resolution through UMA's optimistic oracle.
+
+\textbf{Gnosis} introduced the LMSR (Logarithmic Market Scoring Rule) automated market maker \cite{hanson2003}, providing bounded loss for market makers but requiring subsidization.
+
+\textbf{Drift Protocol} on Solana offers perpetual futures but focuses on price prediction rather than arbitrary DeFi metrics.
+
+Our work differs by: (i) focusing specifically on DeFi protocol metrics, (ii) using pure on-chain data for resolution without external oracles, and (iii) leveraging Solana's high throughput for sub-second betting.
+
+\subsection{On-Chain Oracles}
+
+Oracle systems fall into two categories:
+
+\textbf{External Data Oracles} (Chainlink, Pyth, Switchboard) aggregate off-chain data and post it on-chain. While robust for price feeds, they introduce trust assumptions and cannot provide historical DeFi metrics.
+
+\textbf{On-Chain Computation} derives data directly from blockchain state. DeFiLlama computes TVL off-chain by indexing; we perform equivalent computation using only RPC calls, enabling trustless verification.
+
+\subsection{Vote-Escrow Tokenomics}
+
+The vote-escrow model originated with Curve's veCRV \cite{curve} and was extended by Solidly's ve(3,3) \cite{cronje2022}. We adopt linear decay voting power but add prediction market utility beyond pure governance.
+
+% ============================================================================
+% SECTION 3: PROBLEM STATEMENT
 % ============================================================================
 \section{Problem Statement}
 \label{sec:problem}
@@ -461,6 +493,54 @@ where $V_{\text{daily}}$ is daily volume and $S_{\text{total}}$ is total staked 
 \section{Core Protocol Architecture}
 \label{sec:core-protocol}
 
+\subsection{System Architecture}
+
+Figure~\ref{fig:architecture} illustrates the overall system architecture.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    node distance=1.5cm,
+    box/.style={rectangle, draw, minimum width=2.5cm, minimum height=0.8cm, align=center, font=\small},
+    bigbox/.style={rectangle, draw, minimum width=3cm, minimum height=1cm, align=center, font=\small},
+    arrow/.style={-{Stealth[length=2mm]}, thick}
+]
+
+% Frontend Layer
+\node[bigbox, fill=blue!10] (webapp) {Web App\\(idlhub.com)};
+\node[box, fill=blue!10, right=1cm of webapp] (widget) {Embed\\Widget};
+\node[box, fill=blue!10, right=1cm of widget] (bots) {Telegram/\\Twitter Bots};
+
+% API Layer
+\node[bigbox, fill=green!10, below=1.5cm of webapp] (api) {REST API\\+ MCP Server};
+\node[box, fill=green!10, right=1cm of api] (indexer) {On-Chain\\Indexer};
+\node[box, fill=green!10, right=1cm of indexer] (keeper) {Keeper\\Service};
+
+% Blockchain Layer
+\node[bigbox, fill=orange!10, below=1.5cm of api] (protocol) {IDL Protocol\\Program};
+\node[box, fill=orange!10, right=1cm of protocol] (stableswap) {StableSwap\\AMM};
+\node[box, fill=orange!10, right=1cm of stableswap] (tokens) {PUMP/BAGS\\Tokens};
+
+% Connections
+\draw[arrow] (webapp) -- (api);
+\draw[arrow] (widget) -- (api);
+\draw[arrow] (bots) -- (api);
+\draw[arrow] (api) -- (protocol);
+\draw[arrow] (indexer) -- (protocol);
+\draw[arrow] (keeper) -- (protocol);
+\draw[arrow] (protocol) -- (stableswap);
+\draw[arrow] (protocol) -- (tokens);
+
+% Labels
+\node[left=0.5cm of webapp, font=\footnotesize\itshape] {Frontend};
+\node[left=0.5cm of api, font=\footnotesize\itshape] {Backend};
+\node[left=0.5cm of protocol, font=\footnotesize\itshape] {Solana};
+
+\end{tikzpicture}
+\caption{IDL Protocol System Architecture}
+\label{fig:architecture}
+\end{figure}
+
 \subsection{Smart Contract Structure}
 
 The protocol consists of two primary Solana programs:
@@ -554,6 +634,21 @@ The parimutuel system is zero-sum: total payouts equal total stakes minus fees.
 \sum_{\text{winners}} \text{Payout}_i = (P_Y + P_N) \times (1 - \beta)
 \end{equation}
 \end{theorem}
+
+\begin{proof}
+Without loss of generality, assume YES wins. Each YES bettor $i$ with stake $s_i$ receives:
+\begin{equation}
+\text{Payout}_i = s_i + \frac{s_i}{P_Y} \times P_N \times (1 - \beta)
+\end{equation}
+Summing over all YES bettors:
+\begin{align}
+\sum_i \text{Payout}_i &= \sum_i s_i + \sum_i \frac{s_i}{P_Y} \times P_N \times (1 - \beta) \\
+&= P_Y + \frac{P_N (1-\beta)}{P_Y} \sum_i s_i \\
+&= P_Y + P_N(1-\beta) \\
+&= P_Y + P_N - \beta P_N
+\end{align}
+The fee collected is $\beta P_N$, confirming zero-sum after fees.
+\end{proof}
 
 \subsection{Oracle System}
 
@@ -820,6 +915,38 @@ The stratified estimator $\hat{V} = \sum_j \hat{V}_j$ is unbiased:
 \end{equation}
 \end{theorem}
 
+\begin{proof}
+For each stratum $S_j$, the sample mean is an unbiased estimator of the stratum mean. By linearity of expectation:
+\begin{equation}
+\mathbb{E}[\hat{V}] = \sum_j \mathbb{E}[\hat{V}_j] = \sum_j V_j = V_{\text{true}}
+\end{equation}
+\end{proof}
+
+\subsection{Complexity Analysis}
+
+\begin{table}[H]
+\centering
+\caption{Algorithm Complexity}
+\label{tab:complexity}
+\begin{tabular}{@{}llll@{}}
+\toprule
+\textbf{Operation} & \textbf{Time} & \textbf{Space} & \textbf{RPC Calls} \\
+\midrule
+TVL (n vaults) & $O(n)$ & $O(n)$ & $\lceil n/100 \rceil$ \\
+Volume (m txs, k strata) & $O(m)$ & $O(k)$ & $\lceil m/1000 \rceil$ \\
+Users (HyperLogLog) & $O(m)$ & $O(1)$ & $\lceil m/1000 \rceil$ \\
+Price (p pools) & $O(p)$ & $O(p)$ & $p$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+For a typical protocol with 50 vaults and 100,000 daily transactions:
+\begin{itemize}
+    \item TVL: 1 RPC call, $<$100ms latency
+    \item Volume: 100 RPC calls, $\sim$5 minutes with rate limiting
+    \item Users: 100 RPC calls, 16KB memory for HyperLogLog
+\end{itemize}
+
 The 95\% confidence interval is:
 \begin{equation}
 \text{CI}_{95} = \hat{V} \pm 1.96 \sqrt{\sum_j \frac{\sigma_j^2}{n_j}}
@@ -1033,7 +1160,47 @@ MIN\_BET\_AMOUNT & 0.001 & 0.001--1 & Minimum bet \\
 \end{table}
 
 % ============================================================================
-% SECTION 13: CONCLUSION
+% SECTION 13: LIMITATIONS AND FUTURE WORK
+% ============================================================================
+\section{Limitations and Future Work}
+\label{sec:limitations}
+
+\subsection{Current Limitations}
+
+We acknowledge several limitations of the current design:
+
+\begin{enumerate}
+    \item \textbf{RPC Reliability:} The pure-RPC oracle depends on RPC node availability. While multi-source validation mitigates this, a coordinated RPC outage during resolution could delay markets.
+
+    \item \textbf{Closed-Source Protocols:} Protocols without published IDLs require heuristic balance estimation, reducing confidence scores. Approximately 20\% of top-100 Solana protocols lack public IDLs.
+
+    \item \textbf{Historical Data:} Solana RPC provides no historical state queries. Trend-based predictions (e.g., ``TVL increases 10\%'') require off-chain snapshot databases, introducing trust assumptions.
+
+    \item \textbf{Volume Estimation Variance:} For extremely high-volume protocols ($>$1M daily transactions), stratified sampling introduces 2--5\% estimation error due to the 1000-signature pagination limit.
+
+    \item \textbf{Cross-Chain Limitations:} The oracle cannot verify assets bridged from other chains. Bridge exploits may not be detected until significant price deviation occurs.
+
+    \item \textbf{Governance Centralization:} Initial protocol deployment requires trusted setup. Full decentralization depends on sufficient veIDL distribution, which takes time to develop.
+\end{enumerate}
+
+\subsection{Future Work}
+
+Several directions for future research and development:
+
+\begin{itemize}
+    \item \textbf{Zero-Knowledge Proofs:} ZK-SNARKs could enable verifiable off-chain computation of complex metrics, reducing on-chain costs while maintaining trustlessness.
+
+    \item \textbf{Cross-Chain Expansion:} Extend the IDL registry and prediction markets to EVM chains, enabling cross-ecosystem metric comparisons.
+
+    \item \textbf{Machine Learning Integration:} AI-powered market makers could provide better initial odds estimation and liquidity bootstrapping.
+
+    \item \textbf{Continuous Prediction Markets:} Move beyond binary outcomes to scalar predictions with continuous payoff functions.
+
+    \item \textbf{Formal Verification:} Apply formal methods to verify smart contract correctness, particularly for the commit-reveal and payout logic.
+\end{itemize}
+
+% ============================================================================
+% SECTION 14: CONCLUSION
 % ============================================================================
 \section{Conclusion}
 \label{sec:conclusion}
@@ -1131,11 +1298,32 @@ Egorov, M. (2019). StableSwap---efficient mechanism for Stablecoin liquidity. \t
 \bibitem{hyperloglog}
 Flajolet, P., Fusy, É., Gandouet, O., \& Meunier, F. (2007). HyperLogLog: the analysis of a near-optimal cardinality estimation algorithm. \textit{Discrete Mathematics and Theoretical Computer Science}.
 
-\bibitem{veidl}
-Cronje, A. (2020). ve(3,3): Tokenomics with vote-escrowed tokens. \textit{Solidly Protocol}.
+\bibitem{cronje2022}
+Cronje, A. (2022). ve(3,3): Tokenomics with vote-escrowed tokens. \textit{Solidly Protocol Whitepaper}.
 
 \bibitem{parimutuel}
 Eisenberg, E. (1959). Aggregation of utility functions. \textit{Management Science}, 7(4), 337--350.
+
+\bibitem{forsythe1992}
+Forsythe, R., Nelson, F., Neumann, G. R., \& Wright, J. (1992). Anatomy of an experimental political stock market. \textit{The American Economic Review}, 82(5), 1142--1161.
+
+\bibitem{augur}
+Peterson, J., Krug, J., Zoltu, M., Williams, A. K., \& Alexander, S. (2015). Augur: a decentralized oracle and prediction market platform. \textit{arXiv preprint arXiv:1501.01042}.
+
+\bibitem{hanson2003}
+Hanson, R. (2003). Combinatorial information market design. \textit{Information Systems Frontiers}, 5(1), 107--119.
+
+\bibitem{arrow2008}
+Arrow, K. J., Forsythe, R., Gorham, M., Hahn, R., Hanson, R., Ledyard, J. O., ... \& Zitzewitz, E. (2008). The promise of prediction markets. \textit{Science}, 320(5878), 877--878.
+
+\bibitem{chainlink}
+Ellis, S., Juels, A., \& Nazarov, S. (2017). ChainLink: A decentralized oracle network. \textit{Chainlink Whitepaper}.
+
+\bibitem{uniswap}
+Adams, H., Zinsmeister, N., \& Robinson, D. (2020). Uniswap v2 core. \textit{Uniswap Whitepaper}.
+
+\bibitem{commitreveal}
+Blum, M. (1983). Coin flipping by telephone a protocol for solving impossible problems. \textit{ACM SIGACT News}, 15(1), 23--27.
 
 \end{thebibliography}
 

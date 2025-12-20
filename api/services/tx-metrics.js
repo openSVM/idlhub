@@ -240,24 +240,30 @@ function calculateAdvancedMetrics(userVolumes, timestamps, totalVolume, failedTx
 
     const whaleDependency = totalVolume > 0 ? (top10Volume / totalVolume) : 0;
 
-    // 2. Bot Detection - Calculate timestamp standard deviation
+    // 2. Retail vs Programmatic Activity Analysis
     let timestampStdDev = 0;
-    let botVolume = 0;
+    let programmaticVolume = 0;
+    let retailParticipation = 0;
 
     if (timestamps.length > 1) {
         const mean = timestamps.reduce((a, b) => a + b, 0) / timestamps.length;
         const variance = timestamps.reduce((sum, t) => sum + Math.pow(t - mean, 2), 0) / timestamps.length;
         timestampStdDev = Math.sqrt(variance);
 
-        // If std dev < 1 second, likely bot activity
+        // Low variance = programmatic trading (market makers, arbs - GOOD!)
+        // High variance = retail/human trading (also GOOD!)
         if (timestampStdDev < 1.0) {
-            botVolume = totalVolume * 0.3; // Estimate 30% is bot volume
+            programmaticVolume = totalVolume * 0.7; // Estimate programmatic share
         }
     }
 
-    // 3. Calculate Honest Volume Ratio
+    // Calculate retail participation (users outside top 10 with varied patterns)
+    const retailVolume = totalVolume - top10Volume - failedTxVolume;
+    retailParticipation = totalVolume > 0 ? (retailVolume / totalVolume) : 0;
+
+    // 3. Calculate Honest Volume Ratio (whale manipulation + failed only, no bot penalty)
     const whaleVolume = top10Volume;
-    const dishonestVolume = whaleVolume + failedTxVolume + botVolume;
+    const dishonestVolume = whaleVolume + failedTxVolume; // Removed bot volume
     const honestVolume = Math.max(0, totalVolume - dishonestVolume);
     const honestRatio = totalVolume > 0 ? (honestVolume / totalVolume) : 0;
 
@@ -275,10 +281,11 @@ function calculateAdvancedMetrics(userVolumes, timestamps, totalVolume, failedTx
         whaleVolume: Math.round(whaleVolume * 100), // USD
         isHealthy: whaleDependency < 0.30, // <30% = healthy
 
-        // Bot Detection
+        // Retail vs Programmatic Activity
+        retailParticipation: Math.round(retailParticipation * 100), // Percentage
+        programmaticVolume: Math.round(programmaticVolume * 100), // USD
         timestampStdDev: Math.round(timestampStdDev * 100) / 100, // Seconds
-        botVolume: Math.round(botVolume * 100), // USD
-        likelyBotActivity: timestampStdDev < 1.0,
+        activityType: timestampStdDev < 1.0 ? 'programmatic' : 'retail', // Classification
 
         // Success Rate
         successRate: Math.round(successRate * 100), // Percentage
@@ -336,9 +343,10 @@ export async function getTxMetrics(protocolId, windowHours = 1) {
             whaleDependency: metrics.whaleDependency,
             whaleVolume: metrics.whaleVolume,
             isHealthy: metrics.isHealthy,
+            retailParticipation: metrics.retailParticipation,
+            programmaticVolume: metrics.programmaticVolume,
+            activityType: metrics.activityType,
             timestampStdDev: metrics.timestampStdDev,
-            botVolume: metrics.botVolume,
-            likelyBotActivity: metrics.likelyBotActivity,
             successRate: metrics.successRate,
             failedTxCount: metrics.failedTxCount,
             failedTxVolume: metrics.failedTxVolume,
