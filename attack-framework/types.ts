@@ -93,6 +93,203 @@ export enum AttackVector {
   INSURANCE_DRAIN = 'INSURANCE_DRAIN',           // Drain insurance fund via edge cases
   CHECKPOINT_DESYNC = 'CHECKPOINT_DESYNC',       // Desync reward checkpoints
   SEASON_TRANSITION = 'SEASON_TRANSITION',       // Exploit season bonus transitions
+
+  // ==================== NOVEL ATTACK VECTORS v2 ====================
+  // NEW attacks targeting PUMP mechanics and cross-feature interactions
+
+  // Referral System Exploits
+  REFERRAL_LOOP = 'REFERRAL_LOOP',               // Self-referral via multiple wallets
+  REFERRAL_HIJACK = 'REFERRAL_HIJACK',           // Register referral right before large bet
+  REFERRAL_ORPHAN = 'REFERRAL_ORPHAN',           // Become referrer of whales before they stake
+
+  // VIP Tier Exploits
+  VIP_TIER_FLASH = 'VIP_TIER_FLASH',             // Flash stake to max VIP, bet, unstake
+  VIP_FEE_DRAIN = 'VIP_FEE_DRAIN',               // Abuse VIP discounts to extract protocol value
+
+  // Auto-Compound Exploits
+  COMPOUND_TIMING = 'COMPOUND_TIMING',           // Game auto-compound timing for extra rewards
+  COMPOUND_GRIEF = 'COMPOUND_GRIEF',             // Spam compound calls to waste compute
+
+  // Conviction Betting Exploits
+  CONVICTION_CANCEL = 'CONVICTION_CANCEL',       // Lock for bonus then force market cancel
+  CONVICTION_STACK = 'CONVICTION_STACK',         // Stack multiple conviction locks unfairly
+  CONVICTION_FRONT_RUN = 'CONVICTION_FRONT_RUN', // Front-run conviction bonus calculations
+
+  // Predictor Stats Gaming
+  STREAK_MANIPULATION = 'STREAK_MANIPULATION',   // Game streak system via market selection
+  ACCURACY_GAMING = 'ACCURACY_GAMING',           // Manipulate accuracy for bonus qualification
+  STATS_INFLATION = 'STATS_INFLATION',           // Inflate predictor stats artificially
+
+  // Creator Fee Exploits (Prediction Mining)
+  CREATOR_SELF_BET = 'CREATOR_SELF_BET',         // Create market, bet on both sides for volume
+  CREATOR_FEE_DRAIN = 'CREATOR_FEE_DRAIN',       // Drain creator fees via volume wash
+  CREATOR_SPAM = 'CREATOR_SPAM',                 // Spam markets to dilute legitimate creators
+
+  // Season Exploits
+  SEASON_PRIZE_SNIPE = 'SEASON_PRIZE_SNIPE',     // Snipe season end with massive activity
+  SEASON_BONUS_STACK = 'SEASON_BONUS_STACK',     // Stack season + early bird + conviction
+  SEASON_ROLLOVER = 'SEASON_ROLLOVER',           // Exploit rewards between season transitions
+
+  // Cross-Feature Attacks
+  BADGE_VIP_COMBO = 'BADGE_VIP_COMBO',           // Combine badge + VIP for outsized advantage
+  STAKE_BONUS_LOOP = 'STAKE_BONUS_LOOP',         // Loop stake bonus with veIDL multiplier
+  REFERRAL_VOLUME_WASH = 'REFERRAL_VOLUME_WASH', // Wash trade to generate referral fees
+
+  // Early Bird Exploits
+  EARLY_BIRD_GRIEF = 'EARLY_BIRD_GRIEF',         // Spam early bets to deplete bonus pool
+  EARLY_BIRD_SNIPE = 'EARLY_BIRD_SNIPE',         // Bot early bird window on new markets
+
+  // Oracle Bond Edge Cases
+  BOND_REFRESH_RACE = 'BOND_REFRESH_RACE',       // Race to withdraw + re-deposit bond
+  ORACLE_ROTATION = 'ORACLE_ROTATION',           // Rotate oracle identity to avoid reputation
+
+  // Claim Cooldown Bypass
+  COOLDOWN_SPLIT = 'COOLDOWN_SPLIT',             // Split stake across wallets to bypass cooldown
+  REWARD_TIMING_SPLIT = 'REWARD_TIMING_SPLIT',   // Coordinate claims across wallets for timing
+
+  // Account/PDA Exploits
+  NONCE_REUSE = 'NONCE_REUSE',                   // Attempt to reuse bet nonces
+  PDA_SEED_COLLISION = 'PDA_SEED_COLLISION',     // Find seed combinations that collide
+
+  // ==================== NOVEL ATTACK VECTORS v3 ====================
+  // DEEPER exploits: state transitions, cross-account, timing, multi-tx chains
+
+  // State Transition Attacks
+  PAUSE_FRONT_RUN = 'PAUSE_FRONT_RUN',           // Front-run pause to extract funds
+  UNPAUSE_RACE = 'UNPAUSE_RACE',                 // Race to exploit on unpause
+  AUTHORITY_SNIPE = 'AUTHORITY_SNIPE',           // Exploit during authority transfer window
+  TVL_CAP_SANDWICH = 'TVL_CAP_SANDWICH',         // Sandwich TVL cap raise
+
+  // veIDL Decay Edge Cases
+  DECAY_ROUNDING = 'DECAY_ROUNDING',             // Exploit rounding in veIDL decay calc
+  LOCK_END_EDGE = 'LOCK_END_EDGE',               // Exploit exact lock_end timestamp
+  EXTEND_LOCK_ABUSE = 'EXTEND_LOCK_ABUSE',       // Game extend_lock for veIDL manipulation
+  VE_TOTAL_SUPPLY_DRIFT = 'VE_TOTAL_SUPPLY_DRIFT', // total_ve_supply != sum of positions
+
+  // Reward Checkpoint Exploits
+  CHECKPOINT_SANDWICH = 'CHECKPOINT_SANDWICH',   // Sandwich stake around reward distribution
+  ZERO_TOTAL_STAKED = 'ZERO_TOTAL_STAKED',       // Exploit when total_staked = 0
+  PRECISION_ACCUMULATOR = 'PRECISION_ACCUMULATOR', // Accumulate precision loss over time
+  REWARD_POOL_DRAIN = 'REWARD_POOL_DRAIN',       // Claim more than reward_pool balance
+
+  // Market Pool Exploits
+  POOL_BALANCE_MISMATCH = 'POOL_BALANCE_MISMATCH', // Pool balance != total_yes + total_no
+  EMPTY_SIDE_BET = 'EMPTY_SIDE_BET',             // Bet when one side is 0
+  RESOLUTION_ORDER = 'RESOLUTION_ORDER',         // Exploit claim order after resolution
+  CANCEL_AFTER_CLAIM = 'CANCEL_AFTER_CLAIM',     // Race cancel vs claim after resolution
+
+  // Multi-Account Coordination
+  BET_COORDINATION = 'BET_COORDINATION',         // Coordinate bets to game effective_amount
+  VOLUME_SHUFFLE = 'VOLUME_SHUFFLE',             // Shuffle volume between wallets for badges
+  LEADERBOARD_SNIPE = 'LEADERBOARD_SNIPE',       // Snipe leaderboard position at season end
+  PRIZE_POOL_DRAIN = 'PRIZE_POOL_DRAIN',         // Drain season prize pool unfairly
+
+  // Cross-Instruction Attacks
+  INIT_REINIT = 'INIT_REINIT',                   // Reinitialize already initialized accounts
+  CLOSE_REOPEN = 'CLOSE_REOPEN',                 // Close and reopen accounts in same tx
+  STAKE_DURING_LOCK = 'STAKE_DURING_LOCK',       // Add stake while veIDL locked
+  BET_AFTER_CLOSE = 'BET_AFTER_CLOSE',           // Bet after betting window closed
+
+  // Hash/Commitment Exploits
+  COMMITMENT_PREIMAGE = 'COMMITMENT_PREIMAGE',   // Find preimage collisions
+  SALT_REUSE = 'SALT_REUSE',                     // Reuse salts across commitments
+  WEAK_NONCE = 'WEAK_NONCE',                     // Predictable nonces
+  HASH_LENGTH_EXTENSION = 'HASH_LENGTH_EXTENSION', // Extend commitment hashes
+
+  // Oracle Multi-Market Attacks
+  ORACLE_EXHAUSTION = 'ORACLE_EXHAUSTION',       // Exhaust all available oracles
+  RESOLUTION_STALL = 'RESOLUTION_STALL',         // Stall resolution indefinitely
+  DISPUTE_DEADLOCK = 'DISPUTE_DEADLOCK',         // Create dispute deadlock
+  ORACLE_CARTEL_V2 = 'ORACLE_CARTEL_V2',         // Coordinated oracle attack v2
+
+  // Economic Imbalance Attacks
+  INFINITE_LOOP_BONUS = 'INFINITE_LOOP_BONUS',   // Chain bonuses infinitely
+  NEGATIVE_SUM_GAME = 'NEGATIVE_SUM_GAME',       // Make protocol pay out more than taken in
+  FEE_EVASION = 'FEE_EVASION',                   // Evade protocol fees
+  DUST_ACCUMULATION = 'DUST_ACCUMULATION',       // Accumulate dust across many accounts
+
+  // Time-Based Attacks
+  CLOCK_MANIPULATION = 'CLOCK_MANIPULATION',     // Exploit Solana clock drift
+  SLOT_RACING = 'SLOT_RACING',                   // Race for specific slot inclusion
+  TIMESTAMP_BOUNDARY = 'TIMESTAMP_BOUNDARY',     // Exploit timestamp boundary conditions
+  EPOCH_TRANSITION = 'EPOCH_TRANSITION',         // Attack during epoch transitions
+
+  // Account Closure Attacks
+  RENT_DRAIN = 'RENT_DRAIN',                     // Drain rent from protocol accounts
+  LAMPORT_UNDERFLOW = 'LAMPORT_UNDERFLOW',       // Underflow lamport balances
+  CLOSE_AUTHORITY = 'CLOSE_AUTHORITY',           // Close authority-controlled accounts
+  ORPHAN_ACCOUNTS = 'ORPHAN_ACCOUNTS',           // Create orphan accounts
+
+  // Prediction Stats Gaming v2
+  ACCURACY_INFLATION_V2 = 'ACCURACY_INFLATION_V2', // Inflate accuracy via cancelled markets
+  STREAK_RESET_ABUSE = 'STREAK_RESET_ABUSE',     // Abuse streak reset mechanics
+  VIP_OSCILLATION = 'VIP_OSCILLATION',           // Oscillate VIP tiers for max benefit
+  AUTO_COMPOUND_TIMING = 'AUTO_COMPOUND_TIMING', // Time auto-compound for max bonus
+
+  // ==================== NOVEL ATTACK VECTORS v4 ====================
+  // STABLESWAP & CROSS-PROGRAM EXPLOITS
+
+  // StableSwap Curve Attacks
+  NEWTON_ITERATION_LIMIT = 'NEWTON_ITERATION_LIMIT', // Force Newton's method to max iterations
+  INVARIANT_VIOLATION = 'INVARIANT_VIOLATION',   // Break D invariant via edge inputs
+  AMPLIFICATION_RAMP_EXPLOIT = 'AMPLIFICATION_RAMP_EXPLOIT', // Exploit during amp ramping
+  CONVERGENCE_FAILURE = 'CONVERGENCE_FAILURE',   // Cause convergence threshold failure
+  IMBALANCE_FEE_BYPASS = 'IMBALANCE_FEE_BYPASS', // Bypass imbalance fees via sequencing
+
+  // LP Token Attacks
+  LP_INFLATION_ATTACK = 'LP_INFLATION_ATTACK',   // Inflate LP via first-depositor
+  LP_DONATION_ATTACK = 'LP_DONATION_ATTACK',     // Direct vault transfer to manipulate
+  MINIMUM_LIQUIDITY_BYPASS = 'MINIMUM_LIQUIDITY_BYPASS', // Bypass minimum liquidity lock
+  LP_SANDWICH = 'LP_SANDWICH',                   // Sandwich add/remove liquidity
+
+  // Migration Pool Attacks
+  MIGRATION_FEE_ROUNDING = 'MIGRATION_FEE_ROUNDING', // 0.1337% fee rounding exploitation
+  MIGRATION_FRONT_RUN = 'MIGRATION_FRONT_RUN',   // Front-run large migrations
+  IMBALANCED_POOL_DRAIN = 'IMBALANCED_POOL_DRAIN', // Drain one side of pool
+  SINGLE_SIDED_EXPLOIT = 'SINGLE_SIDED_EXPLOIT', // Exploit single-sided liquidity
+
+  // Farming Attacks
+  FARMING_REWARD_STEAL = 'FARMING_REWARD_STEAL', // Steal farming rewards via timing
+  ACC_REWARD_OVERFLOW = 'ACC_REWARD_OVERFLOW',   // Overflow acc_reward_per_share
+  FARMING_PERIOD_SNIPE = 'FARMING_PERIOD_SNIPE', // Snipe farming period start/end
+  REWARD_CALCULATION_DRIFT = 'REWARD_CALCULATION_DRIFT', // Precision drift in rewards
+
+  // Cross-Program Attacks
+  PROTOCOL_SWAP_ARBITRAGE = 'PROTOCOL_SWAP_ARBITRAGE', // Arbitrage between protocols
+  VOLUME_INFLATION_SWAP = 'VOLUME_INFLATION_SWAP', // Inflate volume via stableswap
+  BADGE_VIA_SWAP = 'BADGE_VIA_SWAP',             // Get badges via swap volume
+  VE_SWAP_COMBO = 'VE_SWAP_COMBO',               // Combine veIDL with swap benefits
+
+  // Vault Balance Attacks
+  VAULT_DONATION = 'VAULT_DONATION',             // Donate to vault to manipulate prices
+  VAULT_BALANCE_DESYNC = 'VAULT_BALANCE_DESYNC', // Desync tracked vs actual balance
+  ADMIN_FEE_ACCUMULATION = 'ADMIN_FEE_ACCUMULATION', // Manipulate admin fee accumulation
+
+  // Deadline Attacks
+  DEADLINE_MANIPULATION = 'DEADLINE_MANIPULATION', // Set malicious deadlines
+  EXPIRED_TX_REPLAY = 'EXPIRED_TX_REPLAY',       // Replay expired transactions
+  TIMESTAMP_DEADLINE_RACE = 'TIMESTAMP_DEADLINE_RACE', // Race condition at deadline
+
+  // Slippage Attacks
+  SLIPPAGE_SANDWICH = 'SLIPPAGE_SANDWICH',       // Exploit min_amount_out slippage
+  DYNAMIC_SLIPPAGE_ATTACK = 'DYNAMIC_SLIPPAGE_ATTACK', // Attack dynamic slippage calculation
+  ZERO_SLIPPAGE_EXPLOIT = 'ZERO_SLIPPAGE_EXPLOIT', // Exploit zero min_amount transactions
+
+  // Admin Function Attacks
+  ADMIN_FEE_DRAIN = 'ADMIN_FEE_DRAIN',           // Drain accumulated admin fees
+  AMP_RAMPING_FRONT_RUN = 'AMP_RAMPING_FRONT_RUN', // Front-run amp ramping
+  PAUSED_STATE_EXPLOIT = 'PAUSED_STATE_EXPLOIT', // Exploit pause/unpause window
+
+  // Token Mint Attacks
+  MINT_AUTHORITY_EXPLOIT = 'MINT_AUTHORITY_EXPLOIT', // Exploit LP mint authority
+  WRONG_MINT_PARAMETER = 'WRONG_MINT_PARAMETER', // Pass wrong mint to is_bags
+  DECIMAL_MISMATCH = 'DECIMAL_MISMATCH',         // Exploit decimal assumptions
+
+  // SDK/Client-Side Attacks
+  PDA_DERIVATION_MISMATCH = 'PDA_DERIVATION_MISMATCH', // SDK vs on-chain PDA mismatch
+  INSTRUCTION_MALFORMATION = 'INSTRUCTION_MALFORMATION', // Malformed instruction data
+  ACCOUNT_ORDER_MANIPULATION = 'ACCOUNT_ORDER_MANIPULATION', // Wrong account order
+  DISCRIMINATOR_COLLISION = 'DISCRIMINATOR_COLLISION', // Anchor discriminator collision
 }
 
 export enum AttackSeverity {

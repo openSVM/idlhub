@@ -472,6 +472,164 @@ Think outside the box. Chain multiple actions. Exploit timing windows.
 }`,
   },
 
+  // ==================== PUMP MECHANICS EXPLOITER ====================
+  {
+    id: 'pump_exploiter',
+    name: 'PUMP_Exploiter',
+    role: AttackRole.WHALE_ATTACKER,
+    vectors: [
+      // Referral exploits
+      AttackVector.REFERRAL_LOOP,
+      AttackVector.REFERRAL_HIJACK,
+      AttackVector.REFERRAL_ORPHAN,
+      AttackVector.REFERRAL_VOLUME_WASH,
+      // VIP exploits
+      AttackVector.VIP_TIER_FLASH,
+      AttackVector.VIP_FEE_DRAIN,
+      // Season exploits
+      AttackVector.SEASON_PRIZE_SNIPE,
+      AttackVector.SEASON_BONUS_STACK,
+      AttackVector.SEASON_ROLLOVER,
+      // Early bird
+      AttackVector.EARLY_BIRD_GRIEF,
+      AttackVector.EARLY_BIRD_SNIPE,
+    ],
+    model: 'anthropic/claude-3-5-haiku',
+    budget: 400000n * BigInt(1e6),
+    riskTolerance: 0.85,
+    systemPrompt: `You are PUMP_Exploiter, targeting the new PUMP tokenomics mechanics.
+
+## YOUR MISSION
+Exploit referral systems, VIP tiers, seasons, and bonus stacking for profit.
+
+## ATTACK STRATEGIES
+
+### 1. REFERRAL SYSTEM EXPLOITS
+- **REFERRAL_LOOP**: Create wallet A → refers B → B bets → A gets 5% forever
+- **REFERRAL_HIJACK**: Watch mempool for large deposits, front-run referral registration
+- **REFERRAL_ORPHAN**: Identify whales early, register as their referrer before they act
+- **REFERRAL_VOLUME_WASH**: Wash trade between referred accounts to generate fee income
+
+### 2. VIP TIER EXPLOITS
+- **VIP_TIER_FLASH**: Flash stake to max VIP tier, get fee discount, bet big, unstake
+- **VIP_FEE_DRAIN**: Accumulate VIP discounts across actions to extract maximum value
+
+### 3. SEASON EXPLOITS
+- **SEASON_PRIZE_SNIPE**: Calculate exact timing, massive activity burst at season end
+- **SEASON_BONUS_STACK**: Stack 25% season + 5% early bird + 15% conviction = 45%+ bonus
+- **SEASON_ROLLOVER**: Exploit the 3-day phase transition window
+
+### 4. EARLY BIRD EXPLOITS
+- **EARLY_BIRD_GRIEF**: Spam minimum bets in first hour to use up bonus allocation
+- **EARLY_BIRD_SNIPE**: Bot new market detection, instant 5% bonus capture
+
+## OUTPUT FORMAT
+{
+  "attack": "<PUMP_VECTOR>",
+  "params": {
+    "targetMechanic": "referral|vip|season|earlybird",
+    "sybilWallets": 5,
+    "timingWindow": "season_end_1h"
+  },
+  "reasoning": "PUMP exploitation strategy...",
+  "expectedProfit": 300000,
+  "confidence": 0.7
+}`,
+  },
+
+  // ==================== NOVEL v2 ATTACKER ====================
+  {
+    id: 'novel_attacker_v2',
+    name: 'Novel_Attacker_v2',
+    role: AttackRole.FUZZER,
+    vectors: [
+      // Conviction betting
+      AttackVector.CONVICTION_CANCEL,
+      AttackVector.CONVICTION_STACK,
+      AttackVector.CONVICTION_FRONT_RUN,
+      // Predictor stats
+      AttackVector.STREAK_MANIPULATION,
+      AttackVector.ACCURACY_GAMING,
+      AttackVector.STATS_INFLATION,
+      // Creator exploits
+      AttackVector.CREATOR_SELF_BET,
+      AttackVector.CREATOR_FEE_DRAIN,
+      AttackVector.CREATOR_SPAM,
+      // Cross-feature
+      AttackVector.BADGE_VIP_COMBO,
+      AttackVector.STAKE_BONUS_LOOP,
+      // Compound
+      AttackVector.COMPOUND_TIMING,
+      AttackVector.COMPOUND_GRIEF,
+      // Cooldown bypass
+      AttackVector.COOLDOWN_SPLIT,
+      AttackVector.REWARD_TIMING_SPLIT,
+      // Oracle edge cases
+      AttackVector.BOND_REFRESH_RACE,
+      AttackVector.ORACLE_ROTATION,
+      // PDA attacks
+      AttackVector.NONCE_REUSE,
+      AttackVector.PDA_SEED_COLLISION,
+    ],
+    model: 'anthropic/claude-3-5-haiku',
+    budget: 500000n * BigInt(1e6),
+    riskTolerance: 0.95,
+    systemPrompt: `You are Novel_Attacker_v2, finding second-generation attack vectors.
+
+## YOUR MISSION
+Target complex feature interactions, cross-mechanism exploits, and edge cases.
+
+## ATTACK STRATEGIES
+
+### 1. CONVICTION BETTING EXPLOITS
+- **CONVICTION_CANCEL**: Lock bet for 30 days (15% bonus), then force market cancel = free bonus
+- **CONVICTION_STACK**: Stack multiple conviction locks on same market
+- **CONVICTION_FRONT_RUN**: Watch for conviction bets, front-run with counter-position
+
+### 2. PREDICTOR STATS GAMING
+- **STREAK_MANIPULATION**: Only bet on easy-to-predict markets to maintain streak
+- **ACCURACY_GAMING**: Bet both sides to guarantee 50% accuracy = qualify for bonus
+- **STATS_INFLATION**: Wash trade to inflate total_predictions and winnings
+
+### 3. CREATOR FEE EXPLOITS (Prediction Mining)
+- **CREATOR_SELF_BET**: Create market, bet both sides with Sybils = 0.5% of volume
+- **CREATOR_FEE_DRAIN**: High-volume wash trading on your own markets
+- **CREATOR_SPAM**: Create 100s of markets to dilute other creators' share
+
+### 4. CROSS-FEATURE ATTACKS
+- **BADGE_VIP_COMBO**: Diamond badge + Platinum VIP = outsized advantage
+- **STAKE_BONUS_LOOP**: Stake bonus → bet → win → restake → compound multiplier
+
+### 5. AUTO-COMPOUND EXPLOITS
+- **COMPOUND_TIMING**: Time compound calls to maximize bonus accrual
+- **COMPOUND_GRIEF**: Spam compound calls to waste protocol compute
+
+### 6. COOLDOWN BYPASS
+- **COOLDOWN_SPLIT**: Split stake across 24 wallets = claim every hour total
+- **REWARD_TIMING_SPLIT**: Coordinate claims for optimal reward timing
+
+### 7. ORACLE EDGE CASES
+- **BOND_REFRESH_RACE**: Withdraw bond, rotate identity, re-bond = clean slate
+- **ORACLE_ROTATION**: Burn oracle reputation, start fresh with new wallet
+
+### 8. PDA EXPLOITS
+- **NONCE_REUSE**: Try reusing bet nonces for double-spending
+- **PDA_SEED_COLLISION**: Brute-force seed combinations for collisions
+
+## OUTPUT FORMAT
+{
+  "attack": "<NOVEL_V2_VECTOR>",
+  "params": {
+    "complexity": "cross-feature|edge-case|timing",
+    "chainedMechanics": ["conviction", "creator_fee", "badge"],
+    "sybilCount": 24
+  },
+  "reasoning": "Second-generation exploit rationale...",
+  "expectedProfit": 400000,
+  "confidence": 0.55
+}`,
+  },
+
   // ==================== SYBIL OPERATOR ====================
   {
     id: 'sybil_operator',
@@ -615,4 +773,198 @@ export const ATTACK_DIFFICULTY: Record<AttackVector, number> = {
   [AttackVector.INSURANCE_DRAIN]: 0.7,         // Hard: needs edge cases
   [AttackVector.CHECKPOINT_DESYNC]: 0.6,       // Hard: complex timing
   [AttackVector.SEASON_TRANSITION]: 0.45,      // Medium: timing dependent
+
+  // ==================== NOVEL ATTACK v2 DIFFICULTIES ====================
+
+  // Referral System Exploits
+  [AttackVector.REFERRAL_LOOP]: 0.2,           // Easy: create 2 wallets, refer self
+  [AttackVector.REFERRAL_HIJACK]: 0.35,        // Medium: needs mempool monitoring
+  [AttackVector.REFERRAL_ORPHAN]: 0.4,         // Medium: whale identification
+
+  // VIP Tier Exploits
+  [AttackVector.VIP_TIER_FLASH]: 0.3,          // Easy if no MIN_STAKE_DURATION check
+  [AttackVector.VIP_FEE_DRAIN]: 0.5,           // Medium: capital intensive
+
+  // Auto-Compound Exploits
+  [AttackVector.COMPOUND_TIMING]: 0.45,        // Medium: timing dependent
+  [AttackVector.COMPOUND_GRIEF]: 0.15,         // Very easy: just spam calls
+
+  // Conviction Betting Exploits
+  [AttackVector.CONVICTION_CANCEL]: 0.4,       // Medium: needs market cancel
+  [AttackVector.CONVICTION_STACK]: 0.35,       // Medium: multiple locks
+  [AttackVector.CONVICTION_FRONT_RUN]: 0.5,    // Medium: needs mempool
+
+  // Predictor Stats Gaming
+  [AttackVector.STREAK_MANIPULATION]: 0.3,     // Easy: pick easy markets
+  [AttackVector.ACCURACY_GAMING]: 0.25,        // Easy: bet both sides
+  [AttackVector.STATS_INFLATION]: 0.2,         // Easy: wash trades
+
+  // Creator Fee Exploits
+  [AttackVector.CREATOR_SELF_BET]: 0.2,        // Easy: create market, bet
+  [AttackVector.CREATOR_FEE_DRAIN]: 0.35,      // Medium: capital needed
+  [AttackVector.CREATOR_SPAM]: 0.25,           // Easy: just spam markets
+
+  // Season Exploits
+  [AttackVector.SEASON_PRIZE_SNIPE]: 0.4,      // Medium: timing critical
+  [AttackVector.SEASON_BONUS_STACK]: 0.3,      // Easy: combine features
+  [AttackVector.SEASON_ROLLOVER]: 0.5,         // Medium: edge case timing
+
+  // Cross-Feature Attacks
+  [AttackVector.BADGE_VIP_COMBO]: 0.35,        // Medium: needs both
+  [AttackVector.STAKE_BONUS_LOOP]: 0.45,       // Medium: complex setup
+  [AttackVector.REFERRAL_VOLUME_WASH]: 0.25,   // Easy: wash + referral
+
+  // Early Bird Exploits
+  [AttackVector.EARLY_BIRD_GRIEF]: 0.2,        // Easy: spam early bets
+  [AttackVector.EARLY_BIRD_SNIPE]: 0.35,       // Medium: bot needed
+
+  // Oracle Bond Edge Cases
+  [AttackVector.BOND_REFRESH_RACE]: 0.55,      // Medium: timing dependent
+  [AttackVector.ORACLE_ROTATION]: 0.4,         // Medium: needs new wallets
+
+  // Claim Cooldown Bypass
+  [AttackVector.COOLDOWN_SPLIT]: 0.25,         // Easy: split stakes
+  [AttackVector.REWARD_TIMING_SPLIT]: 0.35,    // Medium: coordination
+
+  // Account/PDA Exploits
+  [AttackVector.NONCE_REUSE]: 0.7,             // Hard: Anchor prevents
+  [AttackVector.PDA_SEED_COLLISION]: 0.85,     // Very hard: cryptographic
+
+  // ==================== NOVEL ATTACK v3 DIFFICULTIES ====================
+
+  // State Transition Attacks
+  [AttackVector.PAUSE_FRONT_RUN]: 0.4,         // Medium: needs mempool access
+  [AttackVector.UNPAUSE_RACE]: 0.35,           // Medium: timing dependent
+  [AttackVector.AUTHORITY_SNIPE]: 0.5,         // Medium: 48h timelock window
+  [AttackVector.TVL_CAP_SANDWICH]: 0.45,       // Medium: needs to detect raise tx
+
+  // veIDL Decay Edge Cases
+  [AttackVector.DECAY_ROUNDING]: 0.6,          // Hard: small amounts
+  [AttackVector.LOCK_END_EDGE]: 0.5,           // Medium: timing precision
+  [AttackVector.EXTEND_LOCK_ABUSE]: 0.4,       // Medium: veIDL math
+  [AttackVector.VE_TOTAL_SUPPLY_DRIFT]: 0.55,  // Hard: accumulation over time
+
+  // Reward Checkpoint Exploits
+  [AttackVector.CHECKPOINT_SANDWICH]: 0.3,     // Easy: basic MEV
+  [AttackVector.ZERO_TOTAL_STAKED]: 0.7,       // Hard: requires all unstake
+  [AttackVector.PRECISION_ACCUMULATOR]: 0.6,   // Hard: needs many tx
+  [AttackVector.REWARD_POOL_DRAIN]: 0.75,      // Hard: balance checks
+
+  // Market Pool Exploits
+  [AttackVector.POOL_BALANCE_MISMATCH]: 0.65,  // Hard: needs bug
+  [AttackVector.EMPTY_SIDE_BET]: 0.4,          // Medium: timing dependent
+  [AttackVector.RESOLUTION_ORDER]: 0.35,       // Medium: claim ordering
+  [AttackVector.CANCEL_AFTER_CLAIM]: 0.55,     // Hard: race condition
+
+  // Multi-Account Coordination
+  [AttackVector.BET_COORDINATION]: 0.3,        // Easy: Sybil + bets
+  [AttackVector.VOLUME_SHUFFLE]: 0.25,         // Easy: wash trades
+  [AttackVector.LEADERBOARD_SNIPE]: 0.4,       // Medium: timing
+  [AttackVector.PRIZE_POOL_DRAIN]: 0.5,        // Medium: complex setup
+
+  // Cross-Instruction Attacks
+  [AttackVector.INIT_REINIT]: 0.85,            // Very hard: Anchor checks
+  [AttackVector.CLOSE_REOPEN]: 0.8,            // Hard: account checks
+  [AttackVector.STAKE_DURING_LOCK]: 0.5,       // Medium: unclear behavior
+  [AttackVector.BET_AFTER_CLOSE]: 0.7,         // Hard: timestamp checks
+
+  // Hash/Commitment Exploits
+  [AttackVector.COMMITMENT_PREIMAGE]: 0.95,    // Very hard: SHA256
+  [AttackVector.SALT_REUSE]: 0.4,              // Medium: tracking salts
+  [AttackVector.WEAK_NONCE]: 0.45,             // Medium: nonce patterns
+  [AttackVector.HASH_LENGTH_EXTENSION]: 0.9,   // Very hard: hash design
+
+  // Oracle Multi-Market Attacks
+  [AttackVector.ORACLE_EXHAUSTION]: 0.35,      // Medium: capital intensive
+  [AttackVector.RESOLUTION_STALL]: 0.4,        // Medium: DoS behavior
+  [AttackVector.DISPUTE_DEADLOCK]: 0.55,       // Hard: game theory
+  [AttackVector.ORACLE_CARTEL_V2]: 0.6,        // Hard: coordination
+
+  // Economic Imbalance Attacks
+  [AttackVector.INFINITE_LOOP_BONUS]: 0.7,     // Hard: caps exist
+  [AttackVector.NEGATIVE_SUM_GAME]: 0.75,      // Hard: accounting
+  [AttackVector.FEE_EVASION]: 0.45,            // Medium: find loopholes
+  [AttackVector.DUST_ACCUMULATION]: 0.25,      // Easy: many small tx
+
+  // Time-Based Attacks
+  [AttackVector.CLOCK_MANIPULATION]: 0.85,     // Very hard: Solana consensus
+  [AttackVector.SLOT_RACING]: 0.5,             // Medium: MEV infrastructure
+  [AttackVector.TIMESTAMP_BOUNDARY]: 0.45,     // Medium: edge cases
+  [AttackVector.EPOCH_TRANSITION]: 0.6,        // Hard: rare events
+
+  // Account Closure Attacks
+  [AttackVector.RENT_DRAIN]: 0.7,              // Hard: rent exemption
+  [AttackVector.LAMPORT_UNDERFLOW]: 0.9,       // Very hard: runtime checks
+  [AttackVector.CLOSE_AUTHORITY]: 0.75,        // Hard: authority checks
+  [AttackVector.ORPHAN_ACCOUNTS]: 0.4,         // Medium: storage cost
+
+  // Prediction Stats Gaming v2
+  [AttackVector.ACCURACY_INFLATION_V2]: 0.35,  // Medium: cancelled markets
+  [AttackVector.STREAK_RESET_ABUSE]: 0.3,      // Easy: streak mechanics
+  [AttackVector.VIP_OSCILLATION]: 0.4,         // Medium: stake timing
+  [AttackVector.AUTO_COMPOUND_TIMING]: 0.45,   // Medium: timing dependent
+
+  // ==================== NOVEL ATTACK v4 DIFFICULTIES ====================
+
+  // StableSwap Curve Attacks
+  [AttackVector.NEWTON_ITERATION_LIMIT]: 0.6,  // Hard: specific inputs needed
+  [AttackVector.INVARIANT_VIOLATION]: 0.8,     // Very hard: math is sound
+  [AttackVector.AMPLIFICATION_RAMP_EXPLOIT]: 0.5, // Medium: timing dependent
+  [AttackVector.CONVERGENCE_FAILURE]: 0.7,     // Hard: threshold is tight
+  [AttackVector.IMBALANCE_FEE_BYPASS]: 0.4,    // Medium: sequencing attacks
+
+  // LP Token Attacks
+  [AttackVector.LP_INFLATION_ATTACK]: 0.6,     // Hard: first deposit protected
+  [AttackVector.LP_DONATION_ATTACK]: 0.5,      // Medium: vault checks exist
+  [AttackVector.MINIMUM_LIQUIDITY_BYPASS]: 0.8, // Very hard: locked permanently
+  [AttackVector.LP_SANDWICH]: 0.35,            // Medium: MEV standard
+
+  // Migration Pool Attacks
+  [AttackVector.MIGRATION_FEE_ROUNDING]: 0.4,  // Medium: small amounts
+  [AttackVector.MIGRATION_FRONT_RUN]: 0.3,     // Easy: mempool standard
+  [AttackVector.IMBALANCED_POOL_DRAIN]: 0.45,  // Medium: liquidity needed
+  [AttackVector.SINGLE_SIDED_EXPLOIT]: 0.4,    // Medium: edge cases
+
+  // Farming Attacks
+  [AttackVector.FARMING_REWARD_STEAL]: 0.5,    // Medium: timing dependent
+  [AttackVector.ACC_REWARD_OVERFLOW]: 0.75,    // Hard: u128 is large
+  [AttackVector.FARMING_PERIOD_SNIPE]: 0.35,   // Medium: timing
+  [AttackVector.REWARD_CALCULATION_DRIFT]: 0.55, // Hard: precision is high
+
+  // Cross-Program Attacks
+  [AttackVector.PROTOCOL_SWAP_ARBITRAGE]: 0.3, // Easy: standard arb
+  [AttackVector.VOLUME_INFLATION_SWAP]: 0.25,  // Easy: wash trading
+  [AttackVector.BADGE_VIA_SWAP]: 0.35,         // Medium: needs volume
+  [AttackVector.VE_SWAP_COMBO]: 0.4,           // Medium: complex setup
+
+  // Vault Balance Attacks
+  [AttackVector.VAULT_DONATION]: 0.5,          // Medium: check exists
+  [AttackVector.VAULT_BALANCE_DESYNC]: 0.6,    // Hard: tracked carefully
+  [AttackVector.ADMIN_FEE_ACCUMULATION]: 0.4,  // Medium: fee manipulation
+
+  // Deadline Attacks
+  [AttackVector.DEADLINE_MANIPULATION]: 0.45,  // Medium: user-controlled
+  [AttackVector.EXPIRED_TX_REPLAY]: 0.8,       // Very hard: nonce prevents
+  [AttackVector.TIMESTAMP_DEADLINE_RACE]: 0.5, // Medium: timing
+
+  // Slippage Attacks
+  [AttackVector.SLIPPAGE_SANDWICH]: 0.25,      // Easy: MEV standard
+  [AttackVector.DYNAMIC_SLIPPAGE_ATTACK]: 0.4, // Medium: oracle dependent
+  [AttackVector.ZERO_SLIPPAGE_EXPLOIT]: 0.3,   // Easy: user error
+
+  // Admin Function Attacks
+  [AttackVector.ADMIN_FEE_DRAIN]: 0.6,         // Hard: authority required
+  [AttackVector.AMP_RAMPING_FRONT_RUN]: 0.4,   // Medium: timing dependent
+  [AttackVector.PAUSED_STATE_EXPLOIT]: 0.5,    // Medium: timing window
+
+  // Token Mint Attacks
+  [AttackVector.MINT_AUTHORITY_EXPLOIT]: 0.85, // Very hard: PDA controlled
+  [AttackVector.WRONG_MINT_PARAMETER]: 0.55,   // Hard: validation exists
+  [AttackVector.DECIMAL_MISMATCH]: 0.5,        // Medium: assumes 6 decimals
+
+  // SDK/Client-Side Attacks
+  [AttackVector.PDA_DERIVATION_MISMATCH]: 0.65, // Hard: SDK matches on-chain
+  [AttackVector.INSTRUCTION_MALFORMATION]: 0.7, // Hard: Anchor validates
+  [AttackVector.ACCOUNT_ORDER_MANIPULATION]: 0.75, // Hard: Anchor checks
+  [AttackVector.DISCRIMINATOR_COLLISION]: 0.95, // Very hard: SHA256
 };

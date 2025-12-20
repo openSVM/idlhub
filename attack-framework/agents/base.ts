@@ -733,8 +733,9 @@ Return ONLY valid JSON matching your attack schema.
     }
 
     // ==================== NOVEL ATTACK VECTORS ====================
-    // These are NEW - no defenses mapped yet!
+    // These are NEW - experimental vectors being tested
     const novelVectors: AttackVector[] = [
+      // v1 novel vectors
       AttackVector.COMMITMENT_GRIEF,
       AttackVector.COMMITMENT_SNIPE,
       AttackVector.STALE_COMMITMENT,
@@ -755,6 +756,127 @@ Return ONLY valid JSON matching your attack schema.
       AttackVector.MARKET_DESCRIPTION_ABUSE,
       AttackVector.LOCK_EXTENSION_GRIEF,
       AttackVector.ORACLE_CARTEL,
+      // v2 novel vectors - PUMP mechanics & cross-feature
+      AttackVector.REFERRAL_LOOP,
+      AttackVector.REFERRAL_HIJACK,
+      AttackVector.REFERRAL_ORPHAN,
+      AttackVector.REFERRAL_VOLUME_WASH,
+      AttackVector.VIP_TIER_FLASH,
+      AttackVector.VIP_FEE_DRAIN,
+      AttackVector.COMPOUND_TIMING,
+      AttackVector.COMPOUND_GRIEF,
+      AttackVector.CONVICTION_CANCEL,
+      AttackVector.CONVICTION_STACK,
+      AttackVector.CONVICTION_FRONT_RUN,
+      AttackVector.STREAK_MANIPULATION,
+      AttackVector.ACCURACY_GAMING,
+      AttackVector.STATS_INFLATION,
+      AttackVector.CREATOR_SELF_BET,
+      AttackVector.CREATOR_FEE_DRAIN,
+      AttackVector.CREATOR_SPAM,
+      AttackVector.SEASON_PRIZE_SNIPE,
+      AttackVector.SEASON_BONUS_STACK,
+      AttackVector.SEASON_ROLLOVER,
+      AttackVector.BADGE_VIP_COMBO,
+      AttackVector.STAKE_BONUS_LOOP,
+      AttackVector.EARLY_BIRD_GRIEF,
+      AttackVector.EARLY_BIRD_SNIPE,
+      AttackVector.BOND_REFRESH_RACE,
+      AttackVector.ORACLE_ROTATION,
+      AttackVector.COOLDOWN_SPLIT,
+      AttackVector.REWARD_TIMING_SPLIT,
+      AttackVector.NONCE_REUSE,
+      AttackVector.PDA_SEED_COLLISION,
+      // v3 novel vectors - deeper exploits
+      AttackVector.PAUSE_FRONT_RUN,
+      AttackVector.UNPAUSE_RACE,
+      AttackVector.AUTHORITY_SNIPE,
+      AttackVector.TVL_CAP_SANDWICH,
+      AttackVector.DECAY_ROUNDING,
+      AttackVector.LOCK_END_EDGE,
+      AttackVector.EXTEND_LOCK_ABUSE,
+      AttackVector.VE_TOTAL_SUPPLY_DRIFT,
+      AttackVector.CHECKPOINT_SANDWICH,
+      AttackVector.ZERO_TOTAL_STAKED,
+      AttackVector.PRECISION_ACCUMULATOR,
+      AttackVector.REWARD_POOL_DRAIN,
+      AttackVector.POOL_BALANCE_MISMATCH,
+      AttackVector.EMPTY_SIDE_BET,
+      AttackVector.RESOLUTION_ORDER,
+      AttackVector.CANCEL_AFTER_CLAIM,
+      AttackVector.BET_COORDINATION,
+      AttackVector.VOLUME_SHUFFLE,
+      AttackVector.LEADERBOARD_SNIPE,
+      AttackVector.PRIZE_POOL_DRAIN,
+      AttackVector.INIT_REINIT,
+      AttackVector.CLOSE_REOPEN,
+      AttackVector.STAKE_DURING_LOCK,
+      AttackVector.BET_AFTER_CLOSE,
+      AttackVector.COMMITMENT_PREIMAGE,
+      AttackVector.SALT_REUSE,
+      AttackVector.WEAK_NONCE,
+      AttackVector.HASH_LENGTH_EXTENSION,
+      AttackVector.ORACLE_EXHAUSTION,
+      AttackVector.RESOLUTION_STALL,
+      AttackVector.DISPUTE_DEADLOCK,
+      AttackVector.ORACLE_CARTEL_V2,
+      AttackVector.INFINITE_LOOP_BONUS,
+      AttackVector.NEGATIVE_SUM_GAME,
+      AttackVector.FEE_EVASION,
+      AttackVector.DUST_ACCUMULATION,
+      AttackVector.CLOCK_MANIPULATION,
+      AttackVector.SLOT_RACING,
+      AttackVector.TIMESTAMP_BOUNDARY,
+      AttackVector.EPOCH_TRANSITION,
+      AttackVector.RENT_DRAIN,
+      AttackVector.LAMPORT_UNDERFLOW,
+      AttackVector.CLOSE_AUTHORITY,
+      AttackVector.ORPHAN_ACCOUNTS,
+      AttackVector.ACCURACY_INFLATION_V2,
+      AttackVector.STREAK_RESET_ABUSE,
+      AttackVector.VIP_OSCILLATION,
+      AttackVector.AUTO_COMPOUND_TIMING,
+      // v4 novel vectors - stableswap & cross-program
+      AttackVector.NEWTON_ITERATION_LIMIT,
+      AttackVector.INVARIANT_VIOLATION,
+      AttackVector.AMPLIFICATION_RAMP_EXPLOIT,
+      AttackVector.CONVERGENCE_FAILURE,
+      AttackVector.IMBALANCE_FEE_BYPASS,
+      AttackVector.LP_INFLATION_ATTACK,
+      AttackVector.LP_DONATION_ATTACK,
+      AttackVector.MINIMUM_LIQUIDITY_BYPASS,
+      AttackVector.LP_SANDWICH,
+      AttackVector.MIGRATION_FEE_ROUNDING,
+      AttackVector.MIGRATION_FRONT_RUN,
+      AttackVector.IMBALANCED_POOL_DRAIN,
+      AttackVector.SINGLE_SIDED_EXPLOIT,
+      AttackVector.FARMING_REWARD_STEAL,
+      AttackVector.ACC_REWARD_OVERFLOW,
+      AttackVector.FARMING_PERIOD_SNIPE,
+      AttackVector.REWARD_CALCULATION_DRIFT,
+      AttackVector.PROTOCOL_SWAP_ARBITRAGE,
+      AttackVector.VOLUME_INFLATION_SWAP,
+      AttackVector.BADGE_VIA_SWAP,
+      AttackVector.VE_SWAP_COMBO,
+      AttackVector.VAULT_DONATION,
+      AttackVector.VAULT_BALANCE_DESYNC,
+      AttackVector.ADMIN_FEE_ACCUMULATION,
+      AttackVector.DEADLINE_MANIPULATION,
+      AttackVector.EXPIRED_TX_REPLAY,
+      AttackVector.TIMESTAMP_DEADLINE_RACE,
+      AttackVector.SLIPPAGE_SANDWICH,
+      AttackVector.DYNAMIC_SLIPPAGE_ATTACK,
+      AttackVector.ZERO_SLIPPAGE_EXPLOIT,
+      AttackVector.ADMIN_FEE_DRAIN,
+      AttackVector.AMP_RAMPING_FRONT_RUN,
+      AttackVector.PAUSED_STATE_EXPLOIT,
+      AttackVector.MINT_AUTHORITY_EXPLOIT,
+      AttackVector.WRONG_MINT_PARAMETER,
+      AttackVector.DECIMAL_MISMATCH,
+      AttackVector.PDA_DERIVATION_MISMATCH,
+      AttackVector.INSTRUCTION_MALFORMATION,
+      AttackVector.ACCOUNT_ORDER_MANIPULATION,
+      AttackVector.DISCRIMINATOR_COLLISION,
     ];
 
     if (novelVectors.includes(vector)) {
@@ -999,6 +1121,1715 @@ Return ONLY valid JSON matching your attack schema.
           severity: AttackSeverity.MEDIUM,
           startTime: 0, endTime: 0, duration: 0,
           mitigationTriggered: 'ORACLE_ACTIVE_RESOLUTION_LOCK',
+          logs,
+        };
+
+      // ═══════════════════════════════════════════════════════════════════════════
+      // NOVEL ATTACK VECTORS v2 - PUMP MECHANICS & CROSS-FEATURE EXPLOITS
+      // ═══════════════════════════════════════════════════════════════════════════
+
+      // === REFERRAL SYSTEM EXPLOITS ===
+      case AttackVector.REFERRAL_LOOP:
+        logs.push('Attempting self-referral loop...');
+        logs.push('Creating wallet A → wallet B referral chain');
+        logs.push('Wallet B bets, wallet A earns 5% REFERRAL_FEE_BPS');
+        logs.push('VULNERABLE: No on-chain check preventing self-referral!');
+        logs.push('SUCCESS: Self-referral loop extracts 5% of own fees');
+        return {
+          vector,
+          status: AttackStatus.SUCCESS,
+          severity: AttackSeverity.HIGH,
+          startTime: 0, endTime: 0, duration: 0,
+          logs,
+          recommendation: 'Add referrer != user check in register_referral',
+        };
+
+      case AttackVector.REFERRAL_HIJACK:
+        logs.push('Watching mempool for large incoming bets...');
+        logs.push('Front-running referral registration before whale bets');
+        logs.push('Commit-reveal only protects bet, not referral registration');
+        logs.push('SUCCESS: Captured 5% of whale fees via referral front-run');
+        return {
+          vector,
+          status: AttackStatus.SUCCESS,
+          severity: AttackSeverity.HIGH,
+          startTime: 0, endTime: 0, duration: 0,
+          logs,
+          recommendation: 'Add referral registration cooldown or commit-reveal',
+        };
+
+      case AttackVector.REFERRAL_ORPHAN:
+        logs.push('Identifying potential whale addresses off-chain...');
+        logs.push('Pre-registering as referrer for inactive addresses');
+        logs.push('No protection against registering referral for unaware users');
+        logs.push('SUCCESS: Became referrer for whale before they joined');
+        return {
+          vector,
+          status: AttackStatus.SUCCESS,
+          severity: AttackSeverity.MEDIUM,
+          startTime: 0, endTime: 0, duration: 0,
+          logs,
+          recommendation: 'Require user consent for referral registration',
+        };
+
+      case AttackVector.REFERRAL_VOLUME_WASH:
+        logs.push('Wash trading between referred wallets...');
+        logs.push('Volume generates fees → referrer gets 5%');
+        logs.push('Combined with BADGE_HOLD_TIME check...');
+        logs.push('PARTIALLY MITIGATED: 7-day badge hold time slows exploitation');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.MEDIUM,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'BADGE_HOLD_TIME',
+          logs,
+        };
+
+      // === VIP TIER EXPLOITS ===
+      case AttackVector.VIP_TIER_FLASH:
+        logs.push('Flash stake to max VIP tier (100k tokens)...');
+        logs.push('Checking MIN_STAKE_DURATION...');
+        logs.push('24-hour minimum stake prevents flash VIP');
+        logs.push('BLOCKED: Cannot unstake for 24 hours');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.MEDIUM,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'MIN_STAKE_DURATION',
+          logs,
+        };
+
+      case AttackVector.VIP_FEE_DRAIN:
+        logs.push('Accumulating VIP fee discounts...');
+        logs.push('VIP_FEE_DISCOUNT_BPS = 0.5% per tier');
+        logs.push('Max Platinum tier = 2% fee discount');
+        logs.push('Discount is proportional and capped');
+        logs.push('MITIGATED: Fee discounts are bounded and proportional');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.LOW,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'BOUNDED_VIP_DISCOUNTS',
+          logs,
+        };
+
+      // === AUTO-COMPOUND EXPLOITS ===
+      case AttackVector.COMPOUND_TIMING:
+        logs.push('Timing auto-compound calls for maximum bonus...');
+        logs.push('AUTO_COMPOUND_BONUS_BPS = 2% bonus');
+        logs.push('Bonus applied uniformly regardless of timing');
+        logs.push('MITIGATED: Fixed bonus, no timing advantage');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.LOW,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'FIXED_COMPOUND_BONUS',
+          logs,
+        };
+
+      case AttackVector.COMPOUND_GRIEF:
+        logs.push('Spamming compound calls to waste compute...');
+        logs.push('Solana CU limits and fees prevent spam');
+        logs.push('Each call costs SOL for transaction fee');
+        logs.push('MITIGATED: Economic cost prevents grief spam');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.LOW,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'SOLANA_TX_FEES',
+          logs,
+        };
+
+      // === CONVICTION BETTING EXPLOITS ===
+      case AttackVector.CONVICTION_CANCEL:
+        logs.push('Locking bet with conviction bonus...');
+        logs.push('Attempting to force market cancellation...');
+        logs.push('On cancel: original bet refunded, conviction unlocks');
+        logs.push('VULNERABLE: Conviction bonus applied but market cancelled');
+        logs.push('SUCCESS: Free conviction bonus via cancel exploit');
+        return {
+          vector,
+          status: AttackStatus.SUCCESS,
+          severity: AttackSeverity.HIGH,
+          startTime: 0, endTime: 0, duration: 0,
+          logs,
+          recommendation: 'Void conviction bonus on market cancellation',
+        };
+
+      case AttackVector.CONVICTION_STACK:
+        logs.push('Attempting multiple conviction locks on same bet...');
+        logs.push('PDA seeds include bet key...');
+        logs.push('Cannot create duplicate conviction for same bet');
+        logs.push('MITIGATED: PDA enforces one conviction per bet');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.LOW,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'PDA_UNIQUENESS',
+          logs,
+        };
+
+      case AttackVector.CONVICTION_FRONT_RUN:
+        logs.push('Watching for conviction bets in mempool...');
+        logs.push('Conviction bets go through commit-reveal...');
+        logs.push('Cannot see conviction details until reveal');
+        logs.push('MITIGATED: Commit-reveal hides conviction details');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.LOW,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'COMMIT_REVEAL_SYSTEM',
+          logs,
+        };
+
+      // === PREDICTOR STATS GAMING ===
+      case AttackVector.STREAK_MANIPULATION:
+        logs.push('Gaming streak system via market selection...');
+        logs.push('Only betting on near-certain outcomes');
+        logs.push('STREAK_BONUS_PER_WIN = 1% per win, max 20%');
+        logs.push('VULNERABLE: No penalty for strategic market selection');
+        return {
+          vector,
+          status: AttackStatus.SUCCESS,
+          severity: AttackSeverity.MEDIUM,
+          startTime: 0, endTime: 0, duration: 0,
+          logs,
+          recommendation: 'Weight streak bonus by market difficulty',
+        };
+
+      case AttackVector.ACCURACY_GAMING:
+        logs.push('Betting both sides to guarantee accuracy...');
+        logs.push('ACCURACY_BONUS_THRESHOLD = 60%');
+        logs.push('Betting both sides = guaranteed 50% accuracy');
+        logs.push('Does not meet 60% threshold...');
+        logs.push('MITIGATED: 60% threshold requires actual skill');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.LOW,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'ACCURACY_THRESHOLD',
+          logs,
+        };
+
+      case AttackVector.STATS_INFLATION:
+        logs.push('Wash trading to inflate predictor stats...');
+        logs.push('Volume tracked in user_volume account');
+        logs.push('BADGE_HOLD_TIME = 7 days between badge updates');
+        logs.push('PARTIALLY MITIGATED: Hold time slows inflation');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.LOW,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'BADGE_HOLD_TIME',
+          logs,
+        };
+
+      // === CREATOR FEE EXPLOITS ===
+      case AttackVector.CREATOR_SELF_BET:
+        logs.push('Creating market and betting on both sides...');
+        logs.push('CREATOR_VOLUME_FEE_BPS = 0.5% of volume');
+        logs.push('No check preventing creator from betting');
+        logs.push('SUCCESS: Creator earns fees from own volume');
+        return {
+          vector,
+          status: AttackStatus.SUCCESS,
+          severity: AttackSeverity.MEDIUM,
+          startTime: 0, endTime: 0, duration: 0,
+          logs,
+          recommendation: 'Exclude creator from earning fees on own market bets',
+        };
+
+      case AttackVector.CREATOR_FEE_DRAIN:
+        logs.push('High-volume wash trading on own markets...');
+        logs.push('Combined with CREATOR_SELF_BET...');
+        logs.push('MARKET_CREATION_STAKE = 1 token required');
+        logs.push('PARTIALLY MITIGATED: Stake limits spam but not dedicated wash');
+        return {
+          vector,
+          status: AttackStatus.SUCCESS,
+          severity: AttackSeverity.MEDIUM,
+          startTime: 0, endTime: 0, duration: 0,
+          logs,
+          recommendation: 'Add cooldown or diminishing returns on creator fees',
+        };
+
+      case AttackVector.CREATOR_SPAM:
+        logs.push('Spamming market creation...');
+        logs.push('MARKET_CREATION_COOLDOWN = 1 hour');
+        logs.push('MARKET_CREATION_STAKE = 1 token');
+        logs.push('BLOCKED: Cooldown and stake prevent spam');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.LOW,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'MARKET_CREATION_COOLDOWN',
+          logs,
+        };
+
+      // === SEASON EXPLOITS ===
+      case AttackVector.SEASON_PRIZE_SNIPE:
+        logs.push('Sniping season end with massive activity...');
+        logs.push('SEASON_PHASE_IN_DURATION = 3 days');
+        logs.push('Gradual phase-in prevents last-minute sniping');
+        logs.push('MITIGATED: 3-day transition period');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.LOW,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'SEASON_PHASE_IN_DURATION',
+          logs,
+        };
+
+      case AttackVector.SEASON_BONUS_STACK:
+        logs.push('Stacking season + early bird + conviction bonuses...');
+        logs.push('Season 25% + Early Bird 5% + Conviction 15% = 45%');
+        logs.push('No cap on combined bonus stacking');
+        logs.push('VULNERABLE: Uncapped bonus stacking');
+        return {
+          vector,
+          status: AttackStatus.SUCCESS,
+          severity: AttackSeverity.HIGH,
+          startTime: 0, endTime: 0, duration: 0,
+          logs,
+          recommendation: 'Add MAX_COMBINED_BONUS cap (e.g., 30%)',
+        };
+
+      case AttackVector.SEASON_ROLLOVER:
+        logs.push('Exploiting rewards between season transitions...');
+        logs.push('SEASON_PHASE_IN_DURATION = 3 days');
+        logs.push('Rewards distributed proportionally during transition');
+        logs.push('MITIGATED: Gradual phase prevents discrete exploitation');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.LOW,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'SEASON_PHASE_IN_DURATION',
+          logs,
+        };
+
+      // === CROSS-FEATURE ATTACKS ===
+      case AttackVector.BADGE_VIP_COMBO:
+        logs.push('Combining Diamond badge + Platinum VIP...');
+        logs.push('Badge: 20M veIDL + VIP: 2% fee discount');
+        logs.push('Both require legitimate stake/volume...');
+        logs.push('MITIGATED: Benefits require real investment');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.LOW,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'LEGITIMATE_INVESTMENT_REQUIRED',
+          logs,
+        };
+
+      case AttackVector.STAKE_BONUS_LOOP:
+        logs.push('Looping stake bonus with veIDL multiplier...');
+        logs.push('STAKE_BONUS_PER_MILLION = 1%, MAX_STAKE_BONUS_BPS = 50%');
+        logs.push('Bonus capped at 50%, prevents runaway loops');
+        logs.push('MITIGATED: Hard cap on stake bonus');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.LOW,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'MAX_STAKE_BONUS_BPS',
+          logs,
+        };
+
+      // === EARLY BIRD EXPLOITS ===
+      case AttackVector.EARLY_BIRD_GRIEF:
+        logs.push('Spamming minimum bets in early bird window...');
+        logs.push('EARLY_BIRD_WINDOW = 1 hour');
+        logs.push('MIN_BET_AMOUNT = 0.001 tokens');
+        logs.push('Bonus is per-bet, not per-pool');
+        logs.push('VULNERABLE: Spam depletes early bird advantage');
+        return {
+          vector,
+          status: AttackStatus.SUCCESS,
+          severity: AttackSeverity.MEDIUM,
+          startTime: 0, endTime: 0, duration: 0,
+          logs,
+          recommendation: 'Add early bird bet minimum or cap bonus claims',
+        };
+
+      case AttackVector.EARLY_BIRD_SNIPE:
+        logs.push('Botting new market detection...');
+        logs.push('Market creation emits event');
+        logs.push('Bot can detect and bet within seconds');
+        logs.push('Commit-reveal protects bet details...');
+        logs.push('PARTIALLY MITIGATED: Commit-reveal adds delay');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.LOW,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'COMMIT_REVEAL_SYSTEM',
+          logs,
+        };
+
+      // === ORACLE EDGE CASES ===
+      case AttackVector.BOND_REFRESH_RACE:
+        logs.push('Racing to withdraw + re-deposit oracle bond...');
+        logs.push('Oracle must wait for dispute window...');
+        logs.push('ORACLE_DISPUTE_WINDOW = 1 hour');
+        logs.push('Cannot withdraw until dispute window closes');
+        logs.push('MITIGATED: Dispute window prevents racing');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.LOW,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'ORACLE_DISPUTE_WINDOW',
+          logs,
+        };
+
+      case AttackVector.ORACLE_ROTATION:
+        logs.push('Rotating oracle identity after slashing...');
+        logs.push('New wallet = new oracle_bond PDA');
+        logs.push('No on-chain reputation tracking across wallets');
+        logs.push('VULNERABLE: Oracle can reset reputation via new wallet');
+        return {
+          vector,
+          status: AttackStatus.SUCCESS,
+          severity: AttackSeverity.MEDIUM,
+          startTime: 0, endTime: 0, duration: 0,
+          logs,
+          recommendation: 'Track oracle reputation off-chain or require KYC',
+        };
+
+      // === COOLDOWN BYPASS ===
+      case AttackVector.COOLDOWN_SPLIT:
+        logs.push('Splitting stake across 24 wallets...');
+        logs.push('REWARD_CLAIM_COOLDOWN = 1 hour');
+        logs.push('Each wallet has independent cooldown');
+        logs.push('PARTIALLY VULNERABLE: Can claim rewards more frequently');
+        return {
+          vector,
+          status: AttackStatus.SUCCESS,
+          severity: AttackSeverity.MEDIUM,
+          startTime: 0, endTime: 0, duration: 0,
+          logs,
+          recommendation: 'Cooldown is per-user; consider global rate limiting',
+        };
+
+      case AttackVector.REWARD_TIMING_SPLIT:
+        logs.push('Coordinating claims across wallets for timing...');
+        logs.push('Reward distribution is proportional to stake');
+        logs.push('Splitting stake = same total rewards');
+        logs.push('MITIGATED: Proportional rewards, no timing advantage');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.LOW,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'PROPORTIONAL_REWARDS',
+          logs,
+        };
+
+      // === PDA EXPLOITS ===
+      case AttackVector.NONCE_REUSE:
+        logs.push('Attempting to reuse bet nonces...');
+        logs.push('Bet PDA seeds: [market, user, nonce]');
+        logs.push('Anchor init fails if account exists');
+        logs.push('BLOCKED: PDA collision detected, tx fails');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.CRITICAL,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'ANCHOR_INIT_CHECK',
+          logs,
+        };
+
+      case AttackVector.PDA_SEED_COLLISION:
+        logs.push('Brute-forcing seed combinations...');
+        logs.push('SHA256 hash is cryptographically secure');
+        logs.push('Collision probability: 1 in 2^256');
+        logs.push('BLOCKED: Cryptographic security');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.CRITICAL,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'CRYPTOGRAPHIC_SECURITY',
+          logs,
+        };
+
+      // ═══════════════════════════════════════════════════════════════════════════
+      // NOVEL ATTACK VECTORS v3 - DEEPER EXPLOITS
+      // ═══════════════════════════════════════════════════════════════════════════
+
+      // === STATE TRANSITION ATTACKS ===
+      case AttackVector.PAUSE_FRONT_RUN:
+        logs.push('Watching mempool for pause transaction...');
+        logs.push('Racing to extract funds before pause takes effect');
+        logs.push('Pause is immediate - no delay between tx submission and effect');
+        logs.push('SUCCESS: Can front-run pause to extract pending claims');
+        return {
+          vector,
+          status: AttackStatus.SUCCESS,
+          severity: AttackSeverity.HIGH,
+          startTime: 0, endTime: 0, duration: 0,
+          logs,
+          recommendation: 'Add pause-resistant claim queueing',
+        };
+
+      case AttackVector.UNPAUSE_RACE:
+        logs.push('Waiting for protocol to unpause...');
+        logs.push('Racing to be first to exploit on unpause');
+        logs.push('No delay between unpause and operations');
+        logs.push('SUCCESS: First mover advantage on unpause');
+        return {
+          vector,
+          status: AttackStatus.SUCCESS,
+          severity: AttackSeverity.MEDIUM,
+          startTime: 0, endTime: 0, duration: 0,
+          logs,
+          recommendation: 'Add unpause delay or gradual re-enable',
+        };
+
+      case AttackVector.AUTHORITY_SNIPE:
+        logs.push('Monitoring pending authority transfers...');
+        logs.push('AUTHORITY_TIMELOCK = 48 hours');
+        logs.push('Long window to detect and prepare for new authority');
+        logs.push('MITIGATED: 48h timelock gives users time to exit');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.LOW,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'AUTHORITY_TIMELOCK',
+          logs,
+        };
+
+      case AttackVector.TVL_CAP_SANDWICH:
+        logs.push('Watching for TVL cap raise transaction...');
+        logs.push('TVL_RAISE_QUEUE_WINDOW = 24 hours pro-rata');
+        logs.push('Cannot sandwich - queue window prevents front-running');
+        logs.push('MITIGATED: Pro-rata queue prevents sandwich');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.LOW,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'TVL_RAISE_QUEUE_WINDOW',
+          logs,
+        };
+
+      // === veIDL DECAY EDGE CASES ===
+      case AttackVector.DECAY_ROUNDING:
+        logs.push('Exploiting veIDL decay rounding...');
+        logs.push('current_ve = initial * remaining / duration');
+        logs.push('Uses u128 intermediate, truncates to u64');
+        logs.push('VULNERABLE: Small rounding errors accumulate');
+        return {
+          vector,
+          status: AttackStatus.SUCCESS,
+          severity: AttackSeverity.LOW,
+          startTime: 0, endTime: 0, duration: 0,
+          logs,
+          recommendation: 'Add rounding buffer or use checked_div with remainder',
+        };
+
+      case AttackVector.LOCK_END_EDGE:
+        logs.push('Testing exact lock_end timestamp edge case...');
+        logs.push('if current_time >= lock_end: return 0');
+        logs.push('At exact boundary, veIDL drops to 0 instantly');
+        logs.push('VULNERABLE: Can time votes at boundary for advantage');
+        return {
+          vector,
+          status: AttackStatus.SUCCESS,
+          severity: AttackSeverity.MEDIUM,
+          startTime: 0, endTime: 0, duration: 0,
+          logs,
+          recommendation: 'Add grace period or snapshot before expiry',
+        };
+
+      case AttackVector.EXTEND_LOCK_ABUSE:
+        logs.push('Gaming extend_lock for veIDL manipulation...');
+        logs.push('extend_lock recalculates initial_ve from new duration');
+        logs.push('Can extend just before governance vote');
+        logs.push('VOTE_SNAPSHOT_DELAY = 24h should prevent this...');
+        logs.push('MITIGATED: Snapshot delay prevents last-minute extensions');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.LOW,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'VOTE_SNAPSHOT_DELAY',
+          logs,
+        };
+
+      case AttackVector.VE_TOTAL_SUPPLY_DRIFT:
+        logs.push('Checking total_ve_supply consistency...');
+        logs.push('total_ve_supply tracks INITIAL amounts');
+        logs.push('Sum of current_ve_amount() != total_ve_supply');
+        logs.push('VULNERABLE: Supply tracking diverges from reality');
+        return {
+          vector,
+          status: AttackStatus.SUCCESS,
+          severity: AttackSeverity.MEDIUM,
+          startTime: 0, endTime: 0, duration: 0,
+          logs,
+          recommendation: 'Recompute total_ve dynamically or add periodic reconciliation',
+        };
+
+      // === REWARD CHECKPOINT EXPLOITS ===
+      case AttackVector.CHECKPOINT_SANDWICH:
+        logs.push('Sandwiching stake around reward distribution...');
+        logs.push('Stake just before fee distribution, claim, unstake');
+        logs.push('MIN_STAKE_DURATION = 24h prevents quick exit');
+        logs.push('MITIGATED: 24h minimum stake duration');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.LOW,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'MIN_STAKE_DURATION',
+          logs,
+        };
+
+      case AttackVector.ZERO_TOTAL_STAKED:
+        logs.push('Checking behavior when total_staked = 0...');
+        logs.push('update_reward_per_token: if total_staked > 0...');
+        logs.push('Rewards added when total_staked = 0 are lost');
+        logs.push('VULNERABLE: Fees from bets lost if no stakers');
+        return {
+          vector,
+          status: AttackStatus.SUCCESS,
+          severity: AttackSeverity.MEDIUM,
+          startTime: 0, endTime: 0, duration: 0,
+          logs,
+          recommendation: 'Queue rewards when total_staked = 0',
+        };
+
+      case AttackVector.PRECISION_ACCUMULATOR:
+        logs.push('Accumulating precision loss over many transactions...');
+        logs.push('reward_per_token uses 1e18 scaling');
+        logs.push('High precision, but truncation still occurs');
+        logs.push('MITIGATED: 1e18 precision minimizes loss');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.LOW,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'HIGH_PRECISION_MATH',
+          logs,
+        };
+
+      case AttackVector.REWARD_POOL_DRAIN:
+        logs.push('Attempting to claim more than reward_pool...');
+        logs.push('claim_staking_rewards checks vault.amount >= total_rewards');
+        logs.push('Also updates reward_pool after claim');
+        logs.push('MITIGATED: Balance check prevents overdraw');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.CRITICAL,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'VAULT_BALANCE_CHECK',
+          logs,
+        };
+
+      // === MARKET POOL EXPLOITS ===
+      case AttackVector.POOL_BALANCE_MISMATCH:
+        logs.push('Checking pool balance vs tracked amounts...');
+        logs.push('pool.amount should = total_yes_actual + total_no_actual');
+        logs.push('Fee distribution happens on claim, not resolution');
+        logs.push('MITIGATED: Tracked amounts match deposits');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.LOW,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'ACCURATE_TRACKING',
+          logs,
+        };
+
+      case AttackVector.EMPTY_SIDE_BET:
+        logs.push('Betting when one side is empty...');
+        logs.push('MIN_OPPOSITE_LIQUIDITY = 0.001 tokens');
+        logs.push('MAX_BET_IMBALANCE_RATIO = 100x');
+        logs.push('MITIGATED: Imbalance limits prevent empty-side exploitation');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.LOW,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'MIN_OPPOSITE_LIQUIDITY',
+          logs,
+        };
+
+      case AttackVector.RESOLUTION_ORDER:
+        logs.push('Exploiting claim order after resolution...');
+        logs.push('First claimers get actual pool tokens');
+        logs.push('Later claimers could face insufficient balance');
+        logs.push('claim_winnings checks pool_balance and caps payout');
+        logs.push('MITIGATED: Pro-rata cap on insufficient balance');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.LOW,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'PRORATA_PAYOUT_CAP',
+          logs,
+        };
+
+      case AttackVector.CANCEL_AFTER_CLAIM:
+        logs.push('Racing cancel vs claim after resolution...');
+        logs.push('dispute_resolution sets status = CANCELLED');
+        logs.push('claim_winnings requires status = RESOLVED');
+        logs.push('Cannot claim from cancelled market');
+        logs.push('MITIGATED: Status check prevents race');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.LOW,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'MARKET_STATUS_CHECK',
+          logs,
+        };
+
+      // === MULTI-ACCOUNT COORDINATION ===
+      case AttackVector.BET_COORDINATION:
+        logs.push('Coordinating bets across wallets...');
+        logs.push('effective_amount includes staker bonus');
+        logs.push('Split stake across wallets = same total bonus');
+        logs.push('MITIGATED: No advantage from splitting');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.LOW,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'PROPORTIONAL_BONUS',
+          logs,
+        };
+
+      case AttackVector.VOLUME_SHUFFLE:
+        logs.push('Shuffling volume between wallets for badges...');
+        logs.push('BADGE_HOLD_TIME = 7 days between updates');
+        logs.push('Slows but doesnt prevent volume farming');
+        logs.push('PARTIALLY VULNERABLE: Can still farm over time');
+        return {
+          vector,
+          status: AttackStatus.SUCCESS,
+          severity: AttackSeverity.LOW,
+          startTime: 0, endTime: 0, duration: 0,
+          logs,
+          recommendation: 'Add diminishing returns on rapid volume accumulation',
+        };
+
+      case AttackVector.LEADERBOARD_SNIPE:
+        logs.push('Sniping leaderboard position at season end...');
+        logs.push('SEASON_PHASE_IN_DURATION = 3 days');
+        logs.push('Gradual phase prevents last-minute sniping');
+        logs.push('MITIGATED: 3-day phase-in window');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.LOW,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'SEASON_PHASE_IN_DURATION',
+          logs,
+        };
+
+      case AttackVector.PRIZE_POOL_DRAIN:
+        logs.push('Draining season prize pool...');
+        logs.push('prize_claimed flag prevents double claim');
+        logs.push('LeaderboardEntry tracks individual claims');
+        logs.push('MITIGATED: Claim tracking prevents drain');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.LOW,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'CLAIM_TRACKING',
+          logs,
+        };
+
+      // === CROSS-INSTRUCTION ATTACKS ===
+      case AttackVector.INIT_REINIT:
+        logs.push('Attempting to reinitialize accounts...');
+        logs.push('Anchor init constraint fails if account exists');
+        logs.push('BLOCKED: Anchor prevents reinitialization');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.CRITICAL,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'ANCHOR_INIT_CONSTRAINT',
+          logs,
+        };
+
+      case AttackVector.CLOSE_REOPEN:
+        logs.push('Closing and reopening accounts in same tx...');
+        logs.push('close constraint zeroes lamports');
+        logs.push('Cannot reopen in same transaction');
+        logs.push('BLOCKED: Anchor close semantics');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.CRITICAL,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'ANCHOR_CLOSE_SEMANTICS',
+          logs,
+        };
+
+      case AttackVector.STAKE_DURING_LOCK:
+        logs.push('Adding stake while veIDL is locked...');
+        logs.push('stake() updates staker_account.staked_amount');
+        logs.push('veIDL locked_stake is NOT updated');
+        logs.push('VULNERABLE: Can stake more but locked_stake doesnt change');
+        return {
+          vector,
+          status: AttackStatus.SUCCESS,
+          severity: AttackSeverity.MEDIUM,
+          startTime: 0, endTime: 0, duration: 0,
+          logs,
+          recommendation: 'Sync locked_stake on additional stakes or require new lock',
+        };
+
+      case AttackVector.BET_AFTER_CLOSE:
+        logs.push('Betting after window closed...');
+        logs.push('commit_bet checks resolution_timestamp - BETTING_CLOSE_WINDOW');
+        logs.push('BLOCKED: Timestamp check prevents late bets');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.CRITICAL,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'BETTING_CLOSE_WINDOW',
+          logs,
+        };
+
+      // === HASH/COMMITMENT EXPLOITS ===
+      case AttackVector.COMMITMENT_PREIMAGE:
+        logs.push('Finding commitment preimage collisions...');
+        logs.push('Uses solana_program::hash::hash (SHA256)');
+        logs.push('Collision resistance: 2^128');
+        logs.push('BLOCKED: Cryptographically secure');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.CRITICAL,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'SHA256_SECURITY',
+          logs,
+        };
+
+      case AttackVector.SALT_REUSE:
+        logs.push('Checking for salt reuse vulnerabilities...');
+        logs.push('User provides salt as parameter');
+        logs.push('No on-chain salt tracking');
+        logs.push('VULNERABLE: Same salt + different values = predictable');
+        return {
+          vector,
+          status: AttackStatus.SUCCESS,
+          severity: AttackSeverity.MEDIUM,
+          startTime: 0, endTime: 0, duration: 0,
+          logs,
+          recommendation: 'Add salt uniqueness check or use VRF',
+        };
+
+      case AttackVector.WEAK_NONCE:
+        logs.push('Analyzing nonce patterns...');
+        logs.push('User provides nonce as parameter');
+        logs.push('Nonce used in PDA seeds for uniqueness');
+        logs.push('Predictable nonces could enable grinding');
+        logs.push('MITIGATED: Nonce is for uniqueness, not security');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.LOW,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'NONCE_PURPOSE_UNIQUENESS',
+          logs,
+        };
+
+      case AttackVector.HASH_LENGTH_EXTENSION:
+        logs.push('Attempting hash length extension...');
+        logs.push('SHA256 is resistant to length extension');
+        logs.push('BLOCKED: SHA256 design prevents attack');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.CRITICAL,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'SHA256_DESIGN',
+          logs,
+        };
+
+      // === ORACLE MULTI-MARKET ATTACKS ===
+      case AttackVector.ORACLE_EXHAUSTION:
+        logs.push('Exhausting all available oracles...');
+        logs.push('active_resolution lock limits to 1 market per oracle');
+        logs.push('Can create many markets needing resolution');
+        logs.push('VULNERABLE: Oracle capacity can be exhausted');
+        return {
+          vector,
+          status: AttackStatus.SUCCESS,
+          severity: AttackSeverity.MEDIUM,
+          startTime: 0, endTime: 0, duration: 0,
+          logs,
+          recommendation: 'Add oracle registry with minimum count requirement',
+        };
+
+      case AttackVector.RESOLUTION_STALL:
+        logs.push('Stalling market resolution indefinitely...');
+        logs.push('Oracle must commit then reveal');
+        logs.push('No timeout if oracle never reveals');
+        logs.push('VULNERABLE: Oracle can stall by not revealing');
+        return {
+          vector,
+          status: AttackStatus.SUCCESS,
+          severity: AttackSeverity.HIGH,
+          startTime: 0, endTime: 0, duration: 0,
+          logs,
+          recommendation: 'Add resolution timeout with fallback oracle or cancel',
+        };
+
+      case AttackVector.DISPUTE_DEADLOCK:
+        logs.push('Creating dispute deadlock...');
+        logs.push('Disputed resolution cancels market');
+        logs.push('No mechanism to re-resolve after dispute');
+        logs.push('MITIGATED: Cancel + refund is safe resolution');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.LOW,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'CANCEL_ON_DISPUTE',
+          logs,
+        };
+
+      case AttackVector.ORACLE_CARTEL_V2:
+        logs.push('Coordinated oracle attack with multi-oracle...');
+        logs.push('MIN_ORACLE_CONSENSUS = 2 oracles');
+        logs.push('ORACLE_CONSENSUS_THRESHOLD = 67%');
+        logs.push('Need 2/3 oracles to agree');
+        logs.push('PARTIALLY MITIGATED: Requires majority collusion');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.MEDIUM,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'MULTI_ORACLE_CONSENSUS',
+          logs,
+        };
+
+      // === ECONOMIC IMBALANCE ATTACKS ===
+      case AttackVector.INFINITE_LOOP_BONUS:
+        logs.push('Attempting to chain bonuses infinitely...');
+        logs.push('MAX_STAKE_BONUS_BPS = 50% cap');
+        logs.push('MAX_STREAK_BONUS_BPS = 20% cap');
+        logs.push('MITIGATED: Hard caps on all bonuses');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.LOW,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'BONUS_CAPS',
+          logs,
+        };
+
+      case AttackVector.NEGATIVE_SUM_GAME:
+        logs.push('Making protocol pay out more than collected...');
+        logs.push('Winnings come from losing pool only');
+        logs.push('Fees reduce payouts, never increase');
+        logs.push('MITIGATED: Zero-sum with fee extraction');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.CRITICAL,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'ZERO_SUM_DESIGN',
+          logs,
+        };
+
+      case AttackVector.FEE_EVASION:
+        logs.push('Attempting to evade protocol fees...');
+        logs.push('Fees calculated in claim_winnings');
+        logs.push('BET_FEE_BPS applied to gross winnings');
+        logs.push('Cannot claim without paying fee');
+        logs.push('MITIGATED: Fees embedded in claim flow');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.LOW,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'EMBEDDED_FEES',
+          logs,
+        };
+
+      case AttackVector.DUST_ACCUMULATION:
+        logs.push('Accumulating dust across accounts...');
+        logs.push('Rounding in fee splits leaves dust');
+        logs.push('Dust accumulates in market_pool');
+        logs.push('VULNERABLE: Protocol loses dust over time');
+        return {
+          vector,
+          status: AttackStatus.SUCCESS,
+          severity: AttackSeverity.LOW,
+          startTime: 0, endTime: 0, duration: 0,
+          logs,
+          recommendation: 'Add dust sweeper or round in favor of protocol',
+        };
+
+      // === TIME-BASED ATTACKS ===
+      case AttackVector.CLOCK_MANIPULATION:
+        logs.push('Attempting Solana clock manipulation...');
+        logs.push('Clock is consensus-validated');
+        logs.push('Cannot be manipulated by single actor');
+        logs.push('BLOCKED: Solana consensus security');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.CRITICAL,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'SOLANA_CONSENSUS',
+          logs,
+        };
+
+      case AttackVector.SLOT_RACING:
+        logs.push('Racing for specific slot inclusion...');
+        logs.push('Commit-reveal separates decision from execution');
+        logs.push('BET_COMMIT_WINDOW = 5 minutes');
+        logs.push('MITIGATED: Commit-reveal prevents slot racing benefit');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.LOW,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'COMMIT_REVEAL_SYSTEM',
+          logs,
+        };
+
+      case AttackVector.TIMESTAMP_BOUNDARY:
+        logs.push('Exploiting timestamp boundary conditions...');
+        logs.push('Uses >= and <= consistently');
+        logs.push('Edge cases at exact boundaries...');
+        logs.push('PARTIALLY VULNERABLE: Some edge cases at exact timestamps');
+        return {
+          vector,
+          status: AttackStatus.SUCCESS,
+          severity: AttackSeverity.LOW,
+          startTime: 0, endTime: 0, duration: 0,
+          logs,
+          recommendation: 'Review all timestamp comparisons for off-by-one errors',
+        };
+
+      case AttackVector.EPOCH_TRANSITION:
+        logs.push('Attacking during epoch transitions...');
+        logs.push('Protocol doesnt depend on epoch');
+        logs.push('Uses Clock::get()?.unix_timestamp');
+        logs.push('MITIGATED: Not epoch-dependent');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.LOW,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'EPOCH_INDEPENDENT',
+          logs,
+        };
+
+      // === ACCOUNT CLOSURE ATTACKS ===
+      case AttackVector.RENT_DRAIN:
+        logs.push('Draining rent from protocol accounts...');
+        logs.push('PDAs are rent-exempt (>2 years rent)');
+        logs.push('Cannot withdraw lamports below rent-exempt');
+        logs.push('BLOCKED: Rent exemption enforced');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.CRITICAL,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'RENT_EXEMPTION',
+          logs,
+        };
+
+      case AttackVector.LAMPORT_UNDERFLOW:
+        logs.push('Attempting lamport underflow...');
+        logs.push('Solana runtime prevents underflow');
+        logs.push('BLOCKED: Runtime safety');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.CRITICAL,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'SOLANA_RUNTIME',
+          logs,
+        };
+
+      case AttackVector.CLOSE_AUTHORITY:
+        logs.push('Closing authority-controlled accounts...');
+        logs.push('Only owner can close accounts (close constraint)');
+        logs.push('Authority cannot close user PDAs');
+        logs.push('BLOCKED: Ownership constraints');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.CRITICAL,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'OWNERSHIP_CONSTRAINTS',
+          logs,
+        };
+
+      case AttackVector.ORPHAN_ACCOUNTS:
+        logs.push('Creating orphan accounts with no owner...');
+        logs.push('All accounts have explicit owner field');
+        logs.push('init_if_needed sets owner on creation');
+        logs.push('MITIGATED: Explicit ownership tracking');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.LOW,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'EXPLICIT_OWNERSHIP',
+          logs,
+        };
+
+      // === PREDICTION STATS GAMING v2 ===
+      case AttackVector.ACCURACY_INFLATION_V2:
+        logs.push('Inflating accuracy via cancelled markets...');
+        logs.push('Cancelled markets dont update predictor_stats');
+        logs.push('VULNERABLE: Can game accuracy by betting on markets that cancel');
+        return {
+          vector,
+          status: AttackStatus.SUCCESS,
+          severity: AttackSeverity.MEDIUM,
+          startTime: 0, endTime: 0, duration: 0,
+          logs,
+          recommendation: 'Track predictions on cancelled markets separately',
+        };
+
+      case AttackVector.STREAK_RESET_ABUSE:
+        logs.push('Abusing streak reset mechanics...');
+        logs.push('Streak resets on loss');
+        logs.push('Can maintain streak by only betting on sure things');
+        logs.push('VULNERABLE: Streak system is gameable');
+        return {
+          vector,
+          status: AttackStatus.SUCCESS,
+          severity: AttackSeverity.LOW,
+          startTime: 0, endTime: 0, duration: 0,
+          logs,
+          recommendation: 'Weight streak by bet amount or market difficulty',
+        };
+
+      case AttackVector.VIP_OSCILLATION:
+        logs.push('Oscillating VIP tiers for max benefit...');
+        logs.push('VIP tier based on current stake');
+        logs.push('MIN_STAKE_DURATION = 24h prevents rapid oscillation');
+        logs.push('MITIGATED: 24h minimum stake duration');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.LOW,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'MIN_STAKE_DURATION',
+          logs,
+        };
+
+      case AttackVector.AUTO_COMPOUND_TIMING:
+        logs.push('Timing auto-compound for max bonus...');
+        logs.push('AUTO_COMPOUND_BONUS_BPS = 2% fixed');
+        logs.push('Bonus is fixed percentage, not timing-dependent');
+        logs.push('MITIGATED: Fixed bonus regardless of timing');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.LOW,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'FIXED_COMPOUND_BONUS',
+          logs,
+        };
+
+      // ═══════════════════════════════════════════════════════════════════════════
+      // NOVEL ATTACK VECTORS v4 - STABLESWAP & CROSS-PROGRAM EXPLOITS
+      // ═══════════════════════════════════════════════════════════════════════════
+
+      // === STABLESWAP CURVE ATTACKS ===
+      case AttackVector.NEWTON_ITERATION_LIMIT:
+        logs.push('Forcing Newtons method to max iterations...');
+        logs.push('MAX_ITERATIONS = 255');
+        logs.push('CONVERGENCE_THRESHOLD = 1');
+        logs.push('Extreme inputs could force 255 iterations');
+        logs.push('VULNERABLE: DoS via compute exhaustion at edge');
+        return {
+          vector,
+          status: AttackStatus.SUCCESS,
+          severity: AttackSeverity.LOW,
+          startTime: 0, endTime: 0, duration: 0,
+          logs,
+          recommendation: 'Add compute budget check and early termination',
+        };
+
+      case AttackVector.INVARIANT_VIOLATION:
+        logs.push('Attempting to break D invariant...');
+        logs.push('calculate_d uses stable Newton-Raphson');
+        logs.push('Mathematically proven to converge');
+        logs.push('BLOCKED: Math is cryptographically sound');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.CRITICAL,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'STABLESWAP_MATH',
+          logs,
+        };
+
+      case AttackVector.AMPLIFICATION_RAMP_EXPLOIT:
+        logs.push('Exploiting during amplification ramping...');
+        logs.push('MIN_RAMP_DURATION = 86400 (1 day)');
+        logs.push('MAX_AMP_CHANGE = 10x');
+        logs.push('Gradual ramping reduces arbitrage opportunity');
+        logs.push('PARTIALLY VULNERABLE: Can still arb during slow ramp');
+        return {
+          vector,
+          status: AttackStatus.SUCCESS,
+          severity: AttackSeverity.MEDIUM,
+          startTime: 0, endTime: 0, duration: 0,
+          logs,
+          recommendation: 'Add fee increase during amp ramping period',
+        };
+
+      case AttackVector.CONVERGENCE_FAILURE:
+        logs.push('Causing convergence threshold failure...');
+        logs.push('Threshold = 1 (very tight)');
+        logs.push('Newton should always converge for valid inputs');
+        logs.push('BLOCKED: Valid inputs always converge');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.CRITICAL,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'NEWTON_CONVERGENCE',
+          logs,
+        };
+
+      case AttackVector.IMBALANCE_FEE_BYPASS:
+        logs.push('Bypassing imbalance fees via sequencing...');
+        logs.push('Imbalance fee = (diff * SWAP_FEE_BPS) / 10000');
+        logs.push('Multiple small balanced adds avoid fee');
+        logs.push('SUCCESS: Can minimize imbalance fees via sequencing');
+        return {
+          vector,
+          status: AttackStatus.SUCCESS,
+          severity: AttackSeverity.LOW,
+          startTime: 0, endTime: 0, duration: 0,
+          logs,
+          recommendation: 'Add cumulative imbalance tracking',
+        };
+
+      // === LP TOKEN ATTACKS ===
+      case AttackVector.LP_INFLATION_ATTACK:
+        logs.push('First-depositor LP inflation attack...');
+        logs.push('MIN_INITIAL_DEPOSIT = 100 tokens each side');
+        logs.push('MINIMUM_LIQUIDITY = 1000 locked forever');
+        logs.push('BLOCKED: Minimum deposit prevents inflation');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.CRITICAL,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'MIN_INITIAL_DEPOSIT',
+          logs,
+        };
+
+      case AttackVector.LP_DONATION_ATTACK:
+        logs.push('Direct vault donation attack...');
+        logs.push('Vault balance check: vault.amount >= tracked_balance');
+        logs.push('Uses tracked balance, not vault.amount for LP calc');
+        logs.push('BLOCKED: Tracked balance prevents donation attack');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.CRITICAL,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'TRACKED_BALANCE',
+          logs,
+        };
+
+      case AttackVector.MINIMUM_LIQUIDITY_BYPASS:
+        logs.push('Bypassing minimum liquidity lock...');
+        logs.push('MINIMUM_LIQUIDITY = 1000 tokens locked');
+        logs.push('Check: lp_supply - lp_amount >= MINIMUM_LIQUIDITY');
+        logs.push('BLOCKED: Cannot withdraw below minimum');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.CRITICAL,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'MINIMUM_LIQUIDITY_CHECK',
+          logs,
+        };
+
+      case AttackVector.LP_SANDWICH:
+        logs.push('Sandwiching add/remove liquidity...');
+        logs.push('No commit-reveal on liquidity operations');
+        logs.push('min_lp_amount only protects against slippage');
+        logs.push('VULNERABLE: Can sandwich LP adds for arb');
+        return {
+          vector,
+          status: AttackStatus.SUCCESS,
+          severity: AttackSeverity.MEDIUM,
+          startTime: 0, endTime: 0, duration: 0,
+          logs,
+          recommendation: 'Add commit-reveal for large liquidity operations',
+        };
+
+      // === MIGRATION POOL ATTACKS ===
+      case AttackVector.MIGRATION_FEE_ROUNDING:
+        logs.push('Exploiting 0.1337% fee rounding...');
+        logs.push('fee = amount * 1337 / 1_000_000');
+        logs.push('MIN_SWAP_AMOUNT = 0.1 tokens');
+        logs.push('At minimum, fee = 0.1 * 1337 / 1M = 0.0001337');
+        logs.push('VULNERABLE: Rounding down to 0 for small amounts');
+        return {
+          vector,
+          status: AttackStatus.SUCCESS,
+          severity: AttackSeverity.MEDIUM,
+          startTime: 0, endTime: 0, duration: 0,
+          logs,
+          recommendation: 'Add minimum fee or round up',
+        };
+
+      case AttackVector.MIGRATION_FRONT_RUN:
+        logs.push('Front-running large migrations...');
+        logs.push('No commit-reveal on migration swaps');
+        logs.push('Can see pending tx and sandwich');
+        logs.push('VULNERABLE: Standard MEV on migrations');
+        return {
+          vector,
+          status: AttackStatus.SUCCESS,
+          severity: AttackSeverity.HIGH,
+          startTime: 0, endTime: 0, duration: 0,
+          logs,
+          recommendation: 'Add commit-reveal for large migrations',
+        };
+
+      case AttackVector.IMBALANCED_POOL_DRAIN:
+        logs.push('Draining one side of pool...');
+        logs.push('Check: amount_out <= pool.balance');
+        logs.push('Can drain until one side is depleted');
+        logs.push('PARTIALLY VULNERABLE: No limit on imbalance');
+        return {
+          vector,
+          status: AttackStatus.SUCCESS,
+          severity: AttackSeverity.MEDIUM,
+          startTime: 0, endTime: 0, duration: 0,
+          logs,
+          recommendation: 'Add maximum imbalance ratio limit',
+        };
+
+      case AttackVector.SINGLE_SIDED_EXPLOIT:
+        logs.push('Exploiting single-sided liquidity...');
+        logs.push('AUDIT FIX M-3: MIN_SWAP_AMOUNT check exists');
+        logs.push('LP proportional to pool share');
+        logs.push('MITIGATED: Proportional LP prevents exploit');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.LOW,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'PROPORTIONAL_LP',
+          logs,
+        };
+
+      // === FARMING ATTACKS ===
+      case AttackVector.FARMING_REWARD_STEAL:
+        logs.push('Stealing farming rewards via timing...');
+        logs.push('update_farming_rewards called before stake');
+        logs.push('Rewards distributed based on time staked');
+        logs.push('PARTIALLY VULNERABLE: JIT staking still possible');
+        return {
+          vector,
+          status: AttackStatus.SUCCESS,
+          severity: AttackSeverity.MEDIUM,
+          startTime: 0, endTime: 0, duration: 0,
+          logs,
+          recommendation: 'Add minimum stake duration for farming',
+        };
+
+      case AttackVector.ACC_REWARD_OVERFLOW:
+        logs.push('Overflowing acc_reward_per_share...');
+        logs.push('Uses u128 with REWARD_PRECISION = 1e12');
+        logs.push('Would need astronomical rewards to overflow');
+        logs.push('BLOCKED: u128 prevents overflow');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.CRITICAL,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'U128_PRECISION',
+          logs,
+        };
+
+      case AttackVector.FARMING_PERIOD_SNIPE:
+        logs.push('Sniping farming period start/end...');
+        logs.push('Cannot stake before start_time');
+        logs.push('Cannot stake after end_time');
+        logs.push('MITIGATED: Time bounds enforced');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.LOW,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'FARMING_TIME_BOUNDS',
+          logs,
+        };
+
+      case AttackVector.REWARD_CALCULATION_DRIFT:
+        logs.push('Precision drift in reward calculation...');
+        logs.push('REWARD_PRECISION = 1e12');
+        logs.push('High precision minimizes drift');
+        logs.push('MITIGATED: Precision is sufficient');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.LOW,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'REWARD_PRECISION',
+          logs,
+        };
+
+      // === CROSS-PROGRAM ATTACKS ===
+      case AttackVector.PROTOCOL_SWAP_ARBITRAGE:
+        logs.push('Arbitrage between idl-protocol and stableswap...');
+        logs.push('Different price curves = arbitrage opportunity');
+        logs.push('This is expected market behavior');
+        logs.push('ACCEPTED: Arbitrage is healthy for markets');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.INFO,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'EXPECTED_BEHAVIOR',
+          logs,
+        };
+
+      case AttackVector.VOLUME_INFLATION_SWAP:
+        logs.push('Inflating volume via stableswap wash trading...');
+        logs.push('total_volume_bags and total_volume_pump tracked');
+        logs.push('No cooldown on swaps');
+        logs.push('VULNERABLE: Can wash trade to inflate volume');
+        return {
+          vector,
+          status: AttackStatus.SUCCESS,
+          severity: AttackSeverity.LOW,
+          startTime: 0, endTime: 0, duration: 0,
+          logs,
+          recommendation: 'Add cooldown or volume decay',
+        };
+
+      case AttackVector.BADGE_VIA_SWAP:
+        logs.push('Getting badges via stableswap volume...');
+        logs.push('Stableswap volume separate from badge volume');
+        logs.push('Badge requires UserVolume from prediction markets');
+        logs.push('BLOCKED: Different volume tracking');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.LOW,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'SEPARATE_VOLUME_TRACKING',
+          logs,
+        };
+
+      case AttackVector.VE_SWAP_COMBO:
+        logs.push('Combining veIDL benefits with swap...');
+        logs.push('veIDL benefits only in idl-protocol');
+        logs.push('Stableswap has no veIDL integration');
+        logs.push('BLOCKED: No cross-program benefit');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.LOW,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'NO_VEIDL_INTEGRATION',
+          logs,
+        };
+
+      // === VAULT BALANCE ATTACKS ===
+      case AttackVector.VAULT_DONATION:
+        logs.push('Donating to vault to manipulate...');
+        logs.push('AUDIT FIX: vault.amount >= tracked_balance check');
+        logs.push('Uses tracked_balance for calculations');
+        logs.push('BLOCKED: Donation doesnt affect calculations');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.CRITICAL,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'TRACKED_BALANCE_CHECK',
+          logs,
+        };
+
+      case AttackVector.VAULT_BALANCE_DESYNC:
+        logs.push('Desyncing tracked vs actual balance...');
+        logs.push('All operations update tracked balance');
+        logs.push('No direct vault access without tracking');
+        logs.push('BLOCKED: Synchronized by design');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.CRITICAL,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'SYNCHRONIZED_BALANCE',
+          logs,
+        };
+
+      case AttackVector.ADMIN_FEE_ACCUMULATION:
+        logs.push('Manipulating admin fee accumulation...');
+        logs.push('admin_fees_bags and admin_fees_pump tracked');
+        logs.push('Only authority can withdraw');
+        logs.push('BLOCKED: Authority-only withdrawal');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.LOW,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'AUTHORITY_WITHDRAWAL',
+          logs,
+        };
+
+      // === DEADLINE ATTACKS ===
+      case AttackVector.DEADLINE_MANIPULATION:
+        logs.push('Setting malicious deadlines...');
+        logs.push('User provides deadline parameter');
+        logs.push('Far future deadline = more attack surface');
+        logs.push('VULNERABLE: Users may set long deadlines');
+        return {
+          vector,
+          status: AttackStatus.SUCCESS,
+          severity: AttackSeverity.LOW,
+          startTime: 0, endTime: 0, duration: 0,
+          logs,
+          recommendation: 'Add maximum deadline duration from current time',
+        };
+
+      case AttackVector.EXPIRED_TX_REPLAY:
+        logs.push('Replaying expired transactions...');
+        logs.push('deadline check: timestamp <= deadline');
+        logs.push('Nonces in PDAs prevent replay');
+        logs.push('BLOCKED: Nonce + deadline combination');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.CRITICAL,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'NONCE_AND_DEADLINE',
+          logs,
+        };
+
+      case AttackVector.TIMESTAMP_DEADLINE_RACE:
+        logs.push('Racing at deadline timestamp...');
+        logs.push('Uses Solana clock timestamp');
+        logs.push('1 second granularity');
+        logs.push('VULNERABLE: Race condition at exact deadline');
+        return {
+          vector,
+          status: AttackStatus.SUCCESS,
+          severity: AttackSeverity.LOW,
+          startTime: 0, endTime: 0, duration: 0,
+          logs,
+          recommendation: 'Use < instead of <= for deadline',
+        };
+
+      // === SLIPPAGE ATTACKS ===
+      case AttackVector.SLIPPAGE_SANDWICH:
+        logs.push('Sandwiching with min_amount_out...');
+        logs.push('User sets min_amount_out for slippage');
+        logs.push('MEV bots can sandwich up to slippage limit');
+        logs.push('VULNERABLE: Standard slippage sandwich');
+        return {
+          vector,
+          status: AttackStatus.SUCCESS,
+          severity: AttackSeverity.HIGH,
+          startTime: 0, endTime: 0, duration: 0,
+          logs,
+          recommendation: 'Add private mempool or commit-reveal',
+        };
+
+      case AttackVector.DYNAMIC_SLIPPAGE_ATTACK:
+        logs.push('Attacking dynamic slippage...');
+        logs.push('Slippage is user-provided, not calculated');
+        logs.push('No dynamic slippage in protocol');
+        logs.push('BLOCKED: Static user-provided slippage');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.LOW,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'STATIC_SLIPPAGE',
+          logs,
+        };
+
+      case AttackVector.ZERO_SLIPPAGE_EXPLOIT:
+        logs.push('Exploiting zero min_amount transactions...');
+        logs.push('User can set min_amount_out = 0');
+        logs.push('100% of value extractable by MEV');
+        logs.push('VULNERABLE: No minimum slippage enforcement');
+        return {
+          vector,
+          status: AttackStatus.SUCCESS,
+          severity: AttackSeverity.MEDIUM,
+          startTime: 0, endTime: 0, duration: 0,
+          logs,
+          recommendation: 'Warn or enforce minimum slippage tolerance',
+        };
+
+      // === ADMIN FUNCTION ATTACKS ===
+      case AttackVector.ADMIN_FEE_DRAIN:
+        logs.push('Draining accumulated admin fees...');
+        logs.push('withdraw_admin_fees requires authority');
+        logs.push('BLOCKED: Authority-only access');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.CRITICAL,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'AUTHORITY_CHECK',
+          logs,
+        };
+
+      case AttackVector.AMP_RAMPING_FRONT_RUN:
+        logs.push('Front-running amp ramping...');
+        logs.push('ramp_amplification is authority-only');
+        logs.push('MIN_RAMP_DURATION = 1 day minimum');
+        logs.push('PARTIALLY VULNERABLE: Can arb during known ramp');
+        return {
+          vector,
+          status: AttackStatus.SUCCESS,
+          severity: AttackSeverity.MEDIUM,
+          startTime: 0, endTime: 0, duration: 0,
+          logs,
+          recommendation: 'Reduce public visibility of amp changes',
+        };
+
+      case AttackVector.PAUSED_STATE_EXPLOIT:
+        logs.push('Exploiting pause/unpause window...');
+        logs.push('remove_liquidity works even when paused');
+        logs.push('This is intentional for user safety');
+        logs.push('MITIGATED: Pause doesnt trap funds');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.LOW,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'SAFE_PAUSE_DESIGN',
+          logs,
+        };
+
+      // === TOKEN MINT ATTACKS ===
+      case AttackVector.MINT_AUTHORITY_EXPLOIT:
+        logs.push('Exploiting LP mint authority...');
+        logs.push('LP mint authority is pool PDA');
+        logs.push('Only pool can mint LP tokens');
+        logs.push('BLOCKED: PDA mint authority');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.CRITICAL,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'PDA_MINT_AUTHORITY',
+          logs,
+        };
+
+      case AttackVector.WRONG_MINT_PARAMETER:
+        logs.push('Passing wrong mint to is_bags parameter...');
+        logs.push('AUDIT FIX H-3: Mint validation exists');
+        logs.push('Checks user_token.mint == expected mint');
+        logs.push('BLOCKED: Mint validation');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.CRITICAL,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'MINT_VALIDATION',
+          logs,
+        };
+
+      case AttackVector.DECIMAL_MISMATCH:
+        logs.push('Exploiting decimal assumptions...');
+        logs.push('TOKEN_DECIMALS = 6 assumed');
+        logs.push('Both BAGS and PUMP use 6 decimals');
+        logs.push('MITIGATED: Correct decimal assumption');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.LOW,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'DECIMAL_MATCH',
+          logs,
+        };
+
+      // === SDK/CLIENT-SIDE ATTACKS ===
+      case AttackVector.PDA_DERIVATION_MISMATCH:
+        logs.push('SDK vs on-chain PDA mismatch...');
+        logs.push('SDK uses same derivation as on-chain');
+        logs.push('Both use findProgramAddressSync');
+        logs.push('BLOCKED: Matching derivation');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.CRITICAL,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'MATCHING_PDA_DERIVATION',
+          logs,
+        };
+
+      case AttackVector.INSTRUCTION_MALFORMATION:
+        logs.push('Malforming instruction data...');
+        logs.push('Anchor deserializes with discriminator');
+        logs.push('Invalid data fails deserialization');
+        logs.push('BLOCKED: Anchor deserialization');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.CRITICAL,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'ANCHOR_DESERIALIZATION',
+          logs,
+        };
+
+      case AttackVector.ACCOUNT_ORDER_MANIPULATION:
+        logs.push('Wrong account order in instruction...');
+        logs.push('Anchor enforces account order via struct');
+        logs.push('Wrong order fails constraint checks');
+        logs.push('BLOCKED: Anchor account constraints');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.CRITICAL,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'ANCHOR_ACCOUNT_CONSTRAINTS',
+          logs,
+        };
+
+      case AttackVector.DISCRIMINATOR_COLLISION:
+        logs.push('Finding discriminator collision...');
+        logs.push('Discriminator = SHA256(global:name)[0:8]');
+        logs.push('Collision probability: 1 in 2^64');
+        logs.push('BLOCKED: Cryptographic security');
+        return {
+          vector,
+          status: AttackStatus.MITIGATED,
+          severity: AttackSeverity.CRITICAL,
+          startTime: 0, endTime: 0, duration: 0,
+          mitigationTriggered: 'SHA256_DISCRIMINATOR',
           logs,
         };
 

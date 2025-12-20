@@ -8,8 +8,8 @@ import { AttackAgent } from './agents/base';
 import { ATTACK_AGENT_CONFIGS } from './agents/configs';
 import { AttackVector, AttackStatus, ProtocolSnapshot, AttackSeverity } from './types';
 
-// Novel vectors to test
-const NOVEL_VECTORS: AttackVector[] = [
+// Novel vectors to test - v1
+const NOVEL_VECTORS_V1: AttackVector[] = [
   AttackVector.COMMITMENT_GRIEF,
   AttackVector.COMMITMENT_SNIPE,
   AttackVector.STALE_COMMITMENT,
@@ -25,6 +25,174 @@ const NOVEL_VECTORS: AttackVector[] = [
   AttackVector.SEASON_TRANSITION,
   AttackVector.BOND_EXHAUSTION,
 ];
+
+// Novel vectors to test - v2 (PUMP mechanics & cross-feature)
+const NOVEL_VECTORS_V2: AttackVector[] = [
+  // Referral exploits
+  AttackVector.REFERRAL_LOOP,
+  AttackVector.REFERRAL_HIJACK,
+  AttackVector.REFERRAL_ORPHAN,
+  AttackVector.REFERRAL_VOLUME_WASH,
+  // VIP exploits
+  AttackVector.VIP_TIER_FLASH,
+  AttackVector.VIP_FEE_DRAIN,
+  // Auto-compound
+  AttackVector.COMPOUND_TIMING,
+  AttackVector.COMPOUND_GRIEF,
+  // Conviction betting
+  AttackVector.CONVICTION_CANCEL,
+  AttackVector.CONVICTION_STACK,
+  AttackVector.CONVICTION_FRONT_RUN,
+  // Predictor stats
+  AttackVector.STREAK_MANIPULATION,
+  AttackVector.ACCURACY_GAMING,
+  AttackVector.STATS_INFLATION,
+  // Creator fees
+  AttackVector.CREATOR_SELF_BET,
+  AttackVector.CREATOR_FEE_DRAIN,
+  AttackVector.CREATOR_SPAM,
+  // Season
+  AttackVector.SEASON_PRIZE_SNIPE,
+  AttackVector.SEASON_BONUS_STACK,
+  AttackVector.SEASON_ROLLOVER,
+  // Cross-feature
+  AttackVector.BADGE_VIP_COMBO,
+  AttackVector.STAKE_BONUS_LOOP,
+  // Early bird
+  AttackVector.EARLY_BIRD_GRIEF,
+  AttackVector.EARLY_BIRD_SNIPE,
+  // Oracle
+  AttackVector.BOND_REFRESH_RACE,
+  AttackVector.ORACLE_ROTATION,
+  // Cooldown
+  AttackVector.COOLDOWN_SPLIT,
+  AttackVector.REWARD_TIMING_SPLIT,
+  // PDA
+  AttackVector.NONCE_REUSE,
+  AttackVector.PDA_SEED_COLLISION,
+];
+
+// Novel vectors v3 - deeper exploits
+const NOVEL_VECTORS_V3: AttackVector[] = [
+  // State transition
+  AttackVector.PAUSE_FRONT_RUN,
+  AttackVector.UNPAUSE_RACE,
+  AttackVector.AUTHORITY_SNIPE,
+  AttackVector.TVL_CAP_SANDWICH,
+  // veIDL edge cases
+  AttackVector.DECAY_ROUNDING,
+  AttackVector.LOCK_END_EDGE,
+  AttackVector.EXTEND_LOCK_ABUSE,
+  AttackVector.VE_TOTAL_SUPPLY_DRIFT,
+  // Reward checkpoint
+  AttackVector.CHECKPOINT_SANDWICH,
+  AttackVector.ZERO_TOTAL_STAKED,
+  AttackVector.PRECISION_ACCUMULATOR,
+  AttackVector.REWARD_POOL_DRAIN,
+  // Market pool
+  AttackVector.POOL_BALANCE_MISMATCH,
+  AttackVector.EMPTY_SIDE_BET,
+  AttackVector.RESOLUTION_ORDER,
+  AttackVector.CANCEL_AFTER_CLAIM,
+  // Multi-account
+  AttackVector.BET_COORDINATION,
+  AttackVector.VOLUME_SHUFFLE,
+  AttackVector.LEADERBOARD_SNIPE,
+  AttackVector.PRIZE_POOL_DRAIN,
+  // Cross-instruction
+  AttackVector.INIT_REINIT,
+  AttackVector.CLOSE_REOPEN,
+  AttackVector.STAKE_DURING_LOCK,
+  AttackVector.BET_AFTER_CLOSE,
+  // Hash/commitment
+  AttackVector.COMMITMENT_PREIMAGE,
+  AttackVector.SALT_REUSE,
+  AttackVector.WEAK_NONCE,
+  AttackVector.HASH_LENGTH_EXTENSION,
+  // Oracle multi-market
+  AttackVector.ORACLE_EXHAUSTION,
+  AttackVector.RESOLUTION_STALL,
+  AttackVector.DISPUTE_DEADLOCK,
+  AttackVector.ORACLE_CARTEL_V2,
+  // Economic imbalance
+  AttackVector.INFINITE_LOOP_BONUS,
+  AttackVector.NEGATIVE_SUM_GAME,
+  AttackVector.FEE_EVASION,
+  AttackVector.DUST_ACCUMULATION,
+  // Time-based
+  AttackVector.CLOCK_MANIPULATION,
+  AttackVector.SLOT_RACING,
+  AttackVector.TIMESTAMP_BOUNDARY,
+  AttackVector.EPOCH_TRANSITION,
+  // Account closure
+  AttackVector.RENT_DRAIN,
+  AttackVector.LAMPORT_UNDERFLOW,
+  AttackVector.CLOSE_AUTHORITY,
+  AttackVector.ORPHAN_ACCOUNTS,
+  // Prediction stats v2
+  AttackVector.ACCURACY_INFLATION_V2,
+  AttackVector.STREAK_RESET_ABUSE,
+  AttackVector.VIP_OSCILLATION,
+  AttackVector.AUTO_COMPOUND_TIMING,
+];
+
+// Novel vectors v4 - stableswap & cross-program
+const NOVEL_VECTORS_V4: AttackVector[] = [
+  // StableSwap curve attacks
+  AttackVector.NEWTON_ITERATION_LIMIT,
+  AttackVector.INVARIANT_VIOLATION,
+  AttackVector.AMPLIFICATION_RAMP_EXPLOIT,
+  AttackVector.CONVERGENCE_FAILURE,
+  AttackVector.IMBALANCE_FEE_BYPASS,
+  // LP token attacks
+  AttackVector.LP_INFLATION_ATTACK,
+  AttackVector.LP_DONATION_ATTACK,
+  AttackVector.MINIMUM_LIQUIDITY_BYPASS,
+  AttackVector.LP_SANDWICH,
+  // Migration pool attacks
+  AttackVector.MIGRATION_FEE_ROUNDING,
+  AttackVector.MIGRATION_FRONT_RUN,
+  AttackVector.IMBALANCED_POOL_DRAIN,
+  AttackVector.SINGLE_SIDED_EXPLOIT,
+  // Farming attacks
+  AttackVector.FARMING_REWARD_STEAL,
+  AttackVector.ACC_REWARD_OVERFLOW,
+  AttackVector.FARMING_PERIOD_SNIPE,
+  AttackVector.REWARD_CALCULATION_DRIFT,
+  // Cross-program attacks
+  AttackVector.PROTOCOL_SWAP_ARBITRAGE,
+  AttackVector.VOLUME_INFLATION_SWAP,
+  AttackVector.BADGE_VIA_SWAP,
+  AttackVector.VE_SWAP_COMBO,
+  // Vault balance attacks
+  AttackVector.VAULT_DONATION,
+  AttackVector.VAULT_BALANCE_DESYNC,
+  AttackVector.ADMIN_FEE_ACCUMULATION,
+  // Deadline attacks
+  AttackVector.DEADLINE_MANIPULATION,
+  AttackVector.EXPIRED_TX_REPLAY,
+  AttackVector.TIMESTAMP_DEADLINE_RACE,
+  // Slippage attacks
+  AttackVector.SLIPPAGE_SANDWICH,
+  AttackVector.DYNAMIC_SLIPPAGE_ATTACK,
+  AttackVector.ZERO_SLIPPAGE_EXPLOIT,
+  // Admin function attacks
+  AttackVector.ADMIN_FEE_DRAIN,
+  AttackVector.AMP_RAMPING_FRONT_RUN,
+  AttackVector.PAUSED_STATE_EXPLOIT,
+  // Token mint attacks
+  AttackVector.MINT_AUTHORITY_EXPLOIT,
+  AttackVector.WRONG_MINT_PARAMETER,
+  AttackVector.DECIMAL_MISMATCH,
+  // SDK/client-side attacks
+  AttackVector.PDA_DERIVATION_MISMATCH,
+  AttackVector.INSTRUCTION_MALFORMATION,
+  AttackVector.ACCOUNT_ORDER_MANIPULATION,
+  AttackVector.DISCRIMINATOR_COLLISION,
+];
+
+// Combined all novel vectors
+const NOVEL_VECTORS: AttackVector[] = [...NOVEL_VECTORS_V1, ...NOVEL_VECTORS_V2, ...NOVEL_VECTORS_V3, ...NOVEL_VECTORS_V4];
 
 async function main() {
   console.log('\n\x1b[1m\x1b[35m╔══════════════════════════════════════════════════════════╗\x1b[0m');
