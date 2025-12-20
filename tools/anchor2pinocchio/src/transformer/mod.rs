@@ -282,6 +282,9 @@ fn transform_body(body: &str, accounts: &[PinocchioAccount], config: &Config) ->
     // Fix token account .amount access - use get_token_balance()
     result = fix_token_amount_access(&result);
 
+    // Fix Pubkey comparisons - need to dereference key() for equality checks
+    result = fix_pubkey_comparisons(&result);
+
     // Fix signer_seeds pattern for PDA signing
     result = fix_signer_seeds(&result);
 
@@ -1275,6 +1278,28 @@ fn find_matching_paren(s: &str) -> Option<usize> {
     None
 }
 
+/// Fix Pubkey comparisons - dereference key() for equality
+fn fix_pubkey_comparisons(body: &str) -> String {
+    let mut result = body.to_string();
+
+    // Pattern: pending == authority.key() should be pending == *authority.key()
+    // Or: &pending == authority.key()
+    // Look for pattern where we compare with .key()
+    // Replace == account.key () with == *account.key()
+    let accounts = ["authority", "new_authority", "pool", "user", "owner"];
+    for acc in &accounts {
+        let old = format!("== {}.key ()", acc);
+        let new = format!("== *{}.key()", acc);
+        result = result.replace(&old, &new);
+
+        let old = format!("== {}.key()", acc);
+        let new = format!("== *{}.key()", acc);
+        result = result.replace(&old, &new);
+    }
+
+    result
+}
+
 /// Fix signer_seeds pattern for PDA signing
 /// Convert Anchor signer_seeds to pinocchio Signer
 fn fix_signer_seeds(body: &str) -> String {
@@ -1282,14 +1307,14 @@ fn fix_signer_seeds(body: &str) -> String {
 
     // Pattern 1: Pool PDA signer
     // Replace: let pool_seeds = &[...]; let signer_seeds = &[&pool_seeds[..]];
-    // With pinocchio signer pattern (need to create array first to avoid temp lifetime)
+    // Use pinocchio seeds! macro with proper lifetime binding
     result = result.replace(
         "let pool_seeds = & [b\"pool\".as_ref (), & [pool_bump]] ;",
-        "let pool_bump_seed = [pool_state.bump];"
+        "let pool_bump_bytes = [pool_state.bump];\nlet pool_seeds = pinocchio::seeds!(b\"pool\", &pool_bump_bytes);"
     );
     result = result.replace(
         "let signer_seeds = & [& pool_seeds [..]] ;",
-        "let signer = pinocchio::signer!(b\"pool\", &pool_bump_seed);"
+        "let signer = pinocchio::instruction::Signer::from(&pool_seeds);"
     );
 
     // Pattern 2: Period PDA signer (more complex)
