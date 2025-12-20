@@ -1,902 +1,531 @@
-# $IDL Protocol Whitepaper
+# IDL Protocol Whitepaper v3.0
 
 ```
-     ___ ____  _
-    |_ _|  _ \| |
-     | || | | | |
-     | || |_| | |___
-    |___|____/|_____|
+     ██╗██████╗ ██╗         ██████╗ ██████╗  ██████╗ ████████╗ ██████╗  ██████╗ ██████╗ ██╗
+     ██║██╔══██╗██║         ██╔══██╗██╔══██╗██╔═══██╗╚══██╔══╝██╔═══██╗██╔════╝██╔═══██╗██║
+     ██║██║  ██║██║         ██████╔╝██████╔╝██║   ██║   ██║   ██║   ██║██║     ██║   ██║██║
+     ██║██║  ██║██║         ██╔═══╝ ██╔══██╗██║   ██║   ██║   ██║   ██║██║     ██║   ██║██║
+     ██║██████╔╝███████╗    ██║     ██║  ██║╚██████╔╝   ██║   ╚██████╔╝╚██████╗╚██████╔╝███████╗
+     ╚═╝╚═════╝ ╚══════╝    ╚═╝     ╚═╝  ╚═╝ ╚═════╝    ╚═╝    ╚═════╝  ╚═════╝ ╚═════╝ ╚══════╝
 
-    PROTOCOL v0.1.0
+                              The Prediction Layer for Solana DeFi
 ```
 
-## Abstract
+---
 
-$IDL is the native token of IDLHub, Solana's largest Interface Definition Language registry. The protocol enables staking, vote-escrow mechanics, prediction markets for betting on DeFi protocol metrics, and a StableSwap AMM for unified token liquidity across multiple launch platforms. This paper describes the tokenomics, mechanisms, and economic design.
+## Executive Summary
+
+IDL Protocol is a comprehensive DeFi ecosystem built on Solana, combining:
+
+1. **IDLHub** - The largest registry of Solana Interface Definition Languages (100+ protocols)
+2. **Prediction Markets** - Bet on DeFi protocol metrics (TVL, volume, users, etc.)
+3. **StableSwap AMM** - Unified liquidity for dual-token system
+4. **Social Trading** - Guilds, battles, leaderboards, and referrals
+5. **AI Integration** - Claude-powered market making and odds calculation
+
+The $IDL token captures value through staking rewards, fee burns, and governance rights.
 
 ---
 
 ## Table of Contents
 
 1. [Introduction](#1-introduction)
-2. [Token Overview](#2-token-overview)
-3. [Dual Token System & StableSwap](#3-dual-token-system--stableswap)
-4. [Staking Mechanism](#4-staking-mechanism)
-5. [Vote-Escrowed IDL (veIDL)](#5-vote-escrowed-idl-veidl)
-6. [Volume Badges](#6-volume-badges)
-7. [Prediction Markets](#7-prediction-markets)
-8. [Fee Structure](#8-fee-structure)
-9. [Economic Model](#9-economic-model)
-   - 9.1 Value Accrual Mechanics
-   - 9.2 Deflationary Tokenomics
-   - 9.3 Staking Economics
-   - 9.4 Prediction Market Economics
-   - 9.5 Flywheel Effect
-   - 9.6 Game Theory
-   - 9.7 Risk Factors
-   - 9.8 Token Utility Summary
-   - 9.9 Comparison to Other Models
-   - 9.10 Long-Term Value Proposition
-10. [Governance](#10-governance)
-11. [Security Considerations](#11-security-considerations)
-12. [Roadmap](#12-roadmap)
+2. [The Problem](#2-the-problem)
+3. [The Solution](#3-the-solution)
+4. [Token Economics](#4-token-economics)
+5. [Core Protocol](#5-core-protocol)
+6. [Prediction Markets](#6-prediction-markets)
+7. [Advanced Trading Features](#7-advanced-trading-features)
+8. [Social Layer](#8-social-layer)
+9. [AI Integration](#9-ai-integration)
+10. [StableSwap AMM](#10-stableswap-amm)
+11. [Security](#11-security)
+12. [Governance](#12-governance)
+13. [Roadmap](#13-roadmap)
+14. [Technical Architecture](#14-technical-architecture)
+15. [Appendix](#15-appendix)
 
 ---
 
 ## 1. Introduction
 
-### 1.1 The Problem
+### 1.1 Vision
 
-Solana developers need reliable access to Interface Definition Language (IDL) files to interact with on-chain programs. Currently:
+IDL Protocol aims to become the **Bloomberg Terminal of Solana DeFi** - a comprehensive platform where users can:
 
-- IDLs are scattered across GitHub repos
-- Many are outdated or incomplete
-- No standardized registry exists
-- AI agents struggle to find correct program interfaces
+- Access standardized program interfaces for any Solana protocol
+- Predict and bet on DeFi metrics with real economic stakes
+- Compete with other predictors through battles and leaderboards
+- Earn rewards for accurate predictions and market creation
 
-### 1.2 The Solution
-
-IDLHub provides:
-
-- Centralized registry of 100+ Solana protocol IDLs
-- MCP (Model Context Protocol) API for AI agents
-- Free access forever - no paywalls
-- Community-driven updates
-
-### 1.3 Why a Token?
-
-$IDL is a **memecoin with optional utility**. It exists to:
-
-1. Allow community members to support the project
-2. Enable prediction markets on protocol metrics
-3. Provide speculative exposure to IDLHub's growth
-4. Create skin-in-the-game for governance participants
-
-**Important:** IDLHub is FREE. You do NOT need $IDL to use it.
-
----
-
-## 2. Token Overview
-
-### 2.1 Basic Information
+### 1.2 Core Principles
 
 ```
-Name:           $IDL
-Network:        Solana
-Standard:       SPL Token
-Decimals:       6
-Contract:       4GihJrYJGQ9pjqDySTjd57y1h3nNkEZNbzJxCbispump
-Launch:         bags.fm
-```
-
-### 2.2 Supply Distribution
-
-```
-Total Supply:       1,000,000,000 $IDL (1 Billion)
-                    ================================
-
-Circulating:        950,000,000 $IDL    (95.0%)
-    |
-    +-- Public:     950,000,000 $IDL    Fair launch on bags.fm
-                                        No presale, no VC
-
-Team Allocation:     50,000,000 $IDL    (5.0%)
-    |
-    +-- Dev:         50,000,000 $IDL    For development, ops
-                                        No vesting (it's a memecoin)
-```
-
-### 2.3 Supply Visualization
-
-```
-[##################################################] 100%
-[################################################  ] 95% - Public (Fair Launch)
-[##                                                ] 5%  - Team
-```
-
-### 2.4 Token Flow Diagram
-
-```
-                    +------------------+
-                    |   $IDL HOLDERS   |
-                    +--------+---------+
-                             |
-              +--------------+--------------+
-              |              |              |
-              v              v              v
-        +---------+    +---------+    +---------+
-        |  STAKE  |    |   BET   |    |  HOLD   |
-        +----+----+    +----+----+    +---------+
-             |              |
-             v              v
-        +---------+    +---------+
-        |  sIDL   |    | MARKETS |
-        +----+----+    +----+----+
-             |              |
-             v              |
-        +---------+         |
-        |  veIDL  |         |
-        +----+----+         |
-             |              |
-             v              v
-        +---------+    +---------+
-        |  VOTE   |    | RESOLVE |
-        +---------+    +----+----+
-                            |
-              +-------------+-------------+
-              |             |             |
-              v             v             v
-         +--------+   +----------+   +--------+
-         | WINNER |   |  LOSERS  |   |  FEES  |
-         +--------+   +----------+   +---+----+
-                                         |
-                      +------------------+------------------+
-                      |         |         |                 |
-                      v         v         v                 v
-                  +-------+ +-------+ +--------+       +--------+
-                  |STAKERS| |CREATOR| |TREASURY|       |  BURN  |
-                  | (50%) | | (25%) | | (15%)  |       | (10%)  |
-                  +-------+ +-------+ +--------+       +--------+
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                                                                               ║
+║   1. FREE ACCESS     - IDLHub registry is free forever, no paywalls          ║
+║   2. REAL YIELD      - Staking rewards from actual protocol revenue          ║
+║   3. DEFLATIONARY    - 10% of all fees permanently burned                    ║
+║   4. FAIR LAUNCH     - No VC allocation, no presale, 95% public              ║
+║   5. COMMUNITY FIRST - Governance by veIDL holders                           ║
+║                                                                               ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
 ```
 
 ---
 
-## 3. Dual Token System & StableSwap
+## 2. The Problem
 
-### 3.1 Overview
+### 2.1 Fragmented IDL Ecosystem
 
-$IDL exists across two launch platforms with two distinct SPL token mints, unified by a StableSwap AMM that enables 1:1 swaps between them.
+Solana developers and AI agents face significant challenges:
 
-### 3.2 Token Mints
+| Problem | Impact |
+|---------|--------|
+| IDLs scattered across GitHub repos | Hours wasted searching |
+| Many IDLs outdated or incomplete | Integration failures |
+| No standardized registry | Each team builds from scratch |
+| AI agents can't find interfaces | Limits automation potential |
 
-```
-TOKEN 1: BAGS-IDL (Original)
-═══════════════════════════════════════════════════════════════
-Mint:       4GihJrYJGQ9pjqDySTjd57y1h3nNkEZNbzJxCbispump
-Platform:   bags.fm
-Supply:     1,000,000,000 (1B)
-Decimals:   6
-Status:     ORIGINAL MINT
+### 2.2 Prediction Market Gaps
 
+Existing prediction markets fail DeFi users:
 
-TOKEN 2: PUMP-IDL (Expansion)
-═══════════════════════════════════════════════════════════════
-Mint:       4GihJrYJGQ9pjqDySTjd57y1h3nNkEZNbzJxCbispump
-Platform:   pump.fun
-Supply:     1,000,000,000 (1B)
-Decimals:   6
-Status:     EXPANSION MINT
+| Platform | Issue |
+|----------|-------|
+| Polymarket | Ethereum-based, high fees, no DeFi focus |
+| Drift Markets | Limited to specific assets |
+| Custom solutions | Fragmented liquidity, poor UX |
 
+### 2.3 Token Value Problem
 
-COMBINED TOTAL: 2,000,000,000 (2B) IDL tokens
-```
+Most DeFi tokens suffer from:
 
-### 3.3 Token Equivalence
+- **Inflationary emissions** diluting holder value
+- **Governance-only utility** with no real yield
+- **Lack of engagement** beyond speculation
 
-Both tokens represent **equal ownership** in the IDL Protocol ecosystem:
+---
 
-```
-╔════════════════════════════════════════════════════════════════╗
-║                                                                ║
-║           1 BAGS-IDL  ≡  1 PUMP-IDL  (via StableSwap)         ║
-║                                                                ║
-╚════════════════════════════════════════════════════════════════╝
+## 3. The Solution
 
-Users can freely swap between tokens with:
-  • Near-zero slippage (Curve-style StableSwap math)
-  • 0.04% swap fee (4 basis points)
-  • No impermanent loss for LPs (tokens maintain 1:1 peg)
-```
-
-### 3.4 StableSwap AMM Architecture
+### 3.1 IDLHub: The Registry
 
 ```
-                         ┌─────────────────────────────────────┐
-                         │         IDL STABLESWAP POOL         │
-                         │                                     │
-    BAGS-IDL             │    ┌───────────┬───────────┐       │             PUMP-IDL
-    Holders              │    │  BAGS     │   PUMP    │       │             Holders
-       │                 │    │  Vault    │   Vault   │       │                │
-       │   deposit       │    │           │           │       │    deposit     │
-       └────────────────►│    │  500M     │   500M    │       │◄───────────────┘
-                         │    │           │           │       │
-       ┌────────────────◄│    └───────────┴───────────┘       │►───────────────┐
-       │   withdraw      │                                     │    withdraw    │
-       │                 │         LP Token Holders            │                │
-       ▼                 │               earn                  │                ▼
-   BAGS-IDL              │          swap fees (50%)            │           PUMP-IDL
-                         │                                     │
-                         └─────────────────────────────────────┘
-
-SWAP FLOW:
-  User wants PUMP-IDL, has BAGS-IDL:
-  1. User sends BAGS-IDL to pool
-  2. Pool calculates output using StableSwap invariant
-  3. Pool sends PUMP-IDL to user (minus 0.04% fee)
-  4. Pool remains balanced for future swaps
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                              IDLHub Registry                                │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│   100+ Solana Protocol IDLs                                                 │
+│   ├── Jupiter (DEX)                                                         │
+│   ├── Marinade (Staking)                                                    │
+│   ├── Drift (Perps)                                                         │
+│   ├── Jito (MEV)                                                            │
+│   ├── Raydium (AMM)                                                         │
+│   ├── Orca (AMM)                                                            │
+│   ├── Tensor (NFT)                                                          │
+│   ├── Magic Eden (NFT)                                                      │
+│   └── ... and 90+ more                                                      │
+│                                                                             │
+│   Access Methods:                                                           │
+│   ├── Web Interface (idlhub.io)                                             │
+│   ├── REST API (/api/idl/{program})                                         │
+│   ├── MCP Server (AI agents)                                                │
+│   └── JSON-RPC (/api/mcp)                                                   │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
 ```
 
-### 3.5 StableSwap Math (Curve Invariant)
+### 3.2 Prediction Markets
 
-The pool uses Curve Finance's StableSwap formula optimized for 1:1 pegged assets:
-
-```
-StableSwap Invariant:
-═════════════════════
-
-A·n^n·Σx + D = A·D·n^n + D^(n+1) / (n^n·Πx)
-
-Where:
-  A = Amplification coefficient (1000 for tight peg)
-  n = Number of tokens (2)
-  x = Token balances [BAGS, PUMP]
-  D = Invariant (total value)
-
-Properties:
-  • A → ∞: Constant sum (x + y = k), perfect 1:1 but can drain
-  • A → 0: Constant product (x·y = k), high slippage
-  • A = 1000: Balanced - tight peg with graceful degradation
-```
-
-**Slippage Example:**
+Bet on verifiable DeFi metrics:
 
 ```
-Pool State: 100M BAGS / 100M PUMP (balanced)
-Swap: 1M BAGS → PUMP
-
-With Constant Product (A=0):   Output = 990,099 PUMP (0.99% slippage)
-With StableSwap (A=1000):      Output = 999,960 PUMP (0.004% slippage)
-With Constant Sum (A=∞):       Output = 1,000,000 PUMP (0% slippage)
-
-StableSwap provides 250x better execution than traditional AMMs!
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                         SAMPLE PREDICTION MARKETS                            ║
+╠═══════════════════════════════════════════════════════════════════════════════╣
+║                                                                               ║
+║   [JUP-TVL-3B]  "Jupiter TVL > $3B by March 2025?"                           ║
+║                  ├── YES: 65% (650,000 IDL)                                  ║
+║                  ├── NO:  35% (350,000 IDL)                                  ║
+║                  └── Resolution: DeFiLlama Oracle                            ║
+║                                                                               ║
+║   [DRIFT-VOL]   "Drift 24h Volume > $2B?"                                    ║
+║                  ├── YES: 40% (200,000 IDL)                                  ║
+║                  ├── NO:  60% (300,000 IDL)                                  ║
+║                  └── Resolution: Drift API                                   ║
+║                                                                               ║
+║   [SOL-100K]    "Solana reaches 100k TPS average?"                           ║
+║                  ├── YES: 25% (125,000 IDL)                                  ║
+║                  ├── NO:  75% (375,000 IDL)                                  ║
+║                  └── Resolution: Solana Explorer                             ║
+║                                                                               ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
 ```
 
-### 3.6 LP Token Economics
+### 3.3 Social Trading
 
-Liquidity providers deposit both tokens and receive LP tokens:
+Transform prediction markets into a social experience:
 
-```
-ADD LIQUIDITY
-═════════════
-Deposit: 1000 BAGS + 1000 PUMP
-Receive: ~2000 IDL-LP tokens (proportional to pool share)
+- **1v1 Battles** - Challenge any user to head-to-head predictions
+- **Guilds** - Pool capital with friends, share winnings
+- **Leaderboards** - Compete for accuracy rankings
+- **Referrals** - Earn 5% of referred users' fees forever
+- **Seasons** - Time-limited competitions with prize pools
 
-LP REWARDS
-══════════
-• 50% of swap fees auto-compound to LPs
-• 50% of swap fees go to protocol treasury
-• Fee rate: 0.04% per swap
+---
 
-PROJECTED LP APY (at various volumes)
-═════════════════════════════════════
-Daily Volume    │  LP Fees/Day  │  APY (on $1M TVL)
-────────────────┼───────────────┼──────────────────
-$100,000        │  $20          │  0.73%
-$1,000,000      │  $200         │  7.3%
-$10,000,000     │  $2,000       │  73%
-$100,000,000    │  $20,000      │  730%
+## 4. Token Economics
 
-Note: APY = (Daily LP Fees × 365) / TVL × 100
-```
-
-### 3.7 Protocol Integration
-
-The IDL Protocol accepts **EITHER** token for all operations:
+### 4.1 Token Overview
 
 ```
-STAKING
-═══════
-stake_bags(amount)  →  Stakes BAGS-IDL, earns same rewards
-stake_pump(amount)  →  Stakes PUMP-IDL, earns same rewards
-
-Total Stake = bags_staked + pump_staked
-veIDL calculated on combined total
-
-PREDICTION MARKETS
-══════════════════
-place_bet_bags(market, amount, yes/no)  →  Bet with BAGS-IDL
-place_bet_pump(market, amount, yes/no)  →  Bet with PUMP-IDL
-
-Both count toward same market pools
-Winners can claim in either token
-
-VOLUME BADGES
-═════════════
-Volume tracked across BOTH tokens + swap volume
-Swap volume on StableSwap counts toward badges at 2x rate!
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                              $IDL TOKEN                                       ║
+╠═══════════════════════════════════════════════════════════════════════════════╣
+║                                                                               ║
+║   Network:        Solana                                                      ║
+║   Standard:       SPL Token                                                   ║
+║   Decimals:       9                                                           ║
+║                                                                               ║
+║   PUMP-IDL:       4GihJrYJGQ9pjqDySTjd57y1h3nNkEZNbzJxCbispump (Active)      ║
+║   BAGS-IDL:       8zdhHxthCFoigAGw4QRxWfXUWLY1KkMZ1r7CTcmiBAGS (Legacy)      ║
+║                                                                               ║
+║   Total Supply:   2,000,000,000 IDL (2B combined)                            ║
+║   Circulating:    ~1,950,000,000 IDL (97.5%)                                 ║
+║   Team:           ~50,000,000 IDL (2.5%)                                     ║
+║                                                                               ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
 ```
 
-### 3.8 Why Dual Tokens?
+### 4.2 Supply Distribution
 
 ```
-BENEFITS
-════════
-
-1. BROADER DISTRIBUTION
-   • bags.fm community (original supporters)
-   • pump.fun community (expansion audience)
-   • Different user demographics reached
-
-2. ARBITRAGE STABILITY
-   • Price differences between platforms → Arb opportunity
-   • Arbitrageurs keep prices aligned
-   • More efficient price discovery
-
-3. LIQUIDITY DEPTH
-   • Combined liquidity from two platforms
-   • StableSwap unifies fragmented liquidity
-   • Better execution for large trades
-
-4. PLATFORM REDUNDANCY
-   • Not dependent on single platform
-   • If one platform has issues, other remains
-   • Decentralized token availability
-```
-
-### 3.9 Supply Distribution (Combined)
-
-```
-BAGS-IDL (1B):
-├─ Public (bags.fm):     950,000,000  (95%)
-└─ Team:                  50,000,000  (5%)
-
 PUMP-IDL (1B):
-├─ Bonding Curve:        800,000,000  (80%)
-└─ Raydium Migration:    200,000,000  (20%)
+├── Bonding Curve:        800,000,000  (80%)
+└── Raydium Migration:    200,000,000  (20%)
 
-COMBINED (2B):
+BAGS-IDL (1B):
+├── Public (bags.fm):     950,000,000  (95%)
+└── Team:                  50,000,000  (5%)
+
+VISUAL:
 [████████████████████████████████████████████████████████████] 100%
 [██████████████████████████████████████████████████████████  ] 97.5% Public
 [██                                                          ] 2.5%  Team
 ```
 
----
+### 4.3 Token Utility Matrix
 
-## 4. Staking Mechanism
+| Utility | Description | Requirement |
+|---------|-------------|-------------|
+| **Stake** | Earn 50% of protocol fees | Hold IDL |
+| **Lock (veIDL)** | Governance voting power | Lock staked IDL |
+| **Bet** | Predict DeFi metrics | Hold IDL |
+| **Battle** | 1v1 prediction challenges | Hold IDL |
+| **Guild** | Pooled betting groups | 10 IDL creation fee |
+| **Lootbox** | Random rewards | 1-100 IDL per box |
+| **VIP Tiers** | Fee discounts | Stake thresholds |
 
-### 4.1 Overview
-
-Staking allows $IDL holders to:
-- Earn share of protocol fees
-- Gain betting power multiplier
-- Participate in governance (via veIDL)
-
-### 4.2 How It Works
-
-```
-+----------+     stake()      +------------+
-|   $IDL   | ---------------> |   sIDL     |
-| (wallet) |                  | (staked)   |
-+----------+                  +------------+
-                                    |
-                              earns fees from
-                              prediction markets
-                                    |
-                                    v
-+----------+    unstake()     +------------+
-|   $IDL   | <--------------- |   sIDL     |
-| + rewards|                  |            |
-+----------+                  +------------+
-```
-
-### 4.3 Reward Distribution
-
-Stakers earn 50% of all prediction market fees, distributed proportionally:
+### 4.4 Fee Structure
 
 ```
-Your Reward = (Your Stake / Total Staked) * Reward Pool
+                         PREDICTION MARKET FEE FLOW
+                         ═══════════════════════════
 
-Example:
-- Total Staked: 100,000,000 IDL
-- Your Stake:     1,000,000 IDL (1%)
-- Reward Pool:      500,000 IDL
-- Your Reward:        5,000 IDL (1% of pool)
+                              Winner Claims 1000 IDL
+                                       │
+                                       ▼
+                              ┌────────────────┐
+                              │  3% Fee = 30   │
+                              └───────┬────────┘
+                                      │
+              ┌───────────┬───────────┼───────────┬───────────┐
+              │           │           │           │           │
+              ▼           ▼           ▼           ▼           ▼
+         ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐
+         │Stakers │ │Creator │ │Treasury│ │  Burn  │ │Referrer│
+         │  50%   │ │  25%   │ │  15%   │ │  10%   │ │  5%*   │
+         │ 15 IDL │ │7.5 IDL │ │4.5 IDL │ │ 3 IDL  │ │  *if   │
+         └────────┘ └────────┘ └────────┘ └────────┘ │ exists │
+                                                      └────────┘
+
+         * Referral fee taken from staker share when applicable
 ```
 
-### 4.4 Staking Parameters
-
-| Parameter | Value |
-|-----------|-------|
-| Minimum Stake | 1 IDL |
-| Unstake Delay | None (instant) |
-| Reward Source | 50% of betting fees |
-
----
-
-## 4. Vote-Escrowed IDL (veIDL)
-
-### 4.1 Overview
-
-veIDL is a vote-escrow mechanism inspired by Curve's veCRV. Users lock their staked IDL for a period to gain:
-
-- Voting power for governance
-- Boosted betting multiplier
-- Non-transferable (soulbound)
-
-### 4.2 Lock Duration vs Voting Power
+### 4.5 Deflationary Mechanics
 
 ```
-veIDL = Staked IDL * (Lock Duration / Max Duration)
+BURN SOURCES
+════════════
 
-Max Duration = 4 years (126,144,000 seconds)
-Min Duration = 1 week (604,800 seconds)
+1. Prediction Market Fees    │  10% of all fees burned
+2. Lootbox Purchases         │  50% of purchase price burned
+3. Guild Creation            │  Fee partially burned
+4. Failed Stop Loss          │  Small penalty burned
+
+PROJECTED BURN (5 Years)
+════════════════════════
+
+Volume Scenario  │ Monthly Fees │ Monthly Burn │ 5-Year Burn
+─────────────────┼──────────────┼──────────────┼─────────────
+Conservative     │    $30,000   │    $3,000    │   $180,000
+Base Case        │   $300,000   │   $30,000    │ $1,800,000
+Bullish          │ $3,000,000   │  $300,000    │$18,000,000
+Hyperbull        │$30,000,000   │$3,000,000    │   5.5% supply
 ```
 
-```
-Lock Duration    |  veIDL per IDL  |  Multiplier
------------------+-----------------+-------------
-4 years          |  1.00 veIDL     |  100%
-2 years          |  0.50 veIDL     |  50%
-1 year           |  0.25 veIDL     |  25%
-6 months         |  0.125 veIDL    |  12.5%
-1 week (min)     |  0.0048 veIDL   |  0.48%
-```
-
-### 4.3 Visual: Lock Curve
+### 4.6 Staking Tiers & VIP Benefits
 
 ```
-veIDL
-  ^
-1 |                                        *
-  |                                   *
-  |                              *
-  |                         *
-  |                    *
-  |               *
-  |          *
-  |     *
-0 +----*----+----+----+----+----+----+----+--> Duration
-  0   6mo  1yr      2yr      3yr      4yr
-```
+VIP TIER SYSTEM
+═══════════════
 
-### 4.4 veIDL Decay (Future Implementation)
+Tier         │ Stake Required  │ Fee Discount │ Betting Bonus │ Perks
+─────────────┼─────────────────┼──────────────┼───────────────┼──────────────
+Bronze VIP   │     100 IDL     │    0.5%      │      5%       │ Early access
+Silver VIP   │   1,000 IDL     │    1.0%      │     10%       │ + Exclusive markets
+Gold VIP     │  10,000 IDL     │    1.5%      │     25%       │ + Priority support
+Platinum VIP │ 100,000 IDL     │    2.0%      │     50%       │ + Whale chat access
 
-Unlike static locks, veIDL will decay linearly over time:
+STAKING APY PROJECTION
+══════════════════════
 
-```
-Current veIDL = Initial veIDL * (Time Remaining / Lock Duration)
+Total Staked  │ Daily Volume │ Annual Fees │ Staker Share │ APY
+──────────────┼──────────────┼─────────────┼──────────────┼─────
+$100,000      │  $100,000    │  $1,095,000 │   $547,500   │ 547%
+$500,000      │  $100,000    │  $1,095,000 │   $547,500   │ 109%
+$1,000,000    │  $500,000    │  $5,475,000 │ $2,737,500   │ 274%
+$5,000,000    │$1,000,000    │ $10,950,000 │ $5,475,000   │ 109%
 
-Example: Lock 1000 IDL for 4 years
-- At lock:     1000 veIDL
-- After 1 yr:   750 veIDL
-- After 2 yr:   500 veIDL
-- After 3 yr:   250 veIDL
-- At expiry:      0 veIDL
+Note: APY = (Staker Share / Total Staked) × 100
 ```
 
 ---
 
-## 5. Volume Badges
+## 5. Core Protocol
 
-### 5.1 Overview
-
-Traders who generate volume on the bags.fm $IDL pool earn badges that grant veIDL voting power WITHOUT locking tokens. This rewards early supporters and active traders.
-
-### 5.2 Pool Address
+### 5.1 Smart Contract Architecture
 
 ```
-bags.fm Pool: HLnpSz9h2S4hiLQ43rnSD9XkcUThA7B8hQMKmDaiTLcC
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         IDL PROTOCOL CONTRACTS                              │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│   IDL Protocol (BSn7neicVV2kEzgaZmd6tZEBm4tdgzBRyELov65Lq7dt)              │
+│   ├── Staking Module                                                        │
+│   │   ├── stake() / unstake()                                               │
+│   │   ├── lock_for_ve() / unlock_ve()                                       │
+│   │   └── claim_rewards()                                                   │
+│   │                                                                         │
+│   ├── Prediction Market Module                                              │
+│   │   ├── create_market()                                                   │
+│   │   ├── commit_bet() / reveal_bet()                                       │
+│   │   ├── commit_resolution() / reveal_resolution()                         │
+│   │   └── claim_winnings() / claim_refund()                                 │
+│   │                                                                         │
+│   ├── Social Trading Module                                                 │
+│   │   ├── create_battle() / accept_battle() / resolve_battle()             │
+│   │   ├── create_guild() / join_guild()                                     │
+│   │   ├── register_referral() / claim_referral_fees()                       │
+│   │   └── create_season() / end_season()                                    │
+│   │                                                                         │
+│   ├── Advanced Orders Module                                                │
+│   │   ├── create_limit_order() / cancel_limit_order()                       │
+│   │   ├── set_stop_loss()                                                   │
+│   │   └── partial_cashout()                                                 │
+│   │                                                                         │
+│   └── Gamification Module                                                   │
+│       ├── buy_lootbox()                                                     │
+│       ├── init_predictor_stats() / update_vip_tier()                        │
+│       └── init_dynamic_odds()                                               │
+│                                                                             │
+│   IDL StableSwap (EFsgmpbKifyA75ZY5NPHQxrtuAHHB6sYnoGkLi6xoTte)            │
+│   ├── initialize()                                                          │
+│   ├── add_liquidity() / remove_liquidity()                                  │
+│   ├── swap_bags_to_pump() / swap_pump_to_bags()                             │
+│   └── add_farming_period() / claim_farming_rewards()                        │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
 ```
 
-### 5.3 Badge Tiers
+### 5.2 State Accounts
 
 ```
-+===========+===============+================+====================+
-| Badge     | Volume (USD)  | veIDL Granted  | Lock Equivalent    |
-+===========+===============+================+====================+
-| Bronze    | $1,000+       | 50,000 veIDL   | ~1 week lock       |
-| Silver    | $10,000+      | 250,000 veIDL  | ~1 month lock      |
-| Gold      | $100,000+     | 1,000,000 veIDL| ~3 month lock      |
-| Platinum  | $500,000+     | 5,000,000 veIDL| ~1 year lock       |
-| Diamond   | $1,000,000+   | 20,000,000 veIDL| ~4 year lock      |
-+===========+===============+================+====================+
+PROTOCOL STATE
+══════════════
+
+ProtocolState {
+    authority: Pubkey,           // Admin key (timelocked)
+    treasury: Pubkey,            // Fee recipient
+    idl_mint: Pubkey,            // IDL token mint
+    vault: Pubkey,               // Staking vault
+    total_staked: u64,           // Total IDL staked
+    total_ve_supply: u64,        // Total veIDL locked
+    reward_pool: u64,            // Pending rewards
+    total_fees_collected: u64,   // Lifetime fees
+    total_burned: u64,           // Lifetime burns
+    tvl_cap: u64,                // Current TVL limit
+    insurance_fund: u64,         // Emergency fund
+    paused: bool,                // Circuit breaker
+}
+
+USER ACCOUNTS
+═════════════
+
+StakerAccount {
+    owner: Pubkey,
+    staked_amount: u64,
+    reward_per_token_paid: u128,  // Checkpoint for rewards
+    pending_rewards: u64,
+    last_stake_timestamp: i64,
+}
+
+VePosition {
+    owner: Pubkey,
+    locked_stake: u64,
+    initial_ve_amount: u64,
+    lock_start: i64,
+    lock_end: i64,
+    lock_duration: i64,
+}
+
+PredictorStats {
+    owner: Pubkey,
+    total_predictions: u64,
+    correct_predictions: u64,
+    current_streak: u64,
+    best_streak: u64,
+    total_winnings: u64,
+    auto_compound: bool,
+    vip_tier: u8,
+}
 ```
-
-### 5.4 How It Works
-
-```
-TRADER                    PROTOCOL                  BADGE
-   |                          |                        |
-   |  Trade on bags.fm pool   |                        |
-   |------------------------->|                        |
-   |                          |                        |
-   |                    Track volume                   |
-   |                          |                        |
-   |                    Reach threshold                |
-   |                          |                        |
-   |                          |  issue_badge()         |
-   |                          |----------------------->|
-   |                          |                        |
-   |                          |    veIDL granted       |
-   |<-------------------------------------------------|
-   |                          |                        |
-   |  Vote in governance      |                        |
-   |  Boosted betting power   |                        |
-```
-
-### 5.5 Badge Benefits
-
-1. **Voting Power** - veIDL from badges counts toward governance votes
-2. **Betting Bonus** - Badges stack with staking for prediction markets
-3. **Status** - On-chain proof of trading activity
-4. **No Lock Required** - Unlike regular veIDL, no token lock needed
-
-### 5.6 Badge Upgrades
-
-Badges upgrade automatically as volume increases:
-
-```
-Example:
-- Trader has Bronze badge (50k veIDL) from $5k volume
-- Trader reaches $15k total volume
-- Admin issues Silver badge upgrade
-- Old Bronze veIDL removed, Silver veIDL added
-- Net change: +200k veIDL (250k - 50k)
-```
-
-### 5.7 Volume Tracking
-
-Volume is tracked off-chain via:
-1. Indexing pool transactions from bags.fm
-2. Calculating USD value at time of trade
-3. Aggregating per wallet
-4. Periodic badge issuance by admin
 
 ---
 
 ## 6. Prediction Markets
 
-### 6.1 Overview
-
-Users can create and bet on prediction markets for DeFi protocol metrics tracked in IDLHub's registry.
-
-### 6.2 Supported Metric Types
-
-| Type | Description | Example |
-|------|-------------|---------|
-| TVL | Total Value Locked | "Jupiter TVL > $2B by March 2025?" |
-| Volume24h | 24-hour trading volume | "Raydium daily volume > $500M?" |
-| Users | Unique users | "Drift reaches 100k users?" |
-| Transactions | Transaction count | "Kamino > 1M txs this month?" |
-| Price | Token price | "JUP token > $2?" |
-| MarketCap | Market capitalization | "Marinade mcap > $100M?" |
-| Custom | Any verifiable metric | "Protocol ships v2?" |
-
-### 6.3 Market Lifecycle
+### 6.1 Market Lifecycle
 
 ```
-    CREATE           BETTING            RESOLVE           CLAIM
-       |                |                  |                |
-       v                v                  v                v
-+------------+   +------------+    +------------+   +------------+
-| Market     |   | Users bet  |    | Oracle     |   | Winners    |
-| created    |-->| YES or NO  |--->| reports    |-->| claim      |
-| by creator |   | (deadline) |    | outcome    |   | winnings   |
-+------------+   +------------+    +------------+   +------------+
-       |                |                  |                |
-       |                |                  |                |
-   t=0            t < deadline       t >= deadline    t > deadline
-                 (betting open)      (resolution)      (claims)
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                        PREDICTION MARKET LIFECYCLE                          │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+   CREATE                   BET                    RESOLVE               CLAIM
+      │                      │                        │                    │
+      ▼                      ▼                        ▼                    ▼
+┌──────────┐           ┌──────────┐            ┌──────────┐          ┌──────────┐
+│  Market  │           │  Commit  │            │  Oracle  │          │ Winners  │
+│ Created  │──────────▶│  Reveal  │───────────▶│ Commits  │─────────▶│  Claim   │
+│          │           │   Bets   │            │ Reveals  │          │ Losers   │
+└──────────┘           └──────────┘            └──────────┘          │  Refund  │
+      │                      │                        │              │(if cancel)│
+      │                      │                        │              └──────────┘
+   t = 0              t < deadline            t >= deadline
+                                                     │
+                                              ┌──────┴──────┐
+                                              ▼             ▼
+                                        ┌──────────┐  ┌──────────┐
+                                        │ 1hr Wait │  │ Dispute  │
+                                        │   then   │  │ Window   │
+                                        │  Claims  │  │(optional)│
+                                        └──────────┘  └──────────┘
+```
+
+### 6.2 Commit-Reveal Scheme
+
+To prevent front-running, all bets and resolutions use a commit-reveal scheme:
+
+```
+BETTING FLOW
+════════════
+
+1. COMMIT PHASE (User)
+   ┌────────────────────────────────────────────────────────────────────┐
+   │ commitment = SHA256(amount || bet_yes || nonce || salt)           │
+   │                                                                    │
+   │ commit_bet(commitment)                                             │
+   │   → BetCommitment account created                                  │
+   │   → No tokens moved yet                                            │
+   └────────────────────────────────────────────────────────────────────┘
+
+2. WAIT (5 minutes minimum)
+
+3. REVEAL PHASE (within 1 hour)
+   ┌────────────────────────────────────────────────────────────────────┐
+   │ reveal_bet(amount, bet_yes, nonce, salt)                          │
+   │   → Hash verified against commitment                               │
+   │   → Tokens transferred to market pool                              │
+   │   → Bet account created                                            │
+   └────────────────────────────────────────────────────────────────────┘
+
+
+RESOLUTION FLOW
+═══════════════
+
+1. Oracle commits resolution hash
+2. Wait 5 minutes
+3. Oracle reveals actual value
+4. 1-hour dispute window
+5. If no dispute: claims open
+6. If disputed: market cancelled, refunds issued
+```
+
+### 6.3 Oracle System
+
+```
+ORACLE BONDING
+══════════════
+
+Before resolving any market, oracles must:
+
+1. Deposit ORACLE_BOND_AMOUNT (10 IDL)
+2. Bond is locked until dispute window closes
+3. If resolution is disputed:
+   - Oracle loses 50% of bond (slashed)
+   - Slashed tokens go to insurance fund
+   - Market is cancelled
+   - All bets refunded
+
+TRUSTED ORACLE SOURCES
+══════════════════════
+
+Metric Type    │ Oracle Source        │ Verification
+───────────────┼──────────────────────┼─────────────────────
+TVL            │ DeFiLlama API        │ Historical snapshots
+Volume         │ Protocol APIs        │ On-chain verification
+Price          │ Pyth / Switchboard   │ Aggregated feeds
+Users          │ On-chain indexing    │ Unique wallet count
+Custom         │ Multi-sig committee  │ 3-of-5 approval
 ```
 
 ### 6.4 Betting Mechanics
 
-**Parimutuel System:**
-- All bets pooled together
-- Winners split losing pool proportionally
-- No odds set by market maker
-
 ```
-                     MARKET POOL
-              +----------------------+
-              |                      |
-    YES Bets  |  +-------+-------+   |  NO Bets
-    --------->|  |  YES  |  NO   |   |<---------
-              |  | Pool  | Pool  |   |
-              |  +-------+-------+   |
-              |                      |
-              +----------+-----------+
-                         |
-                   RESOLUTION
-                         |
-            +------------+------------+
-            |                         |
-            v                         v
-    +---------------+        +---------------+
-    | YES WINS:     |        | NO WINS:      |
-    | YES bettors   |   OR   | NO bettors    |
-    | split NO pool |        | split YES pool|
-    +---------------+        +---------------+
-```
+PARIMUTUEL SYSTEM
+═════════════════
 
-### 6.5 Staking Bonus
+All bets pooled together. Winners split loser pool proportionally.
 
-Stakers receive a betting power multiplier:
+Example Resolution:
+───────────────────
 
-```
-Effective Bet = Actual Bet * (1 + Staking Bonus)
+Market: "Jupiter TVL > $3B?"
+Result: YES wins
 
-Staking Bonus = min(Staked IDL / 1,000,000, 50%)
+Before Resolution:
+┌─────────────────────────────────────┐
+│  YES Pool: 700,000 IDL (70%)        │
+│  NO Pool:  300,000 IDL (30%)        │
+│  Total:  1,000,000 IDL              │
+└─────────────────────────────────────┘
 
-Examples:
-- 0 IDL staked:      1.00x (no bonus)
-- 1M IDL staked:     1.01x (1% bonus)
-- 10M IDL staked:    1.10x (10% bonus)
-- 50M IDL staked:    1.50x (50% bonus, max)
-- 100M IDL staked:   1.50x (capped at 50%)
-```
-
-### 6.6 Example Market
-
-```
-MARKET: "Jupiter TVL > $3B by Jan 1, 2025?"
-========================================
-
-Protocol:     Jupiter (JUP)
-Metric:       TVL
-Target:       $3,000,000,000
-Resolution:   Jan 1, 2025 00:00 UTC
-Oracle:       DeFiLlama API (verified by multisig)
-
-CURRENT BETS:
-+------------------+------------------+
-|      YES         |       NO         |
-+------------------+------------------+
-|   5,000,000 IDL  |   3,000,000 IDL  |
-|      (62.5%)     |      (37.5%)     |
-+------------------+------------------+
-
-IMPLIED ODDS: 62.5% YES / 37.5% NO
-
-IF YES WINS:
-- YES bettors split 3,000,000 IDL proportionally
-- Less 3% fee
-
-IF NO WINS:
-- NO bettors split 5,000,000 IDL proportionally
-- Less 3% fee
-```
-
----
-
-## 7. Fee Structure
-
-### 7.1 Prediction Market Fees
-
-```
-Fee Rate: 3% of winning claims
-
-Fee Distribution:
-+===================+===========+=================================+
-| Recipient         | Share     | Purpose                         |
-+===================+===========+=================================+
-| Stakers           | 50%       | Reward pool for sIDL holders    |
-| Market Creator    | 25%       | Incentive to create markets     |
-| Treasury          | 15%       | Protocol development            |
-| Burn              | 10%       | Deflationary pressure           |
-+===================+===========+=================================+
-```
-
-### 7.2 Fee Flow Diagram
-
-```
-                    WINNER CLAIMS 1000 IDL
-                            |
-                            v
-                    +---------------+
-                    | 3% Fee = 30   |
-                    +-------+-------+
-                            |
-        +--------+----------+----------+--------+
-        |        |          |          |        |
-        v        v          v          v        v
-    +------+ +------+   +------+   +------+ +------+
-    |Staker| |Staker|   |Creator|  |Treas.| | Burn |
-    | 7.5  | | 7.5  |   |  7.5  |  | 4.5  | |  3   |
-    +------+ +------+   +------+   +------+ +------+
-       |        |           |          |        |
-       v        v           |          |        v
-    +-------------+         |          |    [BURNED]
-    | Reward Pool |         |          |
-    +-------------+         |          |
-                            v          v
-                    +----------+ +----------+
-                    | Creator  | | Treasury |
-                    | Wallet   | | Multisig |
-                    +----------+ +----------+
-```
-
-### 7.3 Burn Mechanics
-
-10% of all fees are permanently burned:
-
-```
-Total Supply (t) = 1,000,000,000 - Total Burned
-
-As markets resolve:
-  - Burn accumulates
-  - Supply decreases
-  - Remaining tokens become more scarce
-```
-
-**Projected Burn Scenarios:**
-
-| Monthly Volume | Monthly Fees | Monthly Burn | Annual Burn |
-|----------------|--------------|--------------|-------------|
-| $100,000 | $3,000 | $300 | $3,600 |
-| $1,000,000 | $30,000 | $3,000 | $36,000 |
-| $10,000,000 | $300,000 | $30,000 | $360,000 |
-
----
-
-## 8. Economic Model
-
-### 8.1 Value Accrual Mechanics
-
-The $IDL token captures value through multiple interconnected mechanisms:
-
-```
-                         +------------------+
-                         |   IDLHub Usage   |
-                         | (Free, no fees)  |
-                         +--------+---------+
-                                  |
-                         Drives awareness
-                                  |
-                                  v
-                         +------------------+
-                         | $IDL Speculation |
-                         |  & Prediction    |
-                         |    Markets       |
-                         +--------+---------+
-                                  |
-                         Generates fees
-                                  |
-              +-------------------+-------------------+
-              |                   |                   |
-              v                   v                   v
-    +------------------+ +------------------+ +------------------+
-    |  Staker Rewards  | |  Token Burns     | |  Treasury        |
-    |  (50% of fees)   | |  (10% of fees)   | |  (15% of fees)   |
-    +------------------+ +------------------+ +------------------+
-              |                   |                   |
-              v                   v                   v
-    +------------------+ +------------------+ +------------------+
-    | Incentivizes     | | Reduces supply   | | Funds            |
-    | staking/locking  | | over time        | | development      |
-    +------------------+ +------------------+ +------------------+
-```
-
-### 8.2 Deflationary Tokenomics
-
-Unlike inflationary models that dilute holders, $IDL has **pure deflationary mechanics**:
-
-```
-SUPPLY DYNAMICS
-===============
-
-Initial Supply:      1,000,000,000 IDL
-                            |
-                            v
-                    +--------------+
-                    |  BURN ONLY   |  No minting function
-                    +--------------+  No inflation
-                            |
-                            v
-                    +---------------+
-                    |  10% of fees  |
-                    |   BURNED      |
-                    +---------------+
-                            |
-                            v
-                    Final Supply < 1B (always decreasing)
-```
-
-**Burn Rate Projections:**
-
-| Scenario | Daily Volume | Annual Fees | Annual Burn | Supply After 5 Years |
-|----------|-------------|-------------|-------------|---------------------|
-| Bear | $10,000 | $109,500 | $10,950 | 999,945,250 IDL |
-| Base | $100,000 | $1,095,000 | $109,500 | 999,452,500 IDL |
-| Bull | $1,000,000 | $10,950,000 | $1,095,000 | 994,525,000 IDL |
-| Moon | $10,000,000 | $109,500,000 | $10,950,000 | 945,250,000 IDL |
-
-### 8.3 Staking Economics
-
-**Real Yield, Not Emissions:**
-
-$IDL staking generates yield from **actual protocol revenue**, not token emissions:
-
-```
-Traditional DeFi                    $IDL Staking
-===============                    ==============
-
-Print new tokens ────────>    ❌    No new tokens minted
-Distribute to stakers
-Inflation dilutes value
-
-                              ✓    Fees from prediction markets
-                                   ────> Distributed to stakers
-                                   Real economic activity = Real yield
-```
-
-**APY Calculation:**
-
-```
-Staking APY = (Annual Fees × 50%) / Total Staked Value
-
-Example:
-- Annual betting volume: $10,000,000
-- Fees (3%):             $300,000
-- Staker share (50%):    $150,000
-- Total staked:          $500,000 worth of IDL
-- Staking APY:           30%
-
-Note: APY varies with volume and staked amount
-```
-
-**Staking Lock-Up Incentives:**
-
-| Lock Duration | veIDL Multiplier | Effective APY Boost |
-|--------------|------------------|---------------------|
-| No lock | 0x | Base APY |
-| 1 week | 0.005x | +0.5% bonus |
-| 1 month | 0.02x | +2% bonus |
-| 6 months | 0.125x | +12.5% bonus |
-| 1 year | 0.25x | +25% bonus |
-| 4 years (max) | 1.0x | +100% bonus (2x base) |
-
-### 8.4 Prediction Market Economics
-
-**Parimutuel vs Order Book:**
-
-$IDL uses parimutuel markets, which are simpler and more fair:
-
-```
-ORDER BOOK (Polymarket-style)         PARIMUTUEL ($IDL)
-==========================         ===================
-
-Market makers set odds          All bets pooled together
-Spread = MM profit              No spread, no MM
-Complex liquidity               Simple: bet yes or no
-Can be manipulated              Natural price discovery
-
-Pro: More capital efficient     Pro: Fair to all bettors
-Con: Sophisticated users win    Con: Less flexible odds
-```
-
-**Winnings Calculation:**
-
-```
-Your Winnings = Your Bet × (Losing Pool / Winning Pool)
-
-Example Market Resolution:
-==========================
-YES Pool: 700,000 IDL (70%)
-NO Pool:  300,000 IDL (30%)
 Your Bet: 100,000 IDL on YES
-Result:   YES wins
 
+Calculation:
+─────────────
 Your Share of YES Pool: 100,000 / 700,000 = 14.28%
 Your Share of NO Pool:  300,000 × 14.28% = 42,857 IDL
 
@@ -904,394 +533,978 @@ Gross Return: 100,000 + 42,857 = 142,857 IDL
 Fee (3%):     142,857 × 0.03 = 4,286 IDL
 Net Return:   138,571 IDL
 Net Profit:   38,571 IDL (+38.6%)
-```
 
-**Betting Power with Staking:**
 
-```
-STAKER ADVANTAGE
-================
+STAKER BONUS
+════════════
 
-Non-Staker:
-  Bet 100 IDL → Counted as 100 IDL
+Staked IDL grants betting power multiplier:
 
-Staker (10M IDL staked):
-  Bet 100 IDL → Counted as 110 IDL (10% bonus)
+Bonus = min(Staked IDL / 1,000,000 × 1%, 50%)
 
-Max Staker (50M+ IDL):
-  Bet 100 IDL → Counted as 150 IDL (50% bonus)
-
-This means stakers get proportionally MORE of the winning pool!
-```
-
-### 8.5 Flywheel Effect
-
-```
-                    +-> More Stakers
-                    |        |
-                    |        v
-             Higher |   More veIDL
-             Rewards|   Locked
-                    |        |
-                    |        v
-                    +-- More Betting <--+
-                            |           |
-                            v           |
-                       More Fees        |
-                            |           |
-                            v           |
-                    +-- More Burns      |
-                    |       |           |
-                    |       v           |
-                    |  Higher Price ----+
-                    |       |
-                    |       v
-                    +-> More Attention
-```
-
-### 8.3 Game Theory
-
-**For Stakers:**
-- Stake to earn fees (passive income)
-- Lock for veIDL to boost betting power
-- Longer locks = more voting power but less liquidity
-
-**For Bettors:**
-- Stake before betting for up to 50% bonus
-- Create markets to earn 25% of fees
-- Research protocols in IDLHub registry
-
-**For Holders:**
-- Supply decreases via burns
-- Network effects from IDLHub adoption
-- Speculative exposure to DeFi metrics
-
-### 8.4 Risk Factors
-
-| Risk | Description | Mitigation |
-|------|-------------|------------|
-| Low Volume | No fees if no betting | Creator incentives |
-| Oracle Manipulation | False resolution | Multisig oracles |
-| Smart Contract Bug | Fund loss | Audits, bug bounty |
-| Regulatory | Securities classification | Memecoin framing |
-| Competition | Other prediction markets | IDLHub integration |
-
-### 8.8 Token Utility Summary
-
-```
-+==================+=================================================+
-|     UTILITY      |                  DESCRIPTION                    |
-+==================+=================================================+
-| STAKE            | Deposit IDL to earn 50% of protocol fees        |
-|                  | Real yield from prediction market activity      |
-+------------------+-------------------------------------------------+
-| LOCK (veIDL)     | Time-lock staked IDL for governance power       |
-|                  | Longer lock = more voting influence             |
-+------------------+-------------------------------------------------+
-| BET              | Place predictions on DeFi protocol metrics      |
-|                  | Stakers get up to 50% bonus betting power       |
-+------------------+-------------------------------------------------+
-| VOTE             | veIDL holders control protocol parameters       |
-|                  | Fee rates, oracle selection, treasury spend     |
-+------------------+-------------------------------------------------+
-| BURN             | 10% of all fees permanently removed from supply |
-|                  | Deflationary pressure increases scarcity        |
-+------------------+-------------------------------------------------+
-| BADGE            | Trade on bags.fm to earn permanent veIDL        |
-|                  | Volume tiers: Bronze → Diamond                  |
-+==================+=================================================+
-```
-
-### 8.9 Comparison to Other Token Models
-
-```
-MODEL COMPARISON
-================
-
-PURE GOVERNANCE (UNI, AAVE)           $IDL HYBRID
-   - Vote on proposals                   - Vote on proposals ✓
-   - No staking yield                    - Real staking yield ✓
-   - No burning                          - Deflationary burns ✓
-   - Speculation only                    - Speculation + utility ✓
-
-REBASING/INFLATIONARY (OHM, SPELL)    $IDL HYBRID
-   - High APY (emissions)                - Lower APY (real yield) ✓
-   - Infinite inflation                  - Zero inflation ✓
-   - Ponzinomics risk                    - Sustainable model ✓
-   - Dilution over time                  - Appreciation over time ✓
-
-PURE UTILITY (LINK, GRT)              $IDL HYBRID
-   - Service payment only                - Prediction market betting ✓
-   - No staking                          - Staking with fees ✓
-   - Demand-driven value                 - Multi-source value ✓
-```
-
-### 8.10 Long-Term Value Proposition
-
-**For Stakers:**
-```
-YEAR 1: Stake IDL → Earn fees → Compound into more IDL
-YEAR 2: Lock for veIDL → Boost betting power → Earn more
-YEAR 3: Burns reduce supply → Your % of supply grows
-YEAR 4: Governance influence → Shape protocol direction
-```
-
-**For Traders:**
-```
-ACTIVITY: Trade IDL on bags.fm
-REWARD:   Volume badges grant permanent veIDL
-BENEFIT:  No lock required, voting power from activity
-SYNERGY:  Trade volume → fees generated → ecosystem grows
-```
-
-**For Bettors:**
-```
-ADVANTAGE: Stake + bet for maximum returns
-STRATEGY:  Research DeFi protocols via IDLHub → informed bets
-EDGE:      50% bonus betting power vs non-stakers
+Examples:
+- 0 IDL staked:      1.00x (no bonus)
+- 10M IDL staked:    1.10x (10% bonus)
+- 50M+ IDL staked:   1.50x (50% max)
 ```
 
 ---
 
-## 9. Governance
+## 7. Advanced Trading Features
 
-### 9.1 veIDL Voting
+### 7.1 Dynamic Odds
 
-veIDL holders can vote on:
-
-1. **Protocol Parameters**
-   - Fee percentages
-   - Minimum bet amounts
-   - Lock durations
-
-2. **Treasury Allocation**
-   - Development funding
-   - Marketing spend
-   - Grants
-
-3. **Oracle Selection**
-   - Approved oracle list
-   - Dispute resolution
-
-### 9.2 Voting Power
+Market odds shift based on betting volume:
 
 ```
-Voting Power = veIDL Balance
+DYNAMIC ODDS ALGORITHM
+══════════════════════
 
-Example Proposal:
-- Total veIDL: 10,000,000
-- Your veIDL:     100,000 (1% voting power)
-- Quorum:       2,000,000 (20% of supply)
-- Threshold:          50% majority
+Initial State: 50% YES / 50% NO
+
+After each bet:
+1. Calculate new implied probability
+2. Apply maximum shift (5% per update)
+3. Update DynamicOdds account
+
+Example:
+────────
+Pool before: 100 YES / 100 NO (50/50)
+Bet: 50 on YES
+Pool after: 150 YES / 100 NO (60/40)
+Odds shift: 50% → 60% for YES (capped at 55% if > 5% shift)
 ```
 
-### 9.3 Governance Process
+### 7.2 Limit Orders
+
+Place bets that only execute at target odds:
 
 ```
-PHASE 1: Discussion (3 days)
-    |
-    v
-PHASE 2: Snapshot Vote (5 days)
-    |
-    +-- Quorum not met --> Proposal fails
-    |
-    v
-PHASE 3: Timelock (2 days)
-    |
-    v
-PHASE 4: Execution
+LIMIT ORDER FLOW
+════════════════
+
+create_limit_order(market, amount, bet_yes, target_odds_bps)
+│
+├── Locks 'amount' in vault
+├── Creates LimitOrder account
+├── Order expires in 7 days if not filled
+│
+└── When market odds reach target:
+    ├── Keeper calls fill_limit_order()
+    ├── Bet placed at target odds
+    └── LimitOrder marked as filled
+
+CANCEL: cancel_limit_order() → Full refund
+```
+
+### 7.3 Stop Loss
+
+Automatically exit positions when losing:
+
+```
+STOP LOSS MECHANISM
+═══════════════════
+
+set_stop_loss(bet, threshold_bps)
+│
+├── Creates StopLoss account
+├── Threshold: 10% - 90% loss
+│
+└── Monitoring (off-chain keeper):
+    ├── Check current odds every 5 minutes
+    ├── If your side's odds < threshold:
+    │   └── Trigger stop loss
+    └── Execute partial_cashout at current odds
+```
+
+### 7.4 Partial Cashout
+
+Exit early at current market odds:
+
+```
+CASHOUT CALCULATION
+═══════════════════
+
+partial_cashout(bet, cashout_amount)
+
+Formula:
+────────
+current_odds = your_side_pool / total_pool
+fee = cashout_amount × 3%
+payout = (cashout_amount - fee) × current_odds
+
+Example:
+────────
+Your bet: 100 IDL on YES
+Current odds: 60% YES / 40% NO
+Cashout: 50 IDL
+
+Calculation:
+- Fee: 50 × 0.03 = 1.5 IDL
+- After fee: 48.5 IDL
+- Payout: 48.5 × 0.60 = 29.1 IDL
+
+You receive 29.1 IDL now instead of waiting for resolution.
+Risk: If YES wins, you would have gotten more.
+Benefit: If NO wins, you salvaged 29.1 IDL.
+```
+
+### 7.5 Conviction Betting
+
+Lock bets for bonus payouts:
+
+```
+CONVICTION BONUS TIERS
+══════════════════════
+
+Lock Duration  │  Bonus
+───────────────┼─────────
+1 day          │   0.5%
+7 days         │   3.5%
+14 days        │   7.0%
+30 days (max)  │  15.0%
+
+place_conviction_bet(lock_duration)
+│
+├── Creates ConvictionBet account
+├── Bet cannot be cashed out early
+├── If you WIN:
+│   └── Payout = normal_winnings × (1 + bonus)
+└── If you LOSE:
+    └── Same as normal (no additional penalty)
 ```
 
 ---
 
-## 10. Security Considerations
+## 8. Social Layer
 
-### 10.0 Protocol Constants
+### 8.1 Prediction Battles
 
-The protocol enforces these hardcoded security parameters:
-
-```
-TIMING PARAMETERS
-=================
-MIN_RESOLUTION_DELAY      = 86,400 seconds (24 hours)
-BETTING_CLOSE_WINDOW      = 3,600 seconds (1 hour before resolution)
-CLAIM_DELAY_AFTER_RESOLVE = 300 seconds (5 minutes)
-MIN_LOCK_DURATION         = 604,800 seconds (1 week)
-MAX_LOCK_DURATION         = 126,144,000 seconds (4 years)
-
-ECONOMIC PARAMETERS
-===================
-MIN_BET_AMOUNT           = 1,000,000 units (0.001 IDL, prevents dust)
-STAKER_FEE_BPS           = 5,000 (50% of fees to stakers)
-CREATOR_FEE_BPS          = 2,500 (25% to market creator)
-TREASURY_FEE_BPS         = 1,500 (15% to treasury)
-BURN_RATE_BPS            = 1,000 (10% burned)
-MAX_STAKER_BONUS_BPS     = 5,000 (50% max betting bonus)
-STAKER_BONUS_DIVISOR     = 100,000,000 (scaling factor)
-```
-
-**Why These Values?**
-
-| Parameter | Rationale |
-|-----------|-----------|
-| 24h resolution delay | Prevents same-day oracle manipulation |
-| 1h betting close | Stops last-second information arbitrage |
-| 5 min claim delay | Allows dispute window |
-| 0.001 IDL minimum | Prevents bet account spam attacks |
-| 50% to stakers | Competitive yield attracts staking |
-| 10% burn | Meaningful deflation without being excessive |
-
-### 10.1 Smart Contract Security
-
-| Measure | Status |
-|---------|--------|
-| Internal Audit | Complete (see audit report) |
-| External Audit | Pending |
-| Bug Bounty | Planned |
-| Timelock | 2 days on admin functions |
-| Multisig | Treasury controlled by 3/5 |
-
-### 10.2 Known Limitations
-
-1. **Oracle Trust** - Markets rely on honest oracle resolution
-2. **Liquidity Risk** - Low liquidity = high slippage on bets
-3. **Governance Attack** - Large veIDL holders control votes
-
-### 10.3 Emergency Procedures
+Head-to-head 1v1 challenges:
 
 ```
-IF vulnerability detected:
-    1. Admin calls set_paused(true)
-    2. All staking/betting halted
-    3. Investigation begins
-    4. Fix deployed
-    5. Admin calls set_paused(false)
+BATTLE FLOW
+═══════════
 
-IF admin key compromised:
-    1. Multisig can override
-    2. 2-day timelock on authority transfer
-    3. Community alert via Twitter/Discord
+1. CREATE BATTLE
+   ┌────────────────────────────────────────────────────────────────┐
+   │ Challenger calls create_battle(market, stake, bet_yes)        │
+   │ → Stake escrowed in vault                                      │
+   │ → Battle status: PENDING                                       │
+   │ → 24 hours for opponent to accept                              │
+   └────────────────────────────────────────────────────────────────┘
+
+2. ACCEPT BATTLE
+   ┌────────────────────────────────────────────────────────────────┐
+   │ Opponent calls accept_battle()                                 │
+   │ → Matching stake escrowed                                      │
+   │ → Opponent takes opposite side (NO if challenger bet YES)      │
+   │ → Battle status: ACTIVE                                        │
+   └────────────────────────────────────────────────────────────────┘
+
+3. RESOLUTION
+   ┌────────────────────────────────────────────────────────────────┐
+   │ After market resolves, anyone calls resolve_battle()          │
+   │ → Winner = side that matches market outcome                    │
+   │ → Winner gets: (2 × stake) - 2.5% platform fee                │
+   │ → Battle status: RESOLVED                                      │
+   └────────────────────────────────────────────────────────────────┘
+
+EXAMPLE:
+────────
+Challenger: 100 IDL on YES
+Opponent: 100 IDL on NO
+Market resolves: YES
+
+Winner (Challenger) receives:
+- Total pot: 200 IDL
+- Platform fee: 5 IDL (2.5%)
+- Net payout: 195 IDL
+- Profit: 95 IDL (+95%)
+```
+
+### 8.2 Guild System
+
+Pooled betting with profit sharing:
+
+```
+GUILD STRUCTURE
+═══════════════
+
+                    ┌─────────────────────┐
+                    │    GUILD TREASURY    │
+                    │                     │
+                    │   Pooled IDL from   │
+                    │    all members      │
+                    └──────────┬──────────┘
+                               │
+          ┌────────────────────┼────────────────────┐
+          │                    │                    │
+          ▼                    ▼                    ▼
+    ┌───────────┐        ┌───────────┐        ┌───────────┐
+    │  LEADER   │        │  MEMBER   │        │  MEMBER   │
+    │           │        │           │        │           │
+    │ 10% extra │        │ Pro-rata  │        │ Pro-rata  │
+    │  of wins  │        │  share    │        │  share    │
+    └───────────┘        └───────────┘        └───────────┘
+
+
+CREATION & JOINING
+══════════════════
+
+create_guild(name)
+├── Costs: 10 IDL
+├── Creator becomes leader
+├── Max 50 members
+└── Creates Guild account
+
+join_guild(contribution)
+├── Transfers contribution to guild treasury
+├── Creates GuildMember account
+└── Share of winnings = contribution / total_pooled
+
+
+PROFIT DISTRIBUTION
+═══════════════════
+
+When guild bet wins:
+1. 10% of profit to leader (GUILD_LEADER_SHARE)
+2. 90% distributed pro-rata to all members
+3. Members can claim anytime
+```
+
+### 8.3 Referral System
+
+Earn passive income from referrals:
+
+```
+REFERRAL MECHANICS
+══════════════════
+
+register_referral(referrer)
+│
+└── Creates ReferralAccount linking user → referrer
+
+Forever after:
+├── User pays betting fee
+├── 5% of fee goes to referrer (from staker share)
+└── Referrer can claim accumulated fees anytime
+
+
+REFERRAL EARNINGS PROJECTION
+════════════════════════════
+
+Scenario: 100 active referred users
+
+User Avg Monthly Volume │ Your Monthly Earnings
+────────────────────────┼───────────────────────
+$100 × 100 users        │  $15 (0.05 × 3% × $10,000)
+$1,000 × 100 users      │  $150
+$10,000 × 100 users     │  $1,500
+
+
+VIRAL LOOP
+══════════
+
+┌──────────────────────────────────────────────────────────────────┐
+│                                                                  │
+│    Share Link                                                    │
+│        │                                                         │
+│        ▼                                                         │
+│    Friend Signs Up ─────────────────┐                           │
+│        │                            │                           │
+│        ▼                            ▼                           │
+│    Friend Bets ──────────▶ You Earn 5% of Fees                  │
+│        │                            │                           │
+│        ▼                            │                           │
+│    Friend Refers Others             │                           │
+│        │                            │                           │
+│        └───────────────────────────►│                           │
+│                                     ▼                           │
+│                           Network Effect Grows                   │
+│                                                                  │
+└──────────────────────────────────────────────────────────────────┘
+```
+
+### 8.4 Leaderboards & Seasons
+
+Compete for accuracy rankings:
+
+```
+PREDICTOR STATS
+═══════════════
+
+PredictorStats tracks:
+├── total_predictions
+├── correct_predictions
+├── current_streak
+├── best_streak
+├── total_winnings
+└── vip_tier
+
+Accuracy = correct_predictions / total_predictions × 100
+
+STREAK BONUS
+════════════
++1% per consecutive win (max 20%)
+
+Example: 5-win streak → +5% bonus on next win
+
+
+SEASONS
+═══════
+
+create_season(season_number, prize_pool)
+│
+├── Duration: 30 days
+├── Prize pool funded by admin
+└── At season end:
+    ├── Top 10 by accuracy share prizes
+    ├── Leaderboard entries minted
+    └── Winners claim via claim_season_prize()
+
+PRIZE DISTRIBUTION (Example 10,000 IDL pool)
+═════════════════════════════════════════════
+
+Rank  │  Share  │  Prize
+──────┼─────────┼─────────
+1st   │   25%   │  2,500 IDL
+2nd   │   15%   │  1,500 IDL
+3rd   │   10%   │  1,000 IDL
+4-5   │    8%   │    800 IDL each
+6-10  │    5%   │    500 IDL each
+```
+
+### 8.5 Loot Boxes
+
+Gamified rewards:
+
+```
+LOOTBOX TIERS
+═════════════
+
+Tier       │  Price   │  Burn   │  Rewards
+───────────┼──────────┼─────────┼─────────────────────────────────
+Common     │   1 IDL  │  0.5 IDL│  1% fee discount, 2% stake boost
+Rare       │  10 IDL  │  5 IDL  │  3-5% discounts, 20 IDL jackpot
+Legendary  │ 100 IDL  │  50 IDL │  10% discounts, VIP upgrade, 500 IDL
+
+REWARD PROBABILITIES (Legendary Box)
+════════════════════════════════════
+
+Roll  │  Reward                │  Probability
+──────┼────────────────────────┼──────────────
+0-29  │  10% fee discount 90d  │     30%
+30-59 │  10% stake boost 90d   │     30%
+60-89 │  VIP tier upgrade      │     30%
+90-99 │  500 IDL JACKPOT!      │     10%
 ```
 
 ---
 
-## 11. Roadmap
+## 9. AI Integration
 
-### Phase 1: Launch (Current)
+### 9.1 AI Market Maker
 
-- [x] Token launch on bags.fm
-- [x] IDLHub registry live (100+ IDLs)
-- [x] MCP API deployed
-- [x] Tokenomics design
-- [ ] Smart contract audit
+Claude-powered liquidity and odds:
 
-### Phase 2: Staking
+```
+AI MARKET MAKER ARCHITECTURE
+════════════════════════════
 
-- [ ] Deploy staking contract
-- [ ] Reward vault initialization
-- [ ] UI for staking/unstaking
-- [ ] veIDL lock mechanism
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           AI MARKET MAKER                                   │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│   ┌─────────────┐     ┌─────────────┐     ┌─────────────┐                  │
+│   │  External   │────▶│   Claude    │────▶│   Action    │                  │
+│   │    Data     │     │   Analysis  │     │   Engine    │                  │
+│   └─────────────┘     └─────────────┘     └─────────────┘                  │
+│         │                   │                   │                          │
+│         │                   │                   │                          │
+│   ┌─────┴─────┐       ┌─────┴─────┐       ┌─────┴─────┐                    │
+│   │           │       │           │       │           │                    │
+│   │ DeFiLlama │       │ Analyze   │       │ Provide   │                    │
+│   │ Pyth      │       │ Sentiment │       │ Liquidity │                    │
+│   │ Protocols │       │ Set Odds  │       │ Rebalance │                    │
+│   │ Twitter   │       │ Suggest   │       │ Create    │                    │
+│   │           │       │ Markets   │       │ Markets   │                    │
+│   └───────────┘       └───────────┘       └───────────┘                    │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
 
-### Phase 3: Prediction Markets
 
-- [ ] Market creation UI
-- [ ] Betting interface
-- [ ] Oracle integration (DeFiLlama, Pyth)
-- [ ] Claim/resolution flow
+FUNCTIONS
+═════════
 
-### Phase 4: Governance
+1. analyzeMarket(description, data)
+   → Returns: probability, confidence, reasoning
 
-- [ ] Snapshot integration
-- [ ] Proposal system
-- [ ] Treasury multisig
-- [ ] On-chain voting (optional)
+2. calculateOdds(market, pools)
+   → Returns: recommended odds with spread
 
-### Phase 5: Expansion
+3. suggestNewMarkets()
+   → Returns: trending market ideas
 
-- [ ] More IDL sources
-- [ ] Cross-chain IDLs (EVM, Move)
-- [ ] API monetization (optional premium tier)
-- [ ] Mobile app
+4. provideLiquidity(market, recommendation)
+   → Places bets on both sides to seed liquidity
+
+5. rebalancePosition(market)
+   → Adjusts positions when too skewed
+```
+
+### 9.2 Telegram Bot
+
+```
+TELEGRAM COMMANDS
+═════════════════
+
+/start          - Welcome & wallet setup
+/markets        - Browse active markets
+/bet <id> <amt> - Place a prediction bet
+/portfolio      - View your positions
+/leaderboard    - Top predictors
+/battle @user   - Challenge to 1v1
+/guild          - Guild management
+/lootbox <tier> - Buy mystery box
+/connect        - Link Solana wallet
+
+NOTIFICATIONS
+═════════════
+- Market resolution alerts
+- Win notifications
+- Battle challenges
+- Streak milestones
+```
+
+### 9.3 Twitter Bot
+
+```
+AUTO-POSTING
+════════════
+
+Triggers:
+├── User wins > 1000 IDL
+├── Market resolves
+├── Leaderboard updates
+├── Battle completions
+└── New season starts
+
+Post Format:
+────────────
+🎯 Prediction confirmed!
+
+[wallet] just won [amount] $IDL (+X%)
+predicting [YES/NO] on "[market]"
+
+Bet on Solana DeFi metrics at idlhub.io
+Use code [referral] for bonus rewards
+
+#Solana #DeFi #PredictionMarkets
+```
+
+### 9.4 Embeddable Widget
+
+```
+WIDGET INTEGRATION
+══════════════════
+
+<script src="https://idlhub.io/widget.js"
+        data-market="JUP-TVL-3B"
+        data-ref="your_code">
+</script>
+
+Features:
+├── Real-time odds display
+├── One-click bet redirect
+├── Customizable styling
+├── Referral tracking
+└── Mobile responsive
+```
 
 ---
 
-## Appendix A: Contract Addresses
+## 10. StableSwap AMM
+
+### 10.1 Purpose
+
+Unify BAGS-IDL and PUMP-IDL liquidity with near-zero slippage swaps.
 
 ```
-TOKENS
+TOKEN EQUIVALENCE
+═════════════════
+
+╔════════════════════════════════════════════════════════════════╗
+║                                                                ║
+║        1 BAGS-IDL  ≡  1 PUMP-IDL  (via StableSwap)            ║
+║                                                                ║
+╚════════════════════════════════════════════════════════════════╝
+
+Swap Fee: 0.1337% (1337 milli-bps)
+LP Rewards: 50% of swap fees
+```
+
+### 10.2 Curve StableSwap Math
+
+```
+INVARIANT
+═════════
+
+A·n^n·Σx + D = A·D·n^n + D^(n+1) / (n^n·Πx)
+
+Where:
+- A = Amplification coefficient (1000)
+- n = Number of tokens (2)
+- x = Token balances [BAGS, PUMP]
+- D = Invariant (total value)
+
+
+SLIPPAGE COMPARISON
+═══════════════════
+
+Swap: 1M BAGS → PUMP (100M balanced pool)
+
+Method          │  Output         │  Slippage
+────────────────┼─────────────────┼───────────
+Constant Product│  990,099 PUMP   │  0.99%
+StableSwap A=100│  999,800 PUMP   │  0.02%
+StableSwap A=1000│ 999,960 PUMP   │  0.004%
+
+StableSwap provides 250x better execution!
+```
+
+### 10.3 LP Token Economics
+
+```
+ADD LIQUIDITY
+═════════════
+
+Deposit: 1000 BAGS + 1000 PUMP
+Receive: ~2000 IDL-LP tokens
+
+LP REWARDS
+══════════
+
+50% of swap fees auto-compound to LPs
+
+PROJECTED APY
+═════════════
+
+Daily Volume   │  LP Fees/Day  │  APY (on $1M TVL)
+───────────────┼───────────────┼──────────────────
+$100,000       │      $67      │     2.4%
+$1,000,000     │     $667      │    24.4%
+$10,000,000    │   $6,670      │   243.5%
+```
+
+### 10.4 Farming Rewards
+
+```
+FARMING PERIODS
+═══════════════
+
+add_farming_period(reward_amount, duration)
+│
+├── Creates FarmingPeriod
+├── Rewards distributed linearly
+├── Max 5 active periods
+└── Min 1 day duration
+
+REWARD CALCULATION
+══════════════════
+
+user_reward = (user_lp / total_lp) × period_rewards × time_staked
+```
+
+---
+
+## 11. Security
+
+### 11.1 Smart Contract Security
+
+```
+SECURITY MEASURES
+═════════════════
+
+✓ Commit-reveal scheme (prevents front-running)
+✓ Oracle bonding & slashing (accountability)
+✓ 48-hour authority timelock
+✓ Pausable protocol (circuit breaker)
+✓ TVL caps (gradual rollout)
+✓ Insurance fund
+✓ Minimum bet amounts (dust prevention)
+✓ Checked arithmetic (overflow protection)
+
+AUDITS
 ══════
-$IDL (PUMP):    4GihJrYJGQ9pjqDySTjd57y1h3nNkEZNbzJxCbispump  (pump.fun) [CURRENT]
-$IDL (BAGS):    8zdhHxthCFoigAGw4QRxWfXUWLY1KkMZ1r7CTcmiBAGS  (bags.fm)  [DEPRECATED]
 
-PROGRAMS
-════════
-IDL Protocol:   BSn7neicVV2kEzgaZmd6tZEBm4tdgzBRyELov65Lq7dt  (devnet)
-IDL StableSwap: STABLESwap1111111111111111111111111111111111  (pending deployment)
-
-PDAs
-════
-Protocol State: [Derived from "state" seed]
-Staking Vault:  [Derived from "vault" seed]
-StableSwap Pool:[Derived from "pool" seed]
-BAGS Vault:     [Derived from "vault", "bags" seeds]
-PUMP Vault:     [Derived from "vault", "pump" seeds]
-LP Mint:        [Derived from "lp_mint" seed]
-Treasury:       [TBD - multisig]
+Internal Red Team:     Complete
+External Audit:        Pending
+Bug Bounty:            Planned
 ```
 
-## Appendix B: Links
+### 11.2 Protocol Constants
 
 ```
-Website:        https://idlhub.com
-Token Page:     https://idlhub.com/tokenomics.html
-GitHub:         https://github.com/openSVM/idlhub
-pump.fun:       https://pump.fun/coin/4GihJrYJGQ9pjqDySTjd57y1h3nNkEZNbzJxCbispump
-DexScreener:    https://dexscreener.com/solana/4GihJrYJGQ9pjqDySTjd57y1h3nNkEZNbzJxCbispump
+TIMING SECURITY
+═══════════════
+
+MIN_RESOLUTION_DELAY     = 24 hours    // Prevents same-day manipulation
+BETTING_CLOSE_WINDOW     = 1 hour      // Stops last-second arbitrage
+BET_COMMIT_WINDOW        = 5 minutes   // Commit-reveal delay
+BET_REVEAL_WINDOW        = 1 hour      // Max reveal time
+ORACLE_DISPUTE_WINDOW    = 1 hour      // Time to challenge resolution
+AUTHORITY_TIMELOCK       = 48 hours    // Admin action delay
+MIN_STAKE_DURATION       = 24 hours    // Anti-flash-loan
+
+ECONOMIC SECURITY
+═════════════════
+
+MIN_BET_AMOUNT           = 0.001 IDL   // Prevents dust attacks
+MAX_BET_AMOUNT           = 1M IDL      // Limits whale manipulation
+MAX_BET_IMBALANCE_RATIO  = 100x        // Prevents extreme skew
+ORACLE_BOND_AMOUNT       = 10 IDL      // Oracle accountability
+ORACLE_SLASH_PERCENT     = 50%         // Penalty for bad resolution
 ```
 
-## Appendix C: Glossary
+### 11.3 Risk Factors
+
+| Risk | Severity | Mitigation |
+|------|----------|------------|
+| Oracle manipulation | High | Bonding, slashing, dispute window |
+| Front-running | High | Commit-reveal scheme |
+| Flash loan attacks | Medium | 24h minimum stake duration |
+| Contract bugs | High | Audits, pausability, insurance |
+| Governance attacks | Medium | Timelock, veIDL distribution |
+| Low liquidity | Low | AI market maker, incentives |
+
+---
+
+## 12. Governance
+
+### 12.1 veIDL Voting
+
+```
+VOTING POWER
+════════════
+
+veIDL = Staked IDL × (Lock Duration / 4 years)
+
+Lock Duration  │  veIDL per IDL  │  Voting Power
+───────────────┼─────────────────┼───────────────
+4 years        │     1.00        │     100%
+2 years        │     0.50        │      50%
+1 year         │     0.25        │      25%
+1 week (min)   │     0.0048      │     0.48%
+
+
+LINEAR DECAY
+════════════
+
+veIDL decreases linearly as lock expires:
+
+Current veIDL = Initial veIDL × (Time Remaining / Lock Duration)
+
+Year 0: 1000 veIDL
+Year 1:  750 veIDL (25% decay)
+Year 2:  500 veIDL (50% decay)
+Year 3:  250 veIDL (75% decay)
+Year 4:    0 veIDL (expired)
+```
+
+### 12.2 Governance Process
+
+```
+PROPOSAL LIFECYCLE
+══════════════════
+
+┌──────────────┐     ┌──────────────┐     ┌──────────────┐     ┌──────────────┐
+│  DISCUSSION  │────▶│   VOTING     │────▶│   TIMELOCK   │────▶│  EXECUTION   │
+│   (3 days)   │     │   (5 days)   │     │   (2 days)   │     │              │
+└──────────────┘     └──────────────┘     └──────────────┘     └──────────────┘
+                            │
+                     ┌──────┴──────┐
+                     │             │
+                     ▼             ▼
+              Quorum Met?     Quorum Failed
+                  │               │
+                  ▼               ▼
+             Majority?        Rejected
+              YES/NO
+                │
+        ┌───────┴───────┐
+        ▼               ▼
+     Passed          Rejected
+
+
+QUORUM: 20% of veIDL supply
+MAJORITY: 50%+1 of votes cast
+```
+
+### 12.3 Governable Parameters
+
+| Parameter | Current | Range | Description |
+|-----------|---------|-------|-------------|
+| BET_FEE_BPS | 300 | 100-500 | Fee on winning bets |
+| STAKER_FEE_SHARE | 50% | 30-70% | Staker portion of fees |
+| BURN_FEE_SHARE | 10% | 5-20% | Burn portion of fees |
+| MIN_BET_AMOUNT | 0.001 | 0.001-1 | Minimum bet size |
+| TVL_CAP | Variable | - | Protocol capacity |
+
+---
+
+## 13. Roadmap
+
+### Phase 1: Foundation (Complete)
+- [x] IDLHub registry (100+ IDLs)
+- [x] MCP API for AI agents
+- [x] Token launch (BAGS + PUMP)
+- [x] Core smart contracts
+- [x] Commit-reveal betting
+
+### Phase 2: Social (Current)
+- [x] Prediction battles
+- [x] Guild system
+- [x] Referral program
+- [x] Leaderboards
+- [x] Loot boxes
+- [ ] Deploy to mainnet
+
+### Phase 3: Advanced Trading
+- [x] Dynamic odds
+- [x] Limit orders
+- [x] Stop loss
+- [x] Partial cashout
+- [ ] UI implementation
+
+### Phase 4: Bots & Integrations
+- [x] Telegram bot
+- [x] Twitter bot
+- [x] Embed widget
+- [x] AI market maker
+- [ ] Jupiter integration
+- [ ] Discord bot
+
+### Phase 5: Governance & Expansion
+- [ ] Snapshot integration
+- [ ] On-chain voting
+- [ ] Cross-chain IDLs (EVM)
+- [ ] Mobile app
+- [ ] Institutional API
+
+---
+
+## 14. Technical Architecture
+
+### 14.1 System Overview
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          IDL PROTOCOL ARCHITECTURE                          │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+                                    FRONTEND
+                    ┌──────────────────────────────────────┐
+                    │                                      │
+                    │    Web App (idlhub.io)               │
+                    │    ├── Market Browser                │
+                    │    ├── Betting Interface             │
+                    │    ├── Portfolio Dashboard           │
+                    │    └── Governance UI                 │
+                    │                                      │
+                    │    Embed Widget                      │
+                    │    └── Drop-in for partner sites     │
+                    │                                      │
+                    └──────────────────┬───────────────────┘
+                                       │
+                                       ▼
+                                    BOTS
+                    ┌──────────────────────────────────────┐
+                    │                                      │
+                    │    Telegram Bot (@IDLProtocolBot)    │
+                    │    Twitter Bot (@IDLProtocol)        │
+                    │    AI Market Maker                   │
+                    │                                      │
+                    └──────────────────┬───────────────────┘
+                                       │
+                                       ▼
+                                   BACKEND
+                    ┌──────────────────────────────────────┐
+                    │                                      │
+                    │    API Server                        │
+                    │    ├── /api/idl/* (IDL registry)     │
+                    │    ├── /api/mcp (JSON-RPC)           │
+                    │    ├── /api/markets (GraphQL)        │
+                    │    └── /api/user (REST)              │
+                    │                                      │
+                    │    Indexer                           │
+                    │    └── Real-time on-chain parsing    │
+                    │                                      │
+                    │    Keeper                            │
+                    │    ├── Fill limit orders             │
+                    │    ├── Trigger stop losses           │
+                    │    └── Execute AI MM actions         │
+                    │                                      │
+                    └──────────────────┬───────────────────┘
+                                       │
+                                       ▼
+                              SOLANA BLOCKCHAIN
+                    ┌──────────────────────────────────────┐
+                    │                                      │
+                    │    IDL Protocol Program              │
+                    │    └── BSn7neic...Lq7dt (devnet)     │
+                    │                                      │
+                    │    IDL StableSwap Program            │
+                    │    └── EFsgmpbK...oTte (devnet)      │
+                    │                                      │
+                    │    Token Mints                       │
+                    │    ├── PUMP-IDL: 4GihJrYJ...pump     │
+                    │    └── BAGS-IDL: 8zdhHxth...BAG      │
+                    │                                      │
+                    └──────────────────────────────────────┘
+```
+
+### 14.2 Data Flow
+
+```
+BET PLACEMENT FLOW
+══════════════════
+
+User                    Frontend                  Backend                 Solana
+  │                        │                         │                      │
+  │  Select market         │                         │                      │
+  ├───────────────────────▶│                         │                      │
+  │                        │  Fetch market data      │                      │
+  │                        ├────────────────────────▶│                      │
+  │                        │                         │  getProgramAccounts  │
+  │                        │                         ├─────────────────────▶│
+  │                        │                         │◀─────────────────────┤
+  │                        │◀────────────────────────┤                      │
+  │                        │                         │                      │
+  │  Enter bet amount      │                         │                      │
+  ├───────────────────────▶│                         │                      │
+  │                        │  Generate commitment    │                      │
+  │                        │  hash locally           │                      │
+  │                        │                         │                      │
+  │  Sign transaction      │                         │                      │
+  ├───────────────────────▶│                         │                      │
+  │                        │                         │  commit_bet()        │
+  │                        ├─────────────────────────┼─────────────────────▶│
+  │                        │                         │◀─────────────────────┤
+  │                        │◀────────────────────────┤                      │
+  │                        │                         │                      │
+  │  (Wait 5 minutes)      │                         │                      │
+  │                        │                         │                      │
+  │  Sign reveal tx        │                         │                      │
+  ├───────────────────────▶│                         │                      │
+  │                        │                         │  reveal_bet()        │
+  │                        ├─────────────────────────┼─────────────────────▶│
+  │                        │                         │                      │
+  │  Bet confirmed!        │                         │                      │
+  │◀───────────────────────┤                         │                      │
+```
+
+---
+
+## 15. Appendix
+
+### 15.1 Contract Addresses
+
+```
+MAINNET (Pending)
+═════════════════
+IDL Protocol:     TBD
+IDL StableSwap:   TBD
+PUMP-IDL Token:   4GihJrYJGQ9pjqDySTjd57y1h3nNkEZNbzJxCbispump
+BAGS-IDL Token:   8zdhHxthCFoigAGw4QRxWfXUWLY1KkMZ1r7CTcmiBAGS
+
+DEVNET
+══════
+IDL Protocol:     BSn7neicVV2kEzgaZmd6tZEBm4tdgzBRyELov65Lq7dt
+IDL StableSwap:   EFsgmpbKifyA75ZY5NPHQxrtuAHHB6sYnoGkLi6xoTte
+```
+
+### 15.2 Links
+
+```
+Website:          https://idlhub.io
+Documentation:    https://docs.idlhub.io
+GitHub:           https://github.com/openSVM/idlhub
+Twitter:          https://twitter.com/IDLProtocol
+Telegram:         https://t.me/IDLProtocol
+Discord:          https://discord.gg/idlprotocol
+DexScreener:      https://dexscreener.com/solana/4GihJrYJGQ9pjqDySTjd57y1h3nNkEZNbzJxCbispump
+```
+
+### 15.3 Glossary
 
 | Term | Definition |
 |------|------------|
-| IDL | Interface Definition Language - JSON schema for Solana programs |
-| sIDL | Staked IDL token |
-| veIDL | Vote-escrowed IDL - locked sIDL with voting power |
-| MCP | Model Context Protocol - API standard for AI agents |
-| Parimutuel | Betting system where all bets pooled, winners split losers' pool |
+| IDL | Interface Definition Language - JSON schema describing Solana program interfaces |
+| veIDL | Vote-escrowed IDL - locked staking tokens with governance power |
+| MCP | Model Context Protocol - AI agent API standard |
+| Parimutuel | Betting system where all bets pooled, winners split loser pool |
 | TVL | Total Value Locked - assets deposited in a protocol |
+| Commit-Reveal | Two-phase scheme preventing front-running |
+| StableSwap | AMM optimized for pegged assets (Curve-style) |
+
+### 15.4 Changelog
+
+```
+v3.0.0 (December 2024)
+- Added prediction battles, guilds, referrals
+- Added loot boxes and gamification
+- Added limit orders, stop loss, partial cashout
+- Added dynamic odds system
+- Added Telegram, Twitter bots
+- Added AI market maker
+- Added embed widget
+- Added conviction betting
+- Added VIP tier system
+- Added seasons and leaderboards
+
+v2.0.0 (December 2024)
+- Added dual token system (BAGS + PUMP)
+- Added StableSwap AMM
+- Added LP farming
+
+v1.0.0 (November 2024)
+- Initial release
+- IDLHub registry
+- Basic prediction markets
+- Staking and veIDL
+```
 
 ---
 
 ## Disclaimer
 
 ```
-THIS IS A MEMECOIN.
-
-$IDL has no guaranteed utility or value. IDLHub is free to use
-regardless of token ownership. Do not invest more than you can
-afford to lose. This is not financial advice.
-
-The prediction markets described are for entertainment purposes.
-Check local regulations before participating. The protocol makes
-no guarantees about oracle accuracy or market resolution.
-
-DYOR. NFA. WAGMI (maybe).
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                                                                               ║
+║                              ⚠️  DISCLAIMER  ⚠️                               ║
+║                                                                               ║
+║   $IDL IS A MEMECOIN WITH OPTIONAL UTILITY.                                  ║
+║                                                                               ║
+║   • IDLHub is FREE to use - no token required                                ║
+║   • Do not invest more than you can afford to lose                           ║
+║   • Prediction markets are for entertainment                                  ║
+║   • Check local regulations before participating                              ║
+║   • No guarantees on oracle accuracy or returns                               ║
+║   • Smart contracts are unaudited - use at your own risk                      ║
+║                                                                               ║
+║   DYOR. NFA. WAGMI (maybe).                                                   ║
+║                                                                               ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
 ```
 
 ---
 
 ```
-Document Version: 2.0.0
+Document Version: 3.0.0
 Last Updated:     December 2024
-Authors:          IDLHub Team
+Authors:          IDL Protocol Team
 License:          MIT
 
-Changelog:
-- v2.0.0: Added dual token system (BAGS-IDL + PUMP-IDL),
-          StableSwap AMM documentation, updated supply to 2B total,
-          added LP token economics, protocol integration details
-- v1.1.0: Expanded tokenomics section with deflationary mechanics,
-          staking economics, APY calculations, parimutuel details,
-          model comparisons, protocol constants, and value propositions
-- v1.0.0: Initial whitepaper release
+                    Built with 🤖 on Solana
 ```
