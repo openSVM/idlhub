@@ -495,6 +495,156 @@
             background: var(--accent-hover);
         }
 
+        .protocol-item {
+            cursor: pointer;
+        }
+
+        .protocol-item.selected {
+            border-color: var(--accent-primary);
+            background: var(--bg-tertiary);
+        }
+
+        .protocol-detail {
+            padding: 16px 24px;
+            background: var(--bg-tertiary);
+            border-top: 2px solid var(--border-primary);
+            display: none;
+        }
+
+        .protocol-detail.active {
+            display: block;
+        }
+
+        .protocol-detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .protocol-detail-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .protocol-detail-title::before {
+            content: '// ';
+            color: var(--text-muted);
+        }
+
+        .protocol-detail-close {
+            padding: 4px 12px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-primary);
+            color: var(--text-primary);
+            cursor: pointer;
+            font-size: 10px;
+            font-weight: 700;
+            font-family: inherit;
+        }
+
+        .protocol-detail-close:hover {
+            background: var(--accent-hover);
+            color: var(--bg-secondary);
+        }
+
+        .protocol-detail-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        @media (max-width: 768px) {
+            .protocol-detail-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .detail-section {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-secondary);
+            padding: 12px;
+        }
+
+        .detail-section-title {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .detail-list {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .detail-item {
+            padding: 4px 0;
+            font-size: 11px;
+            color: var(--text-primary);
+            border-bottom: 1px solid var(--border-secondary);
+        }
+
+        .detail-item:last-child {
+            border-bottom: none;
+        }
+
+        .detail-item-name {
+            font-weight: 600;
+            color: var(--accent-primary);
+        }
+
+        .detail-item-type {
+            color: var(--text-secondary);
+            font-size: 10px;
+        }
+
+        .detail-code {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-secondary);
+            padding: 12px;
+            max-height: 300px;
+            overflow: auto;
+            font-size: 10px;
+            white-space: pre-wrap;
+            color: var(--text-primary);
+        }
+
+        .detail-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .detail-btn {
+            padding: 8px 16px;
+            background: var(--accent-primary);
+            color: var(--bg-secondary);
+            border: none;
+            cursor: pointer;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-family: inherit;
+        }
+
+        .detail-btn:hover {
+            background: var(--accent-hover);
+        }
+
+        .detail-btn.secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-primary);
+        }
+
+        .detail-btn.secondary:hover {
+            background: var(--accent-hover);
+            color: var(--bg-secondary);
+        }
+
         .no-results {
             text-align: center;
             padding: 60px 20px;
@@ -671,6 +821,36 @@
             <div class="loading">
                 <div class="spinner"></div>
                 <p>Loading protocols...</p>
+            </div>
+        </div>
+
+        <div class="protocol-detail" id="protocolDetail">
+            <div class="protocol-detail-header">
+                <span class="protocol-detail-title" id="detailTitle">Protocol Details</span>
+                <button class="protocol-detail-close" onclick="closeDetail()">Close [X]</button>
+            </div>
+            <div class="protocol-detail-content">
+                <div class="detail-section">
+                    <div class="detail-section-title">Instructions</div>
+                    <div class="detail-list" id="detailInstructions">Loading...</div>
+                </div>
+                <div class="detail-section">
+                    <div class="detail-section-title">Accounts</div>
+                    <div class="detail-list" id="detailAccounts">Loading...</div>
+                </div>
+                <div class="detail-section">
+                    <div class="detail-section-title">Types</div>
+                    <div class="detail-list" id="detailTypes">Loading...</div>
+                </div>
+                <div class="detail-section">
+                    <div class="detail-section-title">Errors</div>
+                    <div class="detail-list" id="detailErrors">Loading...</div>
+                </div>
+            </div>
+            <div class="detail-actions">
+                <button class="detail-btn" id="detailDownload">Download IDL</button>
+                <button class="detail-btn secondary" id="detailViewRaw">View Raw JSON</button>
+                <a class="detail-btn secondary" id="detailArweave" href="#" target="_blank">View on Arweave</a>
             </div>
         </div>
 
@@ -896,7 +1076,7 @@
             }
 
             container.innerHTML = filteredProtocols.map(protocol => `
-                <div class="protocol-item" data-id="${protocol.id}">
+                <div class="protocol-item" data-id="${protocol.id}" onclick="selectProtocol('${protocol.id}', event)">
                     <input
                         type="checkbox"
                         class="protocol-checkbox"
@@ -939,7 +1119,131 @@
             });
         }
 
-        // View IDL
+        // Current selected protocol
+        let currentProtocolId = null;
+        let currentIdlData = null;
+
+        // View IDL (click on protocol row)
+        async function selectProtocol(protocolId, event) {
+            // Don't trigger if clicking on checkbox or buttons
+            if (event.target.classList.contains('protocol-checkbox') ||
+                event.target.classList.contains('icon-btn') ||
+                event.target.tagName === 'A') {
+                return;
+            }
+
+            // Toggle if same protocol
+            if (currentProtocolId === protocolId) {
+                closeDetail();
+                return;
+            }
+
+            // Update selected state
+            document.querySelectorAll('.protocol-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+
+            currentProtocolId = protocolId;
+            const protocol = allProtocols.find(p => p.id === protocolId);
+
+            // Show detail panel
+            const detailPanel = document.getElementById('protocolDetail');
+            detailPanel.classList.add('active');
+
+            // Update title
+            document.getElementById('detailTitle').textContent = protocol?.name || protocolId;
+
+            // Show loading state
+            document.getElementById('detailInstructions').innerHTML = '<div class="detail-item">Loading...</div>';
+            document.getElementById('detailAccounts').innerHTML = '<div class="detail-item">Loading...</div>';
+            document.getElementById('detailTypes').innerHTML = '<div class="detail-item">Loading...</div>';
+            document.getElementById('detailErrors').innerHTML = '<div class="detail-item">Loading...</div>';
+
+            // Load IDL data
+            try {
+                const response = await fetch(`/api/idl/${protocolId}`);
+                const data = await response.json();
+                currentIdlData = data;
+
+                const idl = data.idl || {};
+
+                // Render instructions
+                const instructions = idl.instructions || [];
+                document.getElementById('detailInstructions').innerHTML = instructions.length > 0
+                    ? instructions.map(ix => `
+                        <div class="detail-item">
+                            <span class="detail-item-name">${ix.name}</span>
+                            <span class="detail-item-type">${ix.args?.length || 0} args, ${ix.accounts?.length || 0} accounts</span>
+                        </div>
+                    `).join('')
+                    : '<div class="detail-item">No instructions</div>';
+
+                // Render accounts
+                const accounts = idl.accounts || [];
+                document.getElementById('detailAccounts').innerHTML = accounts.length > 0
+                    ? accounts.map(acc => `
+                        <div class="detail-item">
+                            <span class="detail-item-name">${acc.name}</span>
+                        </div>
+                    `).join('')
+                    : '<div class="detail-item">No accounts</div>';
+
+                // Render types
+                const types = idl.types || [];
+                document.getElementById('detailTypes').innerHTML = types.length > 0
+                    ? types.map(t => `
+                        <div class="detail-item">
+                            <span class="detail-item-name">${t.name}</span>
+                            <span class="detail-item-type">${t.type?.kind || 'type'}</span>
+                        </div>
+                    `).join('')
+                    : '<div class="detail-item">No types</div>';
+
+                // Render errors
+                const errors = idl.errors || [];
+                document.getElementById('detailErrors').innerHTML = errors.length > 0
+                    ? errors.map(e => `
+                        <div class="detail-item">
+                            <span class="detail-item-name">${e.code}: ${e.name}</span>
+                            <span class="detail-item-type">${e.msg || ''}</span>
+                        </div>
+                    `).join('')
+                    : '<div class="detail-item">No errors defined</div>';
+
+                // Update action buttons
+                document.getElementById('detailDownload').onclick = () => downloadIDL(protocolId);
+                document.getElementById('detailViewRaw').onclick = () => window.open(`/api/idl/${protocolId}`, '_blank');
+
+                // Arweave link
+                const arweaveLink = document.getElementById('detailArweave');
+                if (data.arweaveUrl) {
+                    arweaveLink.href = data.arweaveUrl;
+                    arweaveLink.style.display = 'inline-block';
+                } else {
+                    arweaveLink.style.display = 'none';
+                }
+
+                // Scroll detail into view
+                detailPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+            } catch (error) {
+                console.error('Failed to load IDL:', error);
+                document.getElementById('detailInstructions').innerHTML = `<div class="detail-item">Error: ${error.message}</div>`;
+            }
+        }
+
+        // Close detail panel
+        function closeDetail() {
+            document.getElementById('protocolDetail').classList.remove('active');
+            document.querySelectorAll('.protocol-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            currentProtocolId = null;
+            currentIdlData = null;
+        }
+
+        // View IDL in new tab
         function viewIDL(protocolId) {
             window.open(`/api/idl/${protocolId}`, '_blank');
         }
