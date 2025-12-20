@@ -2,7 +2,7 @@
   "version": "1.0.0",
   "network": "solana-devnet",
   "gateway": "https://devnet.irys.xyz",
-  "lastUpdated": "2025-12-19T13:32:44.249Z",
+  "lastUpdated": "2025-12-20T09:38:41.695Z",
   "indexTxId": "GGsQtpzigkFE8KhxryiWgVURUxMdRx3qGSDHeWDg3qkY",
   "idls": {
     "acceleraytor": {
@@ -931,6 +931,13 @@
       "name": "Zeta Markets",
       "category": "derivatives",
       "uploadedAt": "2025-12-19T13:32:43.889Z"
+    },
+    "test-upload": {
+      "txId": "213ivodvvdNJeThzMQd89Hgx39WR7viHXuDfMvwep14y",
+      "name": "test-upload",
+      "category": "defi",
+      "programId": "TestProgram123",
+      "uploadedAt": "2025-12-20T09:38:41.695Z"
     }
   }
 }

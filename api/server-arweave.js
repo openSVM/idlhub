@@ -10,6 +10,7 @@ import cors from 'cors';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import * as arweaveUpload from './services/arweave-upload.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -271,10 +272,10 @@ app.get('/api/idl/search', async (req, res) => {
   }
 });
 
-// Upload new IDL (stores locally, requires separate Arweave upload)
+// Upload new IDL - saves locally AND uploads to Arweave
 app.post('/api/idl', async (req, res) => {
   try {
-    const { programId, name, idl: idlData, network = 'mainnet' } = req.body;
+    const { programId, name, idl: idlData, network = 'mainnet', category = 'defi' } = req.body;
 
     if (!programId || !idlData) {
       return res.status(400).json({ error: 'Missing required fields: programId, idl' });
@@ -285,10 +286,30 @@ app.post('/api/idl', async (req, res) => {
       return res.status(400).json({ error: 'Invalid IDL format: missing version or name' });
     }
 
-    // Save locally (Arweave upload is a separate step)
+    // Validate protocol ID format (security)
     const protocolId = name || idlData.name;
+    if (!/^[a-zA-Z0-9_-]+$/.test(protocolId)) {
+      return res.status(400).json({ error: 'Invalid protocol ID format. Use only alphanumeric, dash, underscore.' });
+    }
+
+    // Save locally first
     const localPath = path.join(IDLS_DIR, `${protocolId}IDL.json`);
     fs.writeFileSync(localPath, JSON.stringify(idlData, null, 2));
+
+    // Upload to Arweave
+    let arweaveResult = null;
+    try {
+      arweaveResult = await arweaveUpload.uploadIDL(idlData, {
+        id: protocolId,
+        name: name || idlData.name,
+        programId,
+        category,
+      });
+      console.log(`[API] Uploaded to Arweave: ${arweaveResult.url}`);
+    } catch (uploadError) {
+      console.error('[API] Arweave upload failed:', uploadError.message);
+      // Continue - IDL is saved locally, can retry upload later
+    }
 
     // Update index.json
     const index = loadIndex();
@@ -298,13 +319,14 @@ app.post('/api/idl', async (req, res) => {
       id: protocolId,
       name: name || idlData.name,
       description: idlData.description || `${name || idlData.name} protocol on Solana`,
-      category: 'defi',
+      category,
       idlPath: `IDLs/${protocolId}IDL.json`,
       programId,
       network,
-      status: 'pending-arweave',
+      status: arweaveResult ? 'available' : 'pending-arweave',
       version: idlData.version,
       lastUpdated: new Date().toISOString().split('T')[0],
+      arweaveTxId: arweaveResult?.txId || null,
     };
 
     if (existingIndex >= 0) {
@@ -322,13 +344,113 @@ app.post('/api/idl', async (req, res) => {
 
     res.status(201).json({
       success: true,
-      message: 'IDL saved locally. Run `npm run upload` in arweave/ to upload to Arweave.',
       protocolId,
       localPath,
+      arweave: arweaveResult ? {
+        txId: arweaveResult.txId,
+        url: arweaveResult.url,
+        size: arweaveResult.size,
+      } : null,
+      message: arweaveResult
+        ? `IDL uploaded to Arweave: ${arweaveResult.url}`
+        : 'IDL saved locally. Arweave upload pending (check server wallet balance).',
     });
   } catch (error) {
     console.error('Error:', error.message);
     res.status(500).json({ error: 'Failed to save IDL', details: error.message });
+  }
+});
+
+// Re-upload existing IDL to Arweave (for retrying failed uploads)
+app.post('/api/idl/:id/upload', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Validate ID format
+    if (!/^[a-zA-Z0-9_-]+$/.test(id)) {
+      return res.status(400).json({ error: 'Invalid protocol ID format' });
+    }
+
+    // Get IDL
+    const idl = await getIDL(id);
+    if (!idl) {
+      return res.status(404).json({ error: 'IDL not found', protocolId: id });
+    }
+
+    // Check if already uploaded
+    if (arweaveUpload.isUploaded(id)) {
+      const status = arweaveUpload.getUploadStatus(id);
+      return res.json({
+        success: true,
+        message: 'IDL already uploaded to Arweave',
+        ...status,
+      });
+    }
+
+    // Get metadata from index
+    const index = loadIndex();
+    const protocol = index.protocols.find(p => p.id === id);
+
+    // Upload to Arweave
+    const result = await arweaveUpload.uploadIDL(idl, {
+      id,
+      name: protocol?.name || id,
+      programId: protocol?.programId,
+      category: protocol?.category || 'defi',
+    });
+
+    // Update index status
+    if (protocol) {
+      protocol.status = 'available';
+      protocol.arweaveTxId = result.txId;
+      fs.writeFileSync(INDEX_FILE, JSON.stringify(index, null, 2));
+    }
+
+    // Clear cache
+    memoryCache.delete(id);
+
+    res.json({
+      success: true,
+      protocolId: id,
+      txId: result.txId,
+      url: result.url,
+      size: result.size,
+    });
+  } catch (error) {
+    console.error('Error:', error.message);
+    res.status(500).json({ error: 'Failed to upload to Arweave', details: error.message });
+  }
+});
+
+// Get Arweave upload status for a protocol
+app.get('/api/idl/:id/status', async (req, res) => {
+  const { id } = req.params;
+  const status = arweaveUpload.getUploadStatus(id);
+  res.json({ protocolId: id, ...status });
+});
+
+// Get server Arweave balance
+app.get('/api/arweave/balance', async (req, res) => {
+  try {
+    const balance = await arweaveUpload.getBalance();
+    res.json(balance);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to get balance', details: error.message });
+  }
+});
+
+// Estimate upload cost
+app.post('/api/arweave/estimate', async (req, res) => {
+  try {
+    const { idl } = req.body;
+    if (!idl) {
+      return res.status(400).json({ error: 'IDL required in request body' });
+    }
+    const sizeBytes = Buffer.byteLength(JSON.stringify(idl), 'utf-8');
+    const estimate = await arweaveUpload.estimateCost(sizeBytes);
+    res.json(estimate);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to estimate cost', details: error.message });
   }
 });
 
@@ -401,20 +523,33 @@ app.get('/api/arweave/stats', (req, res) => {
 app.get('/api/docs', (req, res) => {
   res.json({
     title: 'IDLHub REST API',
-    version: '3.0.0',
-    description: 'REST API serving IDLs from Arweave permanent storage',
+    version: '4.0.0',
+    description: 'REST API serving IDLs from Arweave permanent storage. Clients only need to interact with this API - all Arweave uploads are handled server-side.',
     backend: 'arweave',
     endpoints: {
       'GET /health': 'Health check with Arweave status',
       'GET /api/idl': 'List all IDLs',
       'GET /api/idl/:id': 'Get IDL by protocol ID or program address',
       'GET /api/idl/search?q=': 'Search IDLs',
-      'POST /api/idl': 'Upload new IDL (local, then run arweave upload)',
+      'POST /api/idl': 'Upload new IDL (automatically uploads to Arweave)',
+      'POST /api/idl/:id/upload': 'Retry Arweave upload for existing IDL',
+      'GET /api/idl/:id/status': 'Get Arweave upload status for IDL',
+      'GET /api/arweave/balance': 'Get server Arweave wallet balance',
+      'POST /api/arweave/estimate': 'Estimate upload cost for an IDL',
+      'GET /api/arweave/manifest': 'Get Arweave manifest',
+      'GET /api/arweave/stats': 'Get Arweave upload stats',
       'GET /api/programs': 'List programs (legacy)',
       'GET /api/programs/:id': 'Get program (legacy)',
       'GET /api/programs/:id/idl': 'Get program IDL (legacy)',
-      'GET /api/arweave/manifest': 'Get Arweave manifest',
-      'GET /api/arweave/stats': 'Get Arweave upload stats',
+    },
+    upload: {
+      description: 'To upload an IDL, POST to /api/idl with JSON body',
+      example: {
+        programId: 'YourProgramAddress...',
+        name: 'my-protocol',
+        category: 'defi',
+        idl: { version: '0.1.0', name: 'my_protocol', instructions: [] },
+      },
     },
   });
 });

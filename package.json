@@ -4,6 +4,9 @@
   "description": "idlhub - a comprehensive, searchable registry of Interface Definition Language (IDL) files for Solana protocols. This repository provides a centralized location for discovering and accessing IDLs across the Solana ecosystem.",
   "main": "index.js",
   "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview",
     "test": "node mcp-server/test/basic.test.js",
     "test:anchor": "anchor test",
     "test:api-mcp": "node mcp-server/test/api-server.test.js",
@@ -56,11 +59,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@irys/sdk": "^0.2.0",
     "@modelcontextprotocol/sdk": "^1.19.1",
     "@qdrant/js-client-rest": "^1.13.0",
     "axios": "^1.6.2",
+    "bs58": "^5.0.0",
     "cors": "^2.8.5",
     "express": "^4.18.2",
+    "got": "^11.8.6",
     "ws": "^8.18.3"
   },
   "devDependencies": {
@@ -69,6 +75,7 @@
     "@solana/web3.js": "^1.98.4",
     "@types/node": "^20.10.5",
     "ts-node": "^10.9.2",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "vite": "^5.0.0"
   }
 }
