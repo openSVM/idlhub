@@ -56,6 +56,43 @@ export enum AttackVector {
   COMPUTE_EXHAUSTION = 'COMPUTE_EXHAUSTION',     // Exceed CU limits
   STORAGE_BLOAT = 'STORAGE_BLOAT',               // Fill up storage
   TX_SPAM = 'TX_SPAM',                           // Transaction spam
+
+  // ==================== NOVEL ATTACK VECTORS ====================
+  // These are NEW attacks invented specifically for IDL Protocol
+
+  // Commitment Window Exploits
+  COMMITMENT_GRIEF = 'COMMITMENT_GRIEF',         // Spam commitments to block legitimate bets
+  COMMITMENT_SNIPE = 'COMMITMENT_SNIPE',         // Wait for reveal window edge, observe mempool
+  STALE_COMMITMENT = 'STALE_COMMITMENT',         // Exploit expired but unrevealed commitments
+
+  // Cross-Market Attacks
+  CORRELATED_MARKET = 'CORRELATED_MARKET',       // Create correlated markets for arbitrage
+  MARKET_SPAM = 'MARKET_SPAM',                   // Create many markets to dilute oracle attention
+  RESOLUTION_RACE = 'RESOLUTION_RACE',           // Race oracles on resolution timing
+
+  // veIDL Specific Attacks
+  LOCK_EXTENSION_GRIEF = 'LOCK_EXTENSION_GRIEF', // Spam extend_lock calls
+  VE_DECAY_ARBITRAGE = 'VE_DECAY_ARBITRAGE',     // Exploit veIDL decay timing
+  BADGE_TIER_GAMING = 'BADGE_TIER_GAMING',       // Game badge tiers across wallets
+
+  // Oracle Collusion
+  ORACLE_CARTEL = 'ORACLE_CARTEL',               // Multiple oracles collude on false outcome
+  DISPUTE_GRIEF = 'DISPUTE_GRIEF',               // Spam disputes to cancel markets
+  BOND_EXHAUSTION = 'BOND_EXHAUSTION',           // Drain oracle's bond across markets
+
+  // Staking Game Theory
+  STAKE_FRONT_RUN = 'STAKE_FRONT_RUN',           // Front-run large stakes to dilute rewards
+  REWARD_TIMING = 'REWARD_TIMING',               // Exploit reward distribution timing
+  TVL_CAP_RACE = 'TVL_CAP_RACE',                 // Race to fill TVL cap before others
+
+  // Social Engineering
+  FAKE_RESOLUTION_DATA = 'FAKE_RESOLUTION_DATA', // Publish fake resolution data offchain
+  MARKET_DESCRIPTION_ABUSE = 'MARKET_DESCRIPTION_ABUSE', // Misleading market descriptions
+
+  // Protocol State Exploits
+  INSURANCE_DRAIN = 'INSURANCE_DRAIN',           // Drain insurance fund via edge cases
+  CHECKPOINT_DESYNC = 'CHECKPOINT_DESYNC',       // Desync reward checkpoints
+  SEASON_TRANSITION = 'SEASON_TRANSITION',       // Exploit season bonus transitions
 }
 
 export enum AttackSeverity {

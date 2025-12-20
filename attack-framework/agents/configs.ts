@@ -390,6 +390,88 @@ Fuzz the protocol with edge cases and malformed inputs to find bugs.
 }`,
   },
 
+  // ==================== NOVEL ATTACK SPECIALIST ====================
+  {
+    id: 'novel_attacker',
+    name: 'Novel_Attacker',
+    role: AttackRole.FUZZER,  // Use fuzzer role for experimental attacks
+    vectors: [
+      // Commitment exploits
+      AttackVector.COMMITMENT_GRIEF,
+      AttackVector.COMMITMENT_SNIPE,
+      AttackVector.STALE_COMMITMENT,
+      // Cross-market
+      AttackVector.CORRELATED_MARKET,
+      AttackVector.MARKET_SPAM,
+      AttackVector.RESOLUTION_RACE,
+      // veIDL specific
+      AttackVector.VE_DECAY_ARBITRAGE,
+      AttackVector.BADGE_TIER_GAMING,
+      // Oracle attacks
+      AttackVector.DISPUTE_GRIEF,
+      AttackVector.BOND_EXHAUSTION,
+      // Game theory
+      AttackVector.STAKE_FRONT_RUN,
+      AttackVector.REWARD_TIMING,
+      AttackVector.TVL_CAP_RACE,
+      // Protocol state
+      AttackVector.INSURANCE_DRAIN,
+      AttackVector.CHECKPOINT_DESYNC,
+      AttackVector.SEASON_TRANSITION,
+    ],
+    model: 'anthropic/claude-3-5-haiku',
+    budget: 500000n * BigInt(1e6),
+    riskTolerance: 0.95,
+    systemPrompt: `You are Novel_Attacker, a creative security researcher finding NEW attack vectors.
+
+## YOUR MISSION
+Discover and exploit vulnerabilities that haven't been tested before.
+Think outside the box. Chain multiple actions. Exploit timing windows.
+
+## NOVEL ATTACK STRATEGIES
+
+### 1. COMMITMENT WINDOW EXPLOITS
+- **COMMITMENT_GRIEF**: Spam bet commitments to fill storage, block real users
+- **COMMITMENT_SNIPE**: Commit early, watch mempool, reveal or let expire based on others
+- **STALE_COMMITMENT**: Create commitments you never reveal to pollute state
+
+### 2. CROSS-MARKET ATTACKS
+- **CORRELATED_MARKET**: Create markets with correlated outcomes, arbitrage between them
+- **MARKET_SPAM**: Create 100s of markets, dilute oracle attention, sneak bad resolutions
+- **RESOLUTION_RACE**: If multiple oracles, race to resolve first with your preferred outcome
+
+### 3. veIDL TIMING EXPLOITS
+- **VE_DECAY_ARBITRAGE**: veIDL decays linearly - time actions for max voting power
+- **BADGE_TIER_GAMING**: Transfer volume across Sybil wallets at optimal times
+
+### 4. ORACLE CARTEL ATTACKS
+- **DISPUTE_GRIEF**: Dispute every resolution to cancel markets and cause chaos
+- **BOND_EXHAUSTION**: Force oracle to resolve many markets, drain their bond capacity
+
+### 5. STAKING GAME THEORY
+- **STAKE_FRONT_RUN**: Watch mempool for large stakes, front-run to dilute their share
+- **REWARD_TIMING**: Stake right before fee distribution, unstake right after
+- **TVL_CAP_RACE**: Race to fill TVL cap, lock out competitors
+
+### 6. PROTOCOL STATE EXPLOITS
+- **INSURANCE_DRAIN**: Find edge cases that drain insurance fund
+- **CHECKPOINT_DESYNC**: Manipulate reward checkpoint timing
+- **SEASON_TRANSITION**: Exploit bonus calculations during season changes
+
+## OUTPUT FORMAT
+{
+  "attack": "<NOVEL_VECTOR>",
+  "params": {
+    "timing": "optimal_window",
+    "chainedActions": ["action1", "action2"],
+    "targetState": "description"
+  },
+  "reasoning": "Why this hasn't been tried before...",
+  "expectedProfit": 500000,
+  "confidence": 0.6
+}`,
+  },
+
   // ==================== SYBIL OPERATOR ====================
   {
     id: 'sybil_operator',
@@ -496,4 +578,41 @@ export const ATTACK_DIFFICULTY: Record<AttackVector, number> = {
   [AttackVector.COMPUTE_EXHAUSTION]: 0.7,
   [AttackVector.STORAGE_BLOAT]: 0.6,
   [AttackVector.TX_SPAM]: 0.4,
+
+  // ==================== NOVEL ATTACK DIFFICULTIES ====================
+  // Lower = easier to execute, higher = harder
+
+  // Commitment Window Exploits (NEW)
+  [AttackVector.COMMITMENT_GRIEF]: 0.2,        // Easy: just spam commits
+  [AttackVector.COMMITMENT_SNIPE]: 0.4,        // Medium: needs mempool monitoring
+  [AttackVector.STALE_COMMITMENT]: 0.3,        // Easy: just let commits expire
+
+  // Cross-Market Attacks (NEW)
+  [AttackVector.CORRELATED_MARKET]: 0.35,      // Medium: needs market creation
+  [AttackVector.MARKET_SPAM]: 0.25,            // Easy: just create markets
+  [AttackVector.RESOLUTION_RACE]: 0.5,         // Medium: timing dependent
+
+  // veIDL Specific (NEW)
+  [AttackVector.LOCK_EXTENSION_GRIEF]: 0.3,    // Easy: just spam extends
+  [AttackVector.VE_DECAY_ARBITRAGE]: 0.45,     // Medium: timing exploit
+  [AttackVector.BADGE_TIER_GAMING]: 0.4,       // Medium: needs Sybil + volume
+
+  // Oracle Collusion (NEW)
+  [AttackVector.ORACLE_CARTEL]: 0.6,           // Hard: needs multiple oracles
+  [AttackVector.DISPUTE_GRIEF]: 0.25,          // Easy: just dispute everything
+  [AttackVector.BOND_EXHAUSTION]: 0.5,         // Medium: capital intensive
+
+  // Staking Game Theory (NEW)
+  [AttackVector.STAKE_FRONT_RUN]: 0.35,        // Medium: needs mempool
+  [AttackVector.REWARD_TIMING]: 0.4,           // Medium: needs timing
+  [AttackVector.TVL_CAP_RACE]: 0.3,            // Easy: just race
+
+  // Social Engineering (NEW)
+  [AttackVector.FAKE_RESOLUTION_DATA]: 0.2,    // Easy: offchain
+  [AttackVector.MARKET_DESCRIPTION_ABUSE]: 0.15, // Very easy: just bad text
+
+  // Protocol State (NEW)
+  [AttackVector.INSURANCE_DRAIN]: 0.7,         // Hard: needs edge cases
+  [AttackVector.CHECKPOINT_DESYNC]: 0.6,       // Hard: complex timing
+  [AttackVector.SEASON_TRANSITION]: 0.45,      // Medium: timing dependent
 };
