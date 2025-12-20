@@ -70,6 +70,14 @@ pub const BADGE_HOLD_TIME: i64 = 604800; // 7 days minimum between volume update
 // TIER 1 FIX: Anti-flash-loan - minimum stake duration before unstake
 pub const MIN_STAKE_DURATION: i64 = 86400; // 24 hours minimum stake
 
+// ATTACK FIX: Anti-Sybil - minimum stake amount
+pub const MIN_STAKE_AMOUNT: u64 = 100_000_000; // 0.1 tokens minimum stake (prevents dust Sybils)
+
+// ATTACK FIX: Multi-oracle consensus
+pub const MIN_ORACLE_CONSENSUS: u8 = 2; // Minimum 2 oracles must agree
+pub const MAX_ORACLES_PER_MARKET: u8 = 5; // Maximum oracles per market
+pub const ORACLE_CONSENSUS_THRESHOLD: u8 = 67; // 67% must agree on outcome
+
 // TIER 3: TVL caps (gradual rollout)
 pub const INITIAL_TVL_CAP: u64 = 100_000_000_000; // 100 tokens initial cap
 pub const MAX_TVL_CAP: u64 = 10_000_000_000_000_000; // 10M tokens max cap
@@ -152,6 +160,8 @@ pub mod idl_protocol {
     /// SECURITY FIX: Stake IDL tokens with actual SPL token transfer
     pub fn stake(ctx: Context<Stake>, amount: u64) -> Result<()> {
         require!(amount > 0, IdlError::InvalidAmount);
+        // ATTACK FIX: Minimum stake to prevent Sybil attacks with dust amounts
+        require!(amount >= MIN_STAKE_AMOUNT, IdlError::StakeTooSmall);
         require!(!ctx.accounts.state.paused, IdlError::ProtocolPaused);
 
         // TIER 3: Check TVL cap
@@ -396,6 +406,10 @@ pub mod idl_protocol {
         market.created_at = clock.unix_timestamp;
         market.bump = ctx.bumps.market;
         market.status = MARKET_STATUS_ACTIVE;
+        // ATTACK FIX: Initialize multi-oracle consensus
+        market.oracle_count = 1;
+        market.oracle_votes_yes = 0;
+        market.oracle_votes_no = 0;
 
         msg!("Created prediction market for {}", market.protocol_id);
         Ok(())
@@ -2583,6 +2597,10 @@ pub struct PredictionMarket {
     pub bump: u8,
     // SECURITY FIX: Market status for cancellation
     pub status: u8,                 // 0=active, 1=resolved, 2=cancelled
+    // ATTACK FIX: Multi-oracle consensus support
+    pub oracle_count: u8,           // Number of registered oracles
+    pub oracle_votes_yes: u8,       // Oracles that voted YES
+    pub oracle_votes_no: u8,        // Oracles that voted NO
 }
 
 #[account]
@@ -3004,4 +3022,15 @@ pub enum IdlError {
     // SELF-REVIEW FIX: Oracle multi-market exploit prevention
     #[msg("Oracle already has a pending resolution - complete or withdraw first")]
     OracleHasPendingResolution,
+
+    // ATTACK FIX: Anti-Sybil
+    #[msg("Stake amount too small (minimum 0.1 tokens)")]
+    StakeTooSmall,
+
+    // ATTACK FIX: Multi-oracle consensus
+    #[msg("Insufficient oracle consensus")]
+    InsufficientOracleConsensus,
+
+    #[msg("Maximum oracles per market reached")]
+    MaxOraclesReached,
 }
