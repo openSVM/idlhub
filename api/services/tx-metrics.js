@@ -138,10 +138,14 @@ async function parseTransactions(signatures, programId, windowHours = 1) {
     const windowSeconds = windowHours * 3600;
     const windowStart = Date.now() / 1000 - windowSeconds;
 
-    // Process limited number of transactions individually to avoid payload size limits
-    // Parse more transactions for better accuracy (200 recent transactions)
-    const maxTransactions = 200;
-    for (let i = 0; i < Math.min(signatures.length, maxTransactions); i++) {
+    // Process transactions up to 100k for accurate hourly metrics
+    // Use sampling for very high volume protocols to avoid excessive RPC calls
+    const maxTransactions = Math.min(signatures.length, 100000);
+    const samplingRate = signatures.length > 10000 ? Math.ceil(signatures.length / 10000) : 1;
+
+    console.log(`  Parsing ${maxTransactions} transactions (sampling every ${samplingRate} for ${Math.ceil(maxTransactions / samplingRate)} actual fetches)`);
+
+    for (let i = 0; i < maxTransactions; i += samplingRate) {
         const sig = signatures[i];
 
         try {
@@ -201,9 +205,16 @@ async function parseTransactions(signatures, programId, windowHours = 1) {
             continue;
         }
 
-        // Small delay to avoid rate limiting (every 5 transactions)
-        if (i % 5 === 0 && i > 0) {
-            await new Promise(resolve => setTimeout(resolve, 100));
+        // Small delay to avoid rate limiting (every 10 transactions)
+        if (i % (10 * samplingRate) === 0 && i > 0) {
+            await new Promise(resolve => setTimeout(resolve, 50));
+        }
+
+        // Progress logging for large batches
+        if (i % (1000 * samplingRate) === 0 && i > 0) {
+            const processed = Math.ceil(i / samplingRate);
+            const total = Math.ceil(maxTransactions / samplingRate);
+            console.log(`  Parsed ${processed}/${total} transactions (${Math.round(processed / total * 100)}%)`);
         }
     }
 
