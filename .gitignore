@@ -39,5 +39,11 @@ compare-pixels.js
 screenshot-*.png
 attack-framework/reports/
 
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+
 # Local Netlify folder
 .netlify
