@@ -39,10 +39,18 @@ jobs:
       - name: Build application
         run: npm run build
 
+      - name: Serve application
+        run: npx serve -s dist -l 5173 &
+
+      - name: Wait for server
+        run: |
+          timeout 30 bash -c 'until curl -s http://localhost:5173 > /dev/null; do sleep 1; done'
+
       - name: Run Playwright tests
         run: npx playwright test --shard=${{ matrix.shard }}/4
         env:
           CI: true
+          BASE_URL: http://localhost:5173
 
       - name: Upload test results
         if: always()
