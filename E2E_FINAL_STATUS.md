@@ -1,8 +1,8 @@
 # E2E Tests - Final Status Report
 
 **Date**: 2025-12-22
-**Latest Commit**: 6865a1f
-**Status**: ✅ Deployed with Improvements Applied
+**Latest Commit**: 5a14b9c
+**Status**: ✅ React Build Deployed - 94.2% Passing
 
 ## 🎯 Summary
 
@@ -28,18 +28,24 @@ E2E test suite successfully deployed to GitHub CI/CD with 785 tests covering all
 - More resilient to different HTML structures
 - Reduced false failures
 
-### Expected Test Results
+### Test Results History
 
-**Before Fixes**: 154/176 passing (87.5%)
+**Run #1 (6865a1f)**: 154/176 passing (87.5%) - Static HTML build
 - 20 visual test failures (no baselines)
 - 2-4 timeout failures
 - 3 accessibility failures
+- **Root Cause**: Tests written for React app, but build served static HTML
 
-**After Fixes**: ~140-150/156 passing (~90-95%)
+**Run #2 (b627516)**: All failed - index.json missing
+- Added index.json to public/ folder
+- Still failed - JSON fetch returned HTML (404)
+
+**Run #3 (5a14b9c)**: 147/156 passing (94.2%) ✅ - React build
+- Switched to React app build
 - 0 visual test failures (skipped in CI)
-- Fewer timeout failures
-- Fewer accessibility failures
-- Remaining failures are app-specific (missing elements, etc.)
+- 1 accessibility failure (multiple h1 elements)
+- 2 home page failures (heading hierarchy)
+- 6 RPC connection timeouts (expected without wallet)
 
 ## 📁 What Was Delivered
 
@@ -195,7 +201,8 @@ gh run download <run-id>
 4. `49ebce2` - Configure build and serve in CI
 5. `c81e5a7` - Chromium only in CI
 6. `6865a1f` - Fix timeouts, skip visual, flexible accessibility
-7. `[pending]` - Add index.json to public/ folder (fixes registry data loading)
+7. `b627516` - Add index.json to public/ folder
+8. `5a14b9c` - **Switch to React app build** (major fix - 94.2% pass rate)
 
 ## ✨ Conclusion
 
