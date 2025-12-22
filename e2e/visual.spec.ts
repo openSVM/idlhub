@@ -9,7 +9,7 @@ import { test, expect } from '@playwright/test';
  * Example: npx playwright test visual.spec.ts --update-snapshots
  */
 
-test.describe('Visual Regression', () => {
+test.describe('Visual Regression @visual @visual', () => {
   test('should match homepage screenshot', async ({ page }) => {
     await page.goto('/');
     await page.waitForLoadState('networkidle');
@@ -60,7 +60,7 @@ test.describe('Visual Regression', () => {
   });
 });
 
-test.describe('Component Screenshots', () => {
+test.describe('Component Screenshots @visual @visual', () => {
   test('should match hero section', async ({ page }) => {
     await page.goto('/');
 
@@ -149,7 +149,7 @@ test.describe('Component Screenshots', () => {
   });
 });
 
-test.describe('Mobile Visual Regression', () => {
+test.describe('Mobile Visual Regression @visual', () => {
   test.use({ viewport: { width: 375, height: 667 } });
 
   test('should match mobile homepage', async ({ page }) => {
@@ -188,7 +188,7 @@ test.describe('Mobile Visual Regression', () => {
   });
 });
 
-test.describe('Theme and Styling', () => {
+test.describe('Theme and Styling @visual', () => {
   test('should have consistent color scheme', async ({ page }) => {
     await page.goto('/');
 
@@ -253,7 +253,7 @@ test.describe('Theme and Styling', () => {
   });
 });
 
-test.describe('Interactive States', () => {
+test.describe('Interactive States @visual', () => {
   test('should show hover state on buttons', async ({ page }) => {
     await page.goto('/');
 
@@ -298,7 +298,7 @@ test.describe('Interactive States', () => {
   });
 });
 
-test.describe('Responsive Breakpoints', () => {
+test.describe('Responsive Breakpoints @visual', () => {
   test('should match tablet layout', async ({ page }) => {
     await page.setViewportSize({ width: 768, height: 1024 });
     await page.goto('/');
@@ -324,7 +324,7 @@ test.describe('Responsive Breakpoints', () => {
   });
 });
 
-test.describe('Dark Mode / Theme', () => {
+test.describe('Dark Mode / Theme @visual', () => {
   test('should handle dark mode if implemented', async ({ page }) => {
     await page.goto('/');
 
@@ -350,7 +350,7 @@ test.describe('Dark Mode / Theme', () => {
   });
 });
 
-test.describe('Loading States', () => {
+test.describe('Loading States @visual', () => {
   test('should show loading skeleton if implemented', async ({ page }) => {
     await page.goto('/protocol', { waitUntil: 'domcontentloaded' });
 

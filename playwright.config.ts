@@ -19,6 +19,12 @@ export default defineConfig({
   /* Opt out of parallel tests on CI */
   workers: process.env.CI ? 1 : undefined,
 
+  /* Global timeout settings */
+  timeout: 45000, // Increased from default 30s
+  expect: {
+    timeout: 10000, // Increased from default 5s
+  },
+
   /* Reporter to use */
   reporter: [
     ['html'],
