@@ -140,23 +140,25 @@ npm run protocol:issue-badges
 ### Simulations & Bots
 
 ```bash
-# Multi-agent AI simulation (5 LLMs via OpenRouter)
+# Multi-agent AI simulation (5 LLMs compete via OpenRouter)
+# Tests protocol by simulating realistic user behavior
 OPENROUTER_API_KEY=key npm run sim:run
-npm run sim:quick          # 5 rounds, 1s delay
-npm run sim:long           # 30 rounds, 2s delay
+npm run sim:quick          # 5 rounds, 1s delay (fast test)
+npm run sim:long           # 30 rounds, 2s delay (thorough)
 npm run sim:debug          # With debug logging
 
 # Attack framework (security testing)
+# Automated vulnerability scanning and exploit testing
 npm run attack:scan        # Scan for vulnerabilities
-npm run attack:quick       # 5 rounds, mock mode
-npm run attack:full        # 20 rounds, parallel
-npm run attack:mev         # MEV-specific attacks
-npm run attack:flash       # Flash loan attacks
+npm run attack:quick       # 5 rounds, mock mode (safe)
+npm run attack:full        # 20 rounds, parallel (comprehensive)
+npm run attack:mev         # MEV-specific attacks (sandwich, JIT, oracle)
+npm run attack:flash       # Flash loan attacks (stake, vote, drain)
 
-# Bots
-npm run bot:telegram       # Telegram bot
-npm run bot:twitter        # Twitter bot
-npm run bot:market-maker   # AI market maker
+# Bots (production automation)
+npm run bot:telegram       # Telegram notifications bot
+npm run bot:twitter        # Twitter engagement bot
+npm run bot:market-maker   # AI-powered market maker bot
 npm run bot:all            # Run all bots in parallel
 ```
 
@@ -224,6 +226,7 @@ npm run bot:all            # Run all bots in parallel
 - Entry point: `index.html` → `src/main.tsx` → `src/App.tsx`
 - Dev server: port 5174 (with API proxy to :3000)
 - Production build: `npm run build` → `dist/`
+- E2E tests serve built app on port 5173
 - **Important**: `public/index.json` must exist for RegistryPage to load data
 
 **Solana Programs (Anchor):**
@@ -268,16 +271,18 @@ See whitepaper `latex/idl-protocol.pdf` Section 11 for mathematical formulations
 
 ## Environment Variables
 
-**Required:**
-- `IRYS_WALLET` - Path to Solana wallet for Arweave uploads
-- `OPENROUTER_API_KEY` - For simulation (5 LLM models compete)
+**Required (for specific tasks):**
+- `IRYS_WALLET` - Path to Solana wallet (required for Arweave uploads only)
+- `OPENROUTER_API_KEY` - OpenRouter API key (required for simulations only)
 
 **Optional:**
-- `IRYS_NODE` - Default: https://node1.irys.xyz (use devnet.irys.xyz for testing)
-- `API_PORT` - Default: 3000
-- `MCP_PORT` - Default: 8080
-- `QDRANT_URL`, `QDRANT_API_KEY` - For semantic search
-- `BASE_URL` - For E2E tests (default: http://localhost:5173)
+- `IRYS_NODE` - Irys node URL (default: https://node1.irys.xyz, use devnet.irys.xyz for testing)
+- `API_PORT` - REST API port (default: 3000)
+- `MCP_PORT` - MCP server port (default: 8080)
+- `QDRANT_URL`, `QDRANT_API_KEY` - Qdrant vector database (for semantic search)
+- `BASE_URL` - E2E test target URL (default: http://localhost:5173)
+
+**Note**: Basic development (`npm run dev`, `npm run build`, `npm run test`) requires no environment variables.
 
 ## Common Workflows
 
