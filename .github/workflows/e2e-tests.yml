@@ -24,10 +24,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-          cache: 'npm'
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install
 
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
@@ -75,11 +74,14 @@ jobs:
         with:
           pattern: playwright-report-*
           path: all-reports/
+        continue-on-error: true
 
       - name: Merge reports
+        if: success()
         run: |
           npm install -g @playwright/test
           npx playwright merge-reports --reporter html all-reports/
+        continue-on-error: true
 
       - name: Upload merged report
         uses: actions/upload-artifact@v4
