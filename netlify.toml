@@ -64,6 +64,12 @@
   status = 200
   force = true
 
+[[redirects]]
+  from = "/api/metrics"
+  to = "/.netlify/functions/metrics"
+  status = 200
+  force = true
+
 # Legacy /api/programs endpoints
 [[redirects]]
   from = "/api/programs"
