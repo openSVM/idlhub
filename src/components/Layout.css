@@ -33,15 +33,16 @@
   color: inherit;
 }
 
-.logo h1 {
+.logo-text {
   font-size: var(--font-xl);
   margin: 0;
   font-weight: 700;
   color: var(--text-primary);
   letter-spacing: -0.5px;
+  display: block;
 }
 
-.logo h1::before {
+.logo-text::before {
   content: '> ';
   color: var(--accent-primary);
 }

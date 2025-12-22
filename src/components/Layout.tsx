@@ -38,7 +38,7 @@ export default function Layout() {
         <div className="header-content">
           <div className="header-left">
             <Link to="/" className="logo">
-              <h1>IDL Protocol</h1>
+              <span className="logo-text">IDL Protocol</span>
               <p>Stake | Vote | Bet | Earn</p>
             </Link>
           </div>
