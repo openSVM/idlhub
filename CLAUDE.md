@@ -4,144 +4,357 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-IDLHub is a Solana IDL registry with an integrated DeFi protocol. The codebase has two main layers:
+IDLHub is a **decentralized prediction market for Solana DeFi metrics** built on a comprehensive IDL registry. The protocol enables betting on verifiable on-chain metrics (TVL, volume, user counts) using pure Solana RPC data without third-party APIs.
 
-1. **IDL Registry** - Web UI, REST API, and MCP server for browsing/serving Solana IDL files from Arweave (permanent storage)
-2. **IDL Protocol** - On-chain Solana programs for staking, prediction markets, and token swaps
+### Two Core Components
+
+1. **IDL Registry (IDLHub)** - Free, open registry of 100+ Solana protocol IDLs
+   - Web UI at https://idlhub.com (React SPA)
+   - REST API for programmatic access
+   - MCP server for AI agent integration
+   - Arweave permanent storage backend
+
+2. **IDL Protocol** - On-chain prediction markets with DeFi tokenomics
+   - veIDL staking (vote-escrowed tokens) with time-weighted voting power
+   - Commit-reveal betting to prevent front-running
+   - Parimutuel pool structure with fair payouts
+   - Social trading: 1v1 battles, guilds, leaderboards, referrals
+   - Dual-token model: PUMP-IDL (1B supply) + BAGS-IDL (1B legacy)
+   - Deflationary mechanics: 10% of fees burned
+   - Fee distribution: 50% stakers, 25% creators, 15% treasury, 10% burn
+
+**Program IDs:**
+- `idl-protocol`: BSn7neicVV2kEzgaZmd6tZEBm4tdgzBRyELov65Lq7dt
+- `idl-stableswap`: EFsgmpbKifyA75ZY5NPHQxrtuAHHB6sYnoGkLi6xoTte (Curve-style AMM for BAGS⟷PUMP)
+
+**Core Principles:**
+- Free access to IDL registry (no token gating)
+- Real yield from protocol revenue (not inflationary emissions)
+- Fair launch: 95% public distribution, 2.5% team
+- Community governance via veIDL
+- On-chain oracle using only pure Solana RPC (no third-party APIs)
 
 ## Common Commands
+
+### Development
 
 ```bash
 # Install dependencies
 npm install
 
-# Run all tests
+# Start React dev server (port 5174)
+npm run dev
+
+# Build React app for production
+npm run build
+
+# Preview production build
+npm run preview
+```
+
+### Testing
+
+```bash
+# Run all tests (MCP + API + Anchor + E2E)
 npm run test:all
 
-# Individual test commands
+# Individual test suites
 npm test                    # MCP server tests
-npm run test:api           # API server tests (integration)
+npm run test:api           # API server integration tests
 npm run test:api:unit      # API server unit tests
-npm run test:anchor        # Anchor tests (requires Solana)
+npm run test:anchor        # Anchor Solana program tests
 
-# Build Solana programs
+# E2E tests (Playwright)
+npm run test:e2e           # Run all E2E tests (all browsers)
+npm run test:e2e:ui        # Interactive UI mode
+npm run test:e2e:chromium  # Chromium only (fast)
+npm run test:e2e:debug     # Debug mode (step through)
+npm run test:e2e:report    # View HTML report
+```
+
+### Solana Programs
+
+```bash
+# Build Anchor programs
 anchor build
+
+# Test programs (spawns localnet)
+anchor test
 
 # Deploy to devnet
 anchor deploy --provider.cluster devnet
 
-# Start servers
-npm run api:start          # REST API on port 3000 (Arweave backend)
-npm run api:start:legacy   # REST API with OpenSVM backend (deprecated)
-npm run mcp:stdio          # MCP server (stdio transport)
-npm run mcp:websocket      # MCP server (WebSocket on port 8080)
-npm run mcp:api            # API MCP server (SSE on port 3001)
+# Deploy to mainnet (requires mainnet wallet)
+anchor deploy --provider.cluster mainnet
+```
 
-# Arweave IDL storage
-npm run arweave:upload:dry # Preview what will be uploaded
-npm run arweave:upload     # Upload all IDLs to Arweave via Irys
+### Servers
+
+```bash
+# REST API (Arweave backend)
+npm run api:start          # Production (port 3000)
+npm run api:dev            # Development mode
+npm run api:start:legacy   # Legacy OpenSVM backend (deprecated)
+
+# MCP Server (Model Context Protocol)
+npm run mcp:stdio          # stdio transport (default)
+npm run mcp:websocket      # WebSocket (port 8080)
+npm run mcp:api            # SSE (port 3001)
+npm run mcp:jsonrpc        # JSON-RPC transport
+```
+
+### Arweave IDL Storage
+
+```bash
+# Preview upload (dry run)
+npm run arweave:upload:dry
+
+# Upload IDLs to Arweave (requires IRYS_WALLET env var)
+IRYS_WALLET=~/.config/solana/id.json npm run arweave:upload
+
+# Query Arweave
 npm run arweave:list       # List uploaded IDLs
-npm run arweave:search     # Search IDLs on Arweave
+npm run arweave:search     # Search IDLs
+```
 
-# Run multi-agent simulation
+### Protocol Scripts
+
+```bash
+# Initialize protocol on devnet
+npm run protocol:init
+
+# Test protocol instructions
+npm run protocol:test
+npm run protocol:test:advanced
+npm run protocol:test:lifecycle
+npm run protocol:test:sdk
+
+# Deploy with configuration
+npm run protocol:deploy
+
+# Track volume and issue badges
+npm run protocol:track-volume
+npm run protocol:issue-badges
+```
+
+### Simulations & Bots
+
+```bash
+# Multi-agent AI simulation (5 LLMs via OpenRouter)
 OPENROUTER_API_KEY=key npm run sim:run
 npm run sim:quick          # 5 rounds, 1s delay
 npm run sim:long           # 30 rounds, 2s delay
 npm run sim:debug          # With debug logging
 
-# Protocol scripts (require devnet setup)
-npm run protocol:init      # Initialize protocol state
-npm run protocol:test      # Test protocol instructions
-npm run protocol:deploy    # Deploy with configuration
+# Attack framework (security testing)
+npm run attack:scan        # Scan for vulnerabilities
+npm run attack:quick       # 5 rounds, mock mode
+npm run attack:full        # 20 rounds, parallel
+npm run attack:mev         # MEV-specific attacks
+npm run attack:flash       # Flash loan attacks
+
+# Bots
+npm run bot:telegram       # Telegram bot
+npm run bot:twitter        # Twitter bot
+npm run bot:market-maker   # AI market maker
+npm run bot:all            # Run all bots in parallel
 ```
 
 ## Architecture
 
-### On-Chain Programs (Rust/Anchor)
+### Directory Structure
 
-Two Solana programs in `programs/`:
+- **src/** - React application (TypeScript)
+  - `pages/` - Route components (HomePage, RegistryPage, ProtocolPage, BattlesPage, etc.)
+  - `components/` - Reusable UI components (Layout, etc.)
+  - `hooks/` - Custom React hooks (useProtocol, useWallet, etc.)
+  - `context/` - React context providers
+  - `theme.css` - Global theme variables
+  - `main.tsx` - React entry point
+  - `App.tsx` - Root component with routing
 
-- **idl-protocol** (`BSn7neicVV2kEzgaZmd6tZEBm4tdgzBRyELov65Lq7dt`): Core protocol with:
-  - veIDL staking with time-weighted voting power
-  - Prediction markets with commit-reveal betting
-  - Volume-based badge system (Bronze→Diamond)
-  - Fee distribution to stakers/treasury/burn
+- **programs/** - Solana programs (Rust/Anchor)
+  - `idl-protocol/` - veIDL staking, prediction markets, volume badges, fee distribution
+  - `idl-stableswap/` - Curve-style AMM for BAGS⟷PUMP swaps
 
-- **idl-stableswap** (`EFsgmpbKifyA75ZY5NPHQxrtuAHHB6sYnoGkLi6xoTte`): Curve-style AMM for BAGS⟷PUMP token swaps with low slippage
+- **api/** - Express REST API
+  - `server-arweave.js` - Production server (Arweave backend)
+  - `server.js` - Legacy server (OpenSVM backend)
+  - `test/` - API tests
 
-Both use Anchor 0.29.0 with security features: oracle bonding, bet limits, timelock authority transfers, anti-flash-loan protections.
+- **mcp-server/** - Model Context Protocol server
+  - `src/index.js` - stdio transport
+  - `src/websocket-server.js` - WebSocket transport
+  - `src/api-server.js` - SSE transport
+  - `test/` - MCP server tests
 
-### Off-Chain Components
+- **sdk/** - TypeScript SDK (`@idlhub/protocol-sdk`)
+  - Client library for interacting with IDL Protocol programs
 
-- **api/** - Express REST API serving IDLs from Arweave permanent storage (with local cache)
-- **arweave/** - Irys upload scripts and Arweave manifest for permanent IDL storage
-- **mcp-server/** - MCP 2025-06-18 compliant server for LLM integration (schema lookup, code generation, validation)
-- **sdk/** - TypeScript SDK (`@idlhub/protocol-sdk`) for protocol interactions
-- **simulation/** - Multi-agent AI simulation using OpenRouter models to test protocol dynamics
-- **lib/** - Shared utilities and Qdrant integration
+- **simulation/** - Multi-agent AI simulation
+  - 5 LLM agents compete via OpenRouter API
 
-### Data Flow
+- **attack-framework/** - Security testing framework
+  - Automated vulnerability scanning
+  - MEV attack simulations
+  - Flash loan exploit tests
 
-```
-Web UI / API Clients
-        ↓
-    REST API (api/server-arweave.js)
-        ↓
-   Arweave Gateway ←→ Local Cache (arweave/cache/)
-        ↓                    ↓
-   Permanent Storage    IDLs/ (fallback)
-        ↓
-   MCP Server (mcp-server/)
-        ↓
-   LLM / Editor Integration
-```
+- **bots/** - Automated bots
+  - Telegram, Twitter, market maker
 
-## Key Files
+- **arweave/** - Arweave/Irys integration
+  - Upload scripts, manifest, cache
 
-- `Anchor.toml` - Program IDs and cluster configuration
-- `index.json` - Registry index with protocol metadata
-- `programs/*/src/lib.rs` - On-chain program logic
-- `sdk/src/index.ts` - Full SDK with instruction builders and PDA derivation
-- `simulation/engine/simulation.ts` - Simulation engine core
-- `api/server-arweave.js` - REST API entry point (Arweave backend)
-- `arweave/manifest.json` - Maps protocol IDs to Arweave transaction IDs
-- `arweave/upload.js` - Irys upload script for IDLs
-- `mcp-server/src/index.js` - MCP server entry point
+- **IDLs/** - IDL JSON files (100+ Solana protocols)
+
+- **scripts/** - Protocol initialization and testing
+
+- **e2e/** - Playwright E2E tests (785 tests, 100% passing)
+  - Tests for all pages and features
+  - Accessibility, performance, visual regression
+
+- **public/** - Static assets served by Vite
+  - `index.json` - Registry metadata (loaded by RegistryPage)
+
+- **dist/** - Production build output (generated by `npm run build`)
+
+### Build System
+
+**React App (Vite):**
+- Entry point: `index.html` → `src/main.tsx` → `src/App.tsx`
+- Dev server: port 5174 (with API proxy to :3000)
+- Production build: `npm run build` → `dist/`
+- **Important**: `public/index.json` must exist for RegistryPage to load data
+
+**Solana Programs (Anchor):**
+- Build: `anchor build`
+- Test: `anchor test` (spawns local validator)
+- Deploy: `anchor deploy --provider.cluster <cluster>`
+
+### Critical Architecture Details
+
+#### React App Entry Point
+The app is a **React SPA** (not static HTML). The build process:
+1. `index.html` (root) contains `<div id="root"></div>` and loads `src/main.tsx`
+2. Vite bundles React app into `dist/assets/index-*.js` and `dist/assets/index-*.css`
+3. **DO NOT** replace `index.html` with static HTML - this breaks the React app
+
+#### Registry Data Loading
+- `src/pages/RegistryPage.tsx` fetches `/index.json` (from `public/`)
+- Vite copies `public/` contents to `dist/` during build
+- **Critical**: `public/index.json` must be present for registry to work
+
+#### On-Chain Metrics Oracle
+
+The protocol's key innovation is a **pure RPC oracle** that calculates DeFi metrics without external APIs:
+
+- **TVL Calculation**: Queries vault token accounts via `getMultipleAccounts()`, aggregates balances, computes USD value from on-chain liquidity pools
+- **Volume Calculation**: Uses **stratified sampling** for high-volume protocols (>1M daily txs) to overcome 1000-signature pagination limit. Provides unbiased estimates with ~2-5% error.
+- **User Count**: Implements **HyperLogLog** probabilistic counting (16KB memory, 0.81% error) for unique user estimation across millions of transactions
+- **Price Discovery**: TWAP from multiple liquidity pools, weighted by depth, with flash-loan protection (rejects if |spot - TWAP| > 20%)
+- **Confidence Scoring**: Each resolution gets confidence score (0-1); markets with score <0.60 are cancelled
+
+See whitepaper `latex/idl-protocol.pdf` Section 11 for mathematical formulations and algorithms.
+
+### Security Features (programs/idl-protocol/src/lib.rs)
+
+- **Commit-Reveal**: 5min commit window, 1hr reveal window prevents front-running
+- **Oracle Bonding**: 10 IDL bond required, 50% slashed if disputed
+- **Timelock**: 48hr delay on authority actions
+- **Anti-Flash-Loan**: MIN_STAKE_DURATION = 24h, prevents flash-stake attacks
+- **Bet Limits**: MIN_BET = 0.001 IDL, MAX_BET = 1M IDL
+- **TVL Caps**: Gradual rollout from 100 IDL → 10M IDL max
+- **VIP Tiers**: Stake-based fee discounts (Bronze 100 IDL → Platinum 100k IDL)
 
 ## Environment Variables
 
-```bash
-# Arweave/Irys
-IRYS_WALLET=/path/to/solana-wallet.json  # Required for uploads
-IRYS_NODE=https://node1.irys.xyz         # Use devnet.irys.xyz for testing
+**Required:**
+- `IRYS_WALLET` - Path to Solana wallet for Arweave uploads
+- `OPENROUTER_API_KEY` - For simulation (5 LLM models compete)
 
-# API
-API_PORT=3000
+**Optional:**
+- `IRYS_NODE` - Default: https://node1.irys.xyz (use devnet.irys.xyz for testing)
+- `API_PORT` - Default: 3000
+- `MCP_PORT` - Default: 8080
+- `QDRANT_URL`, `QDRANT_API_KEY` - For semantic search
+- `BASE_URL` - For E2E tests (default: http://localhost:5173)
 
-# MCP Server
-IDL_REGISTRY_PATH=/path/to/idlhub
-MCP_PORT=8080
+## Common Workflows
 
-# Simulation
-OPENROUTER_API_KEY=your_key
-
-# Qdrant (optional, for semantic search)
-QDRANT_URL=http://localhost:6333
-QDRANT_API_KEY=your_key
-```
-
-## Arweave Upload Workflow
-
-1. Add new IDL to `IDLs/` directory
-2. Update `index.json` with protocol metadata
+### Add New IDL to Registry
+1. Add JSON to `IDLs/` directory (e.g., `protocolIDL.json`)
+2. Update `index.json` metadata (id, name, description, category)
 3. Preview: `npm run arweave:upload:dry`
-4. Upload: `IRYS_WALLET=/path/to/wallet.json npm run arweave:upload`
-5. Manifest updates automatically in `arweave/manifest.json`
+4. Upload: `IRYS_WALLET=~/.config/solana/id.json npm run arweave:upload`
+5. Auto-updates `arweave/manifest.json`
 
-## Testing Protocol Changes
+### Test Protocol Changes
+1. `anchor build` - Build programs
+2. `anchor test` - Run Anchor tests (spawns localnet)
+3. `anchor deploy --provider.cluster devnet` - Deploy to devnet
+4. `npm run protocol:test` - Integration tests
+5. `npm run sim:quick` - Multi-agent simulation (5 rounds)
 
-1. Build: `anchor build`
-2. Test locally: `anchor test` (uses localnet)
-3. Deploy to devnet: `anchor deploy --provider.cluster devnet`
-4. Run integration: `npm run protocol:test`
-5. Run simulation: `npm run sim:quick`
+### Add New React Page
+1. Create component in `src/pages/` (e.g., `NewPage.tsx`)
+2. Add CSS file `src/pages/NewPage.css`
+3. Add route in `src/App.tsx`:
+   ```tsx
+   <Route path="/new-page" element={<NewPage />} />
+   ```
+4. Add navigation link in `src/components/Layout.tsx`
+5. Add E2E tests in `e2e/new-page.spec.ts`
+
+### Run E2E Tests
+1. Build app: `npm run build`
+2. Start server: `npx serve -s dist -l 5173 &`
+3. Run tests: `npm run test:e2e`
+4. View report: `npm run test:e2e:report`
+
+**Note**: E2E tests run automatically in CI on every push/PR. 785 tests, 100% passing.
+
+## Technical Details from Whitepaper
+
+**Prediction Market Mechanics:**
+- **Parimutuel Payouts**: Winners split losers' pool proportionally. For YES pool PY and NO pool PN, winning bettor with stake s receives: `Payout = s + (s/PY) × PN × (1 - 0.03)`
+- **Dynamic Odds**: Update with each bet, max 5% shift per bet
+- **Market Lifecycle**: Creation → Betting → Resolution → Settlement
+- **VIP Stake Bonuses**: Up to 50% effective bet size increase for Platinum stakers
+
+**Token Economics:**
+- Total Supply: 2B IDL (1B PUMP + 1B BAGS)
+- Circulating: ~1.95B (97.5%)
+- Team: ~50M (2.5%, fair launch)
+- Staking APY: `(DailyVolume × 365 × 0.03 × 0.50) / TotalStaked × 100%`
+- veIDL Formula: `veIDL = staked_amount × (lock_duration / 4_years)`
+
+**Social Trading:**
+- Battles: 1v1 with 2.5% fee, winner takes 2x stake minus fees
+- Guilds: Pooled betting, leader gets 10%, members split 90% proportionally
+- Referrals: Perpetual 5% of staker fees from referred users
+- Seasons: 30-day competitions with prize pools
+
+**StableSwap AMM:**
+- Curve invariant with A=1000 amplification
+- 0.004% slippage for balanced pools (vs 0.99% constant product)
+- 13.37 bps swap fee (50% to LPs)
+
+**Documentation:**
+- Whitepaper: `latex/idl-protocol.pdf` (v3.2, 20 pages)
+- Mathematical proofs for parimutuel zero-sum property, unbiased volume estimation, HyperLogLog error bounds
+- E2E test documentation: `e2e/README.md`, `e2e/QUICKSTART.md`
+- E2E test status: `E2E_FINAL_STATUS.md` (100% passing, 785 tests)
+
+## CI/CD
+
+**GitHub Actions:**
+- E2E tests run on every push/PR
+- Workflow: `.github/workflows/e2e-tests.yml`
+- 4 parallel shards (Chromium only in CI)
+- Visual tests skipped in CI (run locally with `--update-snapshots`)
+- Artifacts uploaded on failure (screenshots, videos, traces)
+
+**Deployment:**
+- Frontend: Auto-deploys to Netlify from main branch
+- Solana Programs: Manual deploy via `anchor deploy`
+- MCP Server: npm package published as `idlhub-mcp`
