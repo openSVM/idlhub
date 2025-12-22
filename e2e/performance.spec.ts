@@ -52,11 +52,15 @@ test.describe('Performance', () => {
     await page.goto('/');
 
     // Hero section should be visible quickly
-    const hero = page.locator('.hero, h1').first();
+    const hero = page.locator('.hero').first();
     await expect(hero).toBeVisible({ timeout: 3000 });
 
-    // Rest of the page can load after
-    const features = page.locator('.features, .stats-grid');
+    // Stats grid should load after hero
+    const statsGrid = page.locator('.stats-grid').first();
+    await expect(statsGrid).toBeVisible({ timeout: 5000 });
+
+    // Features section should also be visible
+    const features = page.locator('.features').first();
     await expect(features).toBeVisible({ timeout: 5000 });
   });
 
