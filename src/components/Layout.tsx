@@ -50,6 +50,9 @@ export default function Layout() {
               <Link to="/protocol" className={`nav-link ${isActive('/protocol') ? 'active' : ''}`}>
                 Protocol
               </Link>
+              <Link to="/analytics" className={`nav-link ${isActive('/analytics') ? 'active' : ''}`}>
+                Dashboard
+              </Link>
               <Link to="/status" className={`nav-link ${isActive('/status') ? 'active' : ''}`}>
                 Status
               </Link>
