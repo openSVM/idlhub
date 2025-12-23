@@ -61,19 +61,31 @@ export default function RegistryPage() {
   const [downloadingBulk, setDownloadingBulk] = useState(false);
   const [downloadProgress, setDownloadProgress] = useState(0);
 
-  // Load protocols from static JSON (no API required - dev tool first!)
+  // Load protocols from Arweave manifest
   useEffect(() => {
     const loadProtocols = async () => {
       try {
-        const res = await fetch('/index.json');
-        if (!res.ok) throw new Error('Failed to load registry data');
-        const data = await res.json();
+        const manifestRes = await fetch('/arweave/manifest.json');
+        if (!manifestRes.ok) throw new Error('Failed to load Arweave manifest');
+        const manifest = await manifestRes.json();
 
-        setAllProtocols(data.idls || []);
+        const protocols: Protocol[] = Object.entries(manifest.idls).map(([id, data]: [string, any]) => ({
+          id,
+          name: data.name || id,
+          description: `${data.name || id} Solana program`,
+          category: data.category || 'defi',
+          idlPath: `${manifest.gateway}/${data.txId}`,
+          repo: null,
+          status: 'available',
+          version: '1.0.0',
+          lastUpdated: data.uploadedAt || '2025-12-19'
+        }));
+
+        setAllProtocols(protocols);
         setLoading(false);
       } catch (err) {
-        console.error('Failed to load protocols:', err);
-        setError('Failed to load registry data from /index.json');
+        console.error('Failed to load protocols from Arweave:', err);
+        setError('Failed to load registry from Arweave');
         setLoading(false);
       }
     };
@@ -81,7 +93,7 @@ export default function RegistryPage() {
     loadProtocols();
   }, []);
 
-  // Load IDL when protocol selected (from static files in IDLs/)
+  // Load IDL when protocol selected (from Arweave)
   useEffect(() => {
     if (!currentProtocolId) {
       setIdlData(null);
@@ -90,18 +102,21 @@ export default function RegistryPage() {
 
     const loadIDL = async () => {
       try {
-        const res = await fetch(`/IDLs/${currentProtocolId}.json`);
-        if (!res.ok) throw new Error('IDL not found');
+        const protocol = allProtocols.find(p => p.id === currentProtocolId);
+        if (!protocol?.idlPath) throw new Error('IDL path not found');
+
+        const res = await fetch(protocol.idlPath);
+        if (!res.ok) throw new Error('Failed to fetch from Arweave');
         const data = await res.json();
-        setIdlData({ idl: data });
+        setIdlData({ idl: data, arweaveUrl: protocol.idlPath });
       } catch (err) {
-        console.error('Failed to load IDL:', err);
+        console.error('Failed to load IDL from Arweave:', err);
         setIdlData(null);
       }
     };
 
     loadIDL();
-  }, [currentProtocolId]);
+  }, [currentProtocolId, allProtocols]);
 
   // Filter protocols
   const filteredProtocols = useMemo(() => {
@@ -232,11 +247,14 @@ export default function RegistryPage() {
     setIdlData(null);
   };
 
-  // Download IDL (from static files)
+  // Download IDL (from Arweave)
   const downloadIDL = async (protocolId: string) => {
     try {
-      const res = await fetch(`/IDLs/${protocolId}.json`);
-      if (!res.ok) throw new Error('IDL not found');
+      const protocol = allProtocols.find(p => p.id === protocolId);
+      if (!protocol?.idlPath) throw new Error('IDL path not found');
+
+      const res = await fetch(protocol.idlPath);
+      if (!res.ok) throw new Error('Failed to fetch from Arweave');
       const data = await res.json();
 
       const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
@@ -249,8 +267,8 @@ export default function RegistryPage() {
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('Failed to download IDL:', error);
-      alert('Failed to download IDL');
+      console.error('Failed to download IDL from Arweave:', error);
+      alert('Failed to download IDL from Arweave');
     }
   };
 
