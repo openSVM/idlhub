@@ -149,8 +149,9 @@
     "drift": {
       "txId": "4F3Fw2G9BhrfdsvXD54m9FnYJsfn1pxNfMw4buzprkwc",
       "name": "Drift Protocol",
-      "category": "derivatives",
-      "uploadedAt": "2025-12-19T13:31:59.759Z"
+      "category": "open-source",
+      "uploadedAt": "2025-12-19T13:31:59.759Z",
+      "repo": "https://github.com/drift-labs/protocol-v2"
     },
     "dumpfun": {
       "txId": "5yZ4q61vFyLrhsEwpiekZ69YCtQ3WbkK6DBBSeQZAZx4",
@@ -273,20 +274,23 @@
     "jito": {
       "txId": "5BoVazsVGjdec9ts2MUVGcB8xBTEji2wiv4wXXZBJBZk",
       "name": "Jito",
-      "category": "liquid-staking",
-      "uploadedAt": "2025-12-19T13:32:06.312Z"
+      "category": "open-source",
+      "uploadedAt": "2025-12-19T13:32:06.312Z",
+      "repo": "https://github.com/jito-foundation/stakenet"
     },
     "jupiter": {
       "txId": "Fs2YyjoXmLGmMzRDLttsnQei5jMkksnuQsfFZqudNKp6",
       "name": "Jupiter",
-      "category": "dex-aggregator",
-      "uploadedAt": "2025-12-19T13:32:06.681Z"
+      "category": "open-source",
+      "uploadedAt": "2025-12-19T13:32:06.681Z",
+      "repo": "https://github.com/jup-ag/jupiter-core"
     },
     "kamino": {
       "txId": "BWPPVZR34bSQCgiYAzHfBYvxzGchzfVdxS2sPzZu85fS",
       "name": "Kamino",
-      "category": "lending",
-      "uploadedAt": "2025-12-19T13:32:07.323Z"
+      "category": "open-source",
+      "uploadedAt": "2025-12-19T13:32:07.323Z",
+      "repo": "https://github.com/Kamino-Finance/klend-sdk"
     },
     "komunitas": {
       "txId": "6eqGW8B3f1FQCyUcezPAsx42RFNNBFzUHAYSxUuuJLdD",
@@ -352,20 +356,23 @@
     "mango": {
       "txId": "CwL4bL1UJHBicjhXRmATtLmCmppMEpxLzcVErJQDMwMp",
       "name": "Mango Markets",
-      "category": "dex",
-      "uploadedAt": "2025-12-19T13:32:10.601Z"
+      "category": "open-source",
+      "uploadedAt": "2025-12-19T13:32:10.601Z",
+      "repo": "https://github.com/blockworks-foundation/mango-v4"
     },
     "marginfi": {
       "txId": "6giQJtZGieE79D2JUVXTExDBFEazpr6UsKximkJGpYgt",
       "name": "MarginFi",
-      "category": "lending",
-      "uploadedAt": "2025-12-19T13:32:10.859Z"
+      "category": "open-source",
+      "uploadedAt": "2025-12-19T13:32:10.859Z",
+      "repo": "https://github.com/mrgnlabs/marginfi-v2"
     },
     "marinade": {
       "txId": "3CrsEwDTLDvzWWi4vAGk1ewe2UAZss6E5WvLcvL7kCvf",
       "name": "Marinade Finance",
-      "category": "liquid-staking",
-      "uploadedAt": "2025-12-19T13:32:11.122Z"
+      "category": "open-source",
+      "uploadedAt": "2025-12-19T13:32:11.122Z",
+      "repo": "https://github.com/marinade-finance/liquid-staking-program"
     },
     "mercurial": {
       "txId": "9vUMEkj5fADnBVKnBgNbZ132qpjqVTvLgxCJHRSt6b2S",
@@ -452,8 +459,9 @@
     "meteora": {
       "txId": "6HsVdadBdhmyvkkw33nVTpCsfTyxY2ngijzdksiGdQdS",
       "name": "Meteora",
-      "category": "dex",
-      "uploadedAt": "2025-12-19T13:32:17.665Z"
+      "category": "open-source",
+      "uploadedAt": "2025-12-19T13:32:17.665Z",
+      "repo": "https://github.com/MeteoraAg/dlmm-sdk"
     },
     "moonshot": {
       "txId": "556hQsRFrjfkyn6zShAxSz7CGTmDAchoDK1kQFYTkVpY",
@@ -524,8 +532,9 @@
     "openbook": {
       "txId": "8s3Q2havZeKR7SoRsxHv3JDGhTsFzHsRkTjkxLQPQgQG",
       "name": "OpenBook",
-      "category": "dex",
-      "uploadedAt": "2025-12-19T13:32:21.979Z"
+      "category": "open-source",
+      "uploadedAt": "2025-12-19T13:32:21.979Z",
+      "repo": "https://github.com/openbook-dex/program"
     },
     "orca-lyf_orca": {
       "txId": "575bPXLyuYYNgzWbX7VTxaSPETAgujN95RTvYLojtNva",
@@ -545,8 +554,9 @@
     "orca": {
       "txId": "9JnGwcXZxQZZRZBRn6PWxy7ftzxKVqXppbWZgJaEHJbt",
       "name": "Orca (Whirlpool)",
-      "category": "dex",
-      "uploadedAt": "2025-12-19T13:32:23.367Z"
+      "category": "open-source",
+      "uploadedAt": "2025-12-19T13:32:23.367Z",
+      "repo": "https://github.com/orca-so/whirlpools"
     },
     "pancakeswap": {
       "txId": "B6m7vrhNDkZoCp3oTCUtCz4uGNYeSWxknsMFVJ9ED5TM",
@@ -574,8 +584,9 @@
     "phoenix": {
       "txId": "9395PKFqHKJC8YKZZi8iKSELGpLfCckQHbQu5T7dbYpP",
       "name": "Phoenix",
-      "category": "dex",
-      "uploadedAt": "2025-12-19T13:32:25.065Z"
+      "category": "open-source",
+      "uploadedAt": "2025-12-19T13:32:25.065Z",
+      "repo": "https://github.com/Ellipsis-Labs/phoenix-v1"
     },
     "plasma": {
       "txId": "9PgFWzSJQdoo6aVqu48fg2AQvtnzzkGPDZBTiwgjB1i9",
@@ -652,7 +663,9 @@
     "raydium": {
       "txId": "AxjiHtYvMM7rgx4r8i266pnjhFBn2Xkva62TdMXW2A8q",
       "name": "raydium",
-      "uploadedAt": "2025-12-19T13:32:29.593Z"
+      "uploadedAt": "2025-12-19T13:32:29.593Z",
+      "repo": "https://github.com/raydium-io/raydium-sdk",
+      "category": "open-source"
     },
     "ribbon": {
       "txId": "4C9ZXHfqT6StSrmHtkzmVhGnXTPz3vEBFoF9nX1BHkvX",
@@ -675,8 +688,9 @@
     "sanctum": {
       "txId": "EanX5PC9SEhK4VKZff5wVfn2RLZnJ2kg4tyqTYQqpkGS",
       "name": "Sanctum",
-      "category": "liquid-staking",
-      "uploadedAt": "2025-12-19T13:32:30.646Z"
+      "category": "open-source",
+      "uploadedAt": "2025-12-19T13:32:30.646Z",
+      "repo": "https://github.com/igneous-labs/sanctum-lst-list"
     },
     "saros": {
       "txId": "4kghfNisH9o2TPegyZPzutyFJzbVfSrjWjuMzKLusHoV",
@@ -722,8 +736,9 @@
     "solend": {
       "txId": "FXGoiDxUzzSgN2rML3xXSzU5FumrxzKEb5T1KXcw7DiE",
       "name": "Solend",
-      "category": "lending",
-      "uploadedAt": "2025-12-19T13:32:33.486Z"
+      "category": "open-source",
+      "uploadedAt": "2025-12-19T13:32:33.486Z",
+      "repo": "https://github.com/solendprotocol/solana-program-library"
     },
     "solfi-solfi": {
       "txId": "9JNmxhouUxnShBtGvhZCbP8oaTKx4aXCDuhHjAn8Z3UK",
@@ -924,8 +939,9 @@
     "zeta": {
       "txId": "GKsoS4ariwRYiNNnfKpytdSe5erTjXGovuWwyVHYbz1E",
       "name": "Zeta Markets",
-      "category": "derivatives",
-      "uploadedAt": "2025-12-19T13:32:43.889Z"
+      "category": "open-source",
+      "uploadedAt": "2025-12-19T13:32:43.889Z",
+      "repo": "https://github.com/zetamarkets/sdk"
     },
     "test-upload": {
       "txId": "213ivodvvdNJeThzMQd89Hgx39WR7viHXuDfMvwep14y",
