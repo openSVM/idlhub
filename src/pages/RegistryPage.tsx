@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
+import JSZip from 'jszip';
 import './RegistryPage.css';
 
 interface Protocol {
@@ -190,22 +191,59 @@ export default function RegistryPage() {
     }
   };
 
-  // Download selected protocols
+  // Download selected protocols as ZIP
   const downloadSelected = async () => {
     if (selectedProtocols.size === 0) return;
 
     setDownloadingBulk(true);
     setDownloadProgress(0);
 
-    const total = selectedProtocols.size;
-    let completed = 0;
+    try {
+      const zip = new JSZip();
+      const allIDLs = [];
+      const total = selectedProtocols.size;
+      let completed = 0;
 
-    for (const protocolId of selectedProtocols) {
-      await downloadIDL(protocolId);
-      completed++;
-      setDownloadProgress(Math.round((completed / total) * 100));
-      // Small delay between downloads
-      await new Promise(resolve => setTimeout(resolve, 200));
+      for (const protocolId of selectedProtocols) {
+        const protocol = allProtocols.find(p => p.id === protocolId);
+        if (!protocol?.idlPath) continue;
+
+        const res = await fetch(protocol.idlPath);
+        if (!res.ok) continue;
+        const data = await res.json();
+
+        // Add individual IDL file to zip
+        zip.file(`${protocolId}.json`, JSON.stringify(data, null, 2));
+
+        // Collect for concatenated file
+        allIDLs.push({
+          protocol: protocolId,
+          name: protocol.name,
+          category: protocol.category,
+          idl: data
+        });
+
+        completed++;
+        setDownloadProgress(Math.round((completed / total) * 100));
+      }
+
+      // Add concatenated file for AI agents
+      zip.file('all-idls-concatenated.json', JSON.stringify(allIDLs, null, 2));
+
+      // Generate and download zip
+      const content = await zip.generateAsync({ type: 'blob' });
+      const url = URL.createObjectURL(content);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `idlhub-${selectedProtocols.size}-protocols.zip`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+    } catch (error) {
+      console.error('Failed to create zip:', error);
+      alert('Failed to download IDLs as ZIP');
     }
 
     setDownloadingBulk(false);
@@ -448,8 +486,8 @@ export default function RegistryPage() {
                 disabled={downloadingBulk}
               >
                 {downloadingBulk
-                  ? `Downloading... ${downloadProgress}%`
-                  : `Download Selected (${selectedProtocols.size})`
+                  ? `Creating ZIP... ${downloadProgress}%`
+                  : `Download ZIP (${selectedProtocols.size})`
                 }
               </button>
             </>
