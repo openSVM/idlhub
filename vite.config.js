@@ -39,7 +39,6 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          'buffer-polyfill': ['buffer'],
           'solana': ['@solana/web3.js', '@solana/spl-token'],
           'react-vendor': ['react', 'react-dom', 'react-router-dom']
         }
