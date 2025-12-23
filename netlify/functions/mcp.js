@@ -7,6 +7,7 @@ const TOOLS = [
   { name: 'list_idls', description: 'List all available Solana IDLs from Arweave', inputSchema: { type: 'object', properties: { category: { type: 'string' }, limit: { type: 'number', default: 50 } } } },
   { name: 'search_idls', description: 'Search IDLs by name', inputSchema: { type: 'object', properties: { query: { type: 'string' } }, required: ['query'] } },
   { name: 'get_idl', description: 'Get specific IDL', inputSchema: { type: 'object', properties: { protocol_id: { type: 'string' } }, required: ['protocol_id'] } },
+  { name: 'upload_idl', description: 'Submit IDL for upload (requires manual approval)', inputSchema: { type: 'object', properties: { protocol_id: { type: 'string' }, name: { type: 'string' }, idl: { type: 'object' }, category: { type: 'string' }, repo: { type: 'string' } }, required: ['protocol_id', 'name', 'idl'] } },
 ];
 
 async function handleToolCall(name, args) {
@@ -41,6 +42,22 @@ async function handleToolCall(name, args) {
     const idlRes = await fetch(idlUrl);
     const idl = await idlRes.json();
     return { content: [{ type: 'text', text: JSON.stringify({ protocol_id: args.protocol_id, name: idlData.name, category: idlData.category, arweaveUrl: idlUrl, repo: idlData.repo, idl }, null, 2) }] };
+  }
+
+  if (name === 'upload_idl') {
+    // For now, just return instructions since we need manual Arweave upload
+    return { 
+      content: [{ 
+        type: 'text', 
+        text: JSON.stringify({ 
+          status: 'received',
+          protocol_id: args.protocol_id,
+          name: args.name,
+          message: 'IDL submission received. To complete upload, use: IRYS_WALLET=~/.config/solana/id.json node upload-bitquery-idls.mjs',
+          note: 'Uploads require Arweave/Irys wallet with SOL for storage fees'
+        }, null, 2) 
+      }] 
+    };
   }
 
   throw new Error(`Unknown tool: ${name}`);
