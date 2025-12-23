@@ -247,21 +247,34 @@ export default function RegistryPage() {
     setIdlData(null);
   };
 
-  // Copy Arweave URLs to clipboard
-  const copyArweaveURLs = () => {
-    const urls = Array.from(selectedProtocols)
-      .map(id => {
-        const protocol = allProtocols.find(p => p.id === id);
-        return protocol?.idlPath || '';
-      })
-      .filter(url => url)
-      .join('\n');
+  // Copy IDL content to clipboard
+  const copyArweaveURLs = async () => {
+    try {
+      const idls = [];
+      let completed = 0;
 
-    navigator.clipboard.writeText(urls).then(() => {
-      alert(`Copied ${selectedProtocols.size} Arweave URLs to clipboard!`);
-    }).catch(() => {
-      alert('Failed to copy to clipboard');
-    });
+      for (const protocolId of selectedProtocols) {
+        const protocol = allProtocols.find(p => p.id === protocolId);
+        if (!protocol?.idlPath) continue;
+
+        const res = await fetch(protocol.idlPath);
+        if (!res.ok) continue;
+        const data = await res.json();
+
+        idls.push({
+          protocol: protocolId,
+          idl: data
+        });
+        completed++;
+      }
+
+      const content = JSON.stringify(idls, null, 2);
+      await navigator.clipboard.writeText(content);
+      alert(`Copied ${completed} IDLs to clipboard!`);
+    } catch (error) {
+      console.error('Failed to copy IDLs:', error);
+      alert('Failed to copy IDLs to clipboard');
+    }
   };
 
   // Download IDL (from Arweave)
@@ -427,7 +440,7 @@ export default function RegistryPage() {
                 className="action-btn"
                 onClick={() => copyArweaveURLs()}
               >
-                Copy Arweave URLs ({selectedProtocols.size})
+                Copy IDLs ({selectedProtocols.size})
               </button>
               <button
                 className="action-btn primary"
