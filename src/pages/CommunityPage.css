@@ -1,0 +1,97 @@
+/* Community Page - Combines Protocol, Battles, and Guilds */
+
+.community-page {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.community-header {
+  padding-bottom: 16px;
+  border-bottom: 2px solid var(--border-primary);
+  margin-bottom: 24px;
+}
+
+.community-header .page-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 8px 0;
+}
+
+.community-header .page-title::before {
+  content: '> ';
+  color: var(--accent-primary);
+}
+
+.community-header .page-subtitle {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.community-tabs {
+  display: flex;
+  gap: 0;
+  margin-bottom: 24px;
+  border: 1px solid var(--border-primary);
+  background: var(--bg-secondary);
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 12px 24px;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: none;
+  border-right: 1px solid var(--border-primary);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.tab-btn:last-child {
+  border-right: none;
+}
+
+.tab-btn:hover {
+  background: var(--bg-tertiary);
+}
+
+.tab-btn.active {
+  background: var(--accent-primary);
+  color: var(--bg-secondary);
+}
+
+.community-content {
+  /* The nested pages handle their own styling */
+}
+
+/* Override nested page titles since we have a main title */
+.community-content .page-title {
+  display: none;
+}
+
+/* Adjust spacing for nested pages */
+.community-content .battles-page,
+.community-content .guilds-page,
+.community-content .protocol-page {
+  padding-top: 0;
+}
+
+@media (max-width: 768px) {
+  .community-tabs {
+    flex-direction: column;
+  }
+
+  .tab-btn {
+    border-right: none;
+    border-bottom: 1px solid var(--border-primary);
+  }
+
+  .tab-btn:last-child {
+    border-bottom: none;
+  }
+}

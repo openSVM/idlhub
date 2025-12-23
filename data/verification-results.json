@@ -1,26 +1,2581 @@
 {
   "lastRun": {
-    "timestamp": "2025-12-21T05:03:43.840Z",
+    "timestamp": "2025-12-23T05:13:53.520Z",
     "totalProtocols": 102,
-    "verified": 0,
-    "partial": 0,
-    "failed": 0,
-    "placeholder": 0,
-    "noProgram": 0,
-    "devnetOnly": 0,
+    "verified": 28,
+    "partial": 12,
+    "failed": 17,
+    "placeholder": 43,
+    "noProgram": 1,
+    "devnetOnly": 1,
     "rpcError": 0,
-    "totalPrograms": 0,
-    "verifiedPrograms": 0,
-    "protocols": [],
-    "error": "All RPC endpoints failed",
-    "durationMs": 31579
+    "totalPrograms": 75,
+    "verifiedPrograms": 45,
+    "protocols": [
+      {
+        "protocolId": "idl-protocol",
+        "protocolName": "IDL Protocol",
+        "status": "devnet_only",
+        "timestamp": "2025-12-23T05:13:54.866Z",
+        "programs": [
+          {
+            "name": "IDL Protocol",
+            "address": "BSn7neicVV2kEzgaZmd6tZEBm4tdgzBRyELov65Lq7dt",
+            "network": "devnet",
+            "status": "verified",
+            "programInfo": {
+              "exists": true,
+              "executable": true,
+              "dataLen": 36,
+              "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+              "lamports": 5001141440
+            },
+            "message": "Program exists and is executable",
+            "onChainIdl": {
+              "found": false
+            }
+          }
+        ],
+        "details": {
+          "programCount": 1,
+          "idlHash": "277e2193c507221e",
+          "instructionCount": 15,
+          "accountCount": 6,
+          "message": "Program(s) only available on devnet",
+          "verified": 0,
+          "total": 1
+        }
+      },
+      {
+        "protocolId": "acceleraytor",
+        "protocolName": "Acceleraytor",
+        "status": "placeholder",
+        "timestamp": "2025-12-23T05:13:55.438Z",
+        "programs": [],
+        "details": {
+          "message": "IDL is a placeholder, not yet available"
+        }
+      },
+      {
+        "protocolId": "adrena",
+        "protocolName": "Adrena",
+        "status": "placeholder",
+        "timestamp": "2025-12-23T05:13:55.538Z",
+        "programs": [],
+        "details": {
+          "message": "IDL is a placeholder, not yet available"
+        }
+      },
+      {
+        "protocolId": "aldrin",
+        "protocolName": "Aldrin",
+        "status": "verified",
+        "timestamp": "2025-12-23T05:13:55.638Z",
+        "programs": [
+          {
+            "name": "Aldrin AMM",
+            "address": "AMM55ShdkoGRB5jVYPjWziwk8m5MpwyDgsMWHaMSQWH6",
+            "network": "mainnet",
+            "status": "verified",
+            "programInfo": {
+              "exists": true,
+              "executable": true,
+              "dataLen": 36,
+              "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+              "lamports": 1141440
+            },
+            "message": "Program exists and is executable",
+            "onChainIdl": {
+              "found": false
+            }
+          }
+        ],
+        "details": {
+          "programCount": 1,
+          "idlHash": "65910336e891591b",
+          "instructionCount": 2,
+          "accountCount": 0,
+          "message": "All 1 program(s) verified on mainnet",
+          "verified": 1,
+          "total": 1
+        }
+      },
+      {
+        "protocolId": "apricot",
+        "protocolName": "Apricot",
+        "status": "program_not_found",
+        "timestamp": "2025-12-23T05:13:55.931Z",
+        "programs": [
+          {
+            "name": "apricot",
+            "address": "6FLTtosMrW1JgPDZ8TAffNJDQ9zr3L78bDdpzqHCevDm",
+            "network": "mainnet",
+            "status": "not_found",
+            "programInfo": {
+              "exists": false,
+              "executable": false,
+              "dataLen": 0
+            },
+            "message": "Program not found on-chain"
+          }
+        ],
+        "details": {
+          "programCount": 1,
+          "idlHash": "af1573cae2f35e5a",
+          "instructionCount": 2,
+          "accountCount": 0,
+          "message": "No programs found on-chain",
+          "verified": 0,
+          "total": 1
+        }
+      },
+      {
+        "protocolId": "arrow",
+        "protocolName": "Arrow",
+        "status": "partial",
+        "timestamp": "2025-12-23T05:13:56.151Z",
+        "programs": [
+          {
+            "name": "Arrow",
+            "address": "ARoWLTBWoWrKMvxEiaE2fn1sPA7kBL98B6nqYSPBPz4h",
+            "network": "mainnet",
+            "status": "not_found",
+            "programInfo": {
+              "exists": false,
+              "executable": false,
+              "dataLen": 0
+            },
+            "message": "Program not found on-chain"
+          },
+          {
+            "name": "arrow",
+            "address": "ARoWLTBWoWrKMvxEiaE2EH9DrWyV7mLpKywGDWxBGeq9",
+            "network": "mainnet",
+            "status": "verified",
+            "programInfo": {
+              "exists": true,
+              "executable": true,
+              "dataLen": 36,
+              "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+              "lamports": 1141440
+            },
+            "message": "Program exists and is executable",
+            "onChainIdl": {
+              "found": false
+            }
+          }
+        ],
+        "details": {
+          "programCount": 2,
+          "idlHash": "64758fc8c3fd7b4c",
+          "instructionCount": 2,
+          "accountCount": 0,
+          "message": "1/2 programs verified on mainnet",
+          "verified": 1,
+          "total": 2
+        }
+      },
+      {
+        "protocolId": "atrix",
+        "protocolName": "Atrix",
+        "status": "program_not_found",
+        "timestamp": "2025-12-23T05:13:56.605Z",
+        "programs": [
+          {
+            "name": "atrix",
+            "address": "ATRiH29rGgf5N3uKEDDEa3vjDixbL9jRnrUh9oHv3gfN",
+            "network": "mainnet",
+            "status": "not_found",
+            "programInfo": {
+              "exists": false,
+              "executable": false,
+              "dataLen": 0
+            },
+            "message": "Program not found on-chain"
+          }
+        ],
+        "details": {
+          "programCount": 1,
+          "idlHash": "fed67414f42ad2b2",
+          "instructionCount": 2,
+          "accountCount": 0,
+          "message": "No programs found on-chain",
+          "verified": 0,
+          "total": 1
+        }
+      },
+      {
+        "protocolId": "balansol",
+        "protocolName": "Balansol",
+        "status": "placeholder",
+        "timestamp": "2025-12-23T05:13:56.818Z",
+        "programs": [],
+        "details": {
+          "message": "IDL is a placeholder, not yet available"
+        }
+      },
+      {
+        "protocolId": "beluga",
+        "protocolName": "Beluga",
+        "status": "placeholder",
+        "timestamp": "2025-12-23T05:13:56.918Z",
+        "programs": [],
+        "details": {
+          "message": "IDL is a placeholder, not yet available"
+        }
+      },
+      {
+        "protocolId": "blaze",
+        "protocolName": "Blaze",
+        "status": "placeholder",
+        "timestamp": "2025-12-23T05:13:57.019Z",
+        "programs": [],
+        "details": {
+          "message": "IDL is a placeholder, not yet available"
+        }
+      },
+      {
+        "protocolId": "bonfida",
+        "protocolName": "Bonfida",
+        "status": "verified",
+        "timestamp": "2025-12-23T05:13:57.119Z",
+        "programs": [
+          {
+            "name": "Bonfida",
+            "address": "namesLPneVptA9Z5rqUDD9tMTWEJwofgaYwp8cawRkX",
+            "network": "mainnet",
+            "status": "verified",
+            "programInfo": {
+              "exists": true,
+              "executable": true,
+              "dataLen": 36,
+              "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+              "lamports": 1141440
+            },
+            "message": "Program exists and is executable",
+            "onChainIdl": {
+              "found": false
+            }
+          }
+        ],
+        "details": {
+          "programCount": 1,
+          "idlHash": "a3d74c257a4b7546",
+          "instructionCount": 2,
+          "accountCount": 0,
+          "message": "All 1 program(s) verified on mainnet",
+          "verified": 1,
+          "total": 1
+        }
+      },
+      {
+        "protocolId": "byreal",
+        "protocolName": "Byreal",
+        "status": "placeholder",
+        "timestamp": "2025-12-23T05:13:57.476Z",
+        "programs": [],
+        "details": {
+          "message": "IDL is a placeholder, not yet available"
+        }
+      },
+      {
+        "protocolId": "cashio",
+        "protocolName": "Cashio",
+        "status": "placeholder",
+        "timestamp": "2025-12-23T05:13:57.577Z",
+        "programs": [],
+        "details": {
+          "message": "IDL is a placeholder, not yet available"
+        }
+      },
+      {
+        "protocolId": "clone",
+        "protocolName": "Clone",
+        "status": "placeholder",
+        "timestamp": "2025-12-23T05:13:57.677Z",
+        "programs": [],
+        "details": {
+          "message": "IDL is a placeholder, not yet available"
+        }
+      },
+      {
+        "protocolId": "crate",
+        "protocolName": "Crate",
+        "status": "placeholder",
+        "timestamp": "2025-12-23T05:13:57.777Z",
+        "programs": [],
+        "details": {
+          "message": "IDL is a placeholder, not yet available"
+        }
+      },
+      {
+        "protocolId": "crema",
+        "protocolName": "Crema",
+        "status": "verified",
+        "timestamp": "2025-12-23T05:13:57.877Z",
+        "programs": [
+          {
+            "name": "Crema",
+            "address": "CLMM9tUoggJu2wagPkkqs9eFG4BWhVBZWkP1qv3Sp7tR",
+            "network": "mainnet",
+            "status": "verified",
+            "programInfo": {
+              "exists": true,
+              "executable": true,
+              "dataLen": 36,
+              "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+              "lamports": 1141446
+            },
+            "message": "Program exists and is executable",
+            "onChainIdl": {
+              "found": false
+            }
+          }
+        ],
+        "details": {
+          "programCount": 1,
+          "idlHash": "881536efc78e157b",
+          "instructionCount": 2,
+          "accountCount": 0,
+          "message": "All 1 program(s) verified on mainnet",
+          "verified": 1,
+          "total": 1
+        }
+      },
+      {
+        "protocolId": "cropper",
+        "protocolName": "Cropper",
+        "status": "placeholder",
+        "timestamp": "2025-12-23T05:13:58.300Z",
+        "programs": [],
+        "details": {
+          "message": "IDL is a placeholder, not yet available"
+        }
+      },
+      {
+        "protocolId": "cyclos",
+        "protocolName": "Cyclos",
+        "status": "program_not_found",
+        "timestamp": "2025-12-23T05:13:58.401Z",
+        "programs": [
+          {
+            "name": "cyclos",
+            "address": "CYCLosMaPQkNaMfNXWg4eZJ2TgQ1Ckrwq8TKbBkuLcxu",
+            "network": "mainnet",
+            "status": "not_found",
+            "programInfo": {
+              "exists": false,
+              "executable": false,
+              "dataLen": 0
+            },
+            "message": "Program not found on-chain"
+          }
+        ],
+        "details": {
+          "programCount": 1,
+          "idlHash": "dda30abbbb482cbc",
+          "instructionCount": 2,
+          "accountCount": 0,
+          "message": "No programs found on-chain",
+          "verified": 0,
+          "total": 1
+        }
+      },
+      {
+        "protocolId": "cykura",
+        "protocolName": "Cykura",
+        "status": "verified",
+        "timestamp": "2025-12-23T05:13:58.608Z",
+        "programs": [
+          {
+            "name": "cykura",
+            "address": "cysPXAjehMpVKUapzbMCCnpFxUFFryEWEaLgnb9NrR8",
+            "network": "mainnet",
+            "status": "verified",
+            "programInfo": {
+              "exists": true,
+              "executable": true,
+              "dataLen": 36,
+              "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+              "lamports": 1141440
+            },
+            "message": "Program exists and is executable",
+            "onChainIdl": {
+              "found": false
+            }
+          }
+        ],
+        "details": {
+          "programCount": 1,
+          "idlHash": "ea782945b8d4f670",
+          "instructionCount": 2,
+          "accountCount": 0,
+          "message": "All 1 program(s) verified on mainnet",
+          "verified": 1,
+          "total": 1
+        }
+      },
+      {
+        "protocolId": "deltaone",
+        "protocolName": "Deltaone",
+        "status": "placeholder",
+        "timestamp": "2025-12-23T05:13:58.953Z",
+        "programs": [],
+        "details": {
+          "message": "IDL is a placeholder, not yet available"
+        }
+      },
+      {
+        "protocolId": "dexlab",
+        "protocolName": "Dexlab",
+        "status": "program_not_found",
+        "timestamp": "2025-12-23T05:13:59.054Z",
+        "programs": [
+          {
+            "name": "dexlab",
+            "address": "DexLaB7TkQN3xLSfzFkXYVJgNJnFJfWDHtqHJN2EHHXz",
+            "network": "mainnet",
+            "status": "not_found",
+            "programInfo": {
+              "exists": false,
+              "executable": false,
+              "dataLen": 0
+            },
+            "message": "Program not found on-chain"
+          }
+        ],
+        "details": {
+          "programCount": 1,
+          "idlHash": "3456a1945749bb61",
+          "instructionCount": 1,
+          "accountCount": 0,
+          "message": "No programs found on-chain",
+          "verified": 0,
+          "total": 1
+        }
+      },
+      {
+        "protocolId": "dexterity",
+        "protocolName": "Dexterity",
+        "status": "program_not_found",
+        "timestamp": "2025-12-23T05:13:59.262Z",
+        "programs": [
+          {
+            "name": "dexterity",
+            "address": "Dex1111111111111111111111111111111111111111",
+            "network": "mainnet",
+            "status": "not_found",
+            "programInfo": {
+              "exists": false,
+              "executable": false,
+              "dataLen": 0
+            },
+            "message": "Program not found on-chain"
+          }
+        ],
+        "details": {
+          "programCount": 1,
+          "idlHash": "2f3a2eb5924d0901",
+          "instructionCount": 2,
+          "accountCount": 0,
+          "message": "No programs found on-chain",
+          "verified": 0,
+          "total": 1
+        }
+      },
+      {
+        "protocolId": "drift",
+        "protocolName": "Drift Protocol",
+        "status": "verified",
+        "timestamp": "2025-12-23T05:13:59.467Z",
+        "programs": [
+          {
+            "name": "Drift Protocol",
+            "address": "dRiftyHA39MWEi3m9aunc5MzRF1JYuBsbn6VPcn33UH",
+            "network": "mainnet",
+            "status": "verified",
+            "programInfo": {
+              "exists": true,
+              "executable": true,
+              "dataLen": 36,
+              "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+              "lamports": 9141449
+            },
+            "message": "Program exists and is executable",
+            "onChainIdl": {
+              "found": false
+            }
+          }
+        ],
+        "details": {
+          "programCount": 1,
+          "idlHash": "0bd2c1ffaff746e7",
+          "instructionCount": 194,
+          "accountCount": 17,
+          "message": "All 1 program(s) verified on mainnet",
+          "verified": 1,
+          "total": 1
+        }
+      },
+      {
+        "protocolId": "ellipsis",
+        "protocolName": "Ellipsis",
+        "status": "placeholder",
+        "timestamp": "2025-12-23T05:13:59.838Z",
+        "programs": [],
+        "details": {
+          "message": "IDL is a placeholder, not yet available"
+        }
+      },
+      {
+        "protocolId": "enjinstarter",
+        "protocolName": "Enjinstarter",
+        "status": "placeholder",
+        "timestamp": "2025-12-23T05:13:59.939Z",
+        "programs": [],
+        "details": {
+          "message": "IDL is a placeholder, not yet available"
+        }
+      },
+      {
+        "protocolId": "flash",
+        "protocolName": "Flash",
+        "status": "placeholder",
+        "timestamp": "2025-12-23T05:14:00.039Z",
+        "programs": [],
+        "details": {
+          "message": "IDL is a placeholder, not yet available"
+        }
+      },
+      {
+        "protocolId": "fluxbeam",
+        "protocolName": "Fluxbeam",
+        "status": "partial",
+        "timestamp": "2025-12-23T05:14:00.140Z",
+        "programs": [
+          {
+            "name": "FluxBeam",
+            "address": "FLUXubRmkEi2q6K3Y9kBPgSpwfBDYxZqYBdRJg6mEZ1",
+            "network": "mainnet",
+            "status": "not_found",
+            "programInfo": {
+              "exists": false,
+              "executable": false,
+              "dataLen": 0
+            },
+            "message": "Program not found on-chain"
+          },
+          {
+            "name": "fluxbeam",
+            "address": "FLUXubRmkEi2q6K3Y9kBPg9248ggaZVsoSFhtJHSrm1X",
+            "network": "mainnet",
+            "status": "verified",
+            "programInfo": {
+              "exists": true,
+              "executable": true,
+              "dataLen": 36,
+              "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+              "lamports": 1142440
+            },
+            "message": "Program exists and is executable",
+            "onChainIdl": {
+              "found": false
+            }
+          }
+        ],
+        "details": {
+          "programCount": 2,
+          "idlHash": "7e7987fa5f6d6827",
+          "instructionCount": 1,
+          "accountCount": 0,
+          "message": "1/2 programs verified on mainnet",
+          "verified": 1,
+          "total": 2
+        }
+      },
+      {
+        "protocolId": "francium",
+        "protocolName": "Francium",
+        "status": "partial",
+        "timestamp": "2025-12-23T05:14:00.552Z",
+        "programs": [
+          {
+            "name": "Francium",
+            "address": "FC81tbGt6JWRXidaWYFXeRaQKQCJc25JWD4RZGHwaqrz",
+            "network": "mainnet",
+            "status": "not_found",
+            "programInfo": {
+              "exists": false,
+              "executable": false,
+              "dataLen": 0
+            },
+            "message": "Program not found on-chain"
+          },
+          {
+            "name": "francium",
+            "address": "FC81tbGt6JWRXidaWYFXxGnTk4VgobhJHATvTRVMqgWj",
+            "network": "mainnet",
+            "status": "verified",
+            "programInfo": {
+              "exists": true,
+              "executable": true,
+              "dataLen": 36,
+              "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+              "lamports": 1141440
+            },
+            "message": "Program exists and is executable",
+            "onChainIdl": {
+              "found": false
+            }
+          }
+        ],
+        "details": {
+          "programCount": 2,
+          "idlHash": "6264b09b4869e2ce",
+          "instructionCount": 2,
+          "accountCount": 0,
+          "message": "1/2 programs verified on mainnet",
+          "verified": 1,
+          "total": 2
+        }
+      },
+      {
+        "protocolId": "gauge",
+        "protocolName": "Gauge",
+        "status": "placeholder",
+        "timestamp": "2025-12-23T05:14:01.036Z",
+        "programs": [],
+        "details": {
+          "message": "IDL is a placeholder, not yet available"
+        }
+      },
+      {
+        "protocolId": "gavel",
+        "protocolName": "Gavel",
+        "status": "placeholder",
+        "timestamp": "2025-12-23T05:14:01.137Z",
+        "programs": [],
+        "details": {
+          "message": "IDL is a placeholder, not yet available"
+        }
+      },
+      {
+        "protocolId": "gmx",
+        "protocolName": "Gmx",
+        "status": "placeholder",
+        "timestamp": "2025-12-23T05:14:01.237Z",
+        "programs": [],
+        "details": {
+          "message": "IDL is a placeholder, not yet available"
+        }
+      },
+      {
+        "protocolId": "goki",
+        "protocolName": "Goki",
+        "status": "partial",
+        "timestamp": "2025-12-23T05:14:01.338Z",
+        "programs": [
+          {
+            "name": "Goki",
+            "address": "GokivDYuQXPZCWRkwMhdH2h91KpDQXBEmpsPZ3DoPj24",
+            "network": "mainnet",
+            "status": "not_found",
+            "programInfo": {
+              "exists": false,
+              "executable": false,
+              "dataLen": 0
+            },
+            "message": "Program not found on-chain"
+          },
+          {
+            "name": "goki_smart_wallet",
+            "address": "GokivDYuQXPZCWRkwMhdH2h91KpDQXBEmpgBgs55bnpH",
+            "network": "mainnet",
+            "status": "verified",
+            "programInfo": {
+              "exists": true,
+              "executable": true,
+              "dataLen": 36,
+              "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+              "lamports": 1141440
+            },
+            "message": "Program exists and is executable",
+            "onChainIdl": {
+              "found": false
+            }
+          }
+        ],
+        "details": {
+          "programCount": 2,
+          "idlHash": "5d00204a4da73e01",
+          "instructionCount": 2,
+          "accountCount": 0,
+          "message": "1/2 programs verified on mainnet",
+          "verified": 1,
+          "total": 2
+        }
+      },
+      {
+        "protocolId": "goonfi",
+        "protocolName": "Goonfi",
+        "status": "placeholder",
+        "timestamp": "2025-12-23T05:14:01.890Z",
+        "programs": [],
+        "details": {
+          "message": "IDL is a placeholder, not yet available"
+        }
+      },
+      {
+        "protocolId": "goosefx",
+        "protocolName": "Goosefx",
+        "status": "verified",
+        "timestamp": "2025-12-23T05:14:01.991Z",
+        "programs": [
+          {
+            "name": "GooseFX",
+            "address": "GFXsSL5sSaDfNFQUYsHekbWBW1TsFdjDYzACh62tEHxn",
+            "network": "mainnet",
+            "status": "verified",
+            "programInfo": {
+              "exists": true,
+              "executable": true,
+              "dataLen": 36,
+              "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+              "lamports": 1141440
+            },
+            "message": "Program exists and is executable",
+            "onChainIdl": {
+              "found": false
+            }
+          },
+          {
+            "name": "goosefx_ssl",
+            "address": "7WduLbRfYhTJktjLw5FDEyrqoEv61aTTCuGAetgLjzN5",
+            "network": "mainnet",
+            "status": "verified",
+            "programInfo": {
+              "exists": true,
+              "executable": true,
+              "dataLen": 36,
+              "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+              "lamports": 1141440
+            },
+            "message": "Program exists and is executable",
+            "onChainIdl": {
+              "found": false
+            }
+          }
+        ],
+        "details": {
+          "programCount": 2,
+          "idlHash": "49e4105066faf54c",
+          "instructionCount": 2,
+          "accountCount": 0,
+          "message": "All 2 program(s) verified on mainnet",
+          "verified": 2,
+          "total": 2
+        }
+      },
+      {
+        "protocolId": "hawksight",
+        "protocolName": "Hawksight",
+        "status": "placeholder",
+        "timestamp": "2025-12-23T05:14:07.191Z",
+        "programs": [],
+        "details": {
+          "message": "IDL is a placeholder, not yet available"
+        }
+      },
+      {
+        "protocolId": "hubble",
+        "protocolName": "Hubble",
+        "status": "program_not_found",
+        "timestamp": "2025-12-23T05:14:07.292Z",
+        "programs": [
+          {
+            "name": "borrowing",
+            "address": "HbbLE47k4s8Aw4YsagCa1E6MRyJUtVVoRcSBXBCTaYH",
+            "network": "mainnet",
+            "status": "not_found",
+            "programInfo": {
+              "exists": false,
+              "executable": false,
+              "dataLen": 0
+            },
+            "message": "Program not found on-chain"
+          }
+        ],
+        "details": {
+          "programCount": 1,
+          "idlHash": "08410e1f58a7cc6b",
+          "instructionCount": 2,
+          "accountCount": 0,
+          "message": "No programs found on-chain",
+          "verified": 0,
+          "total": 1
+        }
+      },
+      {
+        "protocolId": "humidifi",
+        "protocolName": "Humidifi",
+        "status": "placeholder",
+        "timestamp": "2025-12-23T05:14:07.563Z",
+        "programs": [],
+        "details": {
+          "message": "IDL is a placeholder, not yet available"
+        }
+      },
+      {
+        "protocolId": "hxro",
+        "protocolName": "Hxro",
+        "status": "program_not_found",
+        "timestamp": "2025-12-23T05:14:07.663Z",
+        "programs": [
+          {
+            "name": "hxro_network",
+            "address": "HxroShip8KkXZVYcrth6X2zLMnCXfXJmhLHUQZYH7jH",
+            "network": "mainnet",
+            "status": "not_found",
+            "programInfo": {
+              "exists": false,
+              "executable": false,
+              "dataLen": 0
+            },
+            "message": "Program not found on-chain"
+          }
+        ],
+        "details": {
+          "programCount": 1,
+          "idlHash": "d31c64f5c107b40e",
+          "instructionCount": 2,
+          "accountCount": 0,
+          "message": "No programs found on-chain",
+          "verified": 0,
+          "total": 1
+        }
+      },
+      {
+        "protocolId": "invariant",
+        "protocolName": "Invariant",
+        "status": "verified",
+        "timestamp": "2025-12-23T05:14:07.978Z",
+        "programs": [
+          {
+            "name": "Invariant",
+            "address": "HyaB3W9q6XdA5xwpU4XnSZV94htfmbmqJXZcEbRaJutt",
+            "network": "mainnet",
+            "status": "verified",
+            "programInfo": {
+              "exists": true,
+              "executable": true,
+              "dataLen": 36,
+              "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+              "lamports": 1141440
+            },
+            "message": "Program exists and is executable",
+            "onChainIdl": {
+              "found": false
+            }
+          }
+        ],
+        "details": {
+          "programCount": 1,
+          "idlHash": "9aac190555f19605",
+          "instructionCount": 2,
+          "accountCount": 0,
+          "message": "All 1 program(s) verified on mainnet",
+          "verified": 1,
+          "total": 1
+        }
+      },
+      {
+        "protocolId": "jet",
+        "protocolName": "Jet",
+        "status": "partial",
+        "timestamp": "2025-12-23T05:14:08.304Z",
+        "programs": [
+          {
+            "name": "Jet Protocol",
+            "address": "JPLockxtkngHkaQT5AuRMhKgVNDJzQcqhPxhxbocmP5",
+            "network": "mainnet",
+            "status": "not_found",
+            "programInfo": {
+              "exists": false,
+              "executable": false,
+              "dataLen": 0
+            },
+            "message": "Program not found on-chain"
+          },
+          {
+            "name": "jet",
+            "address": "JPLockxtkngHkaQT5AuRYow3HyUv5qWzmhwsCPd653n",
+            "network": "mainnet",
+            "status": "verified",
+            "programInfo": {
+              "exists": true,
+              "executable": true,
+              "dataLen": 36,
+              "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+              "lamports": 1141440
+            },
+            "message": "Program exists and is executable",
+            "onChainIdl": {
+              "found": false
+            }
+          }
+        ],
+        "details": {
+          "programCount": 2,
+          "idlHash": "7de93e05abcb0b9a",
+          "instructionCount": 3,
+          "accountCount": 0,
+          "message": "1/2 programs verified on mainnet",
+          "verified": 1,
+          "total": 2
+        }
+      },
+      {
+        "protocolId": "jito",
+        "protocolName": "Jito",
+        "status": "program_not_found",
+        "timestamp": "2025-12-23T05:14:09.621Z",
+        "programs": [
+          {
+            "name": "Jito Stake Pool",
+            "address": "Jito4APyf642JPZPx3hGc6WWJ8zPKtRbRs4P815Awbb",
+            "network": "mainnet",
+            "status": "not_executable",
+            "programInfo": {
+              "exists": true,
+              "executable": false,
+              "dataLen": 611,
+              "owner": "SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy",
+              "lamports": 2060816388
+            },
+            "message": "Account exists but is not executable"
+          },
+          {
+            "name": "Jito TipRouter",
+            "address": "Jito4APyf642JPZPx3hGc6WWJ8zPKtRbRs4P815Awbb",
+            "network": "mainnet",
+            "status": "not_executable",
+            "programInfo": {
+              "exists": true,
+              "executable": false,
+              "dataLen": 611,
+              "owner": "SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy",
+              "lamports": 2060816388
+            },
+            "message": "Account exists but is not executable"
+          }
+        ],
+        "details": {
+          "programCount": 2,
+          "idlHash": "3f1acb60ee8211be",
+          "instructionCount": 2,
+          "accountCount": 0,
+          "message": "No programs found on-chain",
+          "verified": 0,
+          "total": 2
+        }
+      },
+      {
+        "protocolId": "jupiter",
+        "protocolName": "Jupiter",
+        "status": "verified",
+        "timestamp": "2025-12-23T05:14:09.967Z",
+        "programs": [
+          {
+            "name": "Jupiter v6",
+            "address": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+            "network": "mainnet",
+            "status": "verified",
+            "programInfo": {
+              "exists": true,
+              "executable": true,
+              "dataLen": 36,
+              "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+              "lamports": 2803739208
+            },
+            "message": "Program exists and is executable",
+            "onChainIdl": {
+              "found": false
+            }
+          },
+          {
+            "name": "Jupiter Limit Order",
+            "address": "jupoNjAxXgZ4rjzxzPMP4oxduvQsQtZzyknqvzYNrNu",
+            "network": "mainnet",
+            "status": "verified",
+            "programInfo": {
+              "exists": true,
+              "executable": true,
+              "dataLen": 36,
+              "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+              "lamports": 1141440
+            },
+            "message": "Program exists and is executable",
+            "onChainIdl": {
+              "found": false
+            }
+          },
+          {
+            "name": "Jupiter DCA",
+            "address": "DCA265Vj8a9CEuX1eb1LWRnDT7uK6q1xMipnNyatn23M",
+            "network": "mainnet",
+            "status": "verified",
+            "programInfo": {
+              "exists": true,
+              "executable": true,
+              "dataLen": 36,
+              "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+              "lamports": 1141440
+            },
+            "message": "Program exists and is executable",
+            "onChainIdl": {
+              "found": false
+            }
+          }
+        ],
+        "details": {
+          "programCount": 3,
+          "idlHash": "22a3da061d418ee0",
+          "instructionCount": 16,
+          "accountCount": 1,
+          "message": "All 3 program(s) verified on mainnet",
+          "verified": 3,
+          "total": 3
+        }
+      },
+      {
+        "protocolId": "kamino",
+        "protocolName": "Kamino",
+        "status": "partial",
+        "timestamp": "2025-12-23T05:14:12.159Z",
+        "programs": [
+          {
+            "name": "Kamino Lending",
+            "address": "KLend2g3cP87ber41GRRMFjD2a44rFDPdxYf68LN5Un",
+            "network": "mainnet",
+            "status": "not_found",
+            "programInfo": {
+              "exists": false,
+              "executable": false,
+              "dataLen": 0
+            },
+            "message": "Program not found on-chain"
+          },
+          {
+            "name": "Kamino Liquidity",
+            "address": "6LtLpnUFNByNXLyCoK9wA2MykKAmQNZKBdY8s47dehDc",
+            "network": "mainnet",
+            "status": "verified",
+            "programInfo": {
+              "exists": true,
+              "executable": true,
+              "dataLen": 36,
+              "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+              "lamports": 1141440
+            },
+            "message": "Program exists and is executable",
+            "onChainIdl": {
+              "found": false
+            }
+          }
+        ],
+        "details": {
+          "programCount": 2,
+          "idlHash": "e6b9dab23923e6f8",
+          "instructionCount": 49,
+          "accountCount": 9,
+          "message": "1/2 programs verified on mainnet",
+          "verified": 1,
+          "total": 2
+        }
+      },
+      {
+        "protocolId": "larix",
+        "protocolName": "Larix",
+        "status": "program_not_found",
+        "timestamp": "2025-12-23T05:14:13.538Z",
+        "programs": [
+          {
+            "name": "larix",
+            "address": "LARiTAAoXkNqwt2fQAL9QsWvBm7fLZZP1fgmj5R2Lf2",
+            "network": "mainnet",
+            "status": "not_found",
+            "programInfo": {
+              "exists": false,
+              "executable": false,
+              "dataLen": 0
+            },
+            "message": "Program not found on-chain"
+          }
+        ],
+        "details": {
+          "programCount": 1,
+          "idlHash": "cc63311a728adb03",
+          "instructionCount": 2,
+          "accountCount": 0,
+          "message": "No programs found on-chain",
+          "verified": 0,
+          "total": 1
+        }
+      },
+      {
+        "protocolId": "launchmynft",
+        "protocolName": "Launchmynft",
+        "status": "placeholder",
+        "timestamp": "2025-12-23T05:14:13.763Z",
+        "programs": [],
+        "details": {
+          "message": "IDL is a placeholder, not yet available"
+        }
+      },
+      {
+        "protocolId": "lifinity",
+        "protocolName": "Lifinity",
+        "status": "verified",
+        "timestamp": "2025-12-23T05:14:13.864Z",
+        "programs": [
+          {
+            "name": "Lifinity v1",
+            "address": "EewxydAPCCVuNEyrVN68PuSYdQ7wKn27V9Gjeoi8dy3S",
+            "network": "mainnet",
+            "status": "verified",
+            "programInfo": {
+              "exists": true,
+              "executable": true,
+              "dataLen": 36,
+              "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+              "lamports": 1141440
+            },
+            "message": "Program exists and is executable",
+            "onChainIdl": {
+              "found": false
+            }
+          }
+        ],
+        "details": {
+          "programCount": 1,
+          "idlHash": "51f34e06f94ae432",
+          "instructionCount": 2,
+          "accountCount": 0,
+          "message": "All 1 program(s) verified on mainnet",
+          "verified": 1,
+          "total": 1
+        }
+      },
+      {
+        "protocolId": "lifinity-v2",
+        "protocolName": "Lifinity v2",
+        "status": "partial",
+        "timestamp": "2025-12-23T05:14:14.204Z",
+        "programs": [
+          {
+            "name": "Lifinity v2",
+            "address": "2wT8Yq49kHgDzXuPxZSaeLkbYyJN8hAXNx7e3vP4qsEb",
+            "network": "mainnet",
+            "status": "not_found",
+            "programInfo": {
+              "exists": false,
+              "executable": false,
+              "dataLen": 0
+            },
+            "message": "Program not found on-chain"
+          },
+          {
+            "name": "lifinity_v2",
+            "address": "2wT8Yq49kHgDzXuPxZSaeLaH1qbmGXtEyPy64bL7aD3c",
+            "network": "mainnet",
+            "status": "verified",
+            "programInfo": {
+              "exists": true,
+              "executable": true,
+              "dataLen": 36,
+              "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+              "lamports": 1141442
+            },
+            "message": "Program exists and is executable",
+            "onChainIdl": {
+              "found": false
+            }
+          }
+        ],
+        "details": {
+          "programCount": 2,
+          "idlHash": "1417f4a25b16c59d",
+          "instructionCount": 2,
+          "accountCount": 0,
+          "message": "1/2 programs verified on mainnet",
+          "verified": 1,
+          "total": 2
+        }
+      },
+      {
+        "protocolId": "magiceden",
+        "protocolName": "Magiceden",
+        "status": "verified",
+        "timestamp": "2025-12-23T05:14:15.513Z",
+        "programs": [
+          {
+            "name": "Magic Eden",
+            "address": "M2mx93ekt1fmXSVkTrUL9xVFHkmME8HTUi5Cyc5aF7K",
+            "network": "mainnet",
+            "status": "verified",
+            "programInfo": {
+              "exists": true,
+              "executable": true,
+              "dataLen": 36,
+              "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+              "lamports": 4511542
+            },
+            "message": "Program exists and is executable",
+            "onChainIdl": {
+              "found": false
+            }
+          }
+        ],
+        "details": {
+          "programCount": 1,
+          "idlHash": "16cc3ed1ace86da2",
+          "instructionCount": 2,
+          "accountCount": 0,
+          "message": "All 1 program(s) verified on mainnet",
+          "verified": 1,
+          "total": 1
+        }
+      },
+      {
+        "protocolId": "mango",
+        "protocolName": "Mango Markets",
+        "status": "verified",
+        "timestamp": "2025-12-23T05:14:16.612Z",
+        "programs": [
+          {
+            "name": "Mango v4",
+            "address": "4MangoMjqJ2firMokCjjGgoK8d4MXcrgL7XJaL3w6fVg",
+            "network": "mainnet",
+            "status": "verified",
+            "programInfo": {
+              "exists": true,
+              "executable": true,
+              "dataLen": 36,
+              "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+              "lamports": 1141440
+            },
+            "message": "Program exists and is executable",
+            "onChainIdl": {
+              "found": false
+            }
+          }
+        ],
+        "details": {
+          "programCount": 1,
+          "idlHash": "f2a0717a422cda19",
+          "instructionCount": 3,
+          "accountCount": 0,
+          "message": "All 1 program(s) verified on mainnet",
+          "verified": 1,
+          "total": 1
+        }
+      },
+      {
+        "protocolId": "mango-v3",
+        "protocolName": "Mango v3",
+        "status": "verified",
+        "timestamp": "2025-12-23T05:14:17.002Z",
+        "programs": [
+          {
+            "name": "Mango v3",
+            "address": "mv3ekLzLbnVPNxjSKvqBpU3ZeZXPQdEC3bp5MDEBG68",
+            "network": "mainnet",
+            "status": "verified",
+            "programInfo": {
+              "exists": true,
+              "executable": true,
+              "dataLen": 36,
+              "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+              "lamports": 1141440
+            },
+            "message": "Program exists and is executable",
+            "onChainIdl": {
+              "found": false
+            }
+          }
+        ],
+        "details": {
+          "programCount": 1,
+          "idlHash": "9e14a47a36ac008e",
+          "instructionCount": 2,
+          "accountCount": 0,
+          "message": "All 1 program(s) verified on mainnet",
+          "verified": 1,
+          "total": 1
+        }
+      },
+      {
+        "protocolId": "marginfi",
+        "protocolName": "MarginFi",
+        "status": "verified",
+        "timestamp": "2025-12-23T05:14:18.382Z",
+        "programs": [
+          {
+            "name": "MarginFi",
+            "address": "MFv2hWf31Z9kbCa1snEPYctwafyhdvnV7FZnsebVacA",
+            "network": "mainnet",
+            "status": "verified",
+            "programInfo": {
+              "exists": true,
+              "executable": true,
+              "dataLen": 36,
+              "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+              "lamports": 1141440
+            },
+            "message": "Program exists and is executable",
+            "onChainIdl": {
+              "found": false
+            }
+          }
+        ],
+        "details": {
+          "programCount": 1,
+          "idlHash": "cf437d4d512ab8f0",
+          "instructionCount": 2,
+          "accountCount": 0,
+          "message": "All 1 program(s) verified on mainnet",
+          "verified": 1,
+          "total": 1
+        }
+      },
+      {
+        "protocolId": "marinade",
+        "protocolName": "Marinade Finance",
+        "status": "verified",
+        "timestamp": "2025-12-23T05:14:18.759Z",
+        "programs": [
+          {
+            "name": "Marinade Finance",
+            "address": "MarBmsSgKXdrN1egZf5sqe1TMai9K1rChYNDJgjq7aD",
+            "network": "mainnet",
+            "status": "verified",
+            "programInfo": {
+              "exists": true,
+              "executable": true,
+              "dataLen": 36,
+              "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+              "lamports": 1141440
+            },
+            "message": "Program exists and is executable",
+            "onChainIdl": {
+              "found": false
+            }
+          }
+        ],
+        "details": {
+          "programCount": 1,
+          "idlHash": "6e126ff84c079ae9",
+          "instructionCount": 1,
+          "accountCount": 0,
+          "message": "All 1 program(s) verified on mainnet",
+          "verified": 1,
+          "total": 1
+        }
+      },
+      {
+        "protocolId": "mercurial",
+        "protocolName": "Mercurial",
+        "status": "verified",
+        "timestamp": "2025-12-23T05:14:19.200Z",
+        "programs": [
+          {
+            "name": "Mercurial",
+            "address": "MERLuDFBMmsHnsBPZw2sDQZHvXFMwp8EdjudcU2HKky",
+            "network": "mainnet",
+            "status": "verified",
+            "programInfo": {
+              "exists": true,
+              "executable": true,
+              "dataLen": 36,
+              "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+              "lamports": 1141440
+            },
+            "message": "Program exists and is executable",
+            "onChainIdl": {
+              "found": false
+            }
+          }
+        ],
+        "details": {
+          "programCount": 1,
+          "idlHash": "72c27a6126bd2179",
+          "instructionCount": 2,
+          "accountCount": 0,
+          "message": "All 1 program(s) verified on mainnet",
+          "verified": 1,
+          "total": 1
+        }
+      },
+      {
+        "protocolId": "merkle-distributor",
+        "protocolName": "Merkle distributor",
+        "status": "placeholder",
+        "timestamp": "2025-12-23T05:14:20.353Z",
+        "programs": [],
+        "details": {
+          "message": "IDL is a placeholder, not yet available"
+        }
+      },
+      {
+        "protocolId": "meteora",
+        "protocolName": "Meteora",
+        "status": "verified",
+        "timestamp": "2025-12-23T05:14:20.454Z",
+        "programs": [
+          {
+            "name": "Meteora DLMM",
+            "address": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+            "network": "mainnet",
+            "status": "verified",
+            "programInfo": {
+              "exists": true,
+              "executable": true,
+              "dataLen": 36,
+              "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+              "lamports": 32941452
+            },
+            "message": "Program exists and is executable",
+            "onChainIdl": {
+              "found": false
+            }
+          },
+          {
+            "name": "Meteora Pools",
+            "address": "Eo7WjKq67rjJQSZxS6z3YkapzY3eMj6Xy8X5EQVn5UaB",
+            "network": "mainnet",
+            "status": "verified",
+            "programInfo": {
+              "exists": true,
+              "executable": true,
+              "dataLen": 36,
+              "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+              "lamports": 1141441
+            },
+            "message": "Program exists and is executable",
+            "onChainIdl": {
+              "found": false
+            }
+          }
+        ],
+        "details": {
+          "programCount": 2,
+          "idlHash": "f2eb1cfd8f0b2fbe",
+          "instructionCount": 2,
+          "accountCount": 0,
+          "message": "All 2 program(s) verified on mainnet",
+          "verified": 2,
+          "total": 2
+        }
+      },
+      {
+        "protocolId": "obric",
+        "protocolName": "Obric",
+        "status": "placeholder",
+        "timestamp": "2025-12-23T05:14:22.065Z",
+        "programs": [],
+        "details": {
+          "message": "IDL is a placeholder, not yet available"
+        }
+      },
+      {
+        "protocolId": "openbook",
+        "protocolName": "OpenBook",
+        "status": "verified",
+        "timestamp": "2025-12-23T05:14:22.165Z",
+        "programs": [
+          {
+            "name": "OpenBook v2",
+            "address": "opnb2LAfJYbRMAHHvqjCwQxanZn7ReEHp1k81EohpZb",
+            "network": "mainnet",
+            "status": "verified",
+            "programInfo": {
+              "exists": true,
+              "executable": true,
+              "dataLen": 36,
+              "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+              "lamports": 1141441
+            },
+            "message": "Program exists and is executable",
+            "onChainIdl": {
+              "found": false
+            }
+          }
+        ],
+        "details": {
+          "programCount": 1,
+          "idlHash": "75622ef2d3848693",
+          "instructionCount": 2,
+          "accountCount": 0,
+          "message": "All 1 program(s) verified on mainnet",
+          "verified": 1,
+          "total": 1
+        }
+      },
+      {
+        "protocolId": "orca",
+        "protocolName": "Orca (Whirlpool)",
+        "status": "verified",
+        "timestamp": "2025-12-23T05:14:22.498Z",
+        "programs": [
+          {
+            "name": "Orca Whirlpool",
+            "address": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+            "network": "mainnet",
+            "status": "verified",
+            "programInfo": {
+              "exists": true,
+              "executable": true,
+              "dataLen": 36,
+              "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+              "lamports": 8205554
+            },
+            "message": "Program exists and is executable",
+            "onChainIdl": {
+              "found": false
+            }
+          }
+        ],
+        "details": {
+          "programCount": 1,
+          "idlHash": "197abbc706b37fa2",
+          "instructionCount": 1,
+          "accountCount": 0,
+          "message": "All 1 program(s) verified on mainnet",
+          "verified": 1,
+          "total": 1
+        }
+      },
+      {
+        "protocolId": "parrot",
+        "protocolName": "Parrot",
+        "status": "placeholder",
+        "timestamp": "2025-12-23T05:14:23.794Z",
+        "programs": [],
+        "details": {
+          "message": "IDL is a placeholder, not yet available"
+        }
+      },
+      {
+        "protocolId": "penguin",
+        "protocolName": "Penguin",
+        "status": "placeholder",
+        "timestamp": "2025-12-23T05:14:23.894Z",
+        "programs": [],
+        "details": {
+          "message": "IDL is a placeholder, not yet available"
+        }
+      },
+      {
+        "protocolId": "permalock",
+        "protocolName": "Permalock",
+        "status": "placeholder",
+        "timestamp": "2025-12-23T05:14:23.995Z",
+        "programs": [],
+        "details": {
+          "message": "IDL is a placeholder, not yet available"
+        }
+      },
+      {
+        "protocolId": "phoenix",
+        "protocolName": "Phoenix",
+        "status": "verified",
+        "timestamp": "2025-12-23T05:14:24.096Z",
+        "programs": [
+          {
+            "name": "Phoenix DEX",
+            "address": "PhoeNiXZ8ByJGLkxNfZRnkUfjvmuYqLR89jjFHGqdXY",
+            "network": "mainnet",
+            "status": "verified",
+            "programInfo": {
+              "exists": true,
+              "executable": true,
+              "dataLen": 36,
+              "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+              "lamports": 1141441
+            },
+            "message": "Program exists and is executable",
+            "onChainIdl": {
+              "found": false
+            }
+          }
+        ],
+        "details": {
+          "programCount": 1,
+          "idlHash": "9a4b899e7bd2ed83",
+          "instructionCount": 28,
+          "accountCount": 0,
+          "message": "All 1 program(s) verified on mainnet",
+          "verified": 1,
+          "total": 1
+        }
+      },
+      {
+        "protocolId": "plasma",
+        "protocolName": "Plasma",
+        "status": "placeholder",
+        "timestamp": "2025-12-23T05:14:24.364Z",
+        "programs": [],
+        "details": {
+          "message": "IDL is a placeholder, not yet available"
+        }
+      },
+      {
+        "protocolId": "pool-manager",
+        "protocolName": "Pool manager",
+        "status": "placeholder",
+        "timestamp": "2025-12-23T05:14:24.465Z",
+        "programs": [],
+        "details": {
+          "message": "IDL is a placeholder, not yet available"
+        }
+      },
+      {
+        "protocolId": "port",
+        "protocolName": "Port",
+        "status": "verified",
+        "timestamp": "2025-12-23T05:14:24.565Z",
+        "programs": [
+          {
+            "name": "Port Finance",
+            "address": "Port7uDYB3wk6GJAw4KT1WpTeMtSu9bTcChBHkX2LfR",
+            "network": "mainnet",
+            "status": "verified",
+            "programInfo": {
+              "exists": true,
+              "executable": true,
+              "dataLen": 36,
+              "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+              "lamports": 1141440
+            },
+            "message": "Program exists and is executable",
+            "onChainIdl": {
+              "found": false
+            }
+          }
+        ],
+        "details": {
+          "programCount": 1,
+          "idlHash": "2e42f22e10fb31dc",
+          "instructionCount": 2,
+          "accountCount": 0,
+          "message": "All 1 program(s) verified on mainnet",
+          "verified": 1,
+          "total": 1
+        }
+      },
+      {
+        "protocolId": "prism",
+        "protocolName": "Prism",
+        "status": "program_not_found",
+        "timestamp": "2025-12-23T05:14:24.932Z",
+        "programs": [
+          {
+            "name": "prism",
+            "address": "PRSMNi6muTeXJUdTcvgqRfiNGZYZx1JFNvtQcuVpumT",
+            "network": "mainnet",
+            "status": "not_found",
+            "programInfo": {
+              "exists": false,
+              "executable": false,
+              "dataLen": 0
+            },
+            "message": "Program not found on-chain"
+          }
+        ],
+        "details": {
+          "programCount": 1,
+          "idlHash": "fe998e3576797bea",
+          "instructionCount": 2,
+          "accountCount": 0,
+          "message": "No programs found on-chain",
+          "verified": 0,
+          "total": 1
+        }
+      },
+      {
+        "protocolId": "pumpfun",
+        "protocolName": "Pumpfun",
+        "status": "verified",
+        "timestamp": "2025-12-23T05:14:25.145Z",
+        "programs": [
+          {
+            "name": "Main Program",
+            "address": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+            "network": "mainnet",
+            "status": "verified",
+            "programInfo": {
+              "exists": true,
+              "executable": true,
+              "dataLen": 36,
+              "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+              "lamports": 1662625250
+            },
+            "message": "Program exists and is executable",
+            "onChainIdl": {
+              "found": false
+            }
+          }
+        ],
+        "details": {
+          "programCount": 1,
+          "idlHash": "9977e3393d773374",
+          "instructionCount": 23,
+          "accountCount": 5,
+          "message": "All 1 program(s) verified on mainnet",
+          "verified": 1,
+          "total": 1
+        }
+      },
+      {
+        "protocolId": "pumpswap",
+        "protocolName": "Pumpswap",
+        "status": "placeholder",
+        "timestamp": "2025-12-23T05:14:26.244Z",
+        "programs": [],
+        "details": {
+          "message": "IDL is a placeholder, not yet available"
+        }
+      },
+      {
+        "protocolId": "quarry",
+        "protocolName": "Quarry",
+        "status": "partial",
+        "timestamp": "2025-12-23T05:14:26.344Z",
+        "programs": [
+          {
+            "name": "Quarry",
+            "address": "QMNeHCGYnLVDn1icRAfQhpbV9MBgtZNFqFLqejqhvPK",
+            "network": "mainnet",
+            "status": "not_found",
+            "programInfo": {
+              "exists": false,
+              "executable": false,
+              "dataLen": 0
+            },
+            "message": "Program not found on-chain"
+          },
+          {
+            "name": "quarry_mine",
+            "address": "QMNeHCGYnLVDn1icRAfQZpjPLBNkfGbSKRB83G5d8KB",
+            "network": "mainnet",
+            "status": "verified",
+            "programInfo": {
+              "exists": true,
+              "executable": true,
+              "dataLen": 36,
+              "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+              "lamports": 1141440
+            },
+            "message": "Program exists and is executable",
+            "onChainIdl": {
+              "found": false
+            }
+          }
+        ],
+        "details": {
+          "programCount": 2,
+          "idlHash": "fa0eb9c01f928909",
+          "instructionCount": 3,
+          "accountCount": 0,
+          "message": "1/2 programs verified on mainnet",
+          "verified": 1,
+          "total": 2
+        }
+      },
+      {
+        "protocolId": "ribbon",
+        "protocolName": "Ribbon",
+        "status": "program_not_found",
+        "timestamp": "2025-12-23T05:14:27.731Z",
+        "programs": [
+          {
+            "name": "ribbon_finance",
+            "address": "RiBBoNxJJaMKYnqYPDTNTJLHoTugKxYaKYTgrn4jSgp",
+            "network": "mainnet",
+            "status": "not_found",
+            "programInfo": {
+              "exists": false,
+              "executable": false,
+              "dataLen": 0
+            },
+            "message": "Program not found on-chain"
+          }
+        ],
+        "details": {
+          "programCount": 1,
+          "idlHash": "a7c22fb0143686c0",
+          "instructionCount": 2,
+          "accountCount": 0,
+          "message": "No programs found on-chain",
+          "verified": 0,
+          "total": 1
+        }
+      },
+      {
+        "protocolId": "saber",
+        "protocolName": "Saber",
+        "status": "verified",
+        "timestamp": "2025-12-23T05:14:27.971Z",
+        "programs": [
+          {
+            "name": "Saber Stable Swap",
+            "address": "SSwpkEEcbUqx4vtoEByFjSkhKdCT862DNVb52nZg1UZ",
+            "network": "mainnet",
+            "status": "verified",
+            "programInfo": {
+              "exists": true,
+              "executable": true,
+              "dataLen": 36,
+              "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+              "lamports": 1141448
+            },
+            "message": "Program exists and is executable",
+            "onChainIdl": {
+              "found": false
+            }
+          }
+        ],
+        "details": {
+          "programCount": 1,
+          "idlHash": "be6076d903857863",
+          "instructionCount": 2,
+          "accountCount": 0,
+          "message": "All 1 program(s) verified on mainnet",
+          "verified": 1,
+          "total": 1
+        }
+      },
+      {
+        "protocolId": "saber-periphery",
+        "protocolName": "Saber periphery",
+        "status": "verified",
+        "timestamp": "2025-12-23T05:14:28.436Z",
+        "programs": [
+          {
+            "name": "saber_periphery",
+            "address": "DecZY86MU5Gj7kppfUCEmd4LbXXuyZH1yHaP2NTqdiZB",
+            "network": "mainnet",
+            "status": "verified",
+            "programInfo": {
+              "exists": true,
+              "executable": true,
+              "dataLen": 36,
+              "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+              "lamports": 1141440
+            },
+            "message": "Program exists and is executable",
+            "onChainIdl": {
+              "found": false
+            }
+          }
+        ],
+        "details": {
+          "programCount": 1,
+          "idlHash": "3f2d88ddac30e302",
+          "instructionCount": 2,
+          "accountCount": 0,
+          "message": "All 1 program(s) verified on mainnet",
+          "verified": 1,
+          "total": 1
+        }
+      },
+      {
+        "protocolId": "sanctum",
+        "protocolName": "Sanctum",
+        "status": "verified",
+        "timestamp": "2025-12-23T05:14:29.844Z",
+        "programs": [
+          {
+            "name": "Sanctum",
+            "address": "SP12tWFxD9oJsVWNavTTBZvMbA6gkAmxtVgxdqvyvhY",
+            "network": "mainnet",
+            "status": "verified",
+            "programInfo": {
+              "exists": true,
+              "executable": true,
+              "dataLen": 36,
+              "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+              "lamports": 3141446
+            },
+            "message": "Program exists and is executable",
+            "onChainIdl": {
+              "found": false
+            }
+          }
+        ],
+        "details": {
+          "programCount": 1,
+          "idlHash": "81118aed06913dfb",
+          "instructionCount": 2,
+          "accountCount": 0,
+          "message": "All 1 program(s) verified on mainnet",
+          "verified": 1,
+          "total": 1
+        }
+      },
+      {
+        "protocolId": "saros",
+        "protocolName": "Saros",
+        "status": "no_program_id",
+        "timestamp": "2025-12-23T05:14:30.202Z",
+        "programs": [],
+        "details": {
+          "message": "No program ID found in IDL or known mappings"
+        }
+      },
+      {
+        "protocolId": "save",
+        "protocolName": "Save",
+        "status": "placeholder",
+        "timestamp": "2025-12-23T05:14:30.302Z",
+        "programs": [],
+        "details": {
+          "message": "IDL is a placeholder, not yet available"
+        }
+      },
+      {
+        "protocolId": "sencha",
+        "protocolName": "Sencha",
+        "status": "partial",
+        "timestamp": "2025-12-23T05:14:30.402Z",
+        "programs": [
+          {
+            "name": "Sencha",
+            "address": "SCHAtsf8mbjyjiv4LkhLKutxRoJHSFsqcCbMWLzX7TX",
+            "network": "mainnet",
+            "status": "not_found",
+            "programInfo": {
+              "exists": false,
+              "executable": false,
+              "dataLen": 0
+            },
+            "message": "Program not found on-chain"
+          },
+          {
+            "name": "sencha",
+            "address": "SCHAtsf8mbjyjiv4LkhLKutTf6JnZAbdJKFkXQNMFHZ",
+            "network": "mainnet",
+            "status": "verified",
+            "programInfo": {
+              "exists": true,
+              "executable": true,
+              "dataLen": 36,
+              "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+              "lamports": 1141440
+            },
+            "message": "Program exists and is executable",
+            "onChainIdl": {
+              "found": false
+            }
+          }
+        ],
+        "details": {
+          "programCount": 2,
+          "idlHash": "e1b4f283038b614b",
+          "instructionCount": 2,
+          "accountCount": 0,
+          "message": "1/2 programs verified on mainnet",
+          "verified": 1,
+          "total": 2
+        }
+      },
+      {
+        "protocolId": "serum-v2",
+        "protocolName": "Serum v2",
+        "status": "verified",
+        "timestamp": "2025-12-23T05:14:30.929Z",
+        "programs": [
+          {
+            "name": "Serum v2",
+            "address": "9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin",
+            "network": "mainnet",
+            "status": "verified",
+            "programInfo": {
+              "exists": true,
+              "executable": true,
+              "dataLen": 36,
+              "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+              "lamports": 54734143
+            },
+            "message": "Program exists and is executable",
+            "onChainIdl": {
+              "found": false
+            }
+          }
+        ],
+        "details": {
+          "programCount": 1,
+          "idlHash": "1bfb3f728783625c",
+          "instructionCount": 2,
+          "accountCount": 0,
+          "message": "All 1 program(s) verified on mainnet",
+          "verified": 1,
+          "total": 1
+        }
+      },
+      {
+        "protocolId": "snapshots",
+        "protocolName": "Snapshots",
+        "status": "placeholder",
+        "timestamp": "2025-12-23T05:14:32.012Z",
+        "programs": [],
+        "details": {
+          "message": "IDL is a placeholder, not yet available"
+        }
+      },
+      {
+        "protocolId": "solanium",
+        "protocolName": "Solanium",
+        "status": "program_not_found",
+        "timestamp": "2025-12-23T05:14:32.112Z",
+        "programs": [
+          {
+            "name": "solanium",
+            "address": "SoLaUMhM3P6Qy9iRHNMcY52y9tppKSRvb2VX3vW92Jg",
+            "network": "mainnet",
+            "status": "not_found",
+            "programInfo": {
+              "exists": false,
+              "executable": false,
+              "dataLen": 0
+            },
+            "message": "Program not found on-chain"
+          }
+        ],
+        "details": {
+          "programCount": 1,
+          "idlHash": "77cbfd59a853e9e9",
+          "instructionCount": 2,
+          "accountCount": 0,
+          "message": "No programs found on-chain",
+          "verified": 0,
+          "total": 1
+        }
+      },
+      {
+        "protocolId": "solend",
+        "protocolName": "Solend",
+        "status": "verified",
+        "timestamp": "2025-12-23T05:14:32.399Z",
+        "programs": [
+          {
+            "name": "Solend",
+            "address": "So1endDq2YkqhipRh3WViPa8hdiSpxWy6z3Z6tMCpAo",
+            "network": "mainnet",
+            "status": "verified",
+            "programInfo": {
+              "exists": true,
+              "executable": true,
+              "dataLen": 36,
+              "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+              "lamports": 1141442
+            },
+            "message": "Program exists and is executable",
+            "onChainIdl": {
+              "found": false
+            }
+          }
+        ],
+        "details": {
+          "programCount": 1,
+          "idlHash": "6a452b5cc8e4f106",
+          "instructionCount": 3,
+          "accountCount": 0,
+          "message": "All 1 program(s) verified on mainnet",
+          "verified": 1,
+          "total": 1
+        }
+      },
+      {
+        "protocolId": "solfi",
+        "protocolName": "Solfi",
+        "status": "placeholder",
+        "timestamp": "2025-12-23T05:14:33.552Z",
+        "programs": [],
+        "details": {
+          "message": "IDL is a placeholder, not yet available"
+        }
+      },
+      {
+        "protocolId": "solrazr",
+        "protocolName": "Solrazr",
+        "status": "placeholder",
+        "timestamp": "2025-12-23T05:14:33.653Z",
+        "programs": [],
+        "details": {
+          "message": "IDL is a placeholder, not yet available"
+        }
+      },
+      {
+        "protocolId": "solstarter",
+        "protocolName": "Solstarter",
+        "status": "placeholder",
+        "timestamp": "2025-12-23T05:14:33.753Z",
+        "programs": [],
+        "details": {
+          "message": "IDL is a placeholder, not yet available"
+        }
+      },
+      {
+        "protocolId": "stabble",
+        "protocolName": "Stabble",
+        "status": "placeholder",
+        "timestamp": "2025-12-23T05:14:33.853Z",
+        "programs": [],
+        "details": {
+          "message": "IDL is a placeholder, not yet available"
+        }
+      },
+      {
+        "protocolId": "stable-swap",
+        "protocolName": "Stable swap",
+        "status": "verified",
+        "timestamp": "2025-12-23T05:14:33.954Z",
+        "programs": [
+          {
+            "name": "stable_swap",
+            "address": "SSwpkEEcbUqx4vtoEByFjSkhKdCT862DNVb52nZg1UZ",
+            "network": "mainnet",
+            "status": "verified",
+            "programInfo": {
+              "exists": true,
+              "executable": true,
+              "dataLen": 36,
+              "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+              "lamports": 1141448
+            },
+            "message": "Program exists and is executable",
+            "onChainIdl": {
+              "found": false
+            }
+          }
+        ],
+        "details": {
+          "programCount": 1,
+          "idlHash": "3b4dba4e91c7a98a",
+          "instructionCount": 2,
+          "accountCount": 0,
+          "message": "All 1 program(s) verified on mainnet",
+          "verified": 1,
+          "total": 1
+        }
+      },
+      {
+        "protocolId": "starlaunch",
+        "protocolName": "Starlaunch",
+        "status": "placeholder",
+        "timestamp": "2025-12-23T05:14:34.382Z",
+        "programs": [],
+        "details": {
+          "message": "IDL is a placeholder, not yet available"
+        }
+      },
+      {
+        "protocolId": "step",
+        "protocolName": "Step",
+        "status": "program_not_found",
+        "timestamp": "2025-12-23T05:14:34.482Z",
+        "programs": [
+          {
+            "name": "step_finance",
+            "address": "STEP6uo1vC9GdDLkqXRs8D7mw6Y3Vhn9rjxhHEV8sTg",
+            "network": "mainnet",
+            "status": "not_found",
+            "programInfo": {
+              "exists": false,
+              "executable": false,
+              "dataLen": 0
+            },
+            "message": "Program not found on-chain"
+          }
+        ],
+        "details": {
+          "programCount": 1,
+          "idlHash": "4a1cf1cc1e7703de",
+          "instructionCount": 1,
+          "accountCount": 0,
+          "message": "No programs found on-chain",
+          "verified": 0,
+          "total": 1
+        }
+      },
+      {
+        "protocolId": "stepn",
+        "protocolName": "Stepn",
+        "status": "placeholder",
+        "timestamp": "2025-12-23T05:14:34.686Z",
+        "programs": [],
+        "details": {
+          "message": "IDL is a placeholder, not yet available"
+        }
+      },
+      {
+        "protocolId": "sunny",
+        "protocolName": "Sunny",
+        "status": "program_not_found",
+        "timestamp": "2025-12-23T05:14:34.786Z",
+        "programs": [
+          {
+            "name": "sunny_aggregator",
+            "address": "SUNNY6y3j1qLwf6TUVQeaEfZQ8HaZphRH5W97HWZZLX",
+            "network": "mainnet",
+            "status": "not_found",
+            "programInfo": {
+              "exists": false,
+              "executable": false,
+              "dataLen": 0
+            },
+            "message": "Program not found on-chain"
+          }
+        ],
+        "details": {
+          "programCount": 1,
+          "idlHash": "52a04eb2e9bc9749",
+          "instructionCount": 2,
+          "accountCount": 0,
+          "message": "No programs found on-chain",
+          "verified": 0,
+          "total": 1
+        }
+      },
+      {
+        "protocolId": "switchboard",
+        "protocolName": "Switchboard",
+        "status": "verified",
+        "timestamp": "2025-12-23T05:14:35.040Z",
+        "programs": [
+          {
+            "name": "Switchboard",
+            "address": "SW1TCH7qEPTdLsDHRgPuMQjbQxKdH2aBStViMFnt64f",
+            "network": "mainnet",
+            "status": "verified",
+            "programInfo": {
+              "exists": true,
+              "executable": true,
+              "dataLen": 36,
+              "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+              "lamports": 1141440
+            },
+            "message": "Program exists and is executable",
+            "onChainIdl": {
+              "found": false
+            }
+          }
+        ],
+        "details": {
+          "programCount": 1,
+          "idlHash": "b574af2174eaed72",
+          "instructionCount": 2,
+          "accountCount": 0,
+          "message": "All 1 program(s) verified on mainnet",
+          "verified": 1,
+          "total": 1
+        }
+      },
+      {
+        "protocolId": "symmetry",
+        "protocolName": "Symmetry",
+        "status": "program_not_found",
+        "timestamp": "2025-12-23T05:14:35.341Z",
+        "programs": [
+          {
+            "name": "symmetry_engine",
+            "address": "symwMw4ZF1ATh9PNvBjGFqYJkXLqgCK7zZSkhh5Y6DX",
+            "network": "mainnet",
+            "status": "not_found",
+            "programInfo": {
+              "exists": false,
+              "executable": false,
+              "dataLen": 0
+            },
+            "message": "Program not found on-chain"
+          }
+        ],
+        "details": {
+          "programCount": 1,
+          "idlHash": "1bd33fc6646957d3",
+          "instructionCount": 2,
+          "accountCount": 0,
+          "message": "No programs found on-chain",
+          "verified": 0,
+          "total": 1
+        }
+      },
+      {
+        "protocolId": "synthetify",
+        "protocolName": "Synthetify",
+        "status": "program_not_found",
+        "timestamp": "2025-12-23T05:14:35.542Z",
+        "programs": [
+          {
+            "name": "synthetify",
+            "address": "SNTYtJHabQgFsEHV1vvZhQ7XLk2TwK6c6M6dXqK8C4C",
+            "network": "mainnet",
+            "status": "not_found",
+            "programInfo": {
+              "exists": false,
+              "executable": false,
+              "dataLen": 0
+            },
+            "message": "Program not found on-chain"
+          }
+        ],
+        "details": {
+          "programCount": 1,
+          "idlHash": "fe0feb435fa6aee6",
+          "instructionCount": 2,
+          "accountCount": 0,
+          "message": "No programs found on-chain",
+          "verified": 0,
+          "total": 1
+        }
+      },
+      {
+        "protocolId": "tesserav",
+        "protocolName": "Tesserav",
+        "status": "placeholder",
+        "timestamp": "2025-12-23T05:14:36.637Z",
+        "programs": [],
+        "details": {
+          "message": "IDL is a placeholder, not yet available"
+        }
+      },
+      {
+        "protocolId": "titan",
+        "protocolName": "Titan",
+        "status": "placeholder",
+        "timestamp": "2025-12-23T05:14:36.738Z",
+        "programs": [],
+        "details": {
+          "message": "IDL is a placeholder, not yet available"
+        }
+      },
+      {
+        "protocolId": "tribeca",
+        "protocolName": "Tribeca",
+        "status": "partial",
+        "timestamp": "2025-12-23T05:14:36.839Z",
+        "programs": [
+          {
+            "name": "Tribeca",
+            "address": "Govz1VyoyLD5BL6CSCxUx7PtmNyBL4pLPVXNHD9cLFb",
+            "network": "mainnet",
+            "status": "not_found",
+            "programInfo": {
+              "exists": false,
+              "executable": false,
+              "dataLen": 0
+            },
+            "message": "Program not found on-chain"
+          },
+          {
+            "name": "govern",
+            "address": "Govz1VyoyLD5BL6CSCxUJLVLsQHRwjfFj1prNsdNg5Jw",
+            "network": "mainnet",
+            "status": "verified",
+            "programInfo": {
+              "exists": true,
+              "executable": true,
+              "dataLen": 36,
+              "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+              "lamports": 1141440
+            },
+            "message": "Program exists and is executable",
+            "onChainIdl": {
+              "found": false
+            }
+          }
+        ],
+        "details": {
+          "programCount": 2,
+          "idlHash": "fef09872c0fc67eb",
+          "instructionCount": 3,
+          "accountCount": 0,
+          "message": "1/2 programs verified on mainnet",
+          "verified": 1,
+          "total": 2
+        }
+      },
+      {
+        "protocolId": "tulip",
+        "protocolName": "Tulip",
+        "status": "program_not_found",
+        "timestamp": "2025-12-23T05:14:37.342Z",
+        "programs": [
+          {
+            "name": "tulip",
+            "address": "TuLipcqtGVXP9XR62wM8WWCm6a9vhLs7T9g8bHrzGxe",
+            "network": "mainnet",
+            "status": "not_found",
+            "programInfo": {
+              "exists": false,
+              "executable": false,
+              "dataLen": 0
+            },
+            "message": "Program not found on-chain"
+          }
+        ],
+        "details": {
+          "programCount": 1,
+          "idlHash": "a6ccfcf4d51cc5b0",
+          "instructionCount": 2,
+          "accountCount": 0,
+          "message": "No programs found on-chain",
+          "verified": 0,
+          "total": 1
+        }
+      },
+      {
+        "protocolId": "uxd",
+        "protocolName": "Uxd",
+        "status": "partial",
+        "timestamp": "2025-12-23T05:14:37.546Z",
+        "programs": [
+          {
+            "name": "UXD",
+            "address": "UXD8m9cvwk4RcSxnX2HZ9VudQCEeDH6fGFteuHQ8pNq",
+            "network": "mainnet",
+            "status": "not_found",
+            "programInfo": {
+              "exists": false,
+              "executable": false,
+              "dataLen": 0
+            },
+            "message": "Program not found on-chain"
+          },
+          {
+            "name": "uxd",
+            "address": "UXD8m9cvwk4RcSxnX2HZ9VudQCEeDH6fRnB4CAP57Dr",
+            "network": "mainnet",
+            "status": "verified",
+            "programInfo": {
+              "exists": true,
+              "executable": true,
+              "dataLen": 36,
+              "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+              "lamports": 1141440
+            },
+            "message": "Program exists and is executable",
+            "onChainIdl": {
+              "found": false
+            }
+          }
+        ],
+        "details": {
+          "programCount": 2,
+          "idlHash": "4508ba21cd4e1c14",
+          "instructionCount": 2,
+          "accountCount": 0,
+          "message": "1/2 programs verified on mainnet",
+          "verified": 1,
+          "total": 2
+        }
+      },
+      {
+        "protocolId": "venko",
+        "protocolName": "Venko",
+        "status": "placeholder",
+        "timestamp": "2025-12-23T05:14:38.808Z",
+        "programs": [],
+        "details": {
+          "message": "IDL is a placeholder, not yet available"
+        }
+      },
+      {
+        "protocolId": "yi",
+        "protocolName": "Yi",
+        "status": "placeholder",
+        "timestamp": "2025-12-23T05:14:38.909Z",
+        "programs": [],
+        "details": {
+          "message": "IDL is a placeholder, not yet available"
+        }
+      },
+      {
+        "protocolId": "zerofi",
+        "protocolName": "Zerofi",
+        "status": "placeholder",
+        "timestamp": "2025-12-23T05:14:39.009Z",
+        "programs": [],
+        "details": {
+          "message": "IDL is a placeholder, not yet available"
+        }
+      },
+      {
+        "protocolId": "zeroone",
+        "protocolName": "Zeroone",
+        "status": "placeholder",
+        "timestamp": "2025-12-23T05:14:39.109Z",
+        "programs": [],
+        "details": {
+          "message": "IDL is a placeholder, not yet available"
+        }
+      },
+      {
+        "protocolId": "zeta",
+        "protocolName": "Zeta Markets",
+        "status": "partial",
+        "timestamp": "2025-12-23T05:14:39.209Z",
+        "programs": [
+          {
+            "name": "Zeta Markets",
+            "address": "ZETAxsqBRek56DhiGXrn7PZgAGxnseodLXgLnqrFp6u",
+            "network": "mainnet",
+            "status": "not_found",
+            "programInfo": {
+              "exists": false,
+              "executable": false,
+              "dataLen": 0
+            },
+            "message": "Program not found on-chain"
+          },
+          {
+            "name": "zeta",
+            "address": "ZETAxsqBRek56DhiGXrn75yj2NHU3aYUnxvHXpkf3aD",
+            "network": "mainnet",
+            "status": "verified",
+            "programInfo": {
+              "exists": true,
+              "executable": true,
+              "dataLen": 36,
+              "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+              "lamports": 1141440
+            },
+            "message": "Program exists and is executable",
+            "onChainIdl": {
+              "found": false
+            }
+          }
+        ],
+        "details": {
+          "programCount": 2,
+          "idlHash": "30769d63006ebdc1",
+          "instructionCount": 3,
+          "accountCount": 0,
+          "message": "1/2 programs verified on mainnet",
+          "verified": 1,
+          "total": 2
+        }
+      }
+    ],
+    "durationMs": 47090
   },
   "protocolResults": {
     "idl-protocol": {
       "protocolId": "idl-protocol",
       "protocolName": "IDL Protocol",
       "status": "devnet_only",
-      "timestamp": "2025-12-21T03:03:44.672Z",
+      "timestamp": "2025-12-23T05:13:54.866Z",
       "programs": [
         {
           "name": "IDL Protocol",
@@ -54,7 +2609,7 @@
       "protocolId": "acceleraytor",
       "protocolName": "Acceleraytor",
       "status": "placeholder",
-      "timestamp": "2025-12-21T03:03:45.100Z",
+      "timestamp": "2025-12-23T05:13:55.438Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -64,7 +2619,7 @@
       "protocolId": "adrena",
       "protocolName": "Adrena",
       "status": "placeholder",
-      "timestamp": "2025-12-21T03:03:45.201Z",
+      "timestamp": "2025-12-23T05:13:55.538Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -74,7 +2629,7 @@
       "protocolId": "aldrin",
       "protocolName": "Aldrin",
       "status": "verified",
-      "timestamp": "2025-12-21T03:03:45.301Z",
+      "timestamp": "2025-12-23T05:13:55.638Z",
       "programs": [
         {
           "name": "Aldrin AMM",
@@ -108,7 +2663,7 @@
       "protocolId": "apricot",
       "protocolName": "Apricot",
       "status": "program_not_found",
-      "timestamp": "2025-12-21T03:03:45.558Z",
+      "timestamp": "2025-12-23T05:13:55.931Z",
       "programs": [
         {
           "name": "apricot",
@@ -137,7 +2692,7 @@
       "protocolId": "arrow",
       "protocolName": "Arrow",
       "status": "partial",
-      "timestamp": "2025-12-21T03:03:45.762Z",
+      "timestamp": "2025-12-23T05:13:56.151Z",
       "programs": [
         {
           "name": "Arrow",
@@ -183,7 +2738,7 @@
       "protocolId": "atrix",
       "protocolName": "Atrix",
       "status": "program_not_found",
-      "timestamp": "2025-12-21T03:03:46.116Z",
+      "timestamp": "2025-12-23T05:13:56.605Z",
       "programs": [
         {
           "name": "atrix",
@@ -212,7 +2767,7 @@
       "protocolId": "balansol",
       "protocolName": "Balansol",
       "status": "placeholder",
-      "timestamp": "2025-12-21T03:03:46.319Z",
+      "timestamp": "2025-12-23T05:13:56.818Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -222,7 +2777,7 @@
       "protocolId": "beluga",
       "protocolName": "Beluga",
       "status": "placeholder",
-      "timestamp": "2025-12-21T03:03:46.420Z",
+      "timestamp": "2025-12-23T05:13:56.918Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -232,7 +2787,7 @@
       "protocolId": "blaze",
       "protocolName": "Blaze",
       "status": "placeholder",
-      "timestamp": "2025-12-21T03:03:46.520Z",
+      "timestamp": "2025-12-23T05:13:57.019Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -242,7 +2797,7 @@
       "protocolId": "bonfida",
       "protocolName": "Bonfida",
       "status": "verified",
-      "timestamp": "2025-12-21T03:03:46.621Z",
+      "timestamp": "2025-12-23T05:13:57.119Z",
       "programs": [
         {
           "name": "Bonfida",
@@ -276,7 +2831,7 @@
       "protocolId": "byreal",
       "protocolName": "Byreal",
       "status": "placeholder",
-      "timestamp": "2025-12-21T03:03:46.887Z",
+      "timestamp": "2025-12-23T05:13:57.476Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -286,7 +2841,7 @@
       "protocolId": "cashio",
       "protocolName": "Cashio",
       "status": "placeholder",
-      "timestamp": "2025-12-21T03:03:46.988Z",
+      "timestamp": "2025-12-23T05:13:57.577Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -296,7 +2851,7 @@
       "protocolId": "clone",
       "protocolName": "Clone",
       "status": "placeholder",
-      "timestamp": "2025-12-21T03:03:47.088Z",
+      "timestamp": "2025-12-23T05:13:57.677Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -306,7 +2861,7 @@
       "protocolId": "crate",
       "protocolName": "Crate",
       "status": "placeholder",
-      "timestamp": "2025-12-21T03:03:47.189Z",
+      "timestamp": "2025-12-23T05:13:57.777Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -316,7 +2871,7 @@
       "protocolId": "crema",
       "protocolName": "Crema",
       "status": "verified",
-      "timestamp": "2025-12-21T03:03:47.289Z",
+      "timestamp": "2025-12-23T05:13:57.877Z",
       "programs": [
         {
           "name": "Crema",
@@ -350,7 +2905,7 @@
       "protocolId": "cropper",
       "protocolName": "Cropper",
       "status": "placeholder",
-      "timestamp": "2025-12-21T03:03:47.552Z",
+      "timestamp": "2025-12-23T05:13:58.300Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -360,7 +2915,7 @@
       "protocolId": "cyclos",
       "protocolName": "Cyclos",
       "status": "program_not_found",
-      "timestamp": "2025-12-21T03:03:47.653Z",
+      "timestamp": "2025-12-23T05:13:58.401Z",
       "programs": [
         {
           "name": "cyclos",
@@ -389,7 +2944,7 @@
       "protocolId": "cykura",
       "protocolName": "Cykura",
       "status": "verified",
-      "timestamp": "2025-12-21T03:03:47.857Z",
+      "timestamp": "2025-12-23T05:13:58.608Z",
       "programs": [
         {
           "name": "cykura",
@@ -423,7 +2978,7 @@
       "protocolId": "deltaone",
       "protocolName": "Deltaone",
       "status": "placeholder",
-      "timestamp": "2025-12-21T03:03:48.110Z",
+      "timestamp": "2025-12-23T05:13:58.953Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -433,7 +2988,7 @@
       "protocolId": "dexlab",
       "protocolName": "Dexlab",
       "status": "program_not_found",
-      "timestamp": "2025-12-21T03:03:48.211Z",
+      "timestamp": "2025-12-23T05:13:59.054Z",
       "programs": [
         {
           "name": "dexlab",
@@ -462,7 +3017,7 @@
       "protocolId": "dexterity",
       "protocolName": "Dexterity",
       "status": "program_not_found",
-      "timestamp": "2025-12-21T03:03:48.413Z",
+      "timestamp": "2025-12-23T05:13:59.262Z",
       "programs": [
         {
           "name": "dexterity",
@@ -491,7 +3046,7 @@
       "protocolId": "drift",
       "protocolName": "Drift Protocol",
       "status": "verified",
-      "timestamp": "2025-12-21T03:03:48.623Z",
+      "timestamp": "2025-12-23T05:13:59.467Z",
       "programs": [
         {
           "name": "Drift Protocol",
@@ -525,7 +3080,7 @@
       "protocolId": "ellipsis",
       "protocolName": "Ellipsis",
       "status": "placeholder",
-      "timestamp": "2025-12-21T03:03:48.891Z",
+      "timestamp": "2025-12-23T05:13:59.838Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -535,7 +3090,7 @@
       "protocolId": "enjinstarter",
       "protocolName": "Enjinstarter",
       "status": "placeholder",
-      "timestamp": "2025-12-21T03:03:48.991Z",
+      "timestamp": "2025-12-23T05:13:59.939Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -545,7 +3100,7 @@
       "protocolId": "flash",
       "protocolName": "Flash",
       "status": "placeholder",
-      "timestamp": "2025-12-21T03:03:49.091Z",
+      "timestamp": "2025-12-23T05:14:00.039Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -555,7 +3110,7 @@
       "protocolId": "fluxbeam",
       "protocolName": "Fluxbeam",
       "status": "partial",
-      "timestamp": "2025-12-21T03:03:49.192Z",
+      "timestamp": "2025-12-23T05:14:00.140Z",
       "programs": [
         {
           "name": "FluxBeam",
@@ -601,7 +3156,7 @@
       "protocolId": "francium",
       "protocolName": "Francium",
       "status": "partial",
-      "timestamp": "2025-12-21T03:03:49.549Z",
+      "timestamp": "2025-12-23T05:14:00.552Z",
       "programs": [
         {
           "name": "Francium",
@@ -647,7 +3202,7 @@
       "protocolId": "gauge",
       "protocolName": "Gauge",
       "status": "placeholder",
-      "timestamp": "2025-12-21T03:03:49.913Z",
+      "timestamp": "2025-12-23T05:14:01.036Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -657,7 +3212,7 @@
       "protocolId": "gavel",
       "protocolName": "Gavel",
       "status": "placeholder",
-      "timestamp": "2025-12-21T03:03:50.014Z",
+      "timestamp": "2025-12-23T05:14:01.137Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -667,7 +3222,7 @@
       "protocolId": "gmx",
       "protocolName": "Gmx",
       "status": "placeholder",
-      "timestamp": "2025-12-21T03:03:50.115Z",
+      "timestamp": "2025-12-23T05:14:01.237Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -677,7 +3232,7 @@
       "protocolId": "goki",
       "protocolName": "Goki",
       "status": "partial",
-      "timestamp": "2025-12-21T03:03:50.215Z",
+      "timestamp": "2025-12-23T05:14:01.338Z",
       "programs": [
         {
           "name": "Goki",
@@ -723,7 +3278,7 @@
       "protocolId": "goonfi",
       "protocolName": "Goonfi",
       "status": "placeholder",
-      "timestamp": "2025-12-21T03:03:50.586Z",
+      "timestamp": "2025-12-23T05:14:01.890Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -733,7 +3288,7 @@
       "protocolId": "goosefx",
       "protocolName": "Goosefx",
       "status": "verified",
-      "timestamp": "2025-12-21T03:03:50.687Z",
+      "timestamp": "2025-12-23T05:14:01.991Z",
       "programs": [
         {
           "name": "GooseFX",
@@ -784,7 +3339,7 @@
       "protocolId": "hawksight",
       "protocolName": "Hawksight",
       "status": "placeholder",
-      "timestamp": "2025-12-21T03:03:59.460Z",
+      "timestamp": "2025-12-23T05:14:07.191Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -794,7 +3349,7 @@
       "protocolId": "hubble",
       "protocolName": "Hubble",
       "status": "program_not_found",
-      "timestamp": "2025-12-21T03:03:59.560Z",
+      "timestamp": "2025-12-23T05:14:07.292Z",
       "programs": [
         {
           "name": "borrowing",
@@ -823,7 +3378,7 @@
       "protocolId": "humidifi",
       "protocolName": "Humidifi",
       "status": "placeholder",
-      "timestamp": "2025-12-21T03:03:59.767Z",
+      "timestamp": "2025-12-23T05:14:07.563Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -833,7 +3388,7 @@
       "protocolId": "hxro",
       "protocolName": "Hxro",
       "status": "program_not_found",
-      "timestamp": "2025-12-21T03:03:59.868Z",
+      "timestamp": "2025-12-23T05:14:07.663Z",
       "programs": [
         {
           "name": "hxro_network",
@@ -862,7 +3417,7 @@
       "protocolId": "invariant",
       "protocolName": "Invariant",
       "status": "verified",
-      "timestamp": "2025-12-21T03:04:00.070Z",
+      "timestamp": "2025-12-23T05:14:07.978Z",
       "programs": [
         {
           "name": "Invariant",
@@ -896,7 +3451,7 @@
       "protocolId": "jet",
       "protocolName": "Jet",
       "status": "partial",
-      "timestamp": "2025-12-21T03:04:00.329Z",
+      "timestamp": "2025-12-23T05:14:08.304Z",
       "programs": [
         {
           "name": "Jet Protocol",
@@ -942,7 +3497,7 @@
       "protocolId": "jito",
       "protocolName": "Jito",
       "status": "program_not_found",
-      "timestamp": "2025-12-21T03:04:00.709Z",
+      "timestamp": "2025-12-23T05:14:09.621Z",
       "programs": [
         {
           "name": "Jito Stake Pool",
@@ -987,7 +3542,7 @@
       "protocolId": "jupiter",
       "protocolName": "Jupiter",
       "status": "verified",
-      "timestamp": "2025-12-21T03:04:01.017Z",
+      "timestamp": "2025-12-23T05:14:09.967Z",
       "programs": [
         {
           "name": "Jupiter v6",
@@ -999,7 +3554,7 @@
             "executable": true,
             "dataLen": 36,
             "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
-            "lamports": 2803709208
+            "lamports": 2803739208
           },
           "message": "Program exists and is executable",
           "onChainIdl": {
@@ -1055,7 +3610,7 @@
       "protocolId": "kamino",
       "protocolName": "Kamino",
       "status": "partial",
-      "timestamp": "2025-12-21T03:04:01.587Z",
+      "timestamp": "2025-12-23T05:14:12.159Z",
       "programs": [
         {
           "name": "Kamino Lending",
@@ -1101,7 +3656,7 @@
       "protocolId": "larix",
       "protocolName": "Larix",
       "status": "program_not_found",
-      "timestamp": "2025-12-21T03:04:02.649Z",
+      "timestamp": "2025-12-23T05:14:13.538Z",
       "programs": [
         {
           "name": "larix",
@@ -1130,7 +3685,7 @@
       "protocolId": "launchmynft",
       "protocolName": "Launchmynft",
       "status": "placeholder",
-      "timestamp": "2025-12-21T03:04:02.853Z",
+      "timestamp": "2025-12-23T05:14:13.763Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -1140,7 +3695,7 @@
       "protocolId": "lifinity",
       "protocolName": "Lifinity",
       "status": "verified",
-      "timestamp": "2025-12-21T03:04:02.954Z",
+      "timestamp": "2025-12-23T05:14:13.864Z",
       "programs": [
         {
           "name": "Lifinity v1",
@@ -1174,7 +3729,7 @@
       "protocolId": "lifinity-v2",
       "protocolName": "Lifinity v2",
       "status": "partial",
-      "timestamp": "2025-12-21T03:04:03.209Z",
+      "timestamp": "2025-12-23T05:14:14.204Z",
       "programs": [
         {
           "name": "Lifinity v2",
@@ -1220,7 +3775,7 @@
       "protocolId": "magiceden",
       "protocolName": "Magiceden",
       "status": "verified",
-      "timestamp": "2025-12-21T03:04:04.980Z",
+      "timestamp": "2025-12-23T05:14:15.513Z",
       "programs": [
         {
           "name": "Magic Eden",
@@ -1254,7 +3809,7 @@
       "protocolId": "mango",
       "protocolName": "Mango Markets",
       "status": "verified",
-      "timestamp": "2025-12-21T03:04:05.245Z",
+      "timestamp": "2025-12-23T05:14:16.612Z",
       "programs": [
         {
           "name": "Mango v4",
@@ -1288,7 +3843,7 @@
       "protocolId": "mango-v3",
       "protocolName": "Mango v3",
       "status": "verified",
-      "timestamp": "2025-12-21T03:04:06.216Z",
+      "timestamp": "2025-12-23T05:14:17.002Z",
       "programs": [
         {
           "name": "Mango v3",
@@ -1322,7 +3877,7 @@
       "protocolId": "marginfi",
       "protocolName": "MarginFi",
       "status": "verified",
-      "timestamp": "2025-12-21T03:04:07.374Z",
+      "timestamp": "2025-12-23T05:14:18.382Z",
       "programs": [
         {
           "name": "MarginFi",
@@ -1356,7 +3911,7 @@
       "protocolId": "marinade",
       "protocolName": "Marinade Finance",
       "status": "verified",
-      "timestamp": "2025-12-21T03:04:08.333Z",
+      "timestamp": "2025-12-23T05:14:18.759Z",
       "programs": [
         {
           "name": "Marinade Finance",
@@ -1390,7 +3945,7 @@
       "protocolId": "mercurial",
       "protocolName": "Mercurial",
       "status": "verified",
-      "timestamp": "2025-12-21T03:04:09.296Z",
+      "timestamp": "2025-12-23T05:14:19.200Z",
       "programs": [
         {
           "name": "Mercurial",
@@ -1424,7 +3979,7 @@
       "protocolId": "merkle-distributor",
       "protocolName": "Merkle distributor",
       "status": "placeholder",
-      "timestamp": "2025-12-21T03:04:10.263Z",
+      "timestamp": "2025-12-23T05:14:20.353Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -1434,7 +3989,7 @@
       "protocolId": "meteora",
       "protocolName": "Meteora",
       "status": "verified",
-      "timestamp": "2025-12-21T03:04:10.363Z",
+      "timestamp": "2025-12-23T05:14:20.454Z",
       "programs": [
         {
           "name": "Meteora DLMM",
@@ -1485,7 +4040,7 @@
       "protocolId": "obric",
       "protocolName": "Obric",
       "status": "placeholder",
-      "timestamp": "2025-12-21T03:04:12.201Z",
+      "timestamp": "2025-12-23T05:14:22.065Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -1495,7 +4050,7 @@
       "protocolId": "openbook",
       "protocolName": "OpenBook",
       "status": "verified",
-      "timestamp": "2025-12-21T03:04:12.302Z",
+      "timestamp": "2025-12-23T05:14:22.165Z",
       "programs": [
         {
           "name": "OpenBook v2",
@@ -1529,7 +4084,7 @@
       "protocolId": "orca",
       "protocolName": "Orca (Whirlpool)",
       "status": "verified",
-      "timestamp": "2025-12-21T03:04:13.262Z",
+      "timestamp": "2025-12-23T05:14:22.498Z",
       "programs": [
         {
           "name": "Orca Whirlpool",
@@ -1563,7 +4118,7 @@
       "protocolId": "parrot",
       "protocolName": "Parrot",
       "status": "placeholder",
-      "timestamp": "2025-12-21T03:04:14.225Z",
+      "timestamp": "2025-12-23T05:14:23.794Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -1573,7 +4128,7 @@
       "protocolId": "penguin",
       "protocolName": "Penguin",
       "status": "placeholder",
-      "timestamp": "2025-12-21T03:04:14.325Z",
+      "timestamp": "2025-12-23T05:14:23.894Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -1583,7 +4138,7 @@
       "protocolId": "permalock",
       "protocolName": "Permalock",
       "status": "placeholder",
-      "timestamp": "2025-12-21T03:04:14.426Z",
+      "timestamp": "2025-12-23T05:14:23.995Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -1593,7 +4148,7 @@
       "protocolId": "phoenix",
       "protocolName": "Phoenix",
       "status": "verified",
-      "timestamp": "2025-12-21T03:04:14.527Z",
+      "timestamp": "2025-12-23T05:14:24.096Z",
       "programs": [
         {
           "name": "Phoenix DEX",
@@ -1627,7 +4182,7 @@
       "protocolId": "plasma",
       "protocolName": "Plasma",
       "status": "placeholder",
-      "timestamp": "2025-12-21T03:04:14.799Z",
+      "timestamp": "2025-12-23T05:14:24.364Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -1637,7 +4192,7 @@
       "protocolId": "pool-manager",
       "protocolName": "Pool manager",
       "status": "placeholder",
-      "timestamp": "2025-12-21T03:04:14.900Z",
+      "timestamp": "2025-12-23T05:14:24.465Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -1647,7 +4202,7 @@
       "protocolId": "port",
       "protocolName": "Port",
       "status": "verified",
-      "timestamp": "2025-12-21T03:04:15.001Z",
+      "timestamp": "2025-12-23T05:14:24.565Z",
       "programs": [
         {
           "name": "Port Finance",
@@ -1681,7 +4236,7 @@
       "protocolId": "prism",
       "protocolName": "Prism",
       "status": "program_not_found",
-      "timestamp": "2025-12-21T03:04:15.257Z",
+      "timestamp": "2025-12-23T05:14:24.932Z",
       "programs": [
         {
           "name": "prism",
@@ -1710,7 +4265,7 @@
       "protocolId": "pumpfun",
       "protocolName": "Pumpfun",
       "status": "verified",
-      "timestamp": "2025-12-21T03:04:16.173Z",
+      "timestamp": "2025-12-23T05:14:25.145Z",
       "programs": [
         {
           "name": "Main Program",
@@ -1744,7 +4299,7 @@
       "protocolId": "pumpswap",
       "protocolName": "Pumpswap",
       "status": "placeholder",
-      "timestamp": "2025-12-21T03:04:17.149Z",
+      "timestamp": "2025-12-23T05:14:26.244Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -1754,7 +4309,7 @@
       "protocolId": "quarry",
       "protocolName": "Quarry",
       "status": "partial",
-      "timestamp": "2025-12-21T03:04:17.250Z",
+      "timestamp": "2025-12-23T05:14:26.344Z",
       "programs": [
         {
           "name": "Quarry",
@@ -1800,7 +4355,7 @@
       "protocolId": "ribbon",
       "protocolName": "Ribbon",
       "status": "program_not_found",
-      "timestamp": "2025-12-21T03:04:18.328Z",
+      "timestamp": "2025-12-23T05:14:27.731Z",
       "programs": [
         {
           "name": "ribbon_finance",
@@ -1829,7 +4384,7 @@
       "protocolId": "saber",
       "protocolName": "Saber",
       "status": "verified",
-      "timestamp": "2025-12-21T03:04:18.532Z",
+      "timestamp": "2025-12-23T05:14:27.971Z",
       "programs": [
         {
           "name": "Saber Stable Swap",
@@ -1863,7 +4418,7 @@
       "protocolId": "saber-periphery",
       "protocolName": "Saber periphery",
       "status": "verified",
-      "timestamp": "2025-12-21T03:04:19.493Z",
+      "timestamp": "2025-12-23T05:14:28.436Z",
       "programs": [
         {
           "name": "saber_periphery",
@@ -1897,7 +4452,7 @@
       "protocolId": "sanctum",
       "protocolName": "Sanctum",
       "status": "verified",
-      "timestamp": "2025-12-21T03:04:20.452Z",
+      "timestamp": "2025-12-23T05:14:29.844Z",
       "programs": [
         {
           "name": "Sanctum",
@@ -1931,7 +4486,7 @@
       "protocolId": "saros",
       "protocolName": "Saros",
       "status": "no_program_id",
-      "timestamp": "2025-12-21T03:04:21.419Z",
+      "timestamp": "2025-12-23T05:14:30.202Z",
       "programs": [],
       "details": {
         "message": "No program ID found in IDL or known mappings"
@@ -1941,7 +4496,7 @@
       "protocolId": "save",
       "protocolName": "Save",
       "status": "placeholder",
-      "timestamp": "2025-12-21T03:04:21.520Z",
+      "timestamp": "2025-12-23T05:14:30.302Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -1951,7 +4506,7 @@
       "protocolId": "sencha",
       "protocolName": "Sencha",
       "status": "partial",
-      "timestamp": "2025-12-21T03:04:21.620Z",
+      "timestamp": "2025-12-23T05:14:30.402Z",
       "programs": [
         {
           "name": "Sencha",
@@ -1997,7 +4552,7 @@
       "protocolId": "serum-v2",
       "protocolName": "Serum v2",
       "status": "verified",
-      "timestamp": "2025-12-21T03:04:22.686Z",
+      "timestamp": "2025-12-23T05:14:30.929Z",
       "programs": [
         {
           "name": "Serum v2",
@@ -2031,7 +4586,7 @@
       "protocolId": "snapshots",
       "protocolName": "Snapshots",
       "status": "placeholder",
-      "timestamp": "2025-12-21T03:04:23.650Z",
+      "timestamp": "2025-12-23T05:14:32.012Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -2041,7 +4596,7 @@
       "protocolId": "solanium",
       "protocolName": "Solanium",
       "status": "program_not_found",
-      "timestamp": "2025-12-21T03:04:23.749Z",
+      "timestamp": "2025-12-23T05:14:32.112Z",
       "programs": [
         {
           "name": "solanium",
@@ -2070,7 +4625,7 @@
       "protocolId": "solend",
       "protocolName": "Solend",
       "status": "verified",
-      "timestamp": "2025-12-21T03:04:23.951Z",
+      "timestamp": "2025-12-23T05:14:32.399Z",
       "programs": [
         {
           "name": "Solend",
@@ -2104,7 +4659,7 @@
       "protocolId": "solfi",
       "protocolName": "Solfi",
       "status": "placeholder",
-      "timestamp": "2025-12-21T03:04:24.916Z",
+      "timestamp": "2025-12-23T05:14:33.552Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -2114,7 +4669,7 @@
       "protocolId": "solrazr",
       "protocolName": "Solrazr",
       "status": "placeholder",
-      "timestamp": "2025-12-21T03:04:25.015Z",
+      "timestamp": "2025-12-23T05:14:33.653Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -2124,7 +4679,7 @@
       "protocolId": "solstarter",
       "protocolName": "Solstarter",
       "status": "placeholder",
-      "timestamp": "2025-12-21T03:04:25.116Z",
+      "timestamp": "2025-12-23T05:14:33.753Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -2134,7 +4689,7 @@
       "protocolId": "stabble",
       "protocolName": "Stabble",
       "status": "placeholder",
-      "timestamp": "2025-12-21T03:04:25.217Z",
+      "timestamp": "2025-12-23T05:14:33.853Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -2144,7 +4699,7 @@
       "protocolId": "stable-swap",
       "protocolName": "Stable swap",
       "status": "verified",
-      "timestamp": "2025-12-21T03:04:25.317Z",
+      "timestamp": "2025-12-23T05:14:33.954Z",
       "programs": [
         {
           "name": "stable_swap",
@@ -2178,7 +4733,7 @@
       "protocolId": "starlaunch",
       "protocolName": "Starlaunch",
       "status": "placeholder",
-      "timestamp": "2025-12-21T03:04:25.575Z",
+      "timestamp": "2025-12-23T05:14:34.382Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -2188,7 +4743,7 @@
       "protocolId": "step",
       "protocolName": "Step",
       "status": "program_not_found",
-      "timestamp": "2025-12-21T03:04:25.675Z",
+      "timestamp": "2025-12-23T05:14:34.482Z",
       "programs": [
         {
           "name": "step_finance",
@@ -2217,7 +4772,7 @@
       "protocolId": "stepn",
       "protocolName": "Stepn",
       "status": "placeholder",
-      "timestamp": "2025-12-21T03:04:25.877Z",
+      "timestamp": "2025-12-23T05:14:34.686Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -2227,7 +4782,7 @@
       "protocolId": "sunny",
       "protocolName": "Sunny",
       "status": "program_not_found",
-      "timestamp": "2025-12-21T03:04:25.978Z",
+      "timestamp": "2025-12-23T05:14:34.786Z",
       "programs": [
         {
           "name": "sunny_aggregator",
@@ -2256,7 +4811,7 @@
       "protocolId": "switchboard",
       "protocolName": "Switchboard",
       "status": "verified",
-      "timestamp": "2025-12-21T03:04:26.910Z",
+      "timestamp": "2025-12-23T05:14:35.040Z",
       "programs": [
         {
           "name": "Switchboard",
@@ -2290,7 +4845,7 @@
       "protocolId": "symmetry",
       "protocolName": "Symmetry",
       "status": "program_not_found",
-      "timestamp": "2025-12-21T03:04:27.877Z",
+      "timestamp": "2025-12-23T05:14:35.341Z",
       "programs": [
         {
           "name": "symmetry_engine",
@@ -2319,7 +4874,7 @@
       "protocolId": "synthetify",
       "protocolName": "Synthetify",
       "status": "program_not_found",
-      "timestamp": "2025-12-21T03:04:28.080Z",
+      "timestamp": "2025-12-23T05:14:35.542Z",
       "programs": [
         {
           "name": "synthetify",
@@ -2348,7 +4903,7 @@
       "protocolId": "tesserav",
       "protocolName": "Tesserav",
       "status": "placeholder",
-      "timestamp": "2025-12-21T03:04:28.283Z",
+      "timestamp": "2025-12-23T05:14:36.637Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -2358,7 +4913,7 @@
       "protocolId": "titan",
       "protocolName": "Titan",
       "status": "placeholder",
-      "timestamp": "2025-12-21T03:04:28.383Z",
+      "timestamp": "2025-12-23T05:14:36.738Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -2368,7 +4923,7 @@
       "protocolId": "tribeca",
       "protocolName": "Tribeca",
       "status": "partial",
-      "timestamp": "2025-12-21T03:04:28.484Z",
+      "timestamp": "2025-12-23T05:14:36.839Z",
       "programs": [
         {
           "name": "Tribeca",
@@ -2414,7 +4969,7 @@
       "protocolId": "tulip",
       "protocolName": "Tulip",
       "status": "program_not_found",
-      "timestamp": "2025-12-21T03:04:30.312Z",
+      "timestamp": "2025-12-23T05:14:37.342Z",
       "programs": [
         {
           "name": "tulip",
@@ -2443,7 +4998,7 @@
       "protocolId": "uxd",
       "protocolName": "Uxd",
       "status": "partial",
-      "timestamp": "2025-12-21T03:04:30.516Z",
+      "timestamp": "2025-12-23T05:14:37.546Z",
       "programs": [
         {
           "name": "UXD",
@@ -2489,7 +5044,7 @@
       "protocolId": "venko",
       "protocolName": "Venko",
       "status": "placeholder",
-      "timestamp": "2025-12-21T03:04:32.308Z",
+      "timestamp": "2025-12-23T05:14:38.808Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -2499,7 +5054,7 @@
       "protocolId": "yi",
       "protocolName": "Yi",
       "status": "placeholder",
-      "timestamp": "2025-12-21T03:04:32.409Z",
+      "timestamp": "2025-12-23T05:14:38.909Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -2509,7 +5064,7 @@
       "protocolId": "zerofi",
       "protocolName": "Zerofi",
       "status": "placeholder",
-      "timestamp": "2025-12-21T03:04:32.509Z",
+      "timestamp": "2025-12-23T05:14:39.009Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -2519,7 +5074,7 @@
       "protocolId": "zeroone",
       "protocolName": "Zeroone",
       "status": "placeholder",
-      "timestamp": "2025-12-21T03:04:32.609Z",
+      "timestamp": "2025-12-23T05:14:39.109Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -2529,7 +5084,7 @@
       "protocolId": "zeta",
       "protocolName": "Zeta Markets",
       "status": "partial",
-      "timestamp": "2025-12-21T03:04:32.710Z",
+      "timestamp": "2025-12-23T05:14:39.209Z",
       "programs": [
         {
           "name": "Zeta Markets",

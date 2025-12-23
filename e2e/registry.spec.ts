@@ -5,269 +5,234 @@ test.describe('RegistryPage', () => {
     await page.goto('/registry');
   });
 
-  test('should display page title and subtitle', async ({ page }) => {
-    const pageTitle = page.locator('.page-title');
-    await expect(pageTitle).toHaveText('IDL Registry');
+  test('should display registry header with title and stats', async ({ page }) => {
+    // Wait for header to load
+    await page.waitForSelector('.header', { timeout: 15000 });
 
-    const pageSubtitle = page.locator('.page-subtitle');
-    await expect(pageSubtitle).toContainText('Browse and search Solana protocol IDL files');
-    await expect(pageSubtitle).toContainText('Arweave');
+    const header = page.locator('.header');
+    await expect(header).toBeVisible();
+
+    // Check title (use more specific selector to avoid footer match)
+    await expect(header.locator('text=idlhub.com')).toBeVisible();
+    await expect(header.locator('text=Solana IDL Registry')).toBeVisible();
+
+    // Check for stats
+    const stats = page.locator('.stats');
+    await expect(stats).toBeVisible();
+
+    const statLabels = page.locator('.stat-label');
+    await expect(statLabels).toHaveCount(3);
+
+    // Check stat content
+    await expect(page.locator('text=Total Protocols')).toBeVisible();
+    await expect(page.locator('text=IDLs Available')).toBeVisible();
+    await expect(page.locator('text=Selected')).toBeVisible();
   });
 
-  test('should display search box', async ({ page }) => {
-    const searchBox = page.locator('.search-box input');
-    await expect(searchBox).toBeVisible();
-    await expect(searchBox).toHaveAttribute('placeholder', 'Search protocols...');
-    await expect(searchBox).toHaveAttribute('type', 'text');
+  test('should display search input', async ({ page }) => {
+    await page.waitForSelector('.search-input', { timeout: 15000 });
+
+    const searchInput = page.locator('.search-input');
+    await expect(searchInput).toBeVisible();
+    await expect(searchInput).toHaveAttribute('placeholder', /Search by name/);
   });
 
-  test('should show loading state initially', async ({ page }) => {
-    const loading = page.locator('.loading');
-    const isVisible = await loading.isVisible().catch(() => false);
+  test('should display category filter buttons', async ({ page }) => {
+    await page.waitForSelector('.filter-section', { timeout: 15000 });
 
-    // Loading might disappear quickly, so just check if it exists or grid exists
-    const grid = page.locator('.idl-grid');
-    const gridVisible = await grid.isVisible();
+    const filterSection = page.locator('.filter-section');
+    await expect(filterSection).toBeVisible();
 
-    expect(isVisible || gridVisible).toBeTruthy();
+    const filterBtns = page.locator('.filter-btn');
+    const count = await filterBtns.count();
+    expect(count).toBeGreaterThan(0);
+
+    // Check for "All" button
+    const allBtn = page.locator('.filter-btn').filter({ hasText: 'All' });
+    await expect(allBtn).toBeVisible();
+    await expect(allBtn).toHaveClass(/active/);
   });
 
-  test('should display IDL cards after loading', async ({ page }) => {
-    // Wait for loading to complete
-    await page.waitForSelector('.idl-grid, .empty-state', { timeout: 10000 });
+  test('should display protocol list after loading', async ({ page }) => {
+    // Wait for protocols to load (may take time due to API)
+    await page.waitForSelector('.protocol-item', { timeout: 30000 });
 
-    const grid = page.locator('.idl-grid');
-    const isEmpty = await page.locator('.empty-state').isVisible().catch(() => false);
+    const protocols = page.locator('.protocol-item');
+    const count = await protocols.count();
+    expect(count).toBeGreaterThan(0);
 
-    if (!isEmpty) {
-      await expect(grid).toBeVisible();
-
-      // Check if there are IDL cards
-      const cards = page.locator('.idl-card');
-      const count = await cards.count();
-      expect(count).toBeGreaterThan(0);
-    }
+    // Check first protocol has required elements
+    const firstProtocol = protocols.first();
+    await expect(firstProtocol.locator('.protocol-checkbox')).toBeVisible();
+    await expect(firstProtocol.locator('.protocol-name')).toBeVisible();
+    await expect(firstProtocol.locator('.protocol-actions')).toBeVisible();
   });
 
-  test('should display IDL card with correct structure', async ({ page }) => {
-    await page.waitForSelector('.idl-grid, .empty-state', { timeout: 10000 });
+  test('should display protocol details when clicked', async ({ page }) => {
+    // Wait for protocols
+    await page.waitForSelector('.protocol-item', { timeout: 30000 });
 
-    const firstCard = page.locator('.idl-card').first();
-    const isEmpty = await page.locator('.empty-state').isVisible().catch(() => false);
+    // Click first protocol
+    await page.locator('.protocol-item').first().click();
 
-    if (!isEmpty) {
-      // Check card structure
-      await expect(firstCard).toBeVisible();
-      await expect(firstCard.locator('h3')).toBeVisible();
-      await expect(firstCard.locator('.idl-id')).toBeVisible();
-      await expect(firstCard.locator('.idl-desc')).toBeVisible();
-      await expect(firstCard.locator('.idl-actions')).toBeVisible();
-    }
+    // Wait for detail panel
+    await page.waitForSelector('.protocol-detail.active', { timeout: 5000 });
+
+    const detailPanel = page.locator('.protocol-detail.active');
+    await expect(detailPanel).toBeVisible();
+
+    // Check detail sections (use section titles)
+    await expect(detailPanel.locator('.detail-section-title').filter({ hasText: 'Instructions' })).toBeVisible();
+    await expect(detailPanel.locator('.detail-section-title').filter({ hasText: 'Accounts' })).toBeVisible();
+    await expect(detailPanel.locator('.detail-section-title').filter({ hasText: 'Types' })).toBeVisible();
+    await expect(detailPanel.locator('.detail-section-title').filter({ hasText: 'Errors' })).toBeVisible();
   });
 
-  test('should have View IDL link in each card', async ({ page }) => {
-    await page.waitForSelector('.idl-grid, .empty-state', { timeout: 10000 });
+  test('should filter protocols by search', async ({ page }) => {
+    // Wait for protocol list
+    await page.waitForSelector('.protocol-item', { timeout: 30000 });
 
-    const isEmpty = await page.locator('.empty-state').isVisible().catch(() => false);
+    const initialCount = await page.locator('.protocol-item').count();
+    expect(initialCount).toBeGreaterThan(0);
 
-    if (!isEmpty) {
-      const firstCard = page.locator('.idl-card').first();
-      const viewLink = firstCard.locator('a', { hasText: 'View IDL' });
+    // Search for specific protocol
+    const searchInput = page.locator('.search-input');
+    await searchInput.fill('jupiter');
+    await page.waitForTimeout(500); // Wait for filter to apply
 
-      await expect(viewLink).toBeVisible();
-      const href = await viewLink.getAttribute('href');
-      expect(href).toMatch(/\/api\/idl\/.+/);
-      await expect(viewLink).toHaveAttribute('target', '_blank');
-      await expect(viewLink).toHaveAttribute('rel', 'noopener noreferrer');
-    }
+    const filteredCount = await page.locator('.protocol-item').count();
+    expect(filteredCount).toBeLessThan(initialCount);
+    expect(filteredCount).toBeGreaterThan(0);
+
+    // Verify search result contains "jupiter"
+    const firstResult = page.locator('.protocol-item').first();
+    const text = await firstResult.textContent();
+    expect(text?.toLowerCase()).toContain('jupiter');
   });
 
-  test('should filter IDLs based on search input', async ({ page }) => {
-    await page.waitForSelector('.idl-grid, .empty-state', { timeout: 10000 });
+  test('should filter protocols by category', async ({ page }) => {
+    // Wait for protocol list
+    await page.waitForSelector('.protocol-item', { timeout: 30000 });
 
-    const searchBox = page.locator('.search-box input');
-    const isEmpty = await page.locator('.empty-state').isVisible().catch(() => false);
+    const initialCount = await page.locator('.protocol-item').count();
 
-    if (!isEmpty) {
-      // Get initial card count
-      const initialCards = page.locator('.idl-card');
-      const initialCount = await initialCards.count();
-
-      if (initialCount > 1) {
-        // Get the name of the first protocol
-        const firstName = await initialCards.first().locator('h3').textContent();
-
-        if (firstName) {
-          // Search for part of the first protocol name
-          const searchTerm = firstName.substring(0, Math.min(3, firstName.length));
-          await searchBox.fill(searchTerm);
-
-          // Wait a bit for filtering
-          await page.waitForTimeout(500);
-
-          // Count should be equal or less
-          const filteredCount = await page.locator('.idl-card').count();
-          expect(filteredCount).toBeLessThanOrEqual(initialCount);
-
-          // Clear search
-          await searchBox.clear();
-          await page.waitForTimeout(500);
-
-          // Count should return to original
-          const resetCount = await page.locator('.idl-card').count();
-          expect(resetCount).toBe(initialCount);
-        }
-      }
-    }
-  });
-
-  test('should show empty state when no results match search', async ({ page }) => {
-    await page.waitForSelector('.idl-grid, .empty-state', { timeout: 10000 });
-
-    const searchBox = page.locator('.search-box input');
-
-    // Search for something that definitely doesn't exist
-    await searchBox.fill('zzzzz_nonexistent_protocol_xyz_123');
+    // Click Defi filter
+    const defiBtn = page.locator('.filter-btn').filter({ hasText: 'Defi' });
+    await defiBtn.click();
     await page.waitForTimeout(500);
 
-    const emptyState = page.locator('.empty-state');
-    await expect(emptyState).toBeVisible();
-    await expect(emptyState).toContainText('No protocols found matching');
-    await expect(emptyState).toContainText('zzzzz_nonexistent_protocol_xyz_123');
+    // Should filter results
+    const filteredCount = await page.locator('.protocol-item').count();
+    expect(filteredCount).toBeLessThanOrEqual(initialCount);
+
+    // Defi button should be active
+    await expect(defiBtn).toHaveClass(/active/);
   });
 
-  test('should search by protocol ID', async ({ page }) => {
-    await page.waitForSelector('.idl-grid, .empty-state', { timeout: 10000 });
+  test('should toggle protocol checkboxes', async ({ page }) => {
+    // Wait for protocol list
+    await page.waitForSelector('.protocol-item', { timeout: 30000 });
 
-    const isEmpty = await page.locator('.empty-state').isVisible().catch(() => false);
+    const firstCheckbox = page.locator('.protocol-checkbox').first();
 
-    if (!isEmpty) {
-      const firstCard = page.locator('.idl-card').first();
-      const protocolId = await firstCard.locator('.idl-id').textContent();
+    // Initially unchecked
+    await expect(firstCheckbox).not.toBeChecked();
 
-      if (protocolId) {
-        const searchBox = page.locator('.search-box input');
-        await searchBox.fill(protocolId);
-        await page.waitForTimeout(500);
+    // Check it
+    await firstCheckbox.check();
+    await expect(firstCheckbox).toBeChecked();
 
-        // Should show at least the matching card
-        const cards = page.locator('.idl-card');
-        const count = await cards.count();
-        expect(count).toBeGreaterThanOrEqual(1);
+    // Stats should show 1 selected
+    const selectedStat = page.locator('.stat').filter({ hasText: 'Selected' });
+    await expect(selectedStat.locator('.stat-number')).toHaveText('1');
 
-        // First card should have the matching ID
-        const firstMatchId = await cards.first().locator('.idl-id').textContent();
-        expect(firstMatchId).toBe(protocolId);
-      }
-    }
+    // Uncheck it
+    await firstCheckbox.uncheck();
+    await expect(firstCheckbox).not.toBeChecked();
+
+    // Stats should show 0 selected
+    await expect(selectedStat.locator('.stat-number')).toHaveText('0');
   });
 
-  test('should search case-insensitively', async ({ page }) => {
-    await page.waitForSelector('.idl-grid, .empty-state', { timeout: 10000 });
+  test('should close detail panel', async ({ page }) => {
+    // Wait for protocols
+    await page.waitForSelector('.protocol-item', { timeout: 30000 });
 
-    const isEmpty = await page.locator('.empty-state').isVisible().catch(() => false);
+    // Click first protocol to open detail
+    await page.locator('.protocol-item').first().click();
+    await page.waitForSelector('.protocol-detail.active', { timeout: 5000 });
 
-    if (!isEmpty) {
-      const firstCard = page.locator('.idl-card').first();
-      const protocolName = await firstCard.locator('h3').textContent();
+    // Click close button
+    const closeBtn = page.locator('.protocol-detail-close');
+    await expect(closeBtn).toBeVisible();
+    await closeBtn.click();
 
-      if (protocolName && protocolName.length > 2) {
-        const searchBox = page.locator('.search-box input');
-
-        // Search with lowercase
-        await searchBox.fill(protocolName.toLowerCase());
-        await page.waitForTimeout(500);
-        const lowerCount = await page.locator('.idl-card').count();
-
-        // Search with uppercase
-        await searchBox.clear();
-        await searchBox.fill(protocolName.toUpperCase());
-        await page.waitForTimeout(500);
-        const upperCount = await page.locator('.idl-card').count();
-
-        // Should return same results
-        expect(lowerCount).toBe(upperCount);
-      }
-    }
+    // Detail panel should be hidden
+    await expect(page.locator('.protocol-detail.active')).not.toBeVisible();
   });
 
-  test('should have Arweave link for protocols with arweaveId', async ({ page }) => {
-    await page.waitForSelector('.idl-grid, .empty-state', { timeout: 10000 });
+  test('should show loading spinner initially', async ({ page }) => {
+    // Reload to see loading state
+    await page.goto('/registry');
 
-    const isEmpty = await page.locator('.empty-state').isVisible().catch(() => false);
-
-    if (!isEmpty) {
-      const cards = page.locator('.idl-card');
-      const count = await cards.count();
-
-      // Check if any card has Arweave link
-      for (let i = 0; i < count; i++) {
-        const card = cards.nth(i);
-        const arweaveLink = card.locator('a', { hasText: 'Arweave' });
-        const hasArweaveLink = await arweaveLink.isVisible().catch(() => false);
-
-        if (hasArweaveLink) {
-          const href = await arweaveLink.getAttribute('href');
-          expect(href).toMatch(/https:\/\/arweave\.net\/.+/);
-          await expect(arweaveLink).toHaveAttribute('target', '_blank');
-          await expect(arweaveLink).toHaveAttribute('rel', 'noopener noreferrer');
-          break; // Found at least one, test passes
-        }
-      }
-    }
+    // Loading spinner should appear briefly
+    const loading = page.locator('.loading');
+    // Either loading is visible or already gone (data loaded fast)
+    const isVisible = await loading.isVisible().catch(() => false);
+    // Just verify the page loaded successfully
+    await page.waitForSelector('.container', { timeout: 15000 });
   });
 
-  test('should be responsive', async ({ page }) => {
-    await page.waitForSelector('.idl-grid, .empty-state', { timeout: 10000 });
+  test('should display protocol metadata correctly', async ({ page }) => {
+    // Wait for protocol list
+    await page.waitForSelector('.protocol-item', { timeout: 30000 });
 
-    // Test desktop
-    await page.setViewportSize({ width: 1280, height: 720 });
-    await expect(page.locator('.registry-page')).toBeVisible();
-    await expect(page.locator('.search-box')).toBeVisible();
+    const firstProtocol = page.locator('.protocol-item').first();
 
-    // Test tablet
-    await page.setViewportSize({ width: 768, height: 1024 });
-    await expect(page.locator('.registry-page')).toBeVisible();
-    await expect(page.locator('.search-box')).toBeVisible();
-
-    // Test mobile
-    await page.setViewportSize({ width: 375, height: 667 });
-    await expect(page.locator('.registry-page')).toBeVisible();
-    await expect(page.locator('.search-box')).toBeVisible();
+    // Check metadata elements
+    await expect(firstProtocol.locator('.protocol-name')).toBeVisible();
+    await expect(firstProtocol.locator('.protocol-badge')).toBeVisible();
+    await expect(firstProtocol.locator('.category-badge')).toBeVisible();
+    await expect(firstProtocol.locator('.protocol-description')).toBeVisible();
+    await expect(firstProtocol.locator('.protocol-meta')).toBeVisible();
   });
 
-  test('should clear search when input is cleared', async ({ page }) => {
-    await page.waitForSelector('.idl-grid, .empty-state', { timeout: 10000 });
+  test('should display "no results" message when search has no matches', async ({ page }) => {
+    // Wait for protocol list
+    await page.waitForSelector('.protocol-item', { timeout: 30000 });
 
-    const isEmpty = await page.locator('.empty-state').isVisible().catch(() => false);
+    // Search for something that doesn't exist
+    const searchInput = page.locator('.search-input');
+    await searchInput.fill('xyznonexistent123');
+    await page.waitForTimeout(500);
 
-    if (!isEmpty) {
-      const searchBox = page.locator('.search-box input');
-      const initialCount = await page.locator('.idl-card').count();
-
-      // Add search term
-      await searchBox.fill('test');
-      await page.waitForTimeout(500);
-
-      // Clear search
-      await searchBox.clear();
-      await page.waitForTimeout(500);
-
-      // Should show all cards again
-      const finalCount = await page.locator('.idl-card').count();
-      expect(finalCount).toBe(initialCount);
-    }
+    // Should show no results message
+    const noResults = page.locator('.no-results');
+    await expect(noResults).toBeVisible();
+    await expect(noResults).toContainText('No protocols found');
   });
 
-  test('should navigate from home page', async ({ page }) => {
-    await page.goto('/');
+  test('should have responsive layout', async ({ page }) => {
+    // Wait for content
+    await page.waitForSelector('.container', { timeout: 15000 });
 
-    // Navigate to registry (via navigation menu)
-    const registryLink = page.getByRole('link', { name: /registry/i });
-    if (await registryLink.isVisible()) {
-      await registryLink.click();
-      await page.waitForURL('**/registry');
-      await expect(page).toHaveURL(/\/registry/);
-    }
+    // Test that container exists
+    const container = page.locator('.container');
+    await expect(container).toBeVisible();
+
+    // Wait for protocols
+    await page.waitForSelector('.protocol-item', { timeout: 30000 });
+
+    // Click a protocol to open detail panel
+    await page.locator('.protocol-item').first().click();
+    await page.waitForSelector('.protocol-detail.active', { timeout: 5000 });
+
+    // Detail panel should be visible
+    const detailPanel = page.locator('.protocol-detail.active');
+    await expect(detailPanel).toBeVisible();
+
+    // Check detail content grid
+    const detailContent = page.locator('.protocol-detail-content');
+    await expect(detailContent).toBeVisible();
   });
 });

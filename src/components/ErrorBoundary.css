@@ -1,0 +1,129 @@
+.error-boundary {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-xl);
+  background: var(--bg-primary);
+}
+
+.error-container {
+  max-width: 600px;
+  background: var(--bg-secondary);
+  border: 2px solid var(--border-primary);
+  padding: var(--space-2xl);
+  text-align: center;
+}
+
+.error-title {
+  font-size: var(--font-3xl);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 var(--space-md) 0;
+  text-transform: uppercase;
+}
+
+.error-title::before {
+  color: var(--battle-red);
+}
+
+.error-message {
+  font-size: var(--font-lg);
+  color: var(--text-secondary);
+  margin: 0 0 var(--space-xl) 0;
+  line-height: 1.6;
+}
+
+.error-details {
+  text-align: left;
+  margin: var(--space-xl) 0;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-secondary);
+  padding: var(--space-md);
+}
+
+.error-details summary {
+  cursor: pointer;
+  font-size: var(--font-md);
+  font-weight: 600;
+  color: var(--text-primary);
+  padding: var(--space-sm);
+  user-select: none;
+}
+
+.error-details summary:hover {
+  color: var(--accent-primary);
+}
+
+.error-stack {
+  margin: var(--space-md) 0 0 0;
+  padding: var(--space-md);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-secondary);
+  overflow-x: auto;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.error-stack code {
+  font-family: 'Courier New', monospace;
+  font-size: var(--font-xs);
+  color: var(--text-secondary);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.error-actions {
+  display: flex;
+  gap: var(--space-md);
+  justify-content: center;
+  margin-top: var(--space-xl);
+}
+
+.error-btn {
+  padding: var(--btn-padding);
+  font-size: var(--font-md);
+  font-weight: 700;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.error-btn.primary {
+  background: var(--accent-primary);
+  color: var(--bg-secondary);
+}
+
+.error-btn.primary:hover {
+  background: var(--accent-hover);
+}
+
+.error-btn.secondary {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-primary);
+}
+
+.error-btn.secondary:hover {
+  background: var(--bg-tertiary);
+}
+
+@media (max-width: 768px) {
+  .error-container {
+    padding: var(--space-lg);
+  }
+
+  .error-title {
+    font-size: var(--font-2xl);
+  }
+
+  .error-actions {
+    flex-direction: column;
+  }
+
+  .error-btn {
+    width: 100%;
+  }
+}

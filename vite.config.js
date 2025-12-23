@@ -9,6 +9,17 @@ export default defineConfig({
   plugins: [react()],
   root: __dirname,
   publicDir: 'public',
+  define: {
+    'global': 'globalThis',
+    'process.env': {}
+  },
+  optimizeDeps: {
+    esbuildOptions: {
+      define: {
+        global: 'globalThis'
+      }
+    }
+  },
   server: {
     port: 5174,
     host: '0.0.0.0',

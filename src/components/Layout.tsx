@@ -50,14 +50,11 @@ export default function Layout() {
               <Link to="/protocol" className={`nav-link ${isActive('/protocol') ? 'active' : ''}`}>
                 Protocol
               </Link>
-              <Link to="/battles" className={`nav-link ${isActive('/battles') ? 'active' : ''}`}>
-                Battles
-              </Link>
-              <Link to="/guilds" className={`nav-link ${isActive('/guilds') ? 'active' : ''}`}>
-                Guilds
-              </Link>
               <Link to="/status" className={`nav-link ${isActive('/status') ? 'active' : ''}`}>
                 Status
+              </Link>
+              <Link to="/docs" className={`nav-link ${isActive('/docs') ? 'active' : ''}`}>
+                Docs
               </Link>
             </nav>
             <div className="theme-selector">

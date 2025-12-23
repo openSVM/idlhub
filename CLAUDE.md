@@ -350,6 +350,99 @@ See whitepaper `latex/idl-protocol.pdf` Section 11 for mathematical formulations
 - E2E test documentation: `e2e/README.md`, `e2e/QUICKSTART.md`
 - E2E test status: `E2E_FINAL_STATUS.md` (100% passing, 785 tests)
 
+## Critical Architecture Notes
+
+### React App Build & Entry Point
+
+**IMPORTANT**: The app is a **React SPA**, not static HTML.
+
+Build process:
+1. `index.html` (root) contains `<div id="root"></div>` and loads `src/main.tsx`
+2. Vite bundles React app into `dist/assets/index-*.js` and `dist/assets/index-*.css`
+3. **DO NOT** replace `index.html` with static HTML - this breaks the React app
+
+### Buffer Polyfill Requirement
+
+Solana Web3.js requires `Buffer` global in browser:
+- `src/main.tsx` imports Buffer and sets `window.Buffer = Buffer`
+- `index.html` also has inline script setting up Buffer before main app loads
+- `vite.config.js` defines global polyfills
+- **CRITICAL**: Without this, Solana libraries will fail with "Buffer is not defined"
+
+### Registry Page Architecture
+
+- `src/pages/RegistryPage.tsx` redirects to `/registry.html` (static HTML from git history)
+- Original registry has complex JavaScript for protocol list, IDL viewer, search/filters
+- Live site (idlhub.com) uses this design successfully
+- Local dev: API server (port 3000) must be running for registry.html to load data
+
+**Registry Data Loading:**
+- Old registry.html expects: `GET /api/idl` and `GET /api/status/protocols`
+- React RegistryPage (if used) fetches: `GET /index.json` from `public/`
+- Vite copies `public/` contents to `dist/` during build
+- **CRITICAL**: `public/index.json` must exist for React registry to work
+
+### Swap Page (AMM)
+
+**Location:** `src/pages/SwapPage.tsx` + `src/pages/SwapPage.css` + `src/hooks/useAMM.ts`
+
+Features:
+- 6 tabs: Swap, Add Liquidity, Remove Liquidity, Farm LP, Create Token, Pool Governance
+- BAGS⟷PUMP token swaps with Curve StableSwap formula
+- Slippage protection (0.1%, 0.5%, 1.0%, custom)
+- Real-time pool stats and user balances
+- LP token farming UI (stake/unstake/claim)
+- Fee claiming for LP providers
+- Pool governance voting interface
+
+**Key Details:**
+- Uses Anchor BN from `@coral-xyz/anchor` (not `bn.js`)
+- All CSS scoped with `.swap-page` prefix to avoid conflicts
+- StableSwap Program: `EFsgmpbKifyA75ZY5NPHQxrtuAHHB6sYnoGkLi6xoTte`
+- Token decimals: 6 (both BAGS and PUMP)
+- Keyboard accessible: Full ARIA support with role="tablist" and tabIndex management
+
+### Analytics Dashboard
+
+**Location:** `src/pages/AnalyticsPage.tsx` + `src/pages/AnalyticsPage.css`
+
+Features:
+- Custom SVG line charts (TVL, Volume trends)
+- Time range selection (7d/30d/90d)
+- Protocol statistics and rankings
+- Developer activity metrics (commits, PRs, issues)
+- AMM pool performance table
+- LP token and position statistics
+- AI Insights generation (Claude API integration)
+
+**Key Details:**
+- No heavy chart dependencies (pure SVG implementation)
+- Charts memoized with useCallback for performance
+- Accessibility: ARIA labels, keyboard navigation
+- Responsive design with mobile support
+
+### Vite Configuration Details
+
+**Dev Server:**
+- Port: 5174 (host: 0.0.0.0)
+- API Proxy: `/api/*` → `http://localhost:3000`
+- **Both servers must run**: Vite (5174) + API (3000)
+
+**Path Aliases:**
+```typescript
+@/          → src/
+@components → src/components/
+@pages      → src/pages/
+@hooks      → src/hooks/
+@lib        → lib/
+@sdk        → sdk/src/
+```
+
+**Build Output:**
+- `dist/` directory
+- `public/` → `dist/` (copied as-is)
+- Chunked JS/CSS with content hashes
+
 ## CI/CD
 
 **GitHub Actions:**
@@ -363,3 +456,110 @@ See whitepaper `latex/idl-protocol.pdf` Section 11 for mathematical formulations
 - Frontend: Auto-deploys to Netlify from main branch
 - Solana Programs: Manual deploy via `anchor deploy`
 - MCP Server: npm package published as `idlhub-mcp`
+
+## Design System & Best Practices
+
+### CSS Architecture
+
+**Theme Variables** (`src/theme.css`):
+- 11 themes supported (light, dark, solarized, dracula, monokai, nord, gruvbox, tokyo-night, catppuccin, everforest, rose-pine)
+- Typography scale: `--font-xs` (10px) through `--font-3xl` (24px)
+- Spacing scale: `--space-sm` (8px) through `--space-2xl` (32px)
+- Colors: `--bg-primary/secondary/tertiary`, `--text-primary/secondary/muted`, `--accent-primary/hover`
+- **Convention**: All section titles use `// ` prefix (not `> `)
+- **Design**: No border-radius (sharp corners throughout for terminal aesthetic)
+
+**CSS Patterns**:
+- Prefix all classes with page name (e.g., `.swap-page`, `.analytics-page`)
+- Use CSS variables for all colors, fonts, spacing
+- Never hard-code colors or pixel values
+- Consistent hover states: border-color change only (no transforms)
+
+### Component Patterns
+
+**Tab Navigation Pattern**:
+```typescript
+// State
+const [activeTab, setActiveTab] = useState<TabType>('default');
+
+// Keyboard handler
+const handleTabKeyPress = (e: React.KeyboardEvent, tab: TabType) => {
+  if (e.key === 'Enter' || e.key === ' ') {
+    e.preventDefault();
+    setActiveTab(tab);
+  }
+};
+
+// ARIA attributes
+<div role="tablist" aria-label="Description">
+  <button
+    role="tab"
+    aria-selected={activeTab === 'tab1'}
+    aria-controls="tab1-panel"
+    tabIndex={activeTab === 'tab1' ? 0 : -1}
+    onClick={() => setActiveTab('tab1')}
+    onKeyDown={(e) => handleTabKeyPress(e, 'tab1')}
+  >
+    Tab 1
+  </button>
+</div>
+```
+
+**Error Handling**:
+- Global `ErrorBoundary` component wraps entire app (`src/components/ErrorBoundary.tsx`)
+- Catches React errors and displays user-friendly recovery UI
+- Three actions: Reload Page, Try Again, Go Back
+- Error details collapsible in development mode
+
+**Shared Utilities** (`src/utils/format.ts`):
+- `formatIDL(value)` - Format IDL token amounts
+- `formatWallet(address)` - Shorten wallet addresses (first4...last4)
+- `formatUSD(value)` - Format currency with K/M suffixes
+- `formatPercent(value)` - Format percentage with sign
+
+### Performance Patterns
+
+- **Memoization**: Use `useCallback` for expensive functions (especially chart rendering)
+- **Charts**: Custom SVG implementation (no canvas dependencies)
+- **Code Splitting**: Not yet implemented (bundle is 647KB, consider lazy loading routes)
+- **Images**: No image optimization yet (could add lazy loading)
+
+### Accessibility Requirements
+
+All interactive elements must have:
+- `role` attribute (`button`, `tab`, `tablist`, `img`)
+- `aria-label` or `aria-labelledby`
+- `aria-selected` for tabs
+- `tabIndex` management (0 for active, -1 for inactive tabs)
+- Keyboard handlers (Enter and Space keys)
+
+### Security Status
+
+**Production**: ✅ 0 vulnerabilities
+**Development**: ⚠️ 5 non-critical vulnerabilities (bigint-buffer, esbuild - dev tools only)
+
+Command to verify:
+```bash
+npm audit --omit=dev  # Should show 0 vulnerabilities
+```
+
+### Module System
+
+**Important**: `package.json` has `"type": "module"` to use ES modules throughout and eliminate Vite CJS deprecation warnings.
+
+## Current Navigation Structure
+
+**Main Navigation** (visible in header):
+- Registry - IDL protocol registry
+- Protocol - Prediction markets (combines Markets, Battles, Guilds)
+- Status - Verification and protocol status
+- Docs - Documentation
+
+**Direct Access** (not in nav, accessible via URL):
+- `/swap` - AMM swap interface
+- `/analytics` - Analytics dashboard
+- `/tokenomics` - Token economics
+- `/battles` - 1v1 battles (currently commented out in routes)
+- `/guilds` - Guild system (currently commented out in routes)
+
+**Note**: Battles and Guilds routes are commented out in `src/App.tsx` but page files preserved for future use.
