@@ -39,6 +39,7 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
+          'buffer-polyfill': ['buffer'],
           'solana': ['@solana/web3.js', '@solana/spl-token'],
           'react-vendor': ['react', 'react-dom', 'react-router-dom']
         }
@@ -55,7 +56,10 @@ export default defineConfig({
       '@pages': resolve(__dirname, 'src/pages'),
       '@hooks': resolve(__dirname, 'src/hooks'),
       '@lib': resolve(__dirname, 'lib'),
-      '@sdk': resolve(__dirname, 'sdk/src')
+      '@sdk': resolve(__dirname, 'sdk/src'),
+      'buffer': 'buffer/',
+      'stream': 'stream-browserify',
+      'process': 'process/browser'
     }
   }
 });
