@@ -11,7 +11,8 @@ export default defineConfig({
   publicDir: 'public',
   define: {
     'global': 'globalThis',
-    'process.env': {}
+    'process.env': {},
+    'process.browser': true
   },
   optimizeDeps: {
     esbuildOptions: {
@@ -34,7 +35,18 @@ export default defineConfig({
     }
   },
   build: {
-    outDir: 'dist'
+    outDir: 'dist',
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'solana': ['@solana/web3.js', '@solana/spl-token'],
+          'react-vendor': ['react', 'react-dom', 'react-router-dom']
+        }
+      }
+    },
+    commonjsOptions: {
+      transformMixedEsModules: true
+    }
   },
   resolve: {
     alias: {

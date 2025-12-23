@@ -5,8 +5,10 @@ import App from './App';
 import './theme.css';
 import { Buffer } from 'buffer';
 
-// Polyfill Buffer for browser
-window.Buffer = Buffer;
+// Polyfills for Solana Web3.js
+(window as any).Buffer = Buffer;
+(window as any).global = window;
+(window as any).process = { env: {} };
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

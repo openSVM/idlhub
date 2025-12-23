@@ -1,134 +1,46 @@
+# Netlify configuration for IDLHub
+
 [build]
-  publish = "."
-  command = "echo 'Static site - no build required'"
-  functions = "netlify/functions"
+  command = "npm run build"
+  publish = "dist"
 
-# Redirect /mcp to install.sh script
-[[redirects]]
-  from = "/mcp"
-  to = "/install.sh"
-  status = 200
-  force = true
-
-# Additional redirects for convenience
-[[redirects]]
-  from = "/install"
-  to = "/install.sh"
-  status = 200
-  force = true
-
-# LLM agent guide
-[[redirects]]
-  from = "/llms.txt"
-  to = "/llms.txt"
-  status = 200
-  force = true
-
-# Redirect /docs to docs.html
-[[redirects]]
-  from = "/docs"
-  to = "/docs.html"
-  status = 200
-  force = true
-
-# API endpoints -> Netlify Functions
-[[redirects]]
-  from = "/api/mcp"
-  to = "/.netlify/functions/mcp"
-  status = 200
-  force = true
-
-# Serve static JSON for fast list endpoint
-[[redirects]]
-  from = "/api/idl"
-  to = "/api/idl.json"
-  status = 200
-  force = true
-
-# Individual IDL lookups still use function (for Arweave fetch)
-[[redirects]]
-  from = "/api/idl/*"
-  to = "/.netlify/functions/idl"
-  status = 200
-  force = true
-
-[[redirects]]
-  from = "/api/status"
-  to = "/.netlify/functions/status"
-  status = 200
-  force = true
-
-[[redirects]]
-  from = "/api/status/*"
-  to = "/.netlify/functions/status"
-  status = 200
-  force = true
-
-[[redirects]]
-  from = "/api/metrics"
-  to = "/.netlify/functions/metrics"
-  status = 200
-  force = true
-
-# Legacy /api/programs endpoints
-[[redirects]]
-  from = "/api/programs"
-  to = "/.netlify/functions/idl"
-  status = 200
-  force = true
-
-[[redirects]]
-  from = "/api/programs/*"
-  to = "/.netlify/functions/idl"
-  status = 200
-  force = true
-
-# Catch-all redirect for missing routes - shows custom 404 page
-[[redirects]]
-  from = "/*"
-  to = "/404.html"
-  status = 404
-
-# Headers for install script
-[[headers]]
-  for = "/install.sh"
-  [headers.values]
-    Content-Type = "text/plain; charset=utf-8"
-    X-Content-Type-Options = "nosniff"
-    Cache-Control = "public, max-age=3600"
-
-[[headers]]
-  for = "/mcp"
-  [headers.values]
-    Content-Type = "text/plain; charset=utf-8"
-    X-Content-Type-Options = "nosniff"
-    Cache-Control = "public, max-age=3600"
-
-[[headers]]
-  for = "/llms.txt"
-  [headers.values]
-    Content-Type = "text/plain; charset=utf-8"
-    X-Content-Type-Options = "nosniff"
-    Cache-Control = "public, max-age=3600"
-
-# Headers for JSON files
-[[headers]]
-  for = "/*.json"
-  [headers.values]
-    Content-Type = "application/json; charset=utf-8"
-    Cache-Control = "public, max-age=300"
-
-# Headers for security
 [[headers]]
   for = "/*"
   [headers.values]
     X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
     X-XSS-Protection = "1; mode=block"
     Referrer-Policy = "strict-origin-when-cross-origin"
 
-# Environment configuration
-[context.production.environment]
-  NODE_VERSION = "18"
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Content-Type = "text/javascript; charset=utf-8"
 
-[context.deploy-preview.environment]
-  NODE_VERSION = "18"
+[[headers]]
+  for = "/*.mjs"
+  [headers.values]
+    Content-Type = "text/javascript; charset=utf-8"
+
+[[headers]]
+  for = "/assets/*.js"
+  [headers.values]
+    Content-Type = "text/javascript; charset=utf-8"
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/assets/*.css"
+  [headers.values]
+    Content-Type = "text/css; charset=utf-8"
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[dev]
+  command = "npm run dev"
+  port = 5174
+  targetPort = 5174
+  framework = "#custom"
