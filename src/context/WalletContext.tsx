@@ -30,20 +30,8 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     return null;
   }, []);
 
-  // Auto-connect if previously connected
-  useEffect(() => {
-    const provider = getProvider();
-    if (provider) {
-      provider.connect({ onlyIfTrusted: true })
-        .then(({ publicKey }: { publicKey: PublicKey }) => {
-          setPublicKey(publicKey);
-          setConnected(true);
-        })
-        .catch(() => {
-          // Not previously connected
-        });
-    }
-  }, [getProvider]);
+  // No auto-connect - IDLHub is a dev tool that should work without wallet
+  // Users can manually click "Connect Wallet" when they want to make transactions
 
   const connect = async () => {
     const provider = getProvider();
