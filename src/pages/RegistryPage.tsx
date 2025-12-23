@@ -61,26 +61,19 @@ export default function RegistryPage() {
   const [downloadingBulk, setDownloadingBulk] = useState(false);
   const [downloadProgress, setDownloadProgress] = useState(0);
 
-  // Load protocols from API
+  // Load protocols from static JSON (no API required - dev tool first!)
   useEffect(() => {
     const loadProtocols = async () => {
       try {
-        let data;
-        try {
-          const res = await fetch('/api/idl');
-          if (!res.ok) throw new Error('Proxy failed');
-          data = await res.json();
-        } catch {
-          const res = await fetch('http://localhost:3000/api/idl');
-          if (!res.ok) throw new Error('Direct API failed');
-          data = await res.json();
-        }
+        const res = await fetch('/index.json');
+        if (!res.ok) throw new Error('Failed to load registry data');
+        const data = await res.json();
 
         setAllProtocols(data.idls || []);
         setLoading(false);
       } catch (err) {
         console.error('Failed to load protocols:', err);
-        setError('Failed to load protocols. Make sure API server is running on port 3000.');
+        setError('Failed to load registry data from /index.json');
         setLoading(false);
       }
     };
@@ -88,7 +81,7 @@ export default function RegistryPage() {
     loadProtocols();
   }, []);
 
-  // Load IDL when protocol selected
+  // Load IDL when protocol selected (from static files in IDLs/)
   useEffect(() => {
     if (!currentProtocolId) {
       setIdlData(null);
@@ -97,17 +90,10 @@ export default function RegistryPage() {
 
     const loadIDL = async () => {
       try {
-        let data;
-        try {
-          const res = await fetch(`/api/idl/${currentProtocolId}`);
-          if (!res.ok) throw new Error('Proxy failed');
-          data = await res.json();
-        } catch {
-          const res = await fetch(`http://localhost:3000/api/idl/${currentProtocolId}`);
-          if (!res.ok) throw new Error('Direct API failed');
-          data = await res.json();
-        }
-        setIdlData(data);
+        const res = await fetch(`/IDLs/${currentProtocolId}.json`);
+        if (!res.ok) throw new Error('IDL not found');
+        const data = await res.json();
+        setIdlData({ idl: data });
       } catch (err) {
         console.error('Failed to load IDL:', err);
         setIdlData(null);
@@ -126,8 +112,8 @@ export default function RegistryPage() {
         protocol.category?.toLowerCase().includes(searchQuery.toLowerCase());
 
       const matchesCategory = currentCategory === 'all' ||
-        currentCategory === 'bookmarks' ? bookmarkedProtocols.has(protocol.id) :
-        protocol.category?.toLowerCase() === currentCategory;
+        (currentCategory === 'bookmarks' ? bookmarkedProtocols.has(protocol.id) :
+        protocol.category?.toLowerCase() === currentCategory);
 
       return matchesSearch && matchesCategory;
     });
@@ -246,19 +232,12 @@ export default function RegistryPage() {
     setIdlData(null);
   };
 
-  // Download IDL
+  // Download IDL (from static files)
   const downloadIDL = async (protocolId: string) => {
     try {
-      let data;
-      try {
-        const res = await fetch(`/api/idl/${protocolId}`);
-        if (!res.ok) throw new Error('Proxy failed');
-        data = await res.json();
-      } catch {
-        const res = await fetch(`http://localhost:3000/api/idl/${protocolId}`);
-        if (!res.ok) throw new Error('Direct API failed');
-        data = await res.json();
-      }
+      const res = await fetch(`/IDLs/${protocolId}.json`);
+      if (!res.ok) throw new Error('IDL not found');
+      const data = await res.json();
 
       const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
