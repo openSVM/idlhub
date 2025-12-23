@@ -388,42 +388,71 @@ Solana Web3.js requires `Buffer` global in browser:
 
 ### Swap Page (AMM)
 
-**Location:** `src/pages/SwapPage.tsx` + `src/pages/SwapPage.css` + `src/hooks/useAMM.ts`
+**Location:** `src/pages/SwapPage-simple.tsx` + `src/pages/SwapPage.css` + `src/hooks/useAMM.ts`
 
-Features:
-- 6 tabs: Swap, Add Liquidity, Remove Liquidity, Farm LP, Create Token, Pool Governance
-- BAGS⟷PUMP token swaps with Curve StableSwap formula
-- Slippage protection (0.1%, 0.5%, 1.0%, custom)
-- Real-time pool stats and user balances
-- LP token farming UI (stake/unstake/claim)
-- Fee claiming for LP providers
-- Pool governance voting interface
+**Current Implementation (Simplified):**
+- Token0 ↔ Token1 swaps with StableSwap curve pricing
+- Real-time pool stats (balances, fees, LP supply)
+- Slippage protection (0.1%, 0.5%, 1.0%)
+- Live swap quotes with price impact
+- Token switch button (↓↑)
+- Wallet connection required for trading
+
+**Pool Initialization:**
+- Pool must be initialized before swaps work
+- If pool not found, shows helpful error with:
+  - Program address and token mint addresses
+  - Instructions to initialize: `anchor run init-pool`
+  - Technical error details (collapsible)
 
 **Key Details:**
-- Uses Anchor BN from `@coral-xyz/anchor` (not `bn.js`)
-- All CSS scoped with `.swap-page` prefix to avoid conflicts
+- Uses `useAMM()` and `usePoolState()` hooks from `src/hooks/useAMM.ts`
 - StableSwap Program: `EFsgmpbKifyA75ZY5NPHQxrtuAHHB6sYnoGkLi6xoTte`
-- Token decimals: 6 (both BAGS and PUMP)
-- Keyboard accessible: Full ARIA support with role="tablist" and tabIndex management
+- Default tokens: SOL (Token0) and USDC (Token1)
+- Token decimals: 6 for both tokens
+- All CSS scoped with `.swap-page` prefix
+- Full ARIA accessibility support
+
+**Advanced Features (in full SwapPage.tsx, currently disabled):**
+- Add/Remove Liquidity tabs
+- LP token farming UI (stake/unstake/claim)
+- Fee claiming for LP providers
+- Pool governance voting
+- Create token functionality
+
+**Note:** Full SwapPage exists but requires additional hooks (`useTokenBalances`, `useAddLiquidity`, etc.) that aren't yet implemented.
 
 ### Analytics Dashboard
 
 **Location:** `src/pages/AnalyticsPage.tsx` + `src/pages/AnalyticsPage.css`
 
-Features:
-- Custom SVG line charts (TVL, Volume trends)
+**8 Comprehensive Metric Cards:**
+1. **Total TVL** - Total value locked with % change
+2. **24h Volume** - Trading volume with trend indicator
+3. **Total Fees (24h)** - Fees collected (calculated from 0.3% tier)
+4. **Unique Traders** - Active traders (24h, estimated from volume)
+5. **Active Pools** - Count of live AMM pools
+6. **Avg Pool APR** - Average annualized returns across pools
+7. **Total Swaps** - Transaction count (24h)
+8. **LP Positions** - Total active liquidity providers
+
+**Additional Features:**
+- Custom SVG line charts (TVL, Volume trends over time)
 - Time range selection (7d/30d/90d)
-- Protocol statistics and rankings
+- Protocol statistics and rankings table
 - Developer activity metrics (commits, PRs, issues)
-- AMM pool performance table
+- AMM pool performance breakdown
 - LP token and position statistics
 - AI Insights generation (Claude API integration)
 
 **Key Details:**
+- All metrics auto-calculated from existing data sources
 - No heavy chart dependencies (pure SVG implementation)
 - Charts memoized with useCallback for performance
-- Accessibility: ARIA labels, keyboard navigation
+- Minimalistic terminal aesthetic matching site design
+- Full accessibility: ARIA labels, keyboard navigation
 - Responsive design with mobile support
+- Color-coded metrics: green (positive), red (negative), gray (neutral)
 
 ### Vite Configuration Details
 
@@ -554,16 +583,72 @@ npm audit --omit=dev  # Should show 0 vulnerabilities
 ## Current Navigation Structure
 
 **Main Navigation** (visible in header):
-- Registry - IDL protocol registry
-- Protocol - Prediction markets (combines Markets, Battles, Guilds)
-- Status - Verification and protocol status
-- Docs - Documentation
+- **Registry** (`/` and `/registry`) - IDL protocol registry (default landing page)
+- **Protocol** (`/protocol`) - Prediction markets (staking, betting)
+- **Swap** (`/swap`) - StableSwap AMM for BAGS⟷PUMP tokens
+- **Dashboard** (`/analytics`) - Comprehensive metrics (TVL, volume, fees, pools, traders, APR)
+- **Status** (`/status`) - Verification and protocol status
+- **Docs** (`/docs`) - Documentation
 
 **Direct Access** (not in nav, accessible via URL):
-- `/swap` - AMM swap interface
-- `/analytics` - Analytics dashboard
 - `/tokenomics` - Token economics
-- `/battles` - 1v1 battles (currently commented out in routes)
-- `/guilds` - Guild system (currently commented out in routes)
+- `/battles` - 1v1 battles (page exists but route commented out)
+- `/guilds` - Guild system (page exists but route commented out)
 
 **Note**: Battles and Guilds routes are commented out in `src/App.tsx` but page files preserved for future use.
+
+## Community Bounty System
+
+IDLHub incentivizes community contributions with a reward system:
+
+### Reward Structure
+- **Base reward**: 1000 IDL for valid IDL uploads that replace placeholders
+- **Community bounties**: Anyone can stake IDL tokens to increase rewards for specific protocols
+- **Total reward** = 1000 base + community stakes
+- **Verification period**: 48 hours
+
+### MCP API Tools (8 total)
+1. `list_idls` - List all available IDLs
+2. `search_idls` - Search IDLs by name
+3. `get_idl` - Get specific IDL with full JSON
+4. `upload_idl` - Upload IDL + earn rewards (1000 base + bounty)
+5. `get_pending_rewards` - Check reward status for wallet
+6. `add_bounty` - Stake IDL tokens on missing protocols
+7. `list_bounties` - Browse all active bounties (sort by amount/stakers/date)
+8. `get_bounty` - Get bounty details for specific protocol
+
+### Example: Add Bounty via MCP
+```bash
+curl -X POST https://idlhub.com/api/mcp \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "jsonrpc": "2.0",
+    "method": "tools/call",
+    "params": {
+      "name": "add_bounty",
+      "arguments": {
+        "protocol_id": "missing-protocol",
+        "amount": 1000,
+        "staker_wallet": "YourSolanaAddress",
+        "tx_signature": "SolanaTransactionSignature"
+      }
+    },
+    "id": 1
+  }'
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "total_reward": 2000,
+  "message": "🎯 Added 1000 IDL to bounty! Total reward now: 2000 IDL"
+}
+```
+
+### Registry UI Features
+- Bounty badges (💰) show on protocols with active bounties
+- Hover tooltip displays number of community contributors
+- Auto-loads bounty data from `/data/idl-bounties.json`
+
+**Documentation:** See `docs/REWARDS.md` and `BOUNTY_SYSTEM.md` for complete details.
