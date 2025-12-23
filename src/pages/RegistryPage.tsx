@@ -594,7 +594,7 @@ export default function RegistryPage() {
                   Download
                 </button>
                 <a
-                  href={`/app/#bet-${protocol.id}`}
+                  href={`/protocol#bet-${protocol.id}`}
                   className="icon-btn btn-bet"
                   title="Bet on Metrics"
                 >
