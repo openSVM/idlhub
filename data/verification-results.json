@@ -1,22 +1,22 @@
 {
   "lastRun": {
-    "timestamp": "2025-12-23T06:13:53.553Z",
+    "timestamp": "2025-12-23T07:13:53.652Z",
     "totalProtocols": 102,
-    "verified": 28,
+    "verified": 24,
     "partial": 12,
-    "failed": 17,
+    "failed": 1,
     "placeholder": 43,
-    "noProgram": 1,
+    "noProgram": 21,
     "devnetOnly": 1,
     "rpcError": 0,
-    "totalPrograms": 75,
-    "verifiedPrograms": 45,
+    "totalPrograms": 55,
+    "verifiedPrograms": 41,
     "protocols": [
       {
         "protocolId": "idl-protocol",
         "protocolName": "IDL Protocol",
         "status": "devnet_only",
-        "timestamp": "2025-12-23T06:13:54.524Z",
+        "timestamp": "2025-12-23T07:13:56.184Z",
         "programs": [
           {
             "name": "IDL Protocol",
@@ -38,9 +38,9 @@
         ],
         "details": {
           "programCount": 1,
-          "idlHash": "277e2193c507221e",
-          "instructionCount": 15,
-          "accountCount": 6,
+          "idlHash": null,
+          "instructionCount": 0,
+          "accountCount": 0,
           "message": "Program(s) only available on devnet",
           "verified": 0,
           "total": 1
@@ -50,7 +50,7 @@
         "protocolId": "acceleraytor",
         "protocolName": "Acceleraytor",
         "status": "placeholder",
-        "timestamp": "2025-12-23T06:13:55.117Z",
+        "timestamp": "2025-12-23T07:13:56.998Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -60,7 +60,7 @@
         "protocolId": "adrena",
         "protocolName": "Adrena",
         "status": "placeholder",
-        "timestamp": "2025-12-23T06:13:55.217Z",
+        "timestamp": "2025-12-23T07:13:57.099Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -70,7 +70,7 @@
         "protocolId": "aldrin",
         "protocolName": "Aldrin",
         "status": "verified",
-        "timestamp": "2025-12-23T06:13:55.317Z",
+        "timestamp": "2025-12-23T07:13:57.199Z",
         "programs": [
           {
             "name": "Aldrin AMM",
@@ -92,8 +92,8 @@
         ],
         "details": {
           "programCount": 1,
-          "idlHash": "65910336e891591b",
-          "instructionCount": 2,
+          "idlHash": null,
+          "instructionCount": 0,
           "accountCount": 0,
           "message": "All 1 program(s) verified on mainnet",
           "verified": 1,
@@ -103,37 +103,18 @@
       {
         "protocolId": "apricot",
         "protocolName": "Apricot",
-        "status": "program_not_found",
-        "timestamp": "2025-12-23T06:13:55.647Z",
-        "programs": [
-          {
-            "name": "apricot",
-            "address": "6FLTtosMrW1JgPDZ8TAffNJDQ9zr3L78bDdpzqHCevDm",
-            "network": "mainnet",
-            "status": "not_found",
-            "programInfo": {
-              "exists": false,
-              "executable": false,
-              "dataLen": 0
-            },
-            "message": "Program not found on-chain"
-          }
-        ],
+        "status": "no_program_id",
+        "timestamp": "2025-12-23T07:13:57.943Z",
+        "programs": [],
         "details": {
-          "programCount": 1,
-          "idlHash": "af1573cae2f35e5a",
-          "instructionCount": 2,
-          "accountCount": 0,
-          "message": "No programs found on-chain",
-          "verified": 0,
-          "total": 1
+          "message": "No program ID found in IDL or known mappings"
         }
       },
       {
         "protocolId": "arrow",
         "protocolName": "Arrow",
         "status": "partial",
-        "timestamp": "2025-12-23T06:13:55.868Z",
+        "timestamp": "2025-12-23T07:13:58.045Z",
         "programs": [
           {
             "name": "Arrow",
@@ -167,8 +148,8 @@
         ],
         "details": {
           "programCount": 2,
-          "idlHash": "64758fc8c3fd7b4c",
-          "instructionCount": 2,
+          "idlHash": null,
+          "instructionCount": 0,
           "accountCount": 0,
           "message": "1/2 programs verified on mainnet",
           "verified": 1,
@@ -178,37 +159,18 @@
       {
         "protocolId": "atrix",
         "protocolName": "Atrix",
-        "status": "program_not_found",
-        "timestamp": "2025-12-23T06:13:56.288Z",
-        "programs": [
-          {
-            "name": "atrix",
-            "address": "ATRiH29rGgf5N3uKEDDEa3vjDixbL9jRnrUh9oHv3gfN",
-            "network": "mainnet",
-            "status": "not_found",
-            "programInfo": {
-              "exists": false,
-              "executable": false,
-              "dataLen": 0
-            },
-            "message": "Program not found on-chain"
-          }
-        ],
+        "status": "no_program_id",
+        "timestamp": "2025-12-23T07:13:59.424Z",
+        "programs": [],
         "details": {
-          "programCount": 1,
-          "idlHash": "fed67414f42ad2b2",
-          "instructionCount": 2,
-          "accountCount": 0,
-          "message": "No programs found on-chain",
-          "verified": 0,
-          "total": 1
+          "message": "No program ID found in IDL or known mappings"
         }
       },
       {
         "protocolId": "balansol",
         "protocolName": "Balansol",
         "status": "placeholder",
-        "timestamp": "2025-12-23T06:13:56.495Z",
+        "timestamp": "2025-12-23T07:13:59.525Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -218,7 +180,7 @@
         "protocolId": "beluga",
         "protocolName": "Beluga",
         "status": "placeholder",
-        "timestamp": "2025-12-23T06:13:56.595Z",
+        "timestamp": "2025-12-23T07:13:59.625Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -228,7 +190,7 @@
         "protocolId": "blaze",
         "protocolName": "Blaze",
         "status": "placeholder",
-        "timestamp": "2025-12-23T06:13:56.695Z",
+        "timestamp": "2025-12-23T07:13:59.726Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -238,7 +200,7 @@
         "protocolId": "bonfida",
         "protocolName": "Bonfida",
         "status": "verified",
-        "timestamp": "2025-12-23T06:13:56.796Z",
+        "timestamp": "2025-12-23T07:13:59.826Z",
         "programs": [
           {
             "name": "Bonfida",
@@ -260,8 +222,8 @@
         ],
         "details": {
           "programCount": 1,
-          "idlHash": "a3d74c257a4b7546",
-          "instructionCount": 2,
+          "idlHash": null,
+          "instructionCount": 0,
           "accountCount": 0,
           "message": "All 1 program(s) verified on mainnet",
           "verified": 1,
@@ -272,7 +234,7 @@
         "protocolId": "byreal",
         "protocolName": "Byreal",
         "status": "placeholder",
-        "timestamp": "2025-12-23T06:13:57.161Z",
+        "timestamp": "2025-12-23T07:14:00.371Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -282,7 +244,7 @@
         "protocolId": "cashio",
         "protocolName": "Cashio",
         "status": "placeholder",
-        "timestamp": "2025-12-23T06:13:57.262Z",
+        "timestamp": "2025-12-23T07:14:00.472Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -292,7 +254,7 @@
         "protocolId": "clone",
         "protocolName": "Clone",
         "status": "placeholder",
-        "timestamp": "2025-12-23T06:13:57.362Z",
+        "timestamp": "2025-12-23T07:14:00.572Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -302,7 +264,7 @@
         "protocolId": "crate",
         "protocolName": "Crate",
         "status": "placeholder",
-        "timestamp": "2025-12-23T06:13:57.462Z",
+        "timestamp": "2025-12-23T07:14:00.673Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -312,7 +274,7 @@
         "protocolId": "crema",
         "protocolName": "Crema",
         "status": "verified",
-        "timestamp": "2025-12-23T06:13:57.563Z",
+        "timestamp": "2025-12-23T07:14:00.773Z",
         "programs": [
           {
             "name": "Crema",
@@ -334,8 +296,8 @@
         ],
         "details": {
           "programCount": 1,
-          "idlHash": "881536efc78e157b",
-          "instructionCount": 2,
+          "idlHash": null,
+          "instructionCount": 0,
           "accountCount": 0,
           "message": "All 1 program(s) verified on mainnet",
           "verified": 1,
@@ -346,7 +308,7 @@
         "protocolId": "cropper",
         "protocolName": "Cropper",
         "status": "placeholder",
-        "timestamp": "2025-12-23T06:13:57.839Z",
+        "timestamp": "2025-12-23T07:14:01.258Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -355,71 +317,28 @@
       {
         "protocolId": "cyclos",
         "protocolName": "Cyclos",
-        "status": "program_not_found",
-        "timestamp": "2025-12-23T06:13:57.939Z",
-        "programs": [
-          {
-            "name": "cyclos",
-            "address": "CYCLosMaPQkNaMfNXWg4eZJ2TgQ1Ckrwq8TKbBkuLcxu",
-            "network": "mainnet",
-            "status": "not_found",
-            "programInfo": {
-              "exists": false,
-              "executable": false,
-              "dataLen": 0
-            },
-            "message": "Program not found on-chain"
-          }
-        ],
+        "status": "no_program_id",
+        "timestamp": "2025-12-23T07:14:01.359Z",
+        "programs": [],
         "details": {
-          "programCount": 1,
-          "idlHash": "dda30abbbb482cbc",
-          "instructionCount": 2,
-          "accountCount": 0,
-          "message": "No programs found on-chain",
-          "verified": 0,
-          "total": 1
+          "message": "No program ID found in IDL or known mappings"
         }
       },
       {
         "protocolId": "cykura",
         "protocolName": "Cykura",
-        "status": "verified",
-        "timestamp": "2025-12-23T06:13:58.244Z",
-        "programs": [
-          {
-            "name": "cykura",
-            "address": "cysPXAjehMpVKUapzbMCCnpFxUFFryEWEaLgnb9NrR8",
-            "network": "mainnet",
-            "status": "verified",
-            "programInfo": {
-              "exists": true,
-              "executable": true,
-              "dataLen": 36,
-              "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
-              "lamports": 1141440
-            },
-            "message": "Program exists and is executable",
-            "onChainIdl": {
-              "found": false
-            }
-          }
-        ],
+        "status": "no_program_id",
+        "timestamp": "2025-12-23T07:14:01.459Z",
+        "programs": [],
         "details": {
-          "programCount": 1,
-          "idlHash": "ea782945b8d4f670",
-          "instructionCount": 2,
-          "accountCount": 0,
-          "message": "All 1 program(s) verified on mainnet",
-          "verified": 1,
-          "total": 1
+          "message": "No program ID found in IDL or known mappings"
         }
       },
       {
         "protocolId": "deltaone",
         "protocolName": "Deltaone",
         "status": "placeholder",
-        "timestamp": "2025-12-23T06:13:58.634Z",
+        "timestamp": "2025-12-23T07:14:01.560Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -428,66 +347,28 @@
       {
         "protocolId": "dexlab",
         "protocolName": "Dexlab",
-        "status": "program_not_found",
-        "timestamp": "2025-12-23T06:13:58.734Z",
-        "programs": [
-          {
-            "name": "dexlab",
-            "address": "DexLaB7TkQN3xLSfzFkXYVJgNJnFJfWDHtqHJN2EHHXz",
-            "network": "mainnet",
-            "status": "not_found",
-            "programInfo": {
-              "exists": false,
-              "executable": false,
-              "dataLen": 0
-            },
-            "message": "Program not found on-chain"
-          }
-        ],
+        "status": "no_program_id",
+        "timestamp": "2025-12-23T07:14:01.660Z",
+        "programs": [],
         "details": {
-          "programCount": 1,
-          "idlHash": "3456a1945749bb61",
-          "instructionCount": 1,
-          "accountCount": 0,
-          "message": "No programs found on-chain",
-          "verified": 0,
-          "total": 1
+          "message": "No program ID found in IDL or known mappings"
         }
       },
       {
         "protocolId": "dexterity",
         "protocolName": "Dexterity",
-        "status": "program_not_found",
-        "timestamp": "2025-12-23T06:13:59.056Z",
-        "programs": [
-          {
-            "name": "dexterity",
-            "address": "Dex1111111111111111111111111111111111111111",
-            "network": "mainnet",
-            "status": "not_found",
-            "programInfo": {
-              "exists": false,
-              "executable": false,
-              "dataLen": 0
-            },
-            "message": "Program not found on-chain"
-          }
-        ],
+        "status": "no_program_id",
+        "timestamp": "2025-12-23T07:14:01.761Z",
+        "programs": [],
         "details": {
-          "programCount": 1,
-          "idlHash": "2f3a2eb5924d0901",
-          "instructionCount": 2,
-          "accountCount": 0,
-          "message": "No programs found on-chain",
-          "verified": 0,
-          "total": 1
+          "message": "No program ID found in IDL or known mappings"
         }
       },
       {
         "protocolId": "drift",
         "protocolName": "Drift Protocol",
         "status": "verified",
-        "timestamp": "2025-12-23T06:13:59.349Z",
+        "timestamp": "2025-12-23T07:14:01.861Z",
         "programs": [
           {
             "name": "Drift Protocol",
@@ -509,9 +390,9 @@
         ],
         "details": {
           "programCount": 1,
-          "idlHash": "0bd2c1ffaff746e7",
-          "instructionCount": 194,
-          "accountCount": 17,
+          "idlHash": null,
+          "instructionCount": 0,
+          "accountCount": 0,
           "message": "All 1 program(s) verified on mainnet",
           "verified": 1,
           "total": 1
@@ -521,7 +402,7 @@
         "protocolId": "ellipsis",
         "protocolName": "Ellipsis",
         "status": "placeholder",
-        "timestamp": "2025-12-23T06:13:59.661Z",
+        "timestamp": "2025-12-23T07:14:02.432Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -531,7 +412,7 @@
         "protocolId": "enjinstarter",
         "protocolName": "Enjinstarter",
         "status": "placeholder",
-        "timestamp": "2025-12-23T06:13:59.761Z",
+        "timestamp": "2025-12-23T07:14:02.532Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -541,7 +422,7 @@
         "protocolId": "flash",
         "protocolName": "Flash",
         "status": "placeholder",
-        "timestamp": "2025-12-23T06:13:59.862Z",
+        "timestamp": "2025-12-23T07:14:02.633Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -551,7 +432,7 @@
         "protocolId": "fluxbeam",
         "protocolName": "Fluxbeam",
         "status": "partial",
-        "timestamp": "2025-12-23T06:13:59.963Z",
+        "timestamp": "2025-12-23T07:14:02.733Z",
         "programs": [
           {
             "name": "FluxBeam",
@@ -585,8 +466,8 @@
         ],
         "details": {
           "programCount": 2,
-          "idlHash": "7e7987fa5f6d6827",
-          "instructionCount": 1,
+          "idlHash": null,
+          "instructionCount": 0,
           "accountCount": 0,
           "message": "1/2 programs verified on mainnet",
           "verified": 1,
@@ -597,7 +478,7 @@
         "protocolId": "francium",
         "protocolName": "Francium",
         "status": "partial",
-        "timestamp": "2025-12-23T06:14:00.457Z",
+        "timestamp": "2025-12-23T07:14:03.375Z",
         "programs": [
           {
             "name": "Francium",
@@ -631,8 +512,8 @@
         ],
         "details": {
           "programCount": 2,
-          "idlHash": "6264b09b4869e2ce",
-          "instructionCount": 2,
+          "idlHash": null,
+          "instructionCount": 0,
           "accountCount": 0,
           "message": "1/2 programs verified on mainnet",
           "verified": 1,
@@ -643,7 +524,7 @@
         "protocolId": "gauge",
         "protocolName": "Gauge",
         "status": "placeholder",
-        "timestamp": "2025-12-23T06:14:00.894Z",
+        "timestamp": "2025-12-23T07:14:03.998Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -653,7 +534,7 @@
         "protocolId": "gavel",
         "protocolName": "Gavel",
         "status": "placeholder",
-        "timestamp": "2025-12-23T06:14:00.994Z",
+        "timestamp": "2025-12-23T07:14:04.098Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -663,7 +544,7 @@
         "protocolId": "gmx",
         "protocolName": "Gmx",
         "status": "placeholder",
-        "timestamp": "2025-12-23T06:14:01.095Z",
+        "timestamp": "2025-12-23T07:14:04.198Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -673,7 +554,7 @@
         "protocolId": "goki",
         "protocolName": "Goki",
         "status": "partial",
-        "timestamp": "2025-12-23T06:14:01.196Z",
+        "timestamp": "2025-12-23T07:14:04.299Z",
         "programs": [
           {
             "name": "Goki",
@@ -707,8 +588,8 @@
         ],
         "details": {
           "programCount": 2,
-          "idlHash": "5d00204a4da73e01",
-          "instructionCount": 2,
+          "idlHash": null,
+          "instructionCount": 0,
           "accountCount": 0,
           "message": "1/2 programs verified on mainnet",
           "verified": 1,
@@ -719,7 +600,7 @@
         "protocolId": "goonfi",
         "protocolName": "Goonfi",
         "status": "placeholder",
-        "timestamp": "2025-12-23T06:14:01.719Z",
+        "timestamp": "2025-12-23T07:14:05.128Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -729,7 +610,7 @@
         "protocolId": "goosefx",
         "protocolName": "Goosefx",
         "status": "verified",
-        "timestamp": "2025-12-23T06:14:01.819Z",
+        "timestamp": "2025-12-23T07:14:05.229Z",
         "programs": [
           {
             "name": "GooseFX",
@@ -768,8 +649,8 @@
         ],
         "details": {
           "programCount": 2,
-          "idlHash": "49e4105066faf54c",
-          "instructionCount": 2,
+          "idlHash": null,
+          "instructionCount": 0,
           "accountCount": 0,
           "message": "All 2 program(s) verified on mainnet",
           "verified": 2,
@@ -780,7 +661,7 @@
         "protocolId": "hawksight",
         "protocolName": "Hawksight",
         "status": "placeholder",
-        "timestamp": "2025-12-23T06:14:07.060Z",
+        "timestamp": "2025-12-23T07:14:05.846Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -789,37 +670,18 @@
       {
         "protocolId": "hubble",
         "protocolName": "Hubble",
-        "status": "program_not_found",
-        "timestamp": "2025-12-23T06:14:07.161Z",
-        "programs": [
-          {
-            "name": "borrowing",
-            "address": "HbbLE47k4s8Aw4YsagCa1E6MRyJUtVVoRcSBXBCTaYH",
-            "network": "mainnet",
-            "status": "not_found",
-            "programInfo": {
-              "exists": false,
-              "executable": false,
-              "dataLen": 0
-            },
-            "message": "Program not found on-chain"
-          }
-        ],
+        "status": "no_program_id",
+        "timestamp": "2025-12-23T07:14:05.947Z",
+        "programs": [],
         "details": {
-          "programCount": 1,
-          "idlHash": "08410e1f58a7cc6b",
-          "instructionCount": 2,
-          "accountCount": 0,
-          "message": "No programs found on-chain",
-          "verified": 0,
-          "total": 1
+          "message": "No program ID found in IDL or known mappings"
         }
       },
       {
         "protocolId": "humidifi",
         "protocolName": "Humidifi",
         "status": "placeholder",
-        "timestamp": "2025-12-23T06:14:07.441Z",
+        "timestamp": "2025-12-23T07:14:06.048Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -828,37 +690,18 @@
       {
         "protocolId": "hxro",
         "protocolName": "Hxro",
-        "status": "program_not_found",
-        "timestamp": "2025-12-23T06:14:07.542Z",
-        "programs": [
-          {
-            "name": "hxro_network",
-            "address": "HxroShip8KkXZVYcrth6X2zLMnCXfXJmhLHUQZYH7jH",
-            "network": "mainnet",
-            "status": "not_found",
-            "programInfo": {
-              "exists": false,
-              "executable": false,
-              "dataLen": 0
-            },
-            "message": "Program not found on-chain"
-          }
-        ],
+        "status": "no_program_id",
+        "timestamp": "2025-12-23T07:14:06.148Z",
+        "programs": [],
         "details": {
-          "programCount": 1,
-          "idlHash": "d31c64f5c107b40e",
-          "instructionCount": 2,
-          "accountCount": 0,
-          "message": "No programs found on-chain",
-          "verified": 0,
-          "total": 1
+          "message": "No program ID found in IDL or known mappings"
         }
       },
       {
         "protocolId": "invariant",
         "protocolName": "Invariant",
         "status": "verified",
-        "timestamp": "2025-12-23T06:14:07.748Z",
+        "timestamp": "2025-12-23T07:14:06.249Z",
         "programs": [
           {
             "name": "Invariant",
@@ -880,8 +723,8 @@
         ],
         "details": {
           "programCount": 1,
-          "idlHash": "9aac190555f19605",
-          "instructionCount": 2,
+          "idlHash": null,
+          "instructionCount": 0,
           "accountCount": 0,
           "message": "All 1 program(s) verified on mainnet",
           "verified": 1,
@@ -892,7 +735,7 @@
         "protocolId": "jet",
         "protocolName": "Jet",
         "status": "partial",
-        "timestamp": "2025-12-23T06:14:08.099Z",
+        "timestamp": "2025-12-23T07:14:06.668Z",
         "programs": [
           {
             "name": "Jet Protocol",
@@ -926,8 +769,8 @@
         ],
         "details": {
           "programCount": 2,
-          "idlHash": "7de93e05abcb0b9a",
-          "instructionCount": 3,
+          "idlHash": null,
+          "instructionCount": 0,
           "accountCount": 0,
           "message": "1/2 programs verified on mainnet",
           "verified": 1,
@@ -938,7 +781,7 @@
         "protocolId": "jito",
         "protocolName": "Jito",
         "status": "program_not_found",
-        "timestamp": "2025-12-23T06:14:09.471Z",
+        "timestamp": "2025-12-23T07:14:07.165Z",
         "programs": [
           {
             "name": "Jito Stake Pool",
@@ -971,8 +814,8 @@
         ],
         "details": {
           "programCount": 2,
-          "idlHash": "3f1acb60ee8211be",
-          "instructionCount": 2,
+          "idlHash": null,
+          "instructionCount": 0,
           "accountCount": 0,
           "message": "No programs found on-chain",
           "verified": 0,
@@ -983,7 +826,7 @@
         "protocolId": "jupiter",
         "protocolName": "Jupiter",
         "status": "verified",
-        "timestamp": "2025-12-23T06:14:09.859Z",
+        "timestamp": "2025-12-23T07:14:08.478Z",
         "programs": [
           {
             "name": "Jupiter v6",
@@ -995,7 +838,7 @@
               "executable": true,
               "dataLen": 36,
               "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
-              "lamports": 2803739208
+              "lamports": 2803749208
             },
             "message": "Program exists and is executable",
             "onChainIdl": {
@@ -1039,9 +882,9 @@
         ],
         "details": {
           "programCount": 3,
-          "idlHash": "22a3da061d418ee0",
-          "instructionCount": 16,
-          "accountCount": 1,
+          "idlHash": null,
+          "instructionCount": 0,
+          "accountCount": 0,
           "message": "All 3 program(s) verified on mainnet",
           "verified": 3,
           "total": 3
@@ -1051,7 +894,7 @@
         "protocolId": "kamino",
         "protocolName": "Kamino",
         "status": "partial",
-        "timestamp": "2025-12-23T06:14:11.673Z",
+        "timestamp": "2025-12-23T07:14:10.238Z",
         "programs": [
           {
             "name": "Kamino Lending",
@@ -1085,9 +928,9 @@
         ],
         "details": {
           "programCount": 2,
-          "idlHash": "e6b9dab23923e6f8",
-          "instructionCount": 49,
-          "accountCount": 9,
+          "idlHash": null,
+          "instructionCount": 0,
+          "accountCount": 0,
           "message": "1/2 programs verified on mainnet",
           "verified": 1,
           "total": 2
@@ -1096,37 +939,18 @@
       {
         "protocolId": "larix",
         "protocolName": "Larix",
-        "status": "program_not_found",
-        "timestamp": "2025-12-23T06:14:13.004Z",
-        "programs": [
-          {
-            "name": "larix",
-            "address": "LARiTAAoXkNqwt2fQAL9QsWvBm7fLZZP1fgmj5R2Lf2",
-            "network": "mainnet",
-            "status": "not_found",
-            "programInfo": {
-              "exists": false,
-              "executable": false,
-              "dataLen": 0
-            },
-            "message": "Program not found on-chain"
-          }
-        ],
+        "status": "no_program_id",
+        "timestamp": "2025-12-23T07:14:11.608Z",
+        "programs": [],
         "details": {
-          "programCount": 1,
-          "idlHash": "cc63311a728adb03",
-          "instructionCount": 2,
-          "accountCount": 0,
-          "message": "No programs found on-chain",
-          "verified": 0,
-          "total": 1
+          "message": "No program ID found in IDL or known mappings"
         }
       },
       {
         "protocolId": "launchmynft",
         "protocolName": "Launchmynft",
         "status": "placeholder",
-        "timestamp": "2025-12-23T06:14:13.215Z",
+        "timestamp": "2025-12-23T07:14:11.709Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -1136,7 +960,7 @@
         "protocolId": "lifinity",
         "protocolName": "Lifinity",
         "status": "verified",
-        "timestamp": "2025-12-23T06:14:13.316Z",
+        "timestamp": "2025-12-23T07:14:11.808Z",
         "programs": [
           {
             "name": "Lifinity v1",
@@ -1158,8 +982,8 @@
         ],
         "details": {
           "programCount": 1,
-          "idlHash": "51f34e06f94ae432",
-          "instructionCount": 2,
+          "idlHash": null,
+          "instructionCount": 0,
           "accountCount": 0,
           "message": "All 1 program(s) verified on mainnet",
           "verified": 1,
@@ -1170,7 +994,7 @@
         "protocolId": "lifinity-v2",
         "protocolName": "Lifinity v2",
         "status": "partial",
-        "timestamp": "2025-12-23T06:14:14.528Z",
+        "timestamp": "2025-12-23T07:14:12.931Z",
         "programs": [
           {
             "name": "Lifinity v2",
@@ -1204,8 +1028,8 @@
         ],
         "details": {
           "programCount": 2,
-          "idlHash": "1417f4a25b16c59d",
-          "instructionCount": 2,
+          "idlHash": null,
+          "instructionCount": 0,
           "accountCount": 0,
           "message": "1/2 programs verified on mainnet",
           "verified": 1,
@@ -1216,7 +1040,7 @@
         "protocolId": "magiceden",
         "protocolName": "Magiceden",
         "status": "verified",
-        "timestamp": "2025-12-23T06:14:15.123Z",
+        "timestamp": "2025-12-23T07:14:14.425Z",
         "programs": [
           {
             "name": "Magic Eden",
@@ -1238,8 +1062,8 @@
         ],
         "details": {
           "programCount": 1,
-          "idlHash": "16cc3ed1ace86da2",
-          "instructionCount": 2,
+          "idlHash": null,
+          "instructionCount": 0,
           "accountCount": 0,
           "message": "All 1 program(s) verified on mainnet",
           "verified": 1,
@@ -1250,7 +1074,7 @@
         "protocolId": "mango",
         "protocolName": "Mango Markets",
         "status": "verified",
-        "timestamp": "2025-12-23T06:14:16.289Z",
+        "timestamp": "2025-12-23T07:14:14.819Z",
         "programs": [
           {
             "name": "Mango v4",
@@ -1272,8 +1096,8 @@
         ],
         "details": {
           "programCount": 1,
-          "idlHash": "f2a0717a422cda19",
-          "instructionCount": 3,
+          "idlHash": null,
+          "instructionCount": 0,
           "accountCount": 0,
           "message": "All 1 program(s) verified on mainnet",
           "verified": 1,
@@ -1284,7 +1108,7 @@
         "protocolId": "mango-v3",
         "protocolName": "Mango v3",
         "status": "verified",
-        "timestamp": "2025-12-23T06:14:16.674Z",
+        "timestamp": "2025-12-23T07:14:16.178Z",
         "programs": [
           {
             "name": "Mango v3",
@@ -1306,8 +1130,8 @@
         ],
         "details": {
           "programCount": 1,
-          "idlHash": "9e14a47a36ac008e",
-          "instructionCount": 2,
+          "idlHash": null,
+          "instructionCount": 0,
           "accountCount": 0,
           "message": "All 1 program(s) verified on mainnet",
           "verified": 1,
@@ -1318,7 +1142,7 @@
         "protocolId": "marginfi",
         "protocolName": "MarginFi",
         "status": "verified",
-        "timestamp": "2025-12-23T06:14:17.995Z",
+        "timestamp": "2025-12-23T07:14:16.789Z",
         "programs": [
           {
             "name": "MarginFi",
@@ -1340,8 +1164,8 @@
         ],
         "details": {
           "programCount": 1,
-          "idlHash": "cf437d4d512ab8f0",
-          "instructionCount": 2,
+          "idlHash": null,
+          "instructionCount": 0,
           "accountCount": 0,
           "message": "All 1 program(s) verified on mainnet",
           "verified": 1,
@@ -1352,7 +1176,7 @@
         "protocolId": "marinade",
         "protocolName": "Marinade Finance",
         "status": "verified",
-        "timestamp": "2025-12-23T06:14:18.382Z",
+        "timestamp": "2025-12-23T07:14:17.069Z",
         "programs": [
           {
             "name": "Marinade Finance",
@@ -1374,8 +1198,8 @@
         ],
         "details": {
           "programCount": 1,
-          "idlHash": "6e126ff84c079ae9",
-          "instructionCount": 1,
+          "idlHash": null,
+          "instructionCount": 0,
           "accountCount": 0,
           "message": "All 1 program(s) verified on mainnet",
           "verified": 1,
@@ -1386,7 +1210,7 @@
         "protocolId": "mercurial",
         "protocolName": "Mercurial",
         "status": "verified",
-        "timestamp": "2025-12-23T06:14:19.535Z",
+        "timestamp": "2025-12-23T07:14:18.353Z",
         "programs": [
           {
             "name": "Mercurial",
@@ -1408,8 +1232,8 @@
         ],
         "details": {
           "programCount": 1,
-          "idlHash": "72c27a6126bd2179",
-          "instructionCount": 2,
+          "idlHash": null,
+          "instructionCount": 0,
           "accountCount": 0,
           "message": "All 1 program(s) verified on mainnet",
           "verified": 1,
@@ -1420,7 +1244,7 @@
         "protocolId": "merkle-distributor",
         "protocolName": "Merkle distributor",
         "status": "placeholder",
-        "timestamp": "2025-12-23T06:14:19.857Z",
+        "timestamp": "2025-12-23T07:14:18.769Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -1430,7 +1254,7 @@
         "protocolId": "meteora",
         "protocolName": "Meteora",
         "status": "verified",
-        "timestamp": "2025-12-23T06:14:19.958Z",
+        "timestamp": "2025-12-23T07:14:18.870Z",
         "programs": [
           {
             "name": "Meteora DLMM",
@@ -1469,8 +1293,8 @@
         ],
         "details": {
           "programCount": 2,
-          "idlHash": "f2eb1cfd8f0b2fbe",
-          "instructionCount": 2,
+          "idlHash": null,
+          "instructionCount": 0,
           "accountCount": 0,
           "message": "All 2 program(s) verified on mainnet",
           "verified": 2,
@@ -1481,7 +1305,7 @@
         "protocolId": "obric",
         "protocolName": "Obric",
         "status": "placeholder",
-        "timestamp": "2025-12-23T06:14:21.566Z",
+        "timestamp": "2025-12-23T07:14:20.391Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -1491,7 +1315,7 @@
         "protocolId": "openbook",
         "protocolName": "OpenBook",
         "status": "verified",
-        "timestamp": "2025-12-23T06:14:21.666Z",
+        "timestamp": "2025-12-23T07:14:20.492Z",
         "programs": [
           {
             "name": "OpenBook v2",
@@ -1513,8 +1337,8 @@
         ],
         "details": {
           "programCount": 1,
-          "idlHash": "75622ef2d3848693",
-          "instructionCount": 2,
+          "idlHash": null,
+          "instructionCount": 0,
           "accountCount": 0,
           "message": "All 1 program(s) verified on mainnet",
           "verified": 1,
@@ -1525,7 +1349,7 @@
         "protocolId": "orca",
         "protocolName": "Orca (Whirlpool)",
         "status": "verified",
-        "timestamp": "2025-12-23T06:14:22.886Z",
+        "timestamp": "2025-12-23T07:14:20.967Z",
         "programs": [
           {
             "name": "Orca Whirlpool",
@@ -1547,8 +1371,8 @@
         ],
         "details": {
           "programCount": 1,
-          "idlHash": "197abbc706b37fa2",
-          "instructionCount": 1,
+          "idlHash": null,
+          "instructionCount": 0,
           "accountCount": 0,
           "message": "All 1 program(s) verified on mainnet",
           "verified": 1,
@@ -1559,7 +1383,7 @@
         "protocolId": "parrot",
         "protocolName": "Parrot",
         "status": "placeholder",
-        "timestamp": "2025-12-23T06:14:23.275Z",
+        "timestamp": "2025-12-23T07:14:22.352Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -1569,7 +1393,7 @@
         "protocolId": "penguin",
         "protocolName": "Penguin",
         "status": "placeholder",
-        "timestamp": "2025-12-23T06:14:23.376Z",
+        "timestamp": "2025-12-23T07:14:22.452Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -1579,7 +1403,7 @@
         "protocolId": "permalock",
         "protocolName": "Permalock",
         "status": "placeholder",
-        "timestamp": "2025-12-23T06:14:23.476Z",
+        "timestamp": "2025-12-23T07:14:22.553Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -1589,7 +1413,7 @@
         "protocolId": "phoenix",
         "protocolName": "Phoenix",
         "status": "verified",
-        "timestamp": "2025-12-23T06:14:23.577Z",
+        "timestamp": "2025-12-23T07:14:22.653Z",
         "programs": [
           {
             "name": "Phoenix DEX",
@@ -1611,8 +1435,8 @@
         ],
         "details": {
           "programCount": 1,
-          "idlHash": "9a4b899e7bd2ed83",
-          "instructionCount": 28,
+          "idlHash": null,
+          "instructionCount": 0,
           "accountCount": 0,
           "message": "All 1 program(s) verified on mainnet",
           "verified": 1,
@@ -1623,7 +1447,7 @@
         "protocolId": "plasma",
         "protocolName": "Plasma",
         "status": "placeholder",
-        "timestamp": "2025-12-23T06:14:23.934Z",
+        "timestamp": "2025-12-23T07:14:22.998Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -1633,7 +1457,7 @@
         "protocolId": "pool-manager",
         "protocolName": "Pool manager",
         "status": "placeholder",
-        "timestamp": "2025-12-23T06:14:24.035Z",
+        "timestamp": "2025-12-23T07:14:23.099Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -1643,7 +1467,7 @@
         "protocolId": "port",
         "protocolName": "Port",
         "status": "verified",
-        "timestamp": "2025-12-23T06:14:24.136Z",
+        "timestamp": "2025-12-23T07:14:23.199Z",
         "programs": [
           {
             "name": "Port Finance",
@@ -1665,8 +1489,8 @@
         ],
         "details": {
           "programCount": 1,
-          "idlHash": "2e42f22e10fb31dc",
-          "instructionCount": 2,
+          "idlHash": null,
+          "instructionCount": 0,
           "accountCount": 0,
           "message": "All 1 program(s) verified on mainnet",
           "verified": 1,
@@ -1676,71 +1500,28 @@
       {
         "protocolId": "prism",
         "protocolName": "Prism",
-        "status": "program_not_found",
-        "timestamp": "2025-12-23T06:14:24.472Z",
-        "programs": [
-          {
-            "name": "prism",
-            "address": "PRSMNi6muTeXJUdTcvgqRfiNGZYZx1JFNvtQcuVpumT",
-            "network": "mainnet",
-            "status": "not_found",
-            "programInfo": {
-              "exists": false,
-              "executable": false,
-              "dataLen": 0
-            },
-            "message": "Program not found on-chain"
-          }
-        ],
+        "status": "no_program_id",
+        "timestamp": "2025-12-23T07:14:23.615Z",
+        "programs": [],
         "details": {
-          "programCount": 1,
-          "idlHash": "fe998e3576797bea",
-          "instructionCount": 2,
-          "accountCount": 0,
-          "message": "No programs found on-chain",
-          "verified": 0,
-          "total": 1
+          "message": "No program ID found in IDL or known mappings"
         }
       },
       {
         "protocolId": "pumpfun",
         "protocolName": "Pumpfun",
-        "status": "verified",
-        "timestamp": "2025-12-23T06:14:24.678Z",
-        "programs": [
-          {
-            "name": "Main Program",
-            "address": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
-            "network": "mainnet",
-            "status": "verified",
-            "programInfo": {
-              "exists": true,
-              "executable": true,
-              "dataLen": 36,
-              "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
-              "lamports": 1662625250
-            },
-            "message": "Program exists and is executable",
-            "onChainIdl": {
-              "found": false
-            }
-          }
-        ],
+        "status": "no_program_id",
+        "timestamp": "2025-12-23T07:14:23.716Z",
+        "programs": [],
         "details": {
-          "programCount": 1,
-          "idlHash": "9977e3393d773374",
-          "instructionCount": 23,
-          "accountCount": 5,
-          "message": "All 1 program(s) verified on mainnet",
-          "verified": 1,
-          "total": 1
+          "message": "No program ID found in IDL or known mappings"
         }
       },
       {
         "protocolId": "pumpswap",
         "protocolName": "Pumpswap",
         "status": "placeholder",
-        "timestamp": "2025-12-23T06:14:25.919Z",
+        "timestamp": "2025-12-23T07:14:23.816Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -1750,7 +1531,7 @@
         "protocolId": "quarry",
         "protocolName": "Quarry",
         "status": "partial",
-        "timestamp": "2025-12-23T06:14:26.019Z",
+        "timestamp": "2025-12-23T07:14:23.916Z",
         "programs": [
           {
             "name": "Quarry",
@@ -1784,8 +1565,8 @@
         ],
         "details": {
           "programCount": 2,
-          "idlHash": "fa0eb9c01f928909",
-          "instructionCount": 3,
+          "idlHash": null,
+          "instructionCount": 0,
           "accountCount": 0,
           "message": "1/2 programs verified on mainnet",
           "verified": 1,
@@ -1795,37 +1576,18 @@
       {
         "protocolId": "ribbon",
         "protocolName": "Ribbon",
-        "status": "program_not_found",
-        "timestamp": "2025-12-23T06:14:27.240Z",
-        "programs": [
-          {
-            "name": "ribbon_finance",
-            "address": "RiBBoNxJJaMKYnqYPDTNTJLHoTugKxYaKYTgrn4jSgp",
-            "network": "mainnet",
-            "status": "not_found",
-            "programInfo": {
-              "exists": false,
-              "executable": false,
-              "dataLen": 0
-            },
-            "message": "Program not found on-chain"
-          }
-        ],
+        "status": "no_program_id",
+        "timestamp": "2025-12-23T07:14:24.786Z",
+        "programs": [],
         "details": {
-          "programCount": 1,
-          "idlHash": "a7c22fb0143686c0",
-          "instructionCount": 2,
-          "accountCount": 0,
-          "message": "No programs found on-chain",
-          "verified": 0,
-          "total": 1
+          "message": "No program ID found in IDL or known mappings"
         }
       },
       {
         "protocolId": "saber",
         "protocolName": "Saber",
         "status": "verified",
-        "timestamp": "2025-12-23T06:14:27.514Z",
+        "timestamp": "2025-12-23T07:14:24.887Z",
         "programs": [
           {
             "name": "Saber Stable Swap",
@@ -1847,8 +1609,8 @@
         ],
         "details": {
           "programCount": 1,
-          "idlHash": "be6076d903857863",
-          "instructionCount": 2,
+          "idlHash": null,
+          "instructionCount": 0,
           "accountCount": 0,
           "message": "All 1 program(s) verified on mainnet",
           "verified": 1,
@@ -1858,42 +1620,18 @@
       {
         "protocolId": "saber-periphery",
         "protocolName": "Saber periphery",
-        "status": "verified",
-        "timestamp": "2025-12-23T06:14:28.775Z",
-        "programs": [
-          {
-            "name": "saber_periphery",
-            "address": "DecZY86MU5Gj7kppfUCEmd4LbXXuyZH1yHaP2NTqdiZB",
-            "network": "mainnet",
-            "status": "verified",
-            "programInfo": {
-              "exists": true,
-              "executable": true,
-              "dataLen": 36,
-              "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
-              "lamports": 1141440
-            },
-            "message": "Program exists and is executable",
-            "onChainIdl": {
-              "found": false
-            }
-          }
-        ],
+        "status": "no_program_id",
+        "timestamp": "2025-12-23T07:14:25.214Z",
+        "programs": [],
         "details": {
-          "programCount": 1,
-          "idlHash": "3f2d88ddac30e302",
-          "instructionCount": 2,
-          "accountCount": 0,
-          "message": "All 1 program(s) verified on mainnet",
-          "verified": 1,
-          "total": 1
+          "message": "No program ID found in IDL or known mappings"
         }
       },
       {
         "protocolId": "sanctum",
         "protocolName": "Sanctum",
         "status": "verified",
-        "timestamp": "2025-12-23T06:14:29.057Z",
+        "timestamp": "2025-12-23T07:14:25.315Z",
         "programs": [
           {
             "name": "Sanctum",
@@ -1915,8 +1653,8 @@
         ],
         "details": {
           "programCount": 1,
-          "idlHash": "81118aed06913dfb",
-          "instructionCount": 2,
+          "idlHash": null,
+          "instructionCount": 0,
           "accountCount": 0,
           "message": "All 1 program(s) verified on mainnet",
           "verified": 1,
@@ -1927,7 +1665,7 @@
         "protocolId": "saros",
         "protocolName": "Saros",
         "status": "no_program_id",
-        "timestamp": "2025-12-23T06:14:30.147Z",
+        "timestamp": "2025-12-23T07:14:25.811Z",
         "programs": [],
         "details": {
           "message": "No program ID found in IDL or known mappings"
@@ -1937,7 +1675,7 @@
         "protocolId": "save",
         "protocolName": "Save",
         "status": "placeholder",
-        "timestamp": "2025-12-23T06:14:30.248Z",
+        "timestamp": "2025-12-23T07:14:25.911Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -1947,7 +1685,7 @@
         "protocolId": "sencha",
         "protocolName": "Sencha",
         "status": "partial",
-        "timestamp": "2025-12-23T06:14:30.349Z",
+        "timestamp": "2025-12-23T07:14:26.012Z",
         "programs": [
           {
             "name": "Sencha",
@@ -1981,8 +1719,8 @@
         ],
         "details": {
           "programCount": 2,
-          "idlHash": "e1b4f283038b614b",
-          "instructionCount": 2,
+          "idlHash": null,
+          "instructionCount": 0,
           "accountCount": 0,
           "message": "1/2 programs verified on mainnet",
           "verified": 1,
@@ -1993,7 +1731,7 @@
         "protocolId": "serum-v2",
         "protocolName": "Serum v2",
         "status": "verified",
-        "timestamp": "2025-12-23T06:14:31.690Z",
+        "timestamp": "2025-12-23T07:14:26.526Z",
         "programs": [
           {
             "name": "Serum v2",
@@ -2015,8 +1753,8 @@
         ],
         "details": {
           "programCount": 1,
-          "idlHash": "1bfb3f728783625c",
-          "instructionCount": 2,
+          "idlHash": null,
+          "instructionCount": 0,
           "accountCount": 0,
           "message": "All 1 program(s) verified on mainnet",
           "verified": 1,
@@ -2027,7 +1765,7 @@
         "protocolId": "snapshots",
         "protocolName": "Snapshots",
         "status": "placeholder",
-        "timestamp": "2025-12-23T06:14:32.798Z",
+        "timestamp": "2025-12-23T07:14:27.788Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -2036,37 +1774,18 @@
       {
         "protocolId": "solanium",
         "protocolName": "Solanium",
-        "status": "program_not_found",
-        "timestamp": "2025-12-23T06:14:32.899Z",
-        "programs": [
-          {
-            "name": "solanium",
-            "address": "SoLaUMhM3P6Qy9iRHNMcY52y9tppKSRvb2VX3vW92Jg",
-            "network": "mainnet",
-            "status": "not_found",
-            "programInfo": {
-              "exists": false,
-              "executable": false,
-              "dataLen": 0
-            },
-            "message": "Program not found on-chain"
-          }
-        ],
+        "status": "no_program_id",
+        "timestamp": "2025-12-23T07:14:27.888Z",
+        "programs": [],
         "details": {
-          "programCount": 1,
-          "idlHash": "77cbfd59a853e9e9",
-          "instructionCount": 2,
-          "accountCount": 0,
-          "message": "No programs found on-chain",
-          "verified": 0,
-          "total": 1
+          "message": "No program ID found in IDL or known mappings"
         }
       },
       {
         "protocolId": "solend",
         "protocolName": "Solend",
         "status": "verified",
-        "timestamp": "2025-12-23T06:14:33.175Z",
+        "timestamp": "2025-12-23T07:14:27.989Z",
         "programs": [
           {
             "name": "Solend",
@@ -2088,8 +1807,8 @@
         ],
         "details": {
           "programCount": 1,
-          "idlHash": "6a452b5cc8e4f106",
-          "instructionCount": 3,
+          "idlHash": null,
+          "instructionCount": 0,
           "accountCount": 0,
           "message": "All 1 program(s) verified on mainnet",
           "verified": 1,
@@ -2100,7 +1819,7 @@
         "protocolId": "solfi",
         "protocolName": "Solfi",
         "status": "placeholder",
-        "timestamp": "2025-12-23T06:14:34.254Z",
+        "timestamp": "2025-12-23T07:14:28.453Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -2110,7 +1829,7 @@
         "protocolId": "solrazr",
         "protocolName": "Solrazr",
         "status": "placeholder",
-        "timestamp": "2025-12-23T06:14:34.354Z",
+        "timestamp": "2025-12-23T07:14:28.554Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -2120,7 +1839,7 @@
         "protocolId": "solstarter",
         "protocolName": "Solstarter",
         "status": "placeholder",
-        "timestamp": "2025-12-23T06:14:34.455Z",
+        "timestamp": "2025-12-23T07:14:28.654Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -2130,7 +1849,7 @@
         "protocolId": "stabble",
         "protocolName": "Stabble",
         "status": "placeholder",
-        "timestamp": "2025-12-23T06:14:34.555Z",
+        "timestamp": "2025-12-23T07:14:28.755Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -2139,42 +1858,18 @@
       {
         "protocolId": "stable-swap",
         "protocolName": "Stable swap",
-        "status": "verified",
-        "timestamp": "2025-12-23T06:14:34.656Z",
-        "programs": [
-          {
-            "name": "stable_swap",
-            "address": "SSwpkEEcbUqx4vtoEByFjSkhKdCT862DNVb52nZg1UZ",
-            "network": "mainnet",
-            "status": "verified",
-            "programInfo": {
-              "exists": true,
-              "executable": true,
-              "dataLen": 36,
-              "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
-              "lamports": 1141448
-            },
-            "message": "Program exists and is executable",
-            "onChainIdl": {
-              "found": false
-            }
-          }
-        ],
+        "status": "no_program_id",
+        "timestamp": "2025-12-23T07:14:28.855Z",
+        "programs": [],
         "details": {
-          "programCount": 1,
-          "idlHash": "3b4dba4e91c7a98a",
-          "instructionCount": 2,
-          "accountCount": 0,
-          "message": "All 1 program(s) verified on mainnet",
-          "verified": 1,
-          "total": 1
+          "message": "No program ID found in IDL or known mappings"
         }
       },
       {
         "protocolId": "starlaunch",
         "protocolName": "Starlaunch",
         "status": "placeholder",
-        "timestamp": "2025-12-23T06:14:35.000Z",
+        "timestamp": "2025-12-23T07:14:28.956Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -2183,37 +1878,18 @@
       {
         "protocolId": "step",
         "protocolName": "Step",
-        "status": "program_not_found",
-        "timestamp": "2025-12-23T06:14:35.101Z",
-        "programs": [
-          {
-            "name": "step_finance",
-            "address": "STEP6uo1vC9GdDLkqXRs8D7mw6Y3Vhn9rjxhHEV8sTg",
-            "network": "mainnet",
-            "status": "not_found",
-            "programInfo": {
-              "exists": false,
-              "executable": false,
-              "dataLen": 0
-            },
-            "message": "Program not found on-chain"
-          }
-        ],
+        "status": "no_program_id",
+        "timestamp": "2025-12-23T07:14:29.056Z",
+        "programs": [],
         "details": {
-          "programCount": 1,
-          "idlHash": "4a1cf1cc1e7703de",
-          "instructionCount": 1,
-          "accountCount": 0,
-          "message": "No programs found on-chain",
-          "verified": 0,
-          "total": 1
+          "message": "No program ID found in IDL or known mappings"
         }
       },
       {
         "protocolId": "stepn",
         "protocolName": "Stepn",
         "status": "placeholder",
-        "timestamp": "2025-12-23T06:14:35.375Z",
+        "timestamp": "2025-12-23T07:14:29.157Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -2222,37 +1898,18 @@
       {
         "protocolId": "sunny",
         "protocolName": "Sunny",
-        "status": "program_not_found",
-        "timestamp": "2025-12-23T06:14:35.476Z",
-        "programs": [
-          {
-            "name": "sunny_aggregator",
-            "address": "SUNNY6y3j1qLwf6TUVQeaEfZQ8HaZphRH5W97HWZZLX",
-            "network": "mainnet",
-            "status": "not_found",
-            "programInfo": {
-              "exists": false,
-              "executable": false,
-              "dataLen": 0
-            },
-            "message": "Program not found on-chain"
-          }
-        ],
+        "status": "no_program_id",
+        "timestamp": "2025-12-23T07:14:29.257Z",
+        "programs": [],
         "details": {
-          "programCount": 1,
-          "idlHash": "52a04eb2e9bc9749",
-          "instructionCount": 2,
-          "accountCount": 0,
-          "message": "No programs found on-chain",
-          "verified": 0,
-          "total": 1
+          "message": "No program ID found in IDL or known mappings"
         }
       },
       {
         "protocolId": "switchboard",
         "protocolName": "Switchboard",
         "status": "verified",
-        "timestamp": "2025-12-23T06:14:35.680Z",
+        "timestamp": "2025-12-23T07:14:29.358Z",
         "programs": [
           {
             "name": "Switchboard",
@@ -2274,8 +1931,8 @@
         ],
         "details": {
           "programCount": 1,
-          "idlHash": "b574af2174eaed72",
-          "instructionCount": 2,
+          "idlHash": null,
+          "instructionCount": 0,
           "accountCount": 0,
           "message": "All 1 program(s) verified on mainnet",
           "verified": 1,
@@ -2285,66 +1942,28 @@
       {
         "protocolId": "symmetry",
         "protocolName": "Symmetry",
-        "status": "program_not_found",
-        "timestamp": "2025-12-23T06:14:36.007Z",
-        "programs": [
-          {
-            "name": "symmetry_engine",
-            "address": "symwMw4ZF1ATh9PNvBjGFqYJkXLqgCK7zZSkhh5Y6DX",
-            "network": "mainnet",
-            "status": "not_found",
-            "programInfo": {
-              "exists": false,
-              "executable": false,
-              "dataLen": 0
-            },
-            "message": "Program not found on-chain"
-          }
-        ],
+        "status": "no_program_id",
+        "timestamp": "2025-12-23T07:14:29.768Z",
+        "programs": [],
         "details": {
-          "programCount": 1,
-          "idlHash": "1bd33fc6646957d3",
-          "instructionCount": 2,
-          "accountCount": 0,
-          "message": "No programs found on-chain",
-          "verified": 0,
-          "total": 1
+          "message": "No program ID found in IDL or known mappings"
         }
       },
       {
         "protocolId": "synthetify",
         "protocolName": "Synthetify",
-        "status": "program_not_found",
-        "timestamp": "2025-12-23T06:14:37.138Z",
-        "programs": [
-          {
-            "name": "synthetify",
-            "address": "SNTYtJHabQgFsEHV1vvZhQ7XLk2TwK6c6M6dXqK8C4C",
-            "network": "mainnet",
-            "status": "not_found",
-            "programInfo": {
-              "exists": false,
-              "executable": false,
-              "dataLen": 0
-            },
-            "message": "Program not found on-chain"
-          }
-        ],
+        "status": "no_program_id",
+        "timestamp": "2025-12-23T07:14:29.868Z",
+        "programs": [],
         "details": {
-          "programCount": 1,
-          "idlHash": "fe0feb435fa6aee6",
-          "instructionCount": 2,
-          "accountCount": 0,
-          "message": "No programs found on-chain",
-          "verified": 0,
-          "total": 1
+          "message": "No program ID found in IDL or known mappings"
         }
       },
       {
         "protocolId": "tesserav",
         "protocolName": "Tesserav",
         "status": "placeholder",
-        "timestamp": "2025-12-23T06:14:37.417Z",
+        "timestamp": "2025-12-23T07:14:29.968Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -2354,7 +1973,7 @@
         "protocolId": "titan",
         "protocolName": "Titan",
         "status": "placeholder",
-        "timestamp": "2025-12-23T06:14:37.518Z",
+        "timestamp": "2025-12-23T07:14:30.068Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -2364,7 +1983,7 @@
         "protocolId": "tribeca",
         "protocolName": "Tribeca",
         "status": "partial",
-        "timestamp": "2025-12-23T06:14:37.619Z",
+        "timestamp": "2025-12-23T07:14:30.169Z",
         "programs": [
           {
             "name": "Tribeca",
@@ -2398,8 +2017,8 @@
         ],
         "details": {
           "programCount": 2,
-          "idlHash": "fef09872c0fc67eb",
-          "instructionCount": 3,
+          "idlHash": null,
+          "instructionCount": 0,
           "accountCount": 0,
           "message": "1/2 programs verified on mainnet",
           "verified": 1,
@@ -2409,37 +2028,18 @@
       {
         "protocolId": "tulip",
         "protocolName": "Tulip",
-        "status": "program_not_found",
-        "timestamp": "2025-12-23T06:14:38.070Z",
-        "programs": [
-          {
-            "name": "tulip",
-            "address": "TuLipcqtGVXP9XR62wM8WWCm6a9vhLs7T9g8bHrzGxe",
-            "network": "mainnet",
-            "status": "not_found",
-            "programInfo": {
-              "exists": false,
-              "executable": false,
-              "dataLen": 0
-            },
-            "message": "Program not found on-chain"
-          }
-        ],
+        "status": "no_program_id",
+        "timestamp": "2025-12-23T07:14:30.720Z",
+        "programs": [],
         "details": {
-          "programCount": 1,
-          "idlHash": "a6ccfcf4d51cc5b0",
-          "instructionCount": 2,
-          "accountCount": 0,
-          "message": "No programs found on-chain",
-          "verified": 0,
-          "total": 1
+          "message": "No program ID found in IDL or known mappings"
         }
       },
       {
         "protocolId": "uxd",
         "protocolName": "Uxd",
         "status": "partial",
-        "timestamp": "2025-12-23T06:14:39.182Z",
+        "timestamp": "2025-12-23T07:14:30.820Z",
         "programs": [
           {
             "name": "UXD",
@@ -2473,8 +2073,8 @@
         ],
         "details": {
           "programCount": 2,
-          "idlHash": "4508ba21cd4e1c14",
-          "instructionCount": 2,
+          "idlHash": null,
+          "instructionCount": 0,
           "accountCount": 0,
           "message": "1/2 programs verified on mainnet",
           "verified": 1,
@@ -2485,7 +2085,7 @@
         "protocolId": "venko",
         "protocolName": "Venko",
         "status": "placeholder",
-        "timestamp": "2025-12-23T06:14:40.653Z",
+        "timestamp": "2025-12-23T07:14:31.370Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -2495,7 +2095,7 @@
         "protocolId": "yi",
         "protocolName": "Yi",
         "status": "placeholder",
-        "timestamp": "2025-12-23T06:14:40.753Z",
+        "timestamp": "2025-12-23T07:14:31.470Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -2505,7 +2105,7 @@
         "protocolId": "zerofi",
         "protocolName": "Zerofi",
         "status": "placeholder",
-        "timestamp": "2025-12-23T06:14:40.854Z",
+        "timestamp": "2025-12-23T07:14:31.571Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -2515,7 +2115,7 @@
         "protocolId": "zeroone",
         "protocolName": "Zeroone",
         "status": "placeholder",
-        "timestamp": "2025-12-23T06:14:40.954Z",
+        "timestamp": "2025-12-23T07:14:31.671Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -2525,7 +2125,7 @@
         "protocolId": "zeta",
         "protocolName": "Zeta Markets",
         "status": "partial",
-        "timestamp": "2025-12-23T06:14:41.055Z",
+        "timestamp": "2025-12-23T07:14:31.772Z",
         "programs": [
           {
             "name": "Zeta Markets",
@@ -2559,8 +2159,8 @@
         ],
         "details": {
           "programCount": 2,
-          "idlHash": "30769d63006ebdc1",
-          "instructionCount": 3,
+          "idlHash": null,
+          "instructionCount": 0,
           "accountCount": 0,
           "message": "1/2 programs verified on mainnet",
           "verified": 1,
@@ -2568,14 +2168,14 @@
         }
       }
     ],
-    "durationMs": 48030
+    "durationMs": 38682
   },
   "protocolResults": {
     "idl-protocol": {
       "protocolId": "idl-protocol",
       "protocolName": "IDL Protocol",
       "status": "devnet_only",
-      "timestamp": "2025-12-23T06:13:54.524Z",
+      "timestamp": "2025-12-23T07:13:56.184Z",
       "programs": [
         {
           "name": "IDL Protocol",
@@ -2597,9 +2197,9 @@
       ],
       "details": {
         "programCount": 1,
-        "idlHash": "277e2193c507221e",
-        "instructionCount": 15,
-        "accountCount": 6,
+        "idlHash": null,
+        "instructionCount": 0,
+        "accountCount": 0,
         "message": "Program(s) only available on devnet",
         "verified": 0,
         "total": 1
@@ -2609,7 +2209,7 @@
       "protocolId": "acceleraytor",
       "protocolName": "Acceleraytor",
       "status": "placeholder",
-      "timestamp": "2025-12-23T06:13:55.117Z",
+      "timestamp": "2025-12-23T07:13:56.998Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -2619,7 +2219,7 @@
       "protocolId": "adrena",
       "protocolName": "Adrena",
       "status": "placeholder",
-      "timestamp": "2025-12-23T06:13:55.217Z",
+      "timestamp": "2025-12-23T07:13:57.099Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -2629,7 +2229,7 @@
       "protocolId": "aldrin",
       "protocolName": "Aldrin",
       "status": "verified",
-      "timestamp": "2025-12-23T06:13:55.317Z",
+      "timestamp": "2025-12-23T07:13:57.199Z",
       "programs": [
         {
           "name": "Aldrin AMM",
@@ -2651,8 +2251,8 @@
       ],
       "details": {
         "programCount": 1,
-        "idlHash": "65910336e891591b",
-        "instructionCount": 2,
+        "idlHash": null,
+        "instructionCount": 0,
         "accountCount": 0,
         "message": "All 1 program(s) verified on mainnet",
         "verified": 1,
@@ -2662,37 +2262,18 @@
     "apricot": {
       "protocolId": "apricot",
       "protocolName": "Apricot",
-      "status": "program_not_found",
-      "timestamp": "2025-12-23T06:13:55.647Z",
-      "programs": [
-        {
-          "name": "apricot",
-          "address": "6FLTtosMrW1JgPDZ8TAffNJDQ9zr3L78bDdpzqHCevDm",
-          "network": "mainnet",
-          "status": "not_found",
-          "programInfo": {
-            "exists": false,
-            "executable": false,
-            "dataLen": 0
-          },
-          "message": "Program not found on-chain"
-        }
-      ],
+      "status": "no_program_id",
+      "timestamp": "2025-12-23T07:13:57.943Z",
+      "programs": [],
       "details": {
-        "programCount": 1,
-        "idlHash": "af1573cae2f35e5a",
-        "instructionCount": 2,
-        "accountCount": 0,
-        "message": "No programs found on-chain",
-        "verified": 0,
-        "total": 1
+        "message": "No program ID found in IDL or known mappings"
       }
     },
     "arrow": {
       "protocolId": "arrow",
       "protocolName": "Arrow",
       "status": "partial",
-      "timestamp": "2025-12-23T06:13:55.868Z",
+      "timestamp": "2025-12-23T07:13:58.045Z",
       "programs": [
         {
           "name": "Arrow",
@@ -2726,8 +2307,8 @@
       ],
       "details": {
         "programCount": 2,
-        "idlHash": "64758fc8c3fd7b4c",
-        "instructionCount": 2,
+        "idlHash": null,
+        "instructionCount": 0,
         "accountCount": 0,
         "message": "1/2 programs verified on mainnet",
         "verified": 1,
@@ -2737,37 +2318,18 @@
     "atrix": {
       "protocolId": "atrix",
       "protocolName": "Atrix",
-      "status": "program_not_found",
-      "timestamp": "2025-12-23T06:13:56.288Z",
-      "programs": [
-        {
-          "name": "atrix",
-          "address": "ATRiH29rGgf5N3uKEDDEa3vjDixbL9jRnrUh9oHv3gfN",
-          "network": "mainnet",
-          "status": "not_found",
-          "programInfo": {
-            "exists": false,
-            "executable": false,
-            "dataLen": 0
-          },
-          "message": "Program not found on-chain"
-        }
-      ],
+      "status": "no_program_id",
+      "timestamp": "2025-12-23T07:13:59.424Z",
+      "programs": [],
       "details": {
-        "programCount": 1,
-        "idlHash": "fed67414f42ad2b2",
-        "instructionCount": 2,
-        "accountCount": 0,
-        "message": "No programs found on-chain",
-        "verified": 0,
-        "total": 1
+        "message": "No program ID found in IDL or known mappings"
       }
     },
     "balansol": {
       "protocolId": "balansol",
       "protocolName": "Balansol",
       "status": "placeholder",
-      "timestamp": "2025-12-23T06:13:56.495Z",
+      "timestamp": "2025-12-23T07:13:59.525Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -2777,7 +2339,7 @@
       "protocolId": "beluga",
       "protocolName": "Beluga",
       "status": "placeholder",
-      "timestamp": "2025-12-23T06:13:56.595Z",
+      "timestamp": "2025-12-23T07:13:59.625Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -2787,7 +2349,7 @@
       "protocolId": "blaze",
       "protocolName": "Blaze",
       "status": "placeholder",
-      "timestamp": "2025-12-23T06:13:56.695Z",
+      "timestamp": "2025-12-23T07:13:59.726Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -2797,7 +2359,7 @@
       "protocolId": "bonfida",
       "protocolName": "Bonfida",
       "status": "verified",
-      "timestamp": "2025-12-23T06:13:56.796Z",
+      "timestamp": "2025-12-23T07:13:59.826Z",
       "programs": [
         {
           "name": "Bonfida",
@@ -2819,8 +2381,8 @@
       ],
       "details": {
         "programCount": 1,
-        "idlHash": "a3d74c257a4b7546",
-        "instructionCount": 2,
+        "idlHash": null,
+        "instructionCount": 0,
         "accountCount": 0,
         "message": "All 1 program(s) verified on mainnet",
         "verified": 1,
@@ -2831,7 +2393,7 @@
       "protocolId": "byreal",
       "protocolName": "Byreal",
       "status": "placeholder",
-      "timestamp": "2025-12-23T06:13:57.161Z",
+      "timestamp": "2025-12-23T07:14:00.371Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -2841,7 +2403,7 @@
       "protocolId": "cashio",
       "protocolName": "Cashio",
       "status": "placeholder",
-      "timestamp": "2025-12-23T06:13:57.262Z",
+      "timestamp": "2025-12-23T07:14:00.472Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -2851,7 +2413,7 @@
       "protocolId": "clone",
       "protocolName": "Clone",
       "status": "placeholder",
-      "timestamp": "2025-12-23T06:13:57.362Z",
+      "timestamp": "2025-12-23T07:14:00.572Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -2861,7 +2423,7 @@
       "protocolId": "crate",
       "protocolName": "Crate",
       "status": "placeholder",
-      "timestamp": "2025-12-23T06:13:57.462Z",
+      "timestamp": "2025-12-23T07:14:00.673Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -2871,7 +2433,7 @@
       "protocolId": "crema",
       "protocolName": "Crema",
       "status": "verified",
-      "timestamp": "2025-12-23T06:13:57.563Z",
+      "timestamp": "2025-12-23T07:14:00.773Z",
       "programs": [
         {
           "name": "Crema",
@@ -2893,8 +2455,8 @@
       ],
       "details": {
         "programCount": 1,
-        "idlHash": "881536efc78e157b",
-        "instructionCount": 2,
+        "idlHash": null,
+        "instructionCount": 0,
         "accountCount": 0,
         "message": "All 1 program(s) verified on mainnet",
         "verified": 1,
@@ -2905,7 +2467,7 @@
       "protocolId": "cropper",
       "protocolName": "Cropper",
       "status": "placeholder",
-      "timestamp": "2025-12-23T06:13:57.839Z",
+      "timestamp": "2025-12-23T07:14:01.258Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -2914,71 +2476,28 @@
     "cyclos": {
       "protocolId": "cyclos",
       "protocolName": "Cyclos",
-      "status": "program_not_found",
-      "timestamp": "2025-12-23T06:13:57.939Z",
-      "programs": [
-        {
-          "name": "cyclos",
-          "address": "CYCLosMaPQkNaMfNXWg4eZJ2TgQ1Ckrwq8TKbBkuLcxu",
-          "network": "mainnet",
-          "status": "not_found",
-          "programInfo": {
-            "exists": false,
-            "executable": false,
-            "dataLen": 0
-          },
-          "message": "Program not found on-chain"
-        }
-      ],
+      "status": "no_program_id",
+      "timestamp": "2025-12-23T07:14:01.359Z",
+      "programs": [],
       "details": {
-        "programCount": 1,
-        "idlHash": "dda30abbbb482cbc",
-        "instructionCount": 2,
-        "accountCount": 0,
-        "message": "No programs found on-chain",
-        "verified": 0,
-        "total": 1
+        "message": "No program ID found in IDL or known mappings"
       }
     },
     "cykura": {
       "protocolId": "cykura",
       "protocolName": "Cykura",
-      "status": "verified",
-      "timestamp": "2025-12-23T06:13:58.244Z",
-      "programs": [
-        {
-          "name": "cykura",
-          "address": "cysPXAjehMpVKUapzbMCCnpFxUFFryEWEaLgnb9NrR8",
-          "network": "mainnet",
-          "status": "verified",
-          "programInfo": {
-            "exists": true,
-            "executable": true,
-            "dataLen": 36,
-            "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
-            "lamports": 1141440
-          },
-          "message": "Program exists and is executable",
-          "onChainIdl": {
-            "found": false
-          }
-        }
-      ],
+      "status": "no_program_id",
+      "timestamp": "2025-12-23T07:14:01.459Z",
+      "programs": [],
       "details": {
-        "programCount": 1,
-        "idlHash": "ea782945b8d4f670",
-        "instructionCount": 2,
-        "accountCount": 0,
-        "message": "All 1 program(s) verified on mainnet",
-        "verified": 1,
-        "total": 1
+        "message": "No program ID found in IDL or known mappings"
       }
     },
     "deltaone": {
       "protocolId": "deltaone",
       "protocolName": "Deltaone",
       "status": "placeholder",
-      "timestamp": "2025-12-23T06:13:58.634Z",
+      "timestamp": "2025-12-23T07:14:01.560Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -2987,66 +2506,28 @@
     "dexlab": {
       "protocolId": "dexlab",
       "protocolName": "Dexlab",
-      "status": "program_not_found",
-      "timestamp": "2025-12-23T06:13:58.734Z",
-      "programs": [
-        {
-          "name": "dexlab",
-          "address": "DexLaB7TkQN3xLSfzFkXYVJgNJnFJfWDHtqHJN2EHHXz",
-          "network": "mainnet",
-          "status": "not_found",
-          "programInfo": {
-            "exists": false,
-            "executable": false,
-            "dataLen": 0
-          },
-          "message": "Program not found on-chain"
-        }
-      ],
+      "status": "no_program_id",
+      "timestamp": "2025-12-23T07:14:01.660Z",
+      "programs": [],
       "details": {
-        "programCount": 1,
-        "idlHash": "3456a1945749bb61",
-        "instructionCount": 1,
-        "accountCount": 0,
-        "message": "No programs found on-chain",
-        "verified": 0,
-        "total": 1
+        "message": "No program ID found in IDL or known mappings"
       }
     },
     "dexterity": {
       "protocolId": "dexterity",
       "protocolName": "Dexterity",
-      "status": "program_not_found",
-      "timestamp": "2025-12-23T06:13:59.056Z",
-      "programs": [
-        {
-          "name": "dexterity",
-          "address": "Dex1111111111111111111111111111111111111111",
-          "network": "mainnet",
-          "status": "not_found",
-          "programInfo": {
-            "exists": false,
-            "executable": false,
-            "dataLen": 0
-          },
-          "message": "Program not found on-chain"
-        }
-      ],
+      "status": "no_program_id",
+      "timestamp": "2025-12-23T07:14:01.761Z",
+      "programs": [],
       "details": {
-        "programCount": 1,
-        "idlHash": "2f3a2eb5924d0901",
-        "instructionCount": 2,
-        "accountCount": 0,
-        "message": "No programs found on-chain",
-        "verified": 0,
-        "total": 1
+        "message": "No program ID found in IDL or known mappings"
       }
     },
     "drift": {
       "protocolId": "drift",
       "protocolName": "Drift Protocol",
       "status": "verified",
-      "timestamp": "2025-12-23T06:13:59.349Z",
+      "timestamp": "2025-12-23T07:14:01.861Z",
       "programs": [
         {
           "name": "Drift Protocol",
@@ -3068,9 +2549,9 @@
       ],
       "details": {
         "programCount": 1,
-        "idlHash": "0bd2c1ffaff746e7",
-        "instructionCount": 194,
-        "accountCount": 17,
+        "idlHash": null,
+        "instructionCount": 0,
+        "accountCount": 0,
         "message": "All 1 program(s) verified on mainnet",
         "verified": 1,
         "total": 1
@@ -3080,7 +2561,7 @@
       "protocolId": "ellipsis",
       "protocolName": "Ellipsis",
       "status": "placeholder",
-      "timestamp": "2025-12-23T06:13:59.661Z",
+      "timestamp": "2025-12-23T07:14:02.432Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -3090,7 +2571,7 @@
       "protocolId": "enjinstarter",
       "protocolName": "Enjinstarter",
       "status": "placeholder",
-      "timestamp": "2025-12-23T06:13:59.761Z",
+      "timestamp": "2025-12-23T07:14:02.532Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -3100,7 +2581,7 @@
       "protocolId": "flash",
       "protocolName": "Flash",
       "status": "placeholder",
-      "timestamp": "2025-12-23T06:13:59.862Z",
+      "timestamp": "2025-12-23T07:14:02.633Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -3110,7 +2591,7 @@
       "protocolId": "fluxbeam",
       "protocolName": "Fluxbeam",
       "status": "partial",
-      "timestamp": "2025-12-23T06:13:59.963Z",
+      "timestamp": "2025-12-23T07:14:02.733Z",
       "programs": [
         {
           "name": "FluxBeam",
@@ -3144,8 +2625,8 @@
       ],
       "details": {
         "programCount": 2,
-        "idlHash": "7e7987fa5f6d6827",
-        "instructionCount": 1,
+        "idlHash": null,
+        "instructionCount": 0,
         "accountCount": 0,
         "message": "1/2 programs verified on mainnet",
         "verified": 1,
@@ -3156,7 +2637,7 @@
       "protocolId": "francium",
       "protocolName": "Francium",
       "status": "partial",
-      "timestamp": "2025-12-23T06:14:00.457Z",
+      "timestamp": "2025-12-23T07:14:03.375Z",
       "programs": [
         {
           "name": "Francium",
@@ -3190,8 +2671,8 @@
       ],
       "details": {
         "programCount": 2,
-        "idlHash": "6264b09b4869e2ce",
-        "instructionCount": 2,
+        "idlHash": null,
+        "instructionCount": 0,
         "accountCount": 0,
         "message": "1/2 programs verified on mainnet",
         "verified": 1,
@@ -3202,7 +2683,7 @@
       "protocolId": "gauge",
       "protocolName": "Gauge",
       "status": "placeholder",
-      "timestamp": "2025-12-23T06:14:00.894Z",
+      "timestamp": "2025-12-23T07:14:03.998Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -3212,7 +2693,7 @@
       "protocolId": "gavel",
       "protocolName": "Gavel",
       "status": "placeholder",
-      "timestamp": "2025-12-23T06:14:00.994Z",
+      "timestamp": "2025-12-23T07:14:04.098Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -3222,7 +2703,7 @@
       "protocolId": "gmx",
       "protocolName": "Gmx",
       "status": "placeholder",
-      "timestamp": "2025-12-23T06:14:01.095Z",
+      "timestamp": "2025-12-23T07:14:04.198Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -3232,7 +2713,7 @@
       "protocolId": "goki",
       "protocolName": "Goki",
       "status": "partial",
-      "timestamp": "2025-12-23T06:14:01.196Z",
+      "timestamp": "2025-12-23T07:14:04.299Z",
       "programs": [
         {
           "name": "Goki",
@@ -3266,8 +2747,8 @@
       ],
       "details": {
         "programCount": 2,
-        "idlHash": "5d00204a4da73e01",
-        "instructionCount": 2,
+        "idlHash": null,
+        "instructionCount": 0,
         "accountCount": 0,
         "message": "1/2 programs verified on mainnet",
         "verified": 1,
@@ -3278,7 +2759,7 @@
       "protocolId": "goonfi",
       "protocolName": "Goonfi",
       "status": "placeholder",
-      "timestamp": "2025-12-23T06:14:01.719Z",
+      "timestamp": "2025-12-23T07:14:05.128Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -3288,7 +2769,7 @@
       "protocolId": "goosefx",
       "protocolName": "Goosefx",
       "status": "verified",
-      "timestamp": "2025-12-23T06:14:01.819Z",
+      "timestamp": "2025-12-23T07:14:05.229Z",
       "programs": [
         {
           "name": "GooseFX",
@@ -3327,8 +2808,8 @@
       ],
       "details": {
         "programCount": 2,
-        "idlHash": "49e4105066faf54c",
-        "instructionCount": 2,
+        "idlHash": null,
+        "instructionCount": 0,
         "accountCount": 0,
         "message": "All 2 program(s) verified on mainnet",
         "verified": 2,
@@ -3339,7 +2820,7 @@
       "protocolId": "hawksight",
       "protocolName": "Hawksight",
       "status": "placeholder",
-      "timestamp": "2025-12-23T06:14:07.060Z",
+      "timestamp": "2025-12-23T07:14:05.846Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -3348,37 +2829,18 @@
     "hubble": {
       "protocolId": "hubble",
       "protocolName": "Hubble",
-      "status": "program_not_found",
-      "timestamp": "2025-12-23T06:14:07.161Z",
-      "programs": [
-        {
-          "name": "borrowing",
-          "address": "HbbLE47k4s8Aw4YsagCa1E6MRyJUtVVoRcSBXBCTaYH",
-          "network": "mainnet",
-          "status": "not_found",
-          "programInfo": {
-            "exists": false,
-            "executable": false,
-            "dataLen": 0
-          },
-          "message": "Program not found on-chain"
-        }
-      ],
+      "status": "no_program_id",
+      "timestamp": "2025-12-23T07:14:05.947Z",
+      "programs": [],
       "details": {
-        "programCount": 1,
-        "idlHash": "08410e1f58a7cc6b",
-        "instructionCount": 2,
-        "accountCount": 0,
-        "message": "No programs found on-chain",
-        "verified": 0,
-        "total": 1
+        "message": "No program ID found in IDL or known mappings"
       }
     },
     "humidifi": {
       "protocolId": "humidifi",
       "protocolName": "Humidifi",
       "status": "placeholder",
-      "timestamp": "2025-12-23T06:14:07.441Z",
+      "timestamp": "2025-12-23T07:14:06.048Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -3387,37 +2849,18 @@
     "hxro": {
       "protocolId": "hxro",
       "protocolName": "Hxro",
-      "status": "program_not_found",
-      "timestamp": "2025-12-23T06:14:07.542Z",
-      "programs": [
-        {
-          "name": "hxro_network",
-          "address": "HxroShip8KkXZVYcrth6X2zLMnCXfXJmhLHUQZYH7jH",
-          "network": "mainnet",
-          "status": "not_found",
-          "programInfo": {
-            "exists": false,
-            "executable": false,
-            "dataLen": 0
-          },
-          "message": "Program not found on-chain"
-        }
-      ],
+      "status": "no_program_id",
+      "timestamp": "2025-12-23T07:14:06.148Z",
+      "programs": [],
       "details": {
-        "programCount": 1,
-        "idlHash": "d31c64f5c107b40e",
-        "instructionCount": 2,
-        "accountCount": 0,
-        "message": "No programs found on-chain",
-        "verified": 0,
-        "total": 1
+        "message": "No program ID found in IDL or known mappings"
       }
     },
     "invariant": {
       "protocolId": "invariant",
       "protocolName": "Invariant",
       "status": "verified",
-      "timestamp": "2025-12-23T06:14:07.748Z",
+      "timestamp": "2025-12-23T07:14:06.249Z",
       "programs": [
         {
           "name": "Invariant",
@@ -3439,8 +2882,8 @@
       ],
       "details": {
         "programCount": 1,
-        "idlHash": "9aac190555f19605",
-        "instructionCount": 2,
+        "idlHash": null,
+        "instructionCount": 0,
         "accountCount": 0,
         "message": "All 1 program(s) verified on mainnet",
         "verified": 1,
@@ -3451,7 +2894,7 @@
       "protocolId": "jet",
       "protocolName": "Jet",
       "status": "partial",
-      "timestamp": "2025-12-23T06:14:08.099Z",
+      "timestamp": "2025-12-23T07:14:06.668Z",
       "programs": [
         {
           "name": "Jet Protocol",
@@ -3485,8 +2928,8 @@
       ],
       "details": {
         "programCount": 2,
-        "idlHash": "7de93e05abcb0b9a",
-        "instructionCount": 3,
+        "idlHash": null,
+        "instructionCount": 0,
         "accountCount": 0,
         "message": "1/2 programs verified on mainnet",
         "verified": 1,
@@ -3497,7 +2940,7 @@
       "protocolId": "jito",
       "protocolName": "Jito",
       "status": "program_not_found",
-      "timestamp": "2025-12-23T06:14:09.471Z",
+      "timestamp": "2025-12-23T07:14:07.165Z",
       "programs": [
         {
           "name": "Jito Stake Pool",
@@ -3530,8 +2973,8 @@
       ],
       "details": {
         "programCount": 2,
-        "idlHash": "3f1acb60ee8211be",
-        "instructionCount": 2,
+        "idlHash": null,
+        "instructionCount": 0,
         "accountCount": 0,
         "message": "No programs found on-chain",
         "verified": 0,
@@ -3542,7 +2985,7 @@
       "protocolId": "jupiter",
       "protocolName": "Jupiter",
       "status": "verified",
-      "timestamp": "2025-12-23T06:14:09.859Z",
+      "timestamp": "2025-12-23T07:14:08.478Z",
       "programs": [
         {
           "name": "Jupiter v6",
@@ -3554,7 +2997,7 @@
             "executable": true,
             "dataLen": 36,
             "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
-            "lamports": 2803739208
+            "lamports": 2803749208
           },
           "message": "Program exists and is executable",
           "onChainIdl": {
@@ -3598,9 +3041,9 @@
       ],
       "details": {
         "programCount": 3,
-        "idlHash": "22a3da061d418ee0",
-        "instructionCount": 16,
-        "accountCount": 1,
+        "idlHash": null,
+        "instructionCount": 0,
+        "accountCount": 0,
         "message": "All 3 program(s) verified on mainnet",
         "verified": 3,
         "total": 3
@@ -3610,7 +3053,7 @@
       "protocolId": "kamino",
       "protocolName": "Kamino",
       "status": "partial",
-      "timestamp": "2025-12-23T06:14:11.673Z",
+      "timestamp": "2025-12-23T07:14:10.238Z",
       "programs": [
         {
           "name": "Kamino Lending",
@@ -3644,9 +3087,9 @@
       ],
       "details": {
         "programCount": 2,
-        "idlHash": "e6b9dab23923e6f8",
-        "instructionCount": 49,
-        "accountCount": 9,
+        "idlHash": null,
+        "instructionCount": 0,
+        "accountCount": 0,
         "message": "1/2 programs verified on mainnet",
         "verified": 1,
         "total": 2
@@ -3655,37 +3098,18 @@
     "larix": {
       "protocolId": "larix",
       "protocolName": "Larix",
-      "status": "program_not_found",
-      "timestamp": "2025-12-23T06:14:13.004Z",
-      "programs": [
-        {
-          "name": "larix",
-          "address": "LARiTAAoXkNqwt2fQAL9QsWvBm7fLZZP1fgmj5R2Lf2",
-          "network": "mainnet",
-          "status": "not_found",
-          "programInfo": {
-            "exists": false,
-            "executable": false,
-            "dataLen": 0
-          },
-          "message": "Program not found on-chain"
-        }
-      ],
+      "status": "no_program_id",
+      "timestamp": "2025-12-23T07:14:11.608Z",
+      "programs": [],
       "details": {
-        "programCount": 1,
-        "idlHash": "cc63311a728adb03",
-        "instructionCount": 2,
-        "accountCount": 0,
-        "message": "No programs found on-chain",
-        "verified": 0,
-        "total": 1
+        "message": "No program ID found in IDL or known mappings"
       }
     },
     "launchmynft": {
       "protocolId": "launchmynft",
       "protocolName": "Launchmynft",
       "status": "placeholder",
-      "timestamp": "2025-12-23T06:14:13.215Z",
+      "timestamp": "2025-12-23T07:14:11.709Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -3695,7 +3119,7 @@
       "protocolId": "lifinity",
       "protocolName": "Lifinity",
       "status": "verified",
-      "timestamp": "2025-12-23T06:14:13.316Z",
+      "timestamp": "2025-12-23T07:14:11.808Z",
       "programs": [
         {
           "name": "Lifinity v1",
@@ -3717,8 +3141,8 @@
       ],
       "details": {
         "programCount": 1,
-        "idlHash": "51f34e06f94ae432",
-        "instructionCount": 2,
+        "idlHash": null,
+        "instructionCount": 0,
         "accountCount": 0,
         "message": "All 1 program(s) verified on mainnet",
         "verified": 1,
@@ -3729,7 +3153,7 @@
       "protocolId": "lifinity-v2",
       "protocolName": "Lifinity v2",
       "status": "partial",
-      "timestamp": "2025-12-23T06:14:14.528Z",
+      "timestamp": "2025-12-23T07:14:12.931Z",
       "programs": [
         {
           "name": "Lifinity v2",
@@ -3763,8 +3187,8 @@
       ],
       "details": {
         "programCount": 2,
-        "idlHash": "1417f4a25b16c59d",
-        "instructionCount": 2,
+        "idlHash": null,
+        "instructionCount": 0,
         "accountCount": 0,
         "message": "1/2 programs verified on mainnet",
         "verified": 1,
@@ -3775,7 +3199,7 @@
       "protocolId": "magiceden",
       "protocolName": "Magiceden",
       "status": "verified",
-      "timestamp": "2025-12-23T06:14:15.123Z",
+      "timestamp": "2025-12-23T07:14:14.425Z",
       "programs": [
         {
           "name": "Magic Eden",
@@ -3797,8 +3221,8 @@
       ],
       "details": {
         "programCount": 1,
-        "idlHash": "16cc3ed1ace86da2",
-        "instructionCount": 2,
+        "idlHash": null,
+        "instructionCount": 0,
         "accountCount": 0,
         "message": "All 1 program(s) verified on mainnet",
         "verified": 1,
@@ -3809,7 +3233,7 @@
       "protocolId": "mango",
       "protocolName": "Mango Markets",
       "status": "verified",
-      "timestamp": "2025-12-23T06:14:16.289Z",
+      "timestamp": "2025-12-23T07:14:14.819Z",
       "programs": [
         {
           "name": "Mango v4",
@@ -3831,8 +3255,8 @@
       ],
       "details": {
         "programCount": 1,
-        "idlHash": "f2a0717a422cda19",
-        "instructionCount": 3,
+        "idlHash": null,
+        "instructionCount": 0,
         "accountCount": 0,
         "message": "All 1 program(s) verified on mainnet",
         "verified": 1,
@@ -3843,7 +3267,7 @@
       "protocolId": "mango-v3",
       "protocolName": "Mango v3",
       "status": "verified",
-      "timestamp": "2025-12-23T06:14:16.674Z",
+      "timestamp": "2025-12-23T07:14:16.178Z",
       "programs": [
         {
           "name": "Mango v3",
@@ -3865,8 +3289,8 @@
       ],
       "details": {
         "programCount": 1,
-        "idlHash": "9e14a47a36ac008e",
-        "instructionCount": 2,
+        "idlHash": null,
+        "instructionCount": 0,
         "accountCount": 0,
         "message": "All 1 program(s) verified on mainnet",
         "verified": 1,
@@ -3877,7 +3301,7 @@
       "protocolId": "marginfi",
       "protocolName": "MarginFi",
       "status": "verified",
-      "timestamp": "2025-12-23T06:14:17.995Z",
+      "timestamp": "2025-12-23T07:14:16.789Z",
       "programs": [
         {
           "name": "MarginFi",
@@ -3899,8 +3323,8 @@
       ],
       "details": {
         "programCount": 1,
-        "idlHash": "cf437d4d512ab8f0",
-        "instructionCount": 2,
+        "idlHash": null,
+        "instructionCount": 0,
         "accountCount": 0,
         "message": "All 1 program(s) verified on mainnet",
         "verified": 1,
@@ -3911,7 +3335,7 @@
       "protocolId": "marinade",
       "protocolName": "Marinade Finance",
       "status": "verified",
-      "timestamp": "2025-12-23T06:14:18.382Z",
+      "timestamp": "2025-12-23T07:14:17.069Z",
       "programs": [
         {
           "name": "Marinade Finance",
@@ -3933,8 +3357,8 @@
       ],
       "details": {
         "programCount": 1,
-        "idlHash": "6e126ff84c079ae9",
-        "instructionCount": 1,
+        "idlHash": null,
+        "instructionCount": 0,
         "accountCount": 0,
         "message": "All 1 program(s) verified on mainnet",
         "verified": 1,
@@ -3945,7 +3369,7 @@
       "protocolId": "mercurial",
       "protocolName": "Mercurial",
       "status": "verified",
-      "timestamp": "2025-12-23T06:14:19.535Z",
+      "timestamp": "2025-12-23T07:14:18.353Z",
       "programs": [
         {
           "name": "Mercurial",
@@ -3967,8 +3391,8 @@
       ],
       "details": {
         "programCount": 1,
-        "idlHash": "72c27a6126bd2179",
-        "instructionCount": 2,
+        "idlHash": null,
+        "instructionCount": 0,
         "accountCount": 0,
         "message": "All 1 program(s) verified on mainnet",
         "verified": 1,
@@ -3979,7 +3403,7 @@
       "protocolId": "merkle-distributor",
       "protocolName": "Merkle distributor",
       "status": "placeholder",
-      "timestamp": "2025-12-23T06:14:19.857Z",
+      "timestamp": "2025-12-23T07:14:18.769Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -3989,7 +3413,7 @@
       "protocolId": "meteora",
       "protocolName": "Meteora",
       "status": "verified",
-      "timestamp": "2025-12-23T06:14:19.958Z",
+      "timestamp": "2025-12-23T07:14:18.870Z",
       "programs": [
         {
           "name": "Meteora DLMM",
@@ -4028,8 +3452,8 @@
       ],
       "details": {
         "programCount": 2,
-        "idlHash": "f2eb1cfd8f0b2fbe",
-        "instructionCount": 2,
+        "idlHash": null,
+        "instructionCount": 0,
         "accountCount": 0,
         "message": "All 2 program(s) verified on mainnet",
         "verified": 2,
@@ -4040,7 +3464,7 @@
       "protocolId": "obric",
       "protocolName": "Obric",
       "status": "placeholder",
-      "timestamp": "2025-12-23T06:14:21.566Z",
+      "timestamp": "2025-12-23T07:14:20.391Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -4050,7 +3474,7 @@
       "protocolId": "openbook",
       "protocolName": "OpenBook",
       "status": "verified",
-      "timestamp": "2025-12-23T06:14:21.666Z",
+      "timestamp": "2025-12-23T07:14:20.492Z",
       "programs": [
         {
           "name": "OpenBook v2",
@@ -4072,8 +3496,8 @@
       ],
       "details": {
         "programCount": 1,
-        "idlHash": "75622ef2d3848693",
-        "instructionCount": 2,
+        "idlHash": null,
+        "instructionCount": 0,
         "accountCount": 0,
         "message": "All 1 program(s) verified on mainnet",
         "verified": 1,
@@ -4084,7 +3508,7 @@
       "protocolId": "orca",
       "protocolName": "Orca (Whirlpool)",
       "status": "verified",
-      "timestamp": "2025-12-23T06:14:22.886Z",
+      "timestamp": "2025-12-23T07:14:20.967Z",
       "programs": [
         {
           "name": "Orca Whirlpool",
@@ -4106,8 +3530,8 @@
       ],
       "details": {
         "programCount": 1,
-        "idlHash": "197abbc706b37fa2",
-        "instructionCount": 1,
+        "idlHash": null,
+        "instructionCount": 0,
         "accountCount": 0,
         "message": "All 1 program(s) verified on mainnet",
         "verified": 1,
@@ -4118,7 +3542,7 @@
       "protocolId": "parrot",
       "protocolName": "Parrot",
       "status": "placeholder",
-      "timestamp": "2025-12-23T06:14:23.275Z",
+      "timestamp": "2025-12-23T07:14:22.352Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -4128,7 +3552,7 @@
       "protocolId": "penguin",
       "protocolName": "Penguin",
       "status": "placeholder",
-      "timestamp": "2025-12-23T06:14:23.376Z",
+      "timestamp": "2025-12-23T07:14:22.452Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -4138,7 +3562,7 @@
       "protocolId": "permalock",
       "protocolName": "Permalock",
       "status": "placeholder",
-      "timestamp": "2025-12-23T06:14:23.476Z",
+      "timestamp": "2025-12-23T07:14:22.553Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -4148,7 +3572,7 @@
       "protocolId": "phoenix",
       "protocolName": "Phoenix",
       "status": "verified",
-      "timestamp": "2025-12-23T06:14:23.577Z",
+      "timestamp": "2025-12-23T07:14:22.653Z",
       "programs": [
         {
           "name": "Phoenix DEX",
@@ -4170,8 +3594,8 @@
       ],
       "details": {
         "programCount": 1,
-        "idlHash": "9a4b899e7bd2ed83",
-        "instructionCount": 28,
+        "idlHash": null,
+        "instructionCount": 0,
         "accountCount": 0,
         "message": "All 1 program(s) verified on mainnet",
         "verified": 1,
@@ -4182,7 +3606,7 @@
       "protocolId": "plasma",
       "protocolName": "Plasma",
       "status": "placeholder",
-      "timestamp": "2025-12-23T06:14:23.934Z",
+      "timestamp": "2025-12-23T07:14:22.998Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -4192,7 +3616,7 @@
       "protocolId": "pool-manager",
       "protocolName": "Pool manager",
       "status": "placeholder",
-      "timestamp": "2025-12-23T06:14:24.035Z",
+      "timestamp": "2025-12-23T07:14:23.099Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -4202,7 +3626,7 @@
       "protocolId": "port",
       "protocolName": "Port",
       "status": "verified",
-      "timestamp": "2025-12-23T06:14:24.136Z",
+      "timestamp": "2025-12-23T07:14:23.199Z",
       "programs": [
         {
           "name": "Port Finance",
@@ -4224,8 +3648,8 @@
       ],
       "details": {
         "programCount": 1,
-        "idlHash": "2e42f22e10fb31dc",
-        "instructionCount": 2,
+        "idlHash": null,
+        "instructionCount": 0,
         "accountCount": 0,
         "message": "All 1 program(s) verified on mainnet",
         "verified": 1,
@@ -4235,71 +3659,28 @@
     "prism": {
       "protocolId": "prism",
       "protocolName": "Prism",
-      "status": "program_not_found",
-      "timestamp": "2025-12-23T06:14:24.472Z",
-      "programs": [
-        {
-          "name": "prism",
-          "address": "PRSMNi6muTeXJUdTcvgqRfiNGZYZx1JFNvtQcuVpumT",
-          "network": "mainnet",
-          "status": "not_found",
-          "programInfo": {
-            "exists": false,
-            "executable": false,
-            "dataLen": 0
-          },
-          "message": "Program not found on-chain"
-        }
-      ],
+      "status": "no_program_id",
+      "timestamp": "2025-12-23T07:14:23.615Z",
+      "programs": [],
       "details": {
-        "programCount": 1,
-        "idlHash": "fe998e3576797bea",
-        "instructionCount": 2,
-        "accountCount": 0,
-        "message": "No programs found on-chain",
-        "verified": 0,
-        "total": 1
+        "message": "No program ID found in IDL or known mappings"
       }
     },
     "pumpfun": {
       "protocolId": "pumpfun",
       "protocolName": "Pumpfun",
-      "status": "verified",
-      "timestamp": "2025-12-23T06:14:24.678Z",
-      "programs": [
-        {
-          "name": "Main Program",
-          "address": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
-          "network": "mainnet",
-          "status": "verified",
-          "programInfo": {
-            "exists": true,
-            "executable": true,
-            "dataLen": 36,
-            "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
-            "lamports": 1662625250
-          },
-          "message": "Program exists and is executable",
-          "onChainIdl": {
-            "found": false
-          }
-        }
-      ],
+      "status": "no_program_id",
+      "timestamp": "2025-12-23T07:14:23.716Z",
+      "programs": [],
       "details": {
-        "programCount": 1,
-        "idlHash": "9977e3393d773374",
-        "instructionCount": 23,
-        "accountCount": 5,
-        "message": "All 1 program(s) verified on mainnet",
-        "verified": 1,
-        "total": 1
+        "message": "No program ID found in IDL or known mappings"
       }
     },
     "pumpswap": {
       "protocolId": "pumpswap",
       "protocolName": "Pumpswap",
       "status": "placeholder",
-      "timestamp": "2025-12-23T06:14:25.919Z",
+      "timestamp": "2025-12-23T07:14:23.816Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -4309,7 +3690,7 @@
       "protocolId": "quarry",
       "protocolName": "Quarry",
       "status": "partial",
-      "timestamp": "2025-12-23T06:14:26.019Z",
+      "timestamp": "2025-12-23T07:14:23.916Z",
       "programs": [
         {
           "name": "Quarry",
@@ -4343,8 +3724,8 @@
       ],
       "details": {
         "programCount": 2,
-        "idlHash": "fa0eb9c01f928909",
-        "instructionCount": 3,
+        "idlHash": null,
+        "instructionCount": 0,
         "accountCount": 0,
         "message": "1/2 programs verified on mainnet",
         "verified": 1,
@@ -4354,37 +3735,18 @@
     "ribbon": {
       "protocolId": "ribbon",
       "protocolName": "Ribbon",
-      "status": "program_not_found",
-      "timestamp": "2025-12-23T06:14:27.240Z",
-      "programs": [
-        {
-          "name": "ribbon_finance",
-          "address": "RiBBoNxJJaMKYnqYPDTNTJLHoTugKxYaKYTgrn4jSgp",
-          "network": "mainnet",
-          "status": "not_found",
-          "programInfo": {
-            "exists": false,
-            "executable": false,
-            "dataLen": 0
-          },
-          "message": "Program not found on-chain"
-        }
-      ],
+      "status": "no_program_id",
+      "timestamp": "2025-12-23T07:14:24.786Z",
+      "programs": [],
       "details": {
-        "programCount": 1,
-        "idlHash": "a7c22fb0143686c0",
-        "instructionCount": 2,
-        "accountCount": 0,
-        "message": "No programs found on-chain",
-        "verified": 0,
-        "total": 1
+        "message": "No program ID found in IDL or known mappings"
       }
     },
     "saber": {
       "protocolId": "saber",
       "protocolName": "Saber",
       "status": "verified",
-      "timestamp": "2025-12-23T06:14:27.514Z",
+      "timestamp": "2025-12-23T07:14:24.887Z",
       "programs": [
         {
           "name": "Saber Stable Swap",
@@ -4406,8 +3768,8 @@
       ],
       "details": {
         "programCount": 1,
-        "idlHash": "be6076d903857863",
-        "instructionCount": 2,
+        "idlHash": null,
+        "instructionCount": 0,
         "accountCount": 0,
         "message": "All 1 program(s) verified on mainnet",
         "verified": 1,
@@ -4417,42 +3779,18 @@
     "saber-periphery": {
       "protocolId": "saber-periphery",
       "protocolName": "Saber periphery",
-      "status": "verified",
-      "timestamp": "2025-12-23T06:14:28.775Z",
-      "programs": [
-        {
-          "name": "saber_periphery",
-          "address": "DecZY86MU5Gj7kppfUCEmd4LbXXuyZH1yHaP2NTqdiZB",
-          "network": "mainnet",
-          "status": "verified",
-          "programInfo": {
-            "exists": true,
-            "executable": true,
-            "dataLen": 36,
-            "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
-            "lamports": 1141440
-          },
-          "message": "Program exists and is executable",
-          "onChainIdl": {
-            "found": false
-          }
-        }
-      ],
+      "status": "no_program_id",
+      "timestamp": "2025-12-23T07:14:25.214Z",
+      "programs": [],
       "details": {
-        "programCount": 1,
-        "idlHash": "3f2d88ddac30e302",
-        "instructionCount": 2,
-        "accountCount": 0,
-        "message": "All 1 program(s) verified on mainnet",
-        "verified": 1,
-        "total": 1
+        "message": "No program ID found in IDL or known mappings"
       }
     },
     "sanctum": {
       "protocolId": "sanctum",
       "protocolName": "Sanctum",
       "status": "verified",
-      "timestamp": "2025-12-23T06:14:29.057Z",
+      "timestamp": "2025-12-23T07:14:25.315Z",
       "programs": [
         {
           "name": "Sanctum",
@@ -4474,8 +3812,8 @@
       ],
       "details": {
         "programCount": 1,
-        "idlHash": "81118aed06913dfb",
-        "instructionCount": 2,
+        "idlHash": null,
+        "instructionCount": 0,
         "accountCount": 0,
         "message": "All 1 program(s) verified on mainnet",
         "verified": 1,
@@ -4486,7 +3824,7 @@
       "protocolId": "saros",
       "protocolName": "Saros",
       "status": "no_program_id",
-      "timestamp": "2025-12-23T06:14:30.147Z",
+      "timestamp": "2025-12-23T07:14:25.811Z",
       "programs": [],
       "details": {
         "message": "No program ID found in IDL or known mappings"
@@ -4496,7 +3834,7 @@
       "protocolId": "save",
       "protocolName": "Save",
       "status": "placeholder",
-      "timestamp": "2025-12-23T06:14:30.248Z",
+      "timestamp": "2025-12-23T07:14:25.911Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -4506,7 +3844,7 @@
       "protocolId": "sencha",
       "protocolName": "Sencha",
       "status": "partial",
-      "timestamp": "2025-12-23T06:14:30.349Z",
+      "timestamp": "2025-12-23T07:14:26.012Z",
       "programs": [
         {
           "name": "Sencha",
@@ -4540,8 +3878,8 @@
       ],
       "details": {
         "programCount": 2,
-        "idlHash": "e1b4f283038b614b",
-        "instructionCount": 2,
+        "idlHash": null,
+        "instructionCount": 0,
         "accountCount": 0,
         "message": "1/2 programs verified on mainnet",
         "verified": 1,
@@ -4552,7 +3890,7 @@
       "protocolId": "serum-v2",
       "protocolName": "Serum v2",
       "status": "verified",
-      "timestamp": "2025-12-23T06:14:31.690Z",
+      "timestamp": "2025-12-23T07:14:26.526Z",
       "programs": [
         {
           "name": "Serum v2",
@@ -4574,8 +3912,8 @@
       ],
       "details": {
         "programCount": 1,
-        "idlHash": "1bfb3f728783625c",
-        "instructionCount": 2,
+        "idlHash": null,
+        "instructionCount": 0,
         "accountCount": 0,
         "message": "All 1 program(s) verified on mainnet",
         "verified": 1,
@@ -4586,7 +3924,7 @@
       "protocolId": "snapshots",
       "protocolName": "Snapshots",
       "status": "placeholder",
-      "timestamp": "2025-12-23T06:14:32.798Z",
+      "timestamp": "2025-12-23T07:14:27.788Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -4595,37 +3933,18 @@
     "solanium": {
       "protocolId": "solanium",
       "protocolName": "Solanium",
-      "status": "program_not_found",
-      "timestamp": "2025-12-23T06:14:32.899Z",
-      "programs": [
-        {
-          "name": "solanium",
-          "address": "SoLaUMhM3P6Qy9iRHNMcY52y9tppKSRvb2VX3vW92Jg",
-          "network": "mainnet",
-          "status": "not_found",
-          "programInfo": {
-            "exists": false,
-            "executable": false,
-            "dataLen": 0
-          },
-          "message": "Program not found on-chain"
-        }
-      ],
+      "status": "no_program_id",
+      "timestamp": "2025-12-23T07:14:27.888Z",
+      "programs": [],
       "details": {
-        "programCount": 1,
-        "idlHash": "77cbfd59a853e9e9",
-        "instructionCount": 2,
-        "accountCount": 0,
-        "message": "No programs found on-chain",
-        "verified": 0,
-        "total": 1
+        "message": "No program ID found in IDL or known mappings"
       }
     },
     "solend": {
       "protocolId": "solend",
       "protocolName": "Solend",
       "status": "verified",
-      "timestamp": "2025-12-23T06:14:33.175Z",
+      "timestamp": "2025-12-23T07:14:27.989Z",
       "programs": [
         {
           "name": "Solend",
@@ -4647,8 +3966,8 @@
       ],
       "details": {
         "programCount": 1,
-        "idlHash": "6a452b5cc8e4f106",
-        "instructionCount": 3,
+        "idlHash": null,
+        "instructionCount": 0,
         "accountCount": 0,
         "message": "All 1 program(s) verified on mainnet",
         "verified": 1,
@@ -4659,7 +3978,7 @@
       "protocolId": "solfi",
       "protocolName": "Solfi",
       "status": "placeholder",
-      "timestamp": "2025-12-23T06:14:34.254Z",
+      "timestamp": "2025-12-23T07:14:28.453Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -4669,7 +3988,7 @@
       "protocolId": "solrazr",
       "protocolName": "Solrazr",
       "status": "placeholder",
-      "timestamp": "2025-12-23T06:14:34.354Z",
+      "timestamp": "2025-12-23T07:14:28.554Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -4679,7 +3998,7 @@
       "protocolId": "solstarter",
       "protocolName": "Solstarter",
       "status": "placeholder",
-      "timestamp": "2025-12-23T06:14:34.455Z",
+      "timestamp": "2025-12-23T07:14:28.654Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -4689,7 +4008,7 @@
       "protocolId": "stabble",
       "protocolName": "Stabble",
       "status": "placeholder",
-      "timestamp": "2025-12-23T06:14:34.555Z",
+      "timestamp": "2025-12-23T07:14:28.755Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -4698,42 +4017,18 @@
     "stable-swap": {
       "protocolId": "stable-swap",
       "protocolName": "Stable swap",
-      "status": "verified",
-      "timestamp": "2025-12-23T06:14:34.656Z",
-      "programs": [
-        {
-          "name": "stable_swap",
-          "address": "SSwpkEEcbUqx4vtoEByFjSkhKdCT862DNVb52nZg1UZ",
-          "network": "mainnet",
-          "status": "verified",
-          "programInfo": {
-            "exists": true,
-            "executable": true,
-            "dataLen": 36,
-            "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
-            "lamports": 1141448
-          },
-          "message": "Program exists and is executable",
-          "onChainIdl": {
-            "found": false
-          }
-        }
-      ],
+      "status": "no_program_id",
+      "timestamp": "2025-12-23T07:14:28.855Z",
+      "programs": [],
       "details": {
-        "programCount": 1,
-        "idlHash": "3b4dba4e91c7a98a",
-        "instructionCount": 2,
-        "accountCount": 0,
-        "message": "All 1 program(s) verified on mainnet",
-        "verified": 1,
-        "total": 1
+        "message": "No program ID found in IDL or known mappings"
       }
     },
     "starlaunch": {
       "protocolId": "starlaunch",
       "protocolName": "Starlaunch",
       "status": "placeholder",
-      "timestamp": "2025-12-23T06:14:35.000Z",
+      "timestamp": "2025-12-23T07:14:28.956Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -4742,37 +4037,18 @@
     "step": {
       "protocolId": "step",
       "protocolName": "Step",
-      "status": "program_not_found",
-      "timestamp": "2025-12-23T06:14:35.101Z",
-      "programs": [
-        {
-          "name": "step_finance",
-          "address": "STEP6uo1vC9GdDLkqXRs8D7mw6Y3Vhn9rjxhHEV8sTg",
-          "network": "mainnet",
-          "status": "not_found",
-          "programInfo": {
-            "exists": false,
-            "executable": false,
-            "dataLen": 0
-          },
-          "message": "Program not found on-chain"
-        }
-      ],
+      "status": "no_program_id",
+      "timestamp": "2025-12-23T07:14:29.056Z",
+      "programs": [],
       "details": {
-        "programCount": 1,
-        "idlHash": "4a1cf1cc1e7703de",
-        "instructionCount": 1,
-        "accountCount": 0,
-        "message": "No programs found on-chain",
-        "verified": 0,
-        "total": 1
+        "message": "No program ID found in IDL or known mappings"
       }
     },
     "stepn": {
       "protocolId": "stepn",
       "protocolName": "Stepn",
       "status": "placeholder",
-      "timestamp": "2025-12-23T06:14:35.375Z",
+      "timestamp": "2025-12-23T07:14:29.157Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -4781,37 +4057,18 @@
     "sunny": {
       "protocolId": "sunny",
       "protocolName": "Sunny",
-      "status": "program_not_found",
-      "timestamp": "2025-12-23T06:14:35.476Z",
-      "programs": [
-        {
-          "name": "sunny_aggregator",
-          "address": "SUNNY6y3j1qLwf6TUVQeaEfZQ8HaZphRH5W97HWZZLX",
-          "network": "mainnet",
-          "status": "not_found",
-          "programInfo": {
-            "exists": false,
-            "executable": false,
-            "dataLen": 0
-          },
-          "message": "Program not found on-chain"
-        }
-      ],
+      "status": "no_program_id",
+      "timestamp": "2025-12-23T07:14:29.257Z",
+      "programs": [],
       "details": {
-        "programCount": 1,
-        "idlHash": "52a04eb2e9bc9749",
-        "instructionCount": 2,
-        "accountCount": 0,
-        "message": "No programs found on-chain",
-        "verified": 0,
-        "total": 1
+        "message": "No program ID found in IDL or known mappings"
       }
     },
     "switchboard": {
       "protocolId": "switchboard",
       "protocolName": "Switchboard",
       "status": "verified",
-      "timestamp": "2025-12-23T06:14:35.680Z",
+      "timestamp": "2025-12-23T07:14:29.358Z",
       "programs": [
         {
           "name": "Switchboard",
@@ -4833,8 +4090,8 @@
       ],
       "details": {
         "programCount": 1,
-        "idlHash": "b574af2174eaed72",
-        "instructionCount": 2,
+        "idlHash": null,
+        "instructionCount": 0,
         "accountCount": 0,
         "message": "All 1 program(s) verified on mainnet",
         "verified": 1,
@@ -4844,66 +4101,28 @@
     "symmetry": {
       "protocolId": "symmetry",
       "protocolName": "Symmetry",
-      "status": "program_not_found",
-      "timestamp": "2025-12-23T06:14:36.007Z",
-      "programs": [
-        {
-          "name": "symmetry_engine",
-          "address": "symwMw4ZF1ATh9PNvBjGFqYJkXLqgCK7zZSkhh5Y6DX",
-          "network": "mainnet",
-          "status": "not_found",
-          "programInfo": {
-            "exists": false,
-            "executable": false,
-            "dataLen": 0
-          },
-          "message": "Program not found on-chain"
-        }
-      ],
+      "status": "no_program_id",
+      "timestamp": "2025-12-23T07:14:29.768Z",
+      "programs": [],
       "details": {
-        "programCount": 1,
-        "idlHash": "1bd33fc6646957d3",
-        "instructionCount": 2,
-        "accountCount": 0,
-        "message": "No programs found on-chain",
-        "verified": 0,
-        "total": 1
+        "message": "No program ID found in IDL or known mappings"
       }
     },
     "synthetify": {
       "protocolId": "synthetify",
       "protocolName": "Synthetify",
-      "status": "program_not_found",
-      "timestamp": "2025-12-23T06:14:37.138Z",
-      "programs": [
-        {
-          "name": "synthetify",
-          "address": "SNTYtJHabQgFsEHV1vvZhQ7XLk2TwK6c6M6dXqK8C4C",
-          "network": "mainnet",
-          "status": "not_found",
-          "programInfo": {
-            "exists": false,
-            "executable": false,
-            "dataLen": 0
-          },
-          "message": "Program not found on-chain"
-        }
-      ],
+      "status": "no_program_id",
+      "timestamp": "2025-12-23T07:14:29.868Z",
+      "programs": [],
       "details": {
-        "programCount": 1,
-        "idlHash": "fe0feb435fa6aee6",
-        "instructionCount": 2,
-        "accountCount": 0,
-        "message": "No programs found on-chain",
-        "verified": 0,
-        "total": 1
+        "message": "No program ID found in IDL or known mappings"
       }
     },
     "tesserav": {
       "protocolId": "tesserav",
       "protocolName": "Tesserav",
       "status": "placeholder",
-      "timestamp": "2025-12-23T06:14:37.417Z",
+      "timestamp": "2025-12-23T07:14:29.968Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -4913,7 +4132,7 @@
       "protocolId": "titan",
       "protocolName": "Titan",
       "status": "placeholder",
-      "timestamp": "2025-12-23T06:14:37.518Z",
+      "timestamp": "2025-12-23T07:14:30.068Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -4923,7 +4142,7 @@
       "protocolId": "tribeca",
       "protocolName": "Tribeca",
       "status": "partial",
-      "timestamp": "2025-12-23T06:14:37.619Z",
+      "timestamp": "2025-12-23T07:14:30.169Z",
       "programs": [
         {
           "name": "Tribeca",
@@ -4957,8 +4176,8 @@
       ],
       "details": {
         "programCount": 2,
-        "idlHash": "fef09872c0fc67eb",
-        "instructionCount": 3,
+        "idlHash": null,
+        "instructionCount": 0,
         "accountCount": 0,
         "message": "1/2 programs verified on mainnet",
         "verified": 1,
@@ -4968,37 +4187,18 @@
     "tulip": {
       "protocolId": "tulip",
       "protocolName": "Tulip",
-      "status": "program_not_found",
-      "timestamp": "2025-12-23T06:14:38.070Z",
-      "programs": [
-        {
-          "name": "tulip",
-          "address": "TuLipcqtGVXP9XR62wM8WWCm6a9vhLs7T9g8bHrzGxe",
-          "network": "mainnet",
-          "status": "not_found",
-          "programInfo": {
-            "exists": false,
-            "executable": false,
-            "dataLen": 0
-          },
-          "message": "Program not found on-chain"
-        }
-      ],
+      "status": "no_program_id",
+      "timestamp": "2025-12-23T07:14:30.720Z",
+      "programs": [],
       "details": {
-        "programCount": 1,
-        "idlHash": "a6ccfcf4d51cc5b0",
-        "instructionCount": 2,
-        "accountCount": 0,
-        "message": "No programs found on-chain",
-        "verified": 0,
-        "total": 1
+        "message": "No program ID found in IDL or known mappings"
       }
     },
     "uxd": {
       "protocolId": "uxd",
       "protocolName": "Uxd",
       "status": "partial",
-      "timestamp": "2025-12-23T06:14:39.182Z",
+      "timestamp": "2025-12-23T07:14:30.820Z",
       "programs": [
         {
           "name": "UXD",
@@ -5032,8 +4232,8 @@
       ],
       "details": {
         "programCount": 2,
-        "idlHash": "4508ba21cd4e1c14",
-        "instructionCount": 2,
+        "idlHash": null,
+        "instructionCount": 0,
         "accountCount": 0,
         "message": "1/2 programs verified on mainnet",
         "verified": 1,
@@ -5044,7 +4244,7 @@
       "protocolId": "venko",
       "protocolName": "Venko",
       "status": "placeholder",
-      "timestamp": "2025-12-23T06:14:40.653Z",
+      "timestamp": "2025-12-23T07:14:31.370Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -5054,7 +4254,7 @@
       "protocolId": "yi",
       "protocolName": "Yi",
       "status": "placeholder",
-      "timestamp": "2025-12-23T06:14:40.753Z",
+      "timestamp": "2025-12-23T07:14:31.470Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -5064,7 +4264,7 @@
       "protocolId": "zerofi",
       "protocolName": "Zerofi",
       "status": "placeholder",
-      "timestamp": "2025-12-23T06:14:40.854Z",
+      "timestamp": "2025-12-23T07:14:31.571Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -5074,7 +4274,7 @@
       "protocolId": "zeroone",
       "protocolName": "Zeroone",
       "status": "placeholder",
-      "timestamp": "2025-12-23T06:14:40.954Z",
+      "timestamp": "2025-12-23T07:14:31.671Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -5084,7 +4284,7 @@
       "protocolId": "zeta",
       "protocolName": "Zeta Markets",
       "status": "partial",
-      "timestamp": "2025-12-23T06:14:41.055Z",
+      "timestamp": "2025-12-23T07:14:31.772Z",
       "programs": [
         {
           "name": "Zeta Markets",
@@ -5118,8 +4318,8 @@
       ],
       "details": {
         "programCount": 2,
-        "idlHash": "30769d63006ebdc1",
-        "instructionCount": 3,
+        "idlHash": null,
+        "instructionCount": 0,
         "accountCount": 0,
         "message": "1/2 programs verified on mainnet",
         "verified": 1,

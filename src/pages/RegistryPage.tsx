@@ -76,7 +76,7 @@ export default function RegistryPage() {
           description: `${data.name || id} Solana program`,
           category: data.category || 'defi',
           idlPath: `${manifest.gateway}/${data.txId}`,
-          repo: null,
+          repo: data.repo || null,
           status: 'available',
           version: '1.0.0',
           lastUpdated: data.uploadedAt || '2025-12-19'
