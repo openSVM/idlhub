@@ -20,12 +20,13 @@ export default function App() {
       <ThemeProvider>
         <WalletProvider>
         <Routes>
-          {/* Standalone Registry Page */}
+          {/* Registry is the default landing page - IDLHub is a dev tool first */}
+          <Route path="/" element={<RegistryPage />} />
           <Route path="/registry" element={<RegistryPage />} />
 
           {/* Other pages with layout */}
           <Route path="/" element={<Layout />}>
-            <Route index element={<HomePage />} />
+            <Route path="home" element={<HomePage />} />
             <Route path="protocol" element={<ProtocolPage />} />
             {/* <Route path="battles" element={<BattlesPage />} /> */}
             {/* <Route path="guilds" element={<GuildsPage />} /> */}
