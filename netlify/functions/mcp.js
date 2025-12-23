@@ -121,33 +121,34 @@ exports.handler = async (event) => {
   if (event.httpMethod === 'OPTIONS') return { statusCode: 204, headers, body: '' };
   if (event.httpMethod !== 'POST') return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method not allowed' }) };
 
+  let request;
   try {
-    const request = JSON.parse(event.body);
+    request = JSON.parse(event.body);
 
     if (request.method === 'tools/list') {
-      return { 
-        statusCode: 200, 
-        headers, 
-        body: JSON.stringify({ jsonrpc: '2.0', id: request.id, result: { tools: TOOLS } }) 
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify({ jsonrpc: '2.0', id: request.id, result: { tools: TOOLS } })
       };
     }
 
     if (request.method === 'tools/call') {
       const result = await handleToolCall(request.params.name, request.params.arguments || {});
-      return { 
-        statusCode: 200, 
-        headers, 
-        body: JSON.stringify({ jsonrpc: '2.0', id: request.id, result }) 
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify({ jsonrpc: '2.0', id: request.id, result })
       };
     }
 
     return { statusCode: 400, headers, body: JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: -32601, message: 'Method not found' } }) };
   } catch (error) {
     console.error('MCP Error:', error);
-    return { 
-      statusCode: 500, 
-      headers, 
-      body: JSON.stringify({ jsonrpc: '2.0', id: request.id || null, error: { code: -32603, message: error.message } }) 
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({ jsonrpc: '2.0', id: (request && request.id) || null, error: { code: -32603, message: error.message } })
     };
   }
 };
