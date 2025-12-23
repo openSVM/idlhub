@@ -247,6 +247,23 @@ export default function RegistryPage() {
     setIdlData(null);
   };
 
+  // Copy Arweave URLs to clipboard
+  const copyArweaveURLs = () => {
+    const urls = Array.from(selectedProtocols)
+      .map(id => {
+        const protocol = allProtocols.find(p => p.id === id);
+        return protocol?.idlPath || '';
+      })
+      .filter(url => url)
+      .join('\n');
+
+    navigator.clipboard.writeText(urls).then(() => {
+      alert(`Copied ${selectedProtocols.size} Arweave URLs to clipboard!`);
+    }).catch(() => {
+      alert('Failed to copy to clipboard');
+    });
+  };
+
   // Download IDL (from Arweave)
   const downloadIDL = async (protocolId: string) => {
     try {
@@ -405,16 +422,24 @@ export default function RegistryPage() {
             {selectedProtocols.size === filteredProtocols.length && filteredProtocols.length > 0 ? 'Deselect All' : 'Select All'}
           </button>
           {selectedProtocols.size > 0 && (
-            <button
-              className="action-btn primary"
-              onClick={downloadSelected}
-              disabled={downloadingBulk}
-            >
-              {downloadingBulk
-                ? `Downloading... ${downloadProgress}%`
-                : `Download Selected (${selectedProtocols.size})`
-              }
-            </button>
+            <>
+              <button
+                className="action-btn"
+                onClick={() => copyArweaveURLs()}
+              >
+                Copy Arweave URLs ({selectedProtocols.size})
+              </button>
+              <button
+                className="action-btn primary"
+                onClick={downloadSelected}
+                disabled={downloadingBulk}
+              >
+                {downloadingBulk
+                  ? `Downloading... ${downloadProgress}%`
+                  : `Download Selected (${selectedProtocols.size})`
+                }
+              </button>
+            </>
           )}
         </div>
       </div>
