@@ -41,6 +41,11 @@
   status = 200
 
 [[redirects]]
+  from = "/api/upload-idl"
+  to = "/.netlify/functions/upload-idl"
+  status = 200
+
+[[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
