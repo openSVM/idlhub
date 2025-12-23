@@ -11,7 +11,7 @@ import ProtocolPage from './pages/ProtocolPage';
 import StatusPage from './pages/StatusPage';
 import DocsPage from './pages/DocsPage';
 import TokenomicsPage from './pages/TokenomicsPage';
-// import SwapPage from './pages/SwapPage';
+import SwapPage from './pages/SwapPage-simple';
 import AnalyticsPage from './pages/AnalyticsPage';
 
 export default function App() {
@@ -30,7 +30,7 @@ export default function App() {
             <Route path="protocol" element={<ProtocolPage />} />
             {/* <Route path="battles" element={<BattlesPage />} /> */}
             {/* <Route path="guilds" element={<GuildsPage />} /> */}
-            {/* <Route path="swap" element={<SwapPage />} /> */}
+            <Route path="swap" element={<SwapPage />} />
             <Route path="analytics" element={<AnalyticsPage />} />
             <Route path="status" element={<StatusPage />} />
             <Route path="docs" element={<DocsPage />} />
