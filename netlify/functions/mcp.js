@@ -3,12 +3,52 @@
  * Endpoint: https://idlhub.com/api/mcp
  */
 
+const Irys = require('@irys/sdk');
+
+const IRYS_NODE = process.env.IRYS_NODE || 'https://devnet.irys.xyz';
+const IRYS_WALLET = process.env.IRYS_WALLET;
+const SOLANA_RPC = process.env.SOLANA_RPC || 'https://api.devnet.solana.com';
+
 const TOOLS = [
   { name: 'list_idls', description: 'List all available Solana IDLs from Arweave', inputSchema: { type: 'object', properties: { category: { type: 'string' }, limit: { type: 'number', default: 50 } } } },
   { name: 'search_idls', description: 'Search IDLs by name', inputSchema: { type: 'object', properties: { query: { type: 'string' } }, required: ['query'] } },
   { name: 'get_idl', description: 'Get specific IDL', inputSchema: { type: 'object', properties: { protocol_id: { type: 'string' } }, required: ['protocol_id'] } },
-  { name: 'upload_idl', description: 'Submit IDL for upload (requires manual approval)', inputSchema: { type: 'object', properties: { protocol_id: { type: 'string' }, name: { type: 'string' }, idl: { type: 'object' }, category: { type: 'string' }, repo: { type: 'string' } }, required: ['protocol_id', 'name', 'idl'] } },
+  { name: 'upload_idl', description: 'Upload IDL to Arweave', inputSchema: { type: 'object', properties: { protocol_id: { type: 'string' }, name: { type: 'string' }, idl: { type: 'object' }, category: { type: 'string' }, repo: { type: 'string' } }, required: ['protocol_id', 'name', 'idl'] } },
 ];
+
+async function uploadToArweave(protocol_id, name, idl, category, repo) {
+  if (!IRYS_WALLET) {
+    throw new Error('Server not configured for uploads (IRYS_WALLET missing)');
+  }
+
+  const wallet = JSON.parse(IRYS_WALLET);
+  const irys = new Irys({ url: IRYS_NODE, token: 'solana', key: wallet, config: { providerUrl: SOLANA_RPC } });
+
+  const tags = [
+    { name: 'App-Name', value: 'IDLHub' },
+    { name: 'App-Version', value: '1.0.0' },
+    { name: 'Content-Type', value: 'application/json' },
+    { name: 'Network', value: 'solana' },
+    { name: 'Type', value: 'IDL' },
+    { name: 'Protocol-Name', value: name },
+    { name: 'Protocol-ID', value: protocol_id },
+    { name: 'Program-ID', value: idl.address || idl.metadata?.address || 'unknown' },
+    { name: 'IDL-Version', value: idl.version || '0.1.0' },
+    { name: 'Category', value: category || 'defi' },
+  ];
+
+  if (repo) tags.push({ name: 'Repository', value: repo });
+
+  const idlContent = JSON.stringify(idl);
+  const receipt = await irys.upload(idlContent, { tags });
+
+  return {
+    txId: receipt.id,
+    url: `https://arweave.net/${receipt.id}`,
+    gateway: IRYS_NODE,
+    size: Buffer.byteLength(idlContent),
+  };
+}
 
 async function handleToolCall(name, args) {
   const manifestRes = await fetch('https://idlhub.com/arweave/manifest.json');
@@ -45,16 +85,23 @@ async function handleToolCall(name, args) {
   }
 
   if (name === 'upload_idl') {
-    // For now, just return instructions since we need manual Arweave upload
+    if (!args.idl || !args.idl.version || !args.idl.name) {
+      throw new Error('Invalid IDL: missing version or name field');
+    }
+
+    const arweave = await uploadToArweave(args.protocol_id, args.name, args.idl, args.category, args.repo);
+
     return { 
       content: [{ 
         type: 'text', 
         text: JSON.stringify({ 
-          status: 'received',
+          success: true,
           protocol_id: args.protocol_id,
           name: args.name,
-          message: 'IDL submission received. To complete upload, use: IRYS_WALLET=~/.config/solana/id.json node upload-bitquery-idls.mjs',
-          note: 'Uploads require Arweave/Irys wallet with SOL for storage fees'
+          category: args.category || 'defi',
+          repo: args.repo || null,
+          arweave,
+          message: 'IDL uploaded to Arweave successfully. Will appear in registry after manifest update.',
         }, null, 2) 
       }] 
     };
@@ -100,7 +147,7 @@ exports.handler = async (event) => {
     return { 
       statusCode: 500, 
       headers, 
-      body: JSON.stringify({ jsonrpc: '2.0', id: null, error: { code: -32603, message: error.message } }) 
+      body: JSON.stringify({ jsonrpc: '2.0', id: request.id || null, error: { code: -32603, message: error.message } }) 
     };
   }
 };
