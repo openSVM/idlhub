@@ -1,0 +1,11 @@
+{
+  "bounties": {},
+  "total_staked": 0,
+  "total_claimed": 0,
+  "metadata": {
+    "version": "1.0.0",
+    "description": "Community bounty pool for missing Solana IDLs",
+    "base_reward": 1000,
+    "note": "Anyone can stake IDL tokens to increase bounty for specific protocols"
+  }
+}

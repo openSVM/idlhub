@@ -1,5 +1,23 @@
 [
   {
+    "timestamp": "2025-12-23T10:13:53.881Z",
+    "verified": 24,
+    "total": 102,
+    "placeholder": 43,
+    "noProgram": 21,
+    "rpcError": 0,
+    "durationMs": 37376
+  },
+  {
+    "timestamp": "2025-12-23T09:13:53.781Z",
+    "verified": 24,
+    "total": 102,
+    "placeholder": 43,
+    "noProgram": 21,
+    "rpcError": 0,
+    "durationMs": 37762
+  },
+  {
     "timestamp": "2025-12-23T08:13:53.744Z",
     "verified": 24,
     "total": 102,

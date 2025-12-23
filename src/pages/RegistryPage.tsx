@@ -14,6 +14,10 @@ interface Protocol {
   status: string;
   version: string;
   lastUpdated: string;
+  bounty?: {
+    total: number;
+    stakers: number;
+  };
   metrics?: {
     users?: number;
     accounts?: number;
@@ -70,17 +74,33 @@ export default function RegistryPage() {
         if (!manifestRes.ok) throw new Error('Failed to load Arweave manifest');
         const manifest = await manifestRes.json();
 
-        const protocols: Protocol[] = Object.entries(manifest.idls).map(([id, data]: [string, any]) => ({
-          id,
-          name: data.name || id,
-          description: `${data.name || id} Solana program`,
-          category: data.category || 'defi',
-          idlPath: `${manifest.gateway}/${data.txId}`,
-          repo: data.repo || null,
-          status: 'available',
-          version: '1.0.0',
-          lastUpdated: data.uploadedAt || '2025-12-19'
-        }));
+        // Load bounties
+        let bounties: any = { bounties: {} };
+        try {
+          const bountiesRes = await fetch('/data/idl-bounties.json');
+          if (bountiesRes.ok) bounties = await bountiesRes.json();
+        } catch (e) {
+          console.log('No bounties data available');
+        }
+
+        const protocols: Protocol[] = Object.entries(manifest.idls).map(([id, data]: [string, any]) => {
+          const bountyData = bounties.bounties[id];
+          return {
+            id,
+            name: data.name || id,
+            description: `${data.name || id} Solana program`,
+            category: data.category || 'defi',
+            idlPath: `${manifest.gateway}/${data.txId}`,
+            repo: data.repo || null,
+            status: 'available',
+            version: '1.0.0',
+            lastUpdated: data.uploadedAt || '2025-12-19',
+            bounty: bountyData ? {
+              total: 1000 + bountyData.total_amount,
+              stakers: bountyData.stakers?.length || 0
+            } : undefined
+          };
+        });
 
         setAllProtocols(protocols);
         setLoading(false);
@@ -532,6 +552,11 @@ export default function RegistryPage() {
                     {protocol.status || 'placeholder'}
                   </span>
                   <span className="category-badge">{protocol.category || 'Unknown'}</span>
+                  {protocol.bounty && (
+                    <span className="bounty-badge" title={`${protocol.bounty.stakers} community contributor${protocol.bounty.stakers !== 1 ? 's' : ''}`}>
+                      💰 {protocol.bounty.total} IDL
+                    </span>
+                  )}
                 </div>
                 <div className="protocol-description">
                   {protocol.description || 'No description available'}
