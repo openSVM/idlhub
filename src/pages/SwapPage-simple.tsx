@@ -70,7 +70,30 @@ export default function SwapPage() {
       )}
 
       {poolLoading && <div className="loading">Loading pool...</div>}
-      {poolError && <div className="error">Error: {poolError}</div>}
+      {poolError && (
+        <div className="pool-not-found">
+          <h2>Pool Not Initialized</h2>
+          <p>The SOL/USDC StableSwap pool hasn't been initialized on-chain yet.</p>
+          <div className="pool-info">
+            <div className="info-item">
+              <strong>Program:</strong> 3AMM53MsJZy2Jvf7PeHHga3bsGjWV4TSaYz29WUtcdje
+            </div>
+            <div className="info-item">
+              <strong>Token 0:</strong> SOL (So11111111111111111111111111111111111111112)
+            </div>
+            <div className="info-item">
+              <strong>Token 1:</strong> USDC (EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v)
+            </div>
+          </div>
+          <p className="note">
+            To initialize the pool, run: <code>anchor run init-pool</code> from the idlhub directory.
+          </p>
+          <details className="technical-details">
+            <summary>Technical Details</summary>
+            <pre>{poolError}</pre>
+          </details>
+        </div>
+      )}
 
       {pool && (
         <>
