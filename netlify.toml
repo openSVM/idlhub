@@ -45,6 +45,33 @@
   to = "/.netlify/functions/upload-idl"
   status = 200
 
+# Redirect old .html URLs to React routes
+[[redirects]]
+  from = "/docs.html"
+  to = "/docs"
+  status = 301
+
+[[redirects]]
+  from = "/registry.html"
+  to = "/registry"
+  status = 301
+
+[[redirects]]
+  from = "/protocol.html"
+  to = "/protocol"
+  status = 301
+
+[[redirects]]
+  from = "/swap.html"
+  to = "/swap"
+  status = 301
+
+[[redirects]]
+  from = "/analytics.html"
+  to = "/analytics"
+  status = 301
+
+# SPA catch-all (must be last)
 [[redirects]]
   from = "/*"
   to = "/index.html"
