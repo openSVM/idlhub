@@ -713,3 +713,225 @@
   background: var(--bg-tertiary);
   border-color: var(--border-secondary);
 }
+
+/* Expandable Instruction Styles */
+.instruction-item {
+  margin-bottom: 4px;
+}
+
+.instruction-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-secondary);
+  cursor: pointer;
+  transition: all 0.2s;
+  gap: 12px;
+}
+
+.instruction-header:hover {
+  border-color: var(--accent-primary);
+  background: var(--bg-secondary);
+}
+
+.instruction-header.expanded {
+  border-bottom-color: transparent;
+  background: var(--accent-primary);
+  color: var(--bg-primary);
+}
+
+.instruction-name {
+  font-weight: 600;
+  font-size: 13px;
+  flex: 1;
+  font-family: 'Courier New', monospace;
+}
+
+.instruction-summary {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-family: 'Courier New', monospace;
+}
+
+.instruction-header.expanded .instruction-summary {
+  color: var(--bg-secondary);
+}
+
+.expand-icon {
+  font-size: 10px;
+  color: var(--accent-primary);
+  transition: transform 0.2s;
+  width: 16px;
+  text-align: center;
+}
+
+.instruction-header.expanded .expand-icon {
+  color: var(--bg-primary);
+}
+
+.instruction-details {
+  border: 1px solid var(--border-secondary);
+  border-top: none;
+  padding: 16px;
+  background: var(--bg-primary);
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    max-height: 2000px;
+  }
+}
+
+.instruction-section {
+  margin-bottom: 20px;
+}
+
+.instruction-section:last-child {
+  margin-bottom: 0;
+}
+
+.instruction-section-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent-primary);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.instruction-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  font-family: 'Courier New', monospace;
+}
+
+.instruction-table th {
+  text-align: left;
+  padding: 6px 8px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-secondary);
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.instruction-table td {
+  padding: 6px 8px;
+  border: 1px solid var(--border-secondary);
+  color: var(--text-primary);
+}
+
+.instruction-table code {
+  background: var(--bg-secondary);
+  padding: 2px 6px;
+  font-size: 11px;
+  color: var(--accent-primary);
+}
+
+.instruction-table tr:hover {
+  background: var(--bg-secondary);
+}
+
+.instruction-empty {
+  padding: 12px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 12px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-secondary);
+}
+
+/* Code Snippets */
+.code-snippets {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.code-snippet {
+  border: 1px solid var(--border-secondary);
+  background: var(--bg-tertiary);
+}
+
+.code-snippet-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 12px;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-secondary);
+}
+
+.code-snippet-lang {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.code-copy-btn {
+  padding: 3px 10px;
+  font-size: 10px;
+  font-weight: 600;
+  background: var(--accent-primary);
+  color: var(--bg-primary);
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.code-copy-btn:hover {
+  background: var(--accent-hover);
+  transform: translateY(-1px);
+}
+
+.code-copy-btn:active {
+  transform: translateY(0);
+}
+
+.code-snippet-content {
+  padding: 12px;
+  margin: 0;
+  overflow-x: auto;
+  max-height: 400px;
+  overflow-y: auto;
+  background: var(--bg-primary);
+}
+
+.code-snippet-content code {
+  font-family: 'Courier New', Consolas, Monaco, monospace;
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--text-primary);
+  white-space: pre;
+}
+
+/* Scrollbar for code snippets */
+.code-snippet-content::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.code-snippet-content::-webkit-scrollbar-track {
+  background: var(--bg-tertiary);
+}
+
+.code-snippet-content::-webkit-scrollbar-thumb {
+  background: var(--border-secondary);
+  border: 2px solid var(--bg-tertiary);
+}
+
+.code-snippet-content::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-primary);
+}

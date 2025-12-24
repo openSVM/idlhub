@@ -65,6 +65,7 @@ export default function RegistryPage() {
   const [error, setError] = useState<string | null>(null);
   const [downloadingBulk, setDownloadingBulk] = useState(false);
   const [downloadProgress, setDownloadProgress] = useState(0);
+  const [expandedInstruction, setExpandedInstruction] = useState<number | null>(null);
 
   // Load protocols from Arweave manifest
   useEffect(() => {
@@ -360,6 +361,185 @@ export default function RegistryPage() {
     }
   };
 
+  // Generate TypeScript code snippet for instruction
+  const generateTypeScriptSnippet = (instruction: any, programId: string) => {
+    const argsType = instruction.args?.map((arg: any) =>
+      `  ${arg.name}: ${mapIDLTypeToTS(arg.type)};`
+    ).join('\n') || '';
+
+    const accountsList = instruction.accounts?.map((acc: any) =>
+      `  ${acc.name}: PublicKey; // ${acc.isMut ? 'writable' : 'readonly'}${acc.isSigner ? ', signer' : ''}`
+    ).join('\n') || '';
+
+    return `import { PublicKey, TransactionInstruction } from '@solana/web3.js';
+import { Program } from '@coral-xyz/anchor';
+
+// Instruction arguments
+interface ${instruction.name}Args {
+${argsType || '  // No arguments'}
+}
+
+// Account inputs
+interface ${instruction.name}Accounts {
+${accountsList || '  // No accounts'}
+}
+
+// Create instruction
+async function create${instruction.name}Instruction(
+  program: Program,
+  args: ${instruction.name}Args,
+  accounts: ${instruction.name}Accounts
+): Promise<TransactionInstruction> {
+  return await program.methods
+    .${instruction.name}(${instruction.args?.map((a: any) => `args.${a.name}`).join(', ') || ''})
+    .accounts(accounts)
+    .instruction();
+}`;
+  };
+
+  // Generate Rust code snippet for instruction
+  const generateRustSnippet = (instruction: any, programId: string) => {
+    const argsFields = instruction.args?.map((arg: any) =>
+      `    pub ${arg.name}: ${mapIDLTypeToRust(arg.type)},`
+    ).join('\n') || '';
+
+    const accountsList = instruction.accounts?.map((acc: any) => {
+      const attrs = [];
+      if (acc.isMut) attrs.push('mut');
+      if (acc.isSigner) attrs.push('signer');
+      const attrStr = attrs.length > 0 ? `#[account(${attrs.join(', ')})]` : '#[account]';
+      return `    ${attrStr}\n    pub ${acc.name}: AccountInfo<'info>,`;
+    }).join('\n') || '';
+
+    return `use anchor_lang::prelude::*;
+
+#[derive(Accounts)]
+pub struct ${instruction.name}<'info> {
+${accountsList || '    // No accounts'}
+}
+
+#[derive(AnchorSerialize, AnchorDeserialize)]
+pub struct ${instruction.name}Args {
+${argsFields || '    // No arguments'}
+}
+
+pub fn ${instruction.name}(
+    ctx: Context<${instruction.name}>,
+    args: ${instruction.name}Args,
+) -> Result<()> {
+    // Implementation here
+    Ok(())
+}`;
+  };
+
+  // Generate C code snippet for instruction
+  const generateCSnippet = (instruction: any, programId: string) => {
+    const argsFields = instruction.args?.map((arg: any) =>
+      `    ${mapIDLTypeToC(arg.type)} ${arg.name};`
+    ).join('\n') || '';
+
+    const accountsList = instruction.accounts?.map((acc: any, i: number) =>
+      `    accounts[${i}] = ${acc.name}_account; // ${acc.isMut ? 'writable' : 'readonly'}${acc.isSigner ? ', signer' : ''}`
+    ).join('\n') || '';
+
+    return `#include <solana_sdk.h>
+
+// Instruction arguments
+typedef struct {
+${argsFields || '    // No arguments'}
+} ${instruction.name}_args_t;
+
+// Create instruction
+SolInstruction create_${instruction.name}_instruction(
+    ${instruction.name}_args_t *args,
+    SolAccountMeta *accounts,
+    size_t num_accounts
+) {
+    // Serialize instruction data
+    uint8_t data[1024];
+    size_t data_len = 0;
+
+    // Add instruction discriminator
+    // ... serialize args
+
+    return (SolInstruction){
+        .program_id = (SolPubkey*)&program_id,
+        .accounts = accounts,
+        .account_len = num_accounts,
+        .data = data,
+        .data_len = data_len
+    };
+}`;
+  };
+
+  // Map IDL types to TypeScript
+  const mapIDLTypeToTS = (type: any): string => {
+    if (typeof type === 'string') {
+      const typeMap: Record<string, string> = {
+        'publicKey': 'PublicKey',
+        'u8': 'number', 'u16': 'number', 'u32': 'number', 'u64': 'BN',
+        'i8': 'number', 'i16': 'number', 'i32': 'number', 'i64': 'BN',
+        'bool': 'boolean',
+        'string': 'string',
+        'bytes': 'Buffer',
+      };
+      return typeMap[type] || type;
+    }
+    if (type?.vec) return `${mapIDLTypeToTS(type.vec)}[]`;
+    if (type?.option) return `${mapIDLTypeToTS(type.option)} | null`;
+    if (type?.defined) return type.defined;
+    return 'any';
+  };
+
+  // Map IDL types to Rust
+  const mapIDLTypeToRust = (type: any): string => {
+    if (typeof type === 'string') {
+      const typeMap: Record<string, string> = {
+        'publicKey': 'Pubkey',
+        'u8': 'u8', 'u16': 'u16', 'u32': 'u32', 'u64': 'u64', 'u128': 'u128',
+        'i8': 'i8', 'i16': 'i16', 'i32': 'i32', 'i64': 'i64', 'i128': 'i128',
+        'bool': 'bool',
+        'string': 'String',
+        'bytes': 'Vec<u8>',
+      };
+      return typeMap[type] || type;
+    }
+    if (type?.vec) return `Vec<${mapIDLTypeToRust(type.vec)}>`;
+    if (type?.option) return `Option<${mapIDLTypeToRust(type.option)}>`;
+    if (type?.defined) return type.defined;
+    return 'Unknown';
+  };
+
+  // Map IDL types to C
+  const mapIDLTypeToC = (type: any): string => {
+    if (typeof type === 'string') {
+      const typeMap: Record<string, string> = {
+        'publicKey': 'SolPubkey',
+        'u8': 'uint8_t', 'u16': 'uint16_t', 'u32': 'uint32_t', 'u64': 'uint64_t',
+        'i8': 'int8_t', 'i16': 'int16_t', 'i32': 'int32_t', 'i64': 'int64_t',
+        'bool': 'bool',
+        'string': 'char*',
+        'bytes': 'uint8_t*',
+      };
+      return typeMap[type] || type;
+    }
+    if (type?.vec) return `${mapIDLTypeToC(type.vec)}*`;
+    if (type?.option) return mapIDLTypeToC(type.option);
+    if (type?.defined) return type.defined;
+    return 'void*';
+  };
+
+  // Copy code to clipboard
+  const copyCode = async (code: string, language: string) => {
+    try {
+      await navigator.clipboard.writeText(code);
+      alert(`${language} code copied to clipboard!`);
+    } catch (error) {
+      console.error('Failed to copy code:', error);
+      alert('Failed to copy code');
+    }
+  };
+
   // Format metrics
   const formatMetrics = (metrics?: Protocol['metrics']) => {
     if (!metrics) return null;
@@ -622,11 +802,132 @@ export default function RegistryPage() {
                 <div className="detail-item">Loading...</div>
               ) : (idlData.idl?.instructions || []).length > 0 ? (
                 (idlData.idl?.instructions || []).map((ix, i) => (
-                  <div key={i} className="detail-item">
-                    <span className="detail-item-name">{ix.name}</span>
-                    <span className="detail-item-type">
-                      {ix.args?.length || 0} args, {ix.accounts?.length || 0} accounts
-                    </span>
+                  <div key={i} className="instruction-item">
+                    <div
+                      className={`instruction-header ${expandedInstruction === i ? 'expanded' : ''}`}
+                      onClick={() => setExpandedInstruction(expandedInstruction === i ? null : i)}
+                    >
+                      <span className="instruction-name">{ix.name}</span>
+                      <span className="instruction-summary">
+                        {ix.args?.length || 0} args, {ix.accounts?.length || 0} accounts
+                      </span>
+                      <span className="expand-icon">{expandedInstruction === i ? '▼' : '▶'}</span>
+                    </div>
+
+                    {expandedInstruction === i && (
+                      <div className="instruction-details">
+                        {/* Arguments */}
+                        <div className="instruction-section">
+                          <div className="instruction-section-title">Arguments ({ix.args?.length || 0})</div>
+                          {(ix.args?.length || 0) > 0 ? (
+                            <table className="instruction-table">
+                              <thead>
+                                <tr>
+                                  <th>Name</th>
+                                  <th>Type</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {ix.args.map((arg: any, argIdx: number) => (
+                                  <tr key={argIdx}>
+                                    <td><code>{arg.name}</code></td>
+                                    <td><code>{typeof arg.type === 'string' ? arg.type : JSON.stringify(arg.type)}</code></td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          ) : (
+                            <div className="instruction-empty">No arguments</div>
+                          )}
+                        </div>
+
+                        {/* Accounts */}
+                        <div className="instruction-section">
+                          <div className="instruction-section-title">Accounts ({ix.accounts?.length || 0})</div>
+                          {(ix.accounts?.length || 0) > 0 ? (
+                            <table className="instruction-table">
+                              <thead>
+                                <tr>
+                                  <th>#</th>
+                                  <th>Name</th>
+                                  <th>Writable</th>
+                                  <th>Signer</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {ix.accounts.map((acc: any, accIdx: number) => (
+                                  <tr key={accIdx}>
+                                    <td>{accIdx}</td>
+                                    <td><code>{acc.name}</code></td>
+                                    <td>{acc.isMut ? '✓' : '—'}</td>
+                                    <td>{acc.isSigner ? '✓' : '—'}</td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          ) : (
+                            <div className="instruction-empty">No accounts</div>
+                          )}
+                        </div>
+
+                        {/* Code Snippets */}
+                        <div className="instruction-section">
+                          <div className="instruction-section-title">Code Snippets</div>
+                          <div className="code-snippets">
+                            {/* TypeScript */}
+                            <div className="code-snippet">
+                              <div className="code-snippet-header">
+                                <span className="code-snippet-lang">TypeScript</span>
+                                <button
+                                  className="code-copy-btn"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    copyCode(generateTypeScriptSnippet(ix, currentProtocol?.id || ''), 'TypeScript');
+                                  }}
+                                >
+                                  Copy
+                                </button>
+                              </div>
+                              <pre className="code-snippet-content"><code>{generateTypeScriptSnippet(ix, currentProtocol?.id || '')}</code></pre>
+                            </div>
+
+                            {/* Rust */}
+                            <div className="code-snippet">
+                              <div className="code-snippet-header">
+                                <span className="code-snippet-lang">Rust</span>
+                                <button
+                                  className="code-copy-btn"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    copyCode(generateRustSnippet(ix, currentProtocol?.id || ''), 'Rust');
+                                  }}
+                                >
+                                  Copy
+                                </button>
+                              </div>
+                              <pre className="code-snippet-content"><code>{generateRustSnippet(ix, currentProtocol?.id || '')}</code></pre>
+                            </div>
+
+                            {/* C */}
+                            <div className="code-snippet">
+                              <div className="code-snippet-header">
+                                <span className="code-snippet-lang">C</span>
+                                <button
+                                  className="code-copy-btn"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    copyCode(generateCSnippet(ix, currentProtocol?.id || ''), 'C');
+                                  }}
+                                >
+                                  Copy
+                                </button>
+                              </div>
+                              <pre className="code-snippet-content"><code>{generateCSnippet(ix, currentProtocol?.id || '')}</code></pre>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 ))
               ) : (
