@@ -67,6 +67,13 @@ export default function RegistryPage() {
   const [downloadProgress, setDownloadProgress] = useState(0);
   const [selectedInstruction, setSelectedInstruction] = useState<any | null>(null);
   const [showInstructionModal, setShowInstructionModal] = useState(false);
+  const [selectedType, setSelectedType] = useState<any | null>(null);
+  const [showTypeModal, setShowTypeModal] = useState(false);
+  const [selectedAccount, setSelectedAccount] = useState<any | null>(null);
+  const [showAccountModal, setShowAccountModal] = useState(false);
+  const [selectedError, setSelectedError] = useState<any | null>(null);
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [expandedLanguages, setExpandedLanguages] = useState<Set<string>>(new Set());
 
   // Load protocols from Arweave manifest
   useEffect(() => {
@@ -433,6 +440,126 @@ pub fn ${instruction.name}(
 }`;
   };
 
+  // Generate Kotlin code snippet for instruction
+  const generateKotlinSnippet = (instruction: any, programId: string) => {
+    const argsFields = instruction.args?.map((arg: any) =>
+      `    val ${arg.name}: ${mapIDLTypeToKotlin(arg.type)}`
+    ).join(',\n') || '';
+
+    const accountsList = instruction.accounts?.map((acc: any) =>
+      `    val ${acc.name}: PublicKey // ${acc.isMut ? 'writable' : 'readonly'}${acc.isSigner ? ', signer' : ''}`
+    ).join(',\n') || '';
+
+    return `import com.solana.core.PublicKey
+import com.solana.core.TransactionInstruction
+
+// Instruction arguments
+data class ${instruction.name}Args(
+${argsFields || '    // No arguments'}
+)
+
+// Account inputs
+data class ${instruction.name}Accounts(
+${accountsList || '    // No accounts'}
+)
+
+// Create instruction
+fun create${instruction.name}Instruction(
+    programId: PublicKey,
+    args: ${instruction.name}Args,
+    accounts: ${instruction.name}Accounts
+): TransactionInstruction {
+    // Serialize instruction data
+    val data = serializeInstructionData(args)
+
+    return TransactionInstruction(
+        programId = programId,
+        keys = listOf(${instruction.accounts?.map((acc: any, i: number) =>
+          `\n            AccountMeta(accounts.${acc.name}, ${acc.isSigner}, ${acc.isMut})`
+        ).join(',') || ''}
+        ),
+        data = data
+    )
+}`;
+  };
+
+  // Generate Crystal code snippet for instruction
+  const generateCrystalSnippet = (instruction: any, programId: string) => {
+    const argsFields = instruction.args?.map((arg: any) =>
+      `    property ${arg.name} : ${mapIDLTypeToCrystal(arg.type)}`
+    ).join('\n') || '';
+
+    const accountsList = instruction.accounts?.map((acc: any, i: number) =>
+      `    accounts[${i}] = AccountMeta.new(${acc.name}, signer: ${acc.isSigner}, writable: ${acc.isMut})`
+    ).join('\n') || '';
+
+    return `require "solana"
+
+# Instruction arguments
+class ${instruction.name}Args
+${argsFields || '  # No arguments'}
+end
+
+# Create instruction
+def create_${instruction.name}_instruction(
+  program_id : PublicKey,
+  args : ${instruction.name}Args,
+  ${instruction.accounts?.map((acc: any) => `${acc.name} : PublicKey`).join(',\n  ') || ''}
+) : TransactionInstruction
+  accounts = [] of AccountMeta
+${accountsList || '  # No accounts'}
+
+  data = serialize_instruction_data(args)
+
+  TransactionInstruction.new(
+    program_id: program_id,
+    accounts: accounts,
+    data: data
+  )
+end`;
+  };
+
+  // Generate Zig code snippet for instruction
+  const generateZigSnippet = (instruction: any, programId: string) => {
+    const argsFields = instruction.args?.map((arg: any) =>
+      `    ${arg.name}: ${mapIDLTypeToZig(arg.type)},`
+    ).join('\n') || '';
+
+    const accountsList = instruction.accounts?.map((acc: any, i: number) =>
+      `    accounts[${i}] = .{ .pubkey = ${acc.name}, .is_signer = ${acc.isSigner}, .is_writable = ${acc.isMut} };`
+    ).join('\n') || '';
+
+    return `const std = @import("std");
+const solana = @import("solana");
+
+// Instruction arguments
+const ${instruction.name}Args = struct {
+${argsFields || '    // No arguments'}
+};
+
+// Create instruction
+pub fn create${instruction.name}Instruction(
+    program_id: solana.PublicKey,
+    args: ${instruction.name}Args,
+    ${instruction.accounts?.map((acc: any) => `${acc.name}: solana.PublicKey`).join(',\n    ') || ''}
+) !solana.Instruction {
+    var accounts: [${instruction.accounts?.length || 0}]solana.AccountMeta = undefined;
+${accountsList || '    // No accounts'}
+
+    // Serialize instruction data
+    var data = std.ArrayList(u8).init(std.heap.page_allocator);
+    defer data.deinit();
+
+    // ... serialize args
+
+    return solana.Instruction{
+        .program_id = program_id,
+        .accounts = &accounts,
+        .data = data.items,
+    };
+}`;
+  };
+
   // Generate C code snippet for instruction
   const generateCSnippet = (instruction: any, programId: string) => {
     const argsFields = instruction.args?.map((arg: any) =>
@@ -530,6 +657,63 @@ SolInstruction create_${instruction.name}_instruction(
     return 'void*';
   };
 
+  // Map IDL types to Kotlin
+  const mapIDLTypeToKotlin = (type: any): string => {
+    if (typeof type === 'string') {
+      const typeMap: Record<string, string> = {
+        'publicKey': 'PublicKey',
+        'u8': 'UByte', 'u16': 'UShort', 'u32': 'UInt', 'u64': 'ULong',
+        'i8': 'Byte', 'i16': 'Short', 'i32': 'Int', 'i64': 'Long',
+        'bool': 'Boolean',
+        'string': 'String',
+        'bytes': 'ByteArray',
+      };
+      return typeMap[type] || type;
+    }
+    if (type?.vec) return `List<${mapIDLTypeToKotlin(type.vec)}>`;
+    if (type?.option) return `${mapIDLTypeToKotlin(type.option)}?`;
+    if (type?.defined) return type.defined;
+    return 'Any';
+  };
+
+  // Map IDL types to Crystal
+  const mapIDLTypeToCrystal = (type: any): string => {
+    if (typeof type === 'string') {
+      const typeMap: Record<string, string> = {
+        'publicKey': 'PublicKey',
+        'u8': 'UInt8', 'u16': 'UInt16', 'u32': 'UInt32', 'u64': 'UInt64',
+        'i8': 'Int8', 'i16': 'Int16', 'i32': 'Int32', 'i64': 'Int64',
+        'bool': 'Bool',
+        'string': 'String',
+        'bytes': 'Bytes',
+      };
+      return typeMap[type] || type;
+    }
+    if (type?.vec) return `Array(${mapIDLTypeToCrystal(type.vec)})`;
+    if (type?.option) return `${mapIDLTypeToCrystal(type.option)}?`;
+    if (type?.defined) return type.defined;
+    return 'Nil';
+  };
+
+  // Map IDL types to Zig
+  const mapIDLTypeToZig = (type: any): string => {
+    if (typeof type === 'string') {
+      const typeMap: Record<string, string> = {
+        'publicKey': 'solana.PublicKey',
+        'u8': 'u8', 'u16': 'u16', 'u32': 'u32', 'u64': 'u64', 'u128': 'u128',
+        'i8': 'i8', 'i16': 'i16', 'i32': 'i32', 'i64': 'i64', 'i128': 'i128',
+        'bool': 'bool',
+        'string': '[]const u8',
+        'bytes': '[]u8',
+      };
+      return typeMap[type] || type;
+    }
+    if (type?.vec) return `[]${mapIDLTypeToZig(type.vec)}`;
+    if (type?.option) return `?${mapIDLTypeToZig(type.option)}`;
+    if (type?.defined) return type.defined;
+    return 'void';
+  };
+
   // Copy code to clipboard
   const copyCode = async (code: string, language: string) => {
     try {
@@ -551,6 +735,53 @@ SolInstruction create_${instruction.name}_instruction(
   const closeInstructionModal = () => {
     setShowInstructionModal(false);
     setTimeout(() => setSelectedInstruction(null), 300);
+  };
+
+  // Open type modal
+  const openTypeModal = (type: any) => {
+    setSelectedType(type);
+    setShowTypeModal(true);
+  };
+
+  // Close type modal
+  const closeTypeModal = () => {
+    setShowTypeModal(false);
+    setTimeout(() => setSelectedType(null), 300);
+  };
+
+  // Open account modal
+  const openAccountModal = (account: any) => {
+    setSelectedAccount(account);
+    setShowAccountModal(true);
+  };
+
+  // Close account modal
+  const closeAccountModal = () => {
+    setShowAccountModal(false);
+    setTimeout(() => setSelectedAccount(null), 300);
+  };
+
+  // Open error modal
+  const openErrorModal = (error: any) => {
+    setSelectedError(error);
+    setShowErrorModal(true);
+  };
+
+  // Close error modal
+  const closeErrorModal = () => {
+    setShowErrorModal(false);
+    setTimeout(() => setSelectedError(null), 300);
+  };
+
+  // Toggle language expansion
+  const toggleLanguage = (lang: string) => {
+    const newExpanded = new Set(expandedLanguages);
+    if (newExpanded.has(lang)) {
+      newExpanded.delete(lang);
+    } else {
+      newExpanded.add(lang);
+    }
+    setExpandedLanguages(newExpanded);
   };
 
   // Format metrics
@@ -832,29 +1063,17 @@ SolInstruction create_${instruction.name}_instruction(
             </div>
           </div>
           <div className="detail-section">
-            <div className="detail-section-title">Accounts</div>
-            <div className="detail-list">
-              {!idlData ? (
-                <div className="detail-item">Loading...</div>
-              ) : (idlData.idl?.accounts || []).length > 0 ? (
-                (idlData.idl?.accounts || []).map((acc, i) => (
-                  <div key={i} className="detail-item">
-                    <span className="detail-item-name">{acc.name}</span>
-                  </div>
-                ))
-              ) : (
-                <div className="detail-item">No accounts</div>
-              )}
-            </div>
-          </div>
-          <div className="detail-section">
             <div className="detail-section-title">Types</div>
             <div className="detail-list">
               {!idlData ? (
                 <div className="detail-item">Loading...</div>
               ) : (idlData.idl?.types || []).length > 0 ? (
                 (idlData.idl?.types || []).map((t, i) => (
-                  <div key={i} className="detail-item">
+                  <div
+                    key={i}
+                    className="detail-item instruction-clickable"
+                    onClick={() => openTypeModal(t)}
+                  >
                     <span className="detail-item-name">{t.name}</span>
                     <span className="detail-item-type">{t.type?.kind || 'type'}</span>
                   </div>
@@ -865,13 +1084,37 @@ SolInstruction create_${instruction.name}_instruction(
             </div>
           </div>
           <div className="detail-section">
+            <div className="detail-section-title">Accounts</div>
+            <div className="detail-list">
+              {!idlData ? (
+                <div className="detail-item">Loading...</div>
+              ) : (idlData.idl?.accounts || []).length > 0 ? (
+                (idlData.idl?.accounts || []).map((acc, i) => (
+                  <div
+                    key={i}
+                    className="detail-item instruction-clickable"
+                    onClick={() => openAccountModal(acc)}
+                  >
+                    <span className="detail-item-name">{acc.name}</span>
+                  </div>
+                ))
+              ) : (
+                <div className="detail-item">No accounts</div>
+              )}
+            </div>
+          </div>
+          <div className="detail-section">
             <div className="detail-section-title">Errors</div>
             <div className="detail-list">
               {!idlData ? (
                 <div className="detail-item">Loading...</div>
               ) : (idlData.idl?.errors || []).length > 0 ? (
                 (idlData.idl?.errors || []).map((e, i) => (
-                  <div key={i} className="detail-item">
+                  <div
+                    key={i}
+                    className="detail-item instruction-clickable"
+                    onClick={() => openErrorModal(e)}
+                  >
                     <span className="detail-item-name">{e.code}: {e.name}</span>
                     <span className="detail-item-type">{e.msg || ''}</span>
                   </div>
@@ -985,50 +1228,382 @@ SolInstruction create_${instruction.name}_instruction(
                 )}
               </div>
 
-              {/* Code Snippets */}
+              {/* Code Snippets - Collapsible */}
               <div className="instruction-section">
-                <div className="instruction-section-title">Code Snippets</div>
+                <div className="instruction-section-title">Code Snippets (6 languages)</div>
                 <div className="code-snippets">
                   {/* TypeScript */}
                   <div className="code-snippet">
-                    <div className="code-snippet-header">
-                      <span className="code-snippet-lang">TypeScript</span>
+                    <div
+                      className="code-snippet-header code-snippet-collapsible"
+                      onClick={() => toggleLanguage('typescript')}
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          toggleLanguage('typescript');
+                        }
+                      }}
+                    >
+                      <span className="code-snippet-lang">
+                        {expandedLanguages.has('typescript') ? '▼' : '▶'} TypeScript
+                      </span>
                       <button
                         className="code-copy-btn"
-                        onClick={() => copyCode(generateTypeScriptSnippet(selectedInstruction, currentProtocol?.id || ''), 'TypeScript')}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          copyCode(generateTypeScriptSnippet(selectedInstruction, currentProtocol?.id || ''), 'TypeScript');
+                        }}
                       >
                         Copy
                       </button>
                     </div>
-                    <pre className="code-snippet-content"><code>{generateTypeScriptSnippet(selectedInstruction, currentProtocol?.id || '')}</code></pre>
+                    {expandedLanguages.has('typescript') && (
+                      <pre className="code-snippet-content"><code>{generateTypeScriptSnippet(selectedInstruction, currentProtocol?.id || '')}</code></pre>
+                    )}
                   </div>
 
                   {/* Rust */}
                   <div className="code-snippet">
-                    <div className="code-snippet-header">
-                      <span className="code-snippet-lang">Rust</span>
+                    <div
+                      className="code-snippet-header code-snippet-collapsible"
+                      onClick={() => toggleLanguage('rust')}
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          toggleLanguage('rust');
+                        }
+                      }}
+                    >
+                      <span className="code-snippet-lang">
+                        {expandedLanguages.has('rust') ? '▼' : '▶'} Rust
+                      </span>
                       <button
                         className="code-copy-btn"
-                        onClick={() => copyCode(generateRustSnippet(selectedInstruction, currentProtocol?.id || ''), 'Rust')}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          copyCode(generateRustSnippet(selectedInstruction, currentProtocol?.id || ''), 'Rust');
+                        }}
                       >
                         Copy
                       </button>
                     </div>
-                    <pre className="code-snippet-content"><code>{generateRustSnippet(selectedInstruction, currentProtocol?.id || '')}</code></pre>
+                    {expandedLanguages.has('rust') && (
+                      <pre className="code-snippet-content"><code>{generateRustSnippet(selectedInstruction, currentProtocol?.id || '')}</code></pre>
+                    )}
                   </div>
 
                   {/* C */}
                   <div className="code-snippet">
-                    <div className="code-snippet-header">
-                      <span className="code-snippet-lang">C</span>
+                    <div
+                      className="code-snippet-header code-snippet-collapsible"
+                      onClick={() => toggleLanguage('c')}
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          toggleLanguage('c');
+                        }
+                      }}
+                    >
+                      <span className="code-snippet-lang">
+                        {expandedLanguages.has('c') ? '▼' : '▶'} C
+                      </span>
                       <button
                         className="code-copy-btn"
-                        onClick={() => copyCode(generateCSnippet(selectedInstruction, currentProtocol?.id || ''), 'C')}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          copyCode(generateCSnippet(selectedInstruction, currentProtocol?.id || ''), 'C');
+                        }}
                       >
                         Copy
                       </button>
                     </div>
-                    <pre className="code-snippet-content"><code>{generateCSnippet(selectedInstruction, currentProtocol?.id || '')}</code></pre>
+                    {expandedLanguages.has('c') && (
+                      <pre className="code-snippet-content"><code>{generateCSnippet(selectedInstruction, currentProtocol?.id || '')}</code></pre>
+                    )}
+                  </div>
+
+                  {/* Kotlin */}
+                  <div className="code-snippet">
+                    <div
+                      className="code-snippet-header code-snippet-collapsible"
+                      onClick={() => toggleLanguage('kotlin')}
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          toggleLanguage('kotlin');
+                        }
+                      }}
+                    >
+                      <span className="code-snippet-lang">
+                        {expandedLanguages.has('kotlin') ? '▼' : '▶'} Kotlin
+                      </span>
+                      <button
+                        className="code-copy-btn"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          copyCode(generateKotlinSnippet(selectedInstruction, currentProtocol?.id || ''), 'Kotlin');
+                        }}
+                      >
+                        Copy
+                      </button>
+                    </div>
+                    {expandedLanguages.has('kotlin') && (
+                      <pre className="code-snippet-content"><code>{generateKotlinSnippet(selectedInstruction, currentProtocol?.id || '')}</code></pre>
+                    )}
+                  </div>
+
+                  {/* Crystal */}
+                  <div className="code-snippet">
+                    <div
+                      className="code-snippet-header code-snippet-collapsible"
+                      onClick={() => toggleLanguage('crystal')}
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          toggleLanguage('crystal');
+                        }
+                      }}
+                    >
+                      <span className="code-snippet-lang">
+                        {expandedLanguages.has('crystal') ? '▼' : '▶'} Crystal
+                      </span>
+                      <button
+                        className="code-copy-btn"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          copyCode(generateCrystalSnippet(selectedInstruction, currentProtocol?.id || ''), 'Crystal');
+                        }}
+                      >
+                        Copy
+                      </button>
+                    </div>
+                    {expandedLanguages.has('crystal') && (
+                      <pre className="code-snippet-content"><code>{generateCrystalSnippet(selectedInstruction, currentProtocol?.id || '')}</code></pre>
+                    )}
+                  </div>
+
+                  {/* Zig */}
+                  <div className="code-snippet">
+                    <div
+                      className="code-snippet-header code-snippet-collapsible"
+                      onClick={() => toggleLanguage('zig')}
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          toggleLanguage('zig');
+                        }
+                      }}
+                    >
+                      <span className="code-snippet-lang">
+                        {expandedLanguages.has('zig') ? '▼' : '▶'} Zig
+                      </span>
+                      <button
+                        className="code-copy-btn"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          copyCode(generateZigSnippet(selectedInstruction, currentProtocol?.id || ''), 'Zig');
+                        }}
+                      >
+                        Copy
+                      </button>
+                    </div>
+                    {expandedLanguages.has('zig') && (
+                      <pre className="code-snippet-content"><code>{generateZigSnippet(selectedInstruction, currentProtocol?.id || '')}</code></pre>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Type Detail Modal */}
+      {showTypeModal && selectedType && (
+        <div className="modal-overlay" onClick={closeTypeModal}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2 className="modal-title">Type: {selectedType.name}</h2>
+              <button className="modal-close" onClick={closeTypeModal}>×</button>
+            </div>
+            <div className="modal-body">
+              {/* Type Fields */}
+              <div className="instruction-section">
+                <div className="instruction-section-title">Fields ({selectedType.type?.fields?.length || 0})</div>
+                {selectedType.type?.fields && selectedType.type.fields.length > 0 ? (
+                  <table className="instruction-table">
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {selectedType.type.fields.map((field: any, idx: number) => (
+                        <tr key={idx}>
+                          <td><code>{field.name}</code></td>
+                          <td><code>{typeof field.type === 'string' ? field.type : JSON.stringify(field.type)}</code></td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                ) : (
+                  <div className="instruction-empty">No fields</div>
+                )}
+              </div>
+
+              {/* Metadata */}
+              <div className="instruction-section">
+                <div className="instruction-section-title">Metadata</div>
+                <div className="metadata-grid">
+                  <div className="metadata-item">
+                    <span className="metadata-label">Type Kind:</span>
+                    <span className="metadata-value">{selectedType.type?.kind || 'N/A'}</span>
+                  </div>
+                  <div className="metadata-item">
+                    <span className="metadata-label">Field Count:</span>
+                    <span className="metadata-value">{selectedType.type?.fields?.length || 0}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Account Detail Modal */}
+      {showAccountModal && selectedAccount && (
+        <div className="modal-overlay" onClick={closeAccountModal}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2 className="modal-title">Account: {selectedAccount.name}</h2>
+              <button className="modal-close" onClick={closeAccountModal}>×</button>
+            </div>
+            <div className="modal-body">
+              {/* Account Fields */}
+              <div className="instruction-section">
+                <div className="instruction-section-title">Fields ({selectedAccount.type?.fields?.length || 0})</div>
+                {selectedAccount.type?.fields && selectedAccount.type.fields.length > 0 ? (
+                  <table className="instruction-table">
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {selectedAccount.type.fields.map((field: any, idx: number) => (
+                        <tr key={idx}>
+                          <td><code>{field.name}</code></td>
+                          <td><code>{typeof field.type === 'string' ? field.type : JSON.stringify(field.type)}</code></td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                ) : (
+                  <div className="instruction-empty">No fields</div>
+                )}
+              </div>
+
+              {/* Metadata */}
+              <div className="instruction-section">
+                <div className="instruction-section-title">Metadata</div>
+                <div className="metadata-grid">
+                  <div className="metadata-item">
+                    <span className="metadata-label">Account Type:</span>
+                    <span className="metadata-value">{selectedAccount.type?.kind || 'N/A'}</span>
+                  </div>
+                  <div className="metadata-item">
+                    <span className="metadata-label">Field Count:</span>
+                    <span className="metadata-value">{selectedAccount.type?.fields?.length || 0}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Query Account State */}
+              <div className="instruction-section">
+                <div className="instruction-section-title">Query Account State</div>
+                <div className="account-query-info">
+                  <p>To query and decode this account type on-chain, use:</p>
+                  <pre className="code-snippet-content"><code>{`// TypeScript example
+const accountInfo = await connection.getAccountInfo(accountPubkey);
+const decodedData = program.coder.accounts.decode(
+  "${selectedAccount.name}",
+  accountInfo.data
+);
+console.log(decodedData);`}</code></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Error Detail Modal */}
+      {showErrorModal && selectedError && (
+        <div className="modal-overlay" onClick={closeErrorModal}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2 className="modal-title">Error: {selectedError.name}</h2>
+              <button className="modal-close" onClick={closeErrorModal}>×</button>
+            </div>
+            <div className="modal-body">
+              {/* Error Details */}
+              <div className="instruction-section">
+                <div className="instruction-section-title">Details</div>
+                <div className="metadata-grid">
+                  <div className="metadata-item">
+                    <span className="metadata-label">Error Code:</span>
+                    <span className="metadata-value"><code>{selectedError.code}</code></span>
+                  </div>
+                  <div className="metadata-item">
+                    <span className="metadata-label">Name:</span>
+                    <span className="metadata-value"><code>{selectedError.name}</code></span>
+                  </div>
+                  <div className="metadata-item metadata-item-full">
+                    <span className="metadata-label">Message:</span>
+                    <span className="metadata-value">{selectedError.msg || 'No message provided'}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Usage Example */}
+              <div className="instruction-section">
+                <div className="instruction-section-title">Usage Example</div>
+                <pre className="code-snippet-content"><code>{`// TypeScript - Handling this error
+try {
+  await program.methods.someInstruction().rpc();
+} catch (error) {
+  if (error.code === ${selectedError.code}) {
+    console.error("${selectedError.name}: ${selectedError.msg || 'Error occurred'}");
+    // Handle specific error case
+  }
+}`}</code></pre>
+              </div>
+
+              {/* Metadata */}
+              <div className="instruction-section">
+                <div className="instruction-section-title">Metadata</div>
+                <div className="metadata-grid">
+                  <div className="metadata-item">
+                    <span className="metadata-label">Hex Code:</span>
+                    <span className="metadata-value"><code>0x{selectedError.code.toString(16).toUpperCase()}</code></span>
+                  </div>
+                  <div className="metadata-item">
+                    <span className="metadata-label">Decimal Code:</span>
+                    <span className="metadata-value"><code>{selectedError.code}</code></span>
                   </div>
                 </div>
               </div>

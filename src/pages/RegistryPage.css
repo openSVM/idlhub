@@ -875,6 +875,70 @@
   background: var(--accent-primary);
 }
 
+/* Collapsible Code Snippets */
+.code-snippet-collapsible {
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.2s ease;
+}
+
+.code-snippet-collapsible:hover {
+  background: var(--bg-tertiary);
+}
+
+.code-snippet-collapsible .code-snippet-lang {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Metadata Grid */
+.metadata-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 12px;
+  padding: 12px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+}
+
+.metadata-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.metadata-item-full {
+  grid-column: 1 / -1;
+}
+
+.metadata-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.metadata-value {
+  font-size: 13px;
+  color: var(--text-primary);
+  font-family: 'Courier New', monospace;
+}
+
+/* Account Query Info */
+.account-query-info {
+  padding: 12px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+}
+
+.account-query-info p {
+  margin: 0 0 12px 0;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
 /* Modal Styles */
 .modal-overlay {
   position: fixed;

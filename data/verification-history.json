@@ -1,5 +1,41 @@
 [
   {
+    "timestamp": "2025-12-25T04:22:27.887Z",
+    "verified": 24,
+    "total": 102,
+    "placeholder": 43,
+    "noProgram": 21,
+    "rpcError": 0,
+    "durationMs": 36153
+  },
+  {
+    "timestamp": "2025-12-25T03:22:27.799Z",
+    "verified": 24,
+    "total": 102,
+    "placeholder": 43,
+    "noProgram": 21,
+    "rpcError": 0,
+    "durationMs": 36645
+  },
+  {
+    "timestamp": "2025-12-25T02:22:27.756Z",
+    "verified": 24,
+    "total": 102,
+    "placeholder": 43,
+    "noProgram": 21,
+    "rpcError": 0,
+    "durationMs": 36538
+  },
+  {
+    "timestamp": "2025-12-25T01:22:27.713Z",
+    "verified": 24,
+    "total": 102,
+    "placeholder": 43,
+    "noProgram": 21,
+    "rpcError": 0,
+    "durationMs": 36772
+  },
+  {
     "timestamp": "2025-12-25T00:22:27.620Z",
     "verified": 24,
     "total": 102,
