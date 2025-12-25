@@ -1,5 +1,32 @@
 [
   {
+    "timestamp": "2025-12-25T14:22:28.523Z",
+    "verified": 24,
+    "total": 102,
+    "placeholder": 43,
+    "noProgram": 21,
+    "rpcError": 0,
+    "durationMs": 36628
+  },
+  {
+    "timestamp": "2025-12-25T13:22:28.423Z",
+    "verified": 24,
+    "total": 102,
+    "placeholder": 43,
+    "noProgram": 21,
+    "rpcError": 0,
+    "durationMs": 35900
+  },
+  {
+    "timestamp": "2025-12-25T12:22:28.400Z",
+    "verified": 24,
+    "total": 102,
+    "placeholder": 43,
+    "noProgram": 21,
+    "rpcError": 0,
+    "durationMs": 49382
+  },
+  {
     "timestamp": "2025-12-25T11:22:28.319Z",
     "verified": 24,
     "total": 102,

@@ -172,12 +172,19 @@ export default function RegistryPage() {
         const protocol = allProtocols.find(p => p.id === currentProtocolId);
         if (!protocol?.idlPath) throw new Error('IDL path not found');
 
-        const res = await fetch(protocol.idlPath);
-        if (!res.ok) throw new Error('Failed to fetch from Arweave');
+        let res = await fetch(protocol.idlPath);
+
+        // If Arweave fetch fails and txId starts with LOCAL_, try loading from cache
+        if (!res.ok && protocol.idlPath.includes('LOCAL_')) {
+          console.log('Arweave fetch failed, trying local cache...');
+          res = await fetch(`/arweave/cache/${currentProtocolId}.json`);
+        }
+
+        if (!res.ok) throw new Error('Failed to fetch IDL');
         const data = await res.json();
         setIdlData({ idl: data, arweaveUrl: protocol.idlPath });
       } catch (err) {
-        console.error('Failed to load IDL from Arweave:', err);
+        console.error('Failed to load IDL:', err);
         setIdlData(null);
       }
     };

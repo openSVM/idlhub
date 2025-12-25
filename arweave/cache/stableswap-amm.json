@@ -1,0 +1,848 @@
+{
+  "version": "0.1.0",
+  "name": "stableswap_amm",
+  "metadata": {
+    "address": "3AMM53MsJZy2Jvf7PeHHga3bsGjWV4TSaYz29WUtcdje",
+    "description": "Pure eBPF C StableSwap AMM with N-token pools, TWAP oracle, farming, and Token-2022 support"
+  },
+  "instructions": [
+    {
+      "name": "createpool",
+      "discriminator": [249, 227, 167, 200, 209, 228, 185, 242],
+      "docs": ["Create a new 2-token StableSwap pool"],
+      "accounts": [
+        { "name": "pool", "isMut": true, "isSigner": false },
+        { "name": "mint0", "isMut": false, "isSigner": false },
+        { "name": "mint1", "isMut": false, "isSigner": false },
+        { "name": "authority", "isMut": true, "isSigner": true },
+        { "name": "systemProgram", "isMut": false, "isSigner": false }
+      ],
+      "args": [
+        { "name": "amp", "type": "u64" },
+        { "name": "bump", "type": "u8" }
+      ]
+    },
+    {
+      "name": "createpn",
+      "discriminator": [27, 124, 197, 229, 188, 51, 156, 39],
+      "docs": ["Create N-token pool (2-8 tokens)"],
+      "accounts": [
+        { "name": "pool", "isMut": true, "isSigner": false },
+        { "name": "authority", "isMut": true, "isSigner": true },
+        { "name": "systemProgram", "isMut": false, "isSigner": false }
+      ],
+      "args": [
+        { "name": "amp", "type": "u64" },
+        { "name": "nTokens", "type": "u8" },
+        { "name": "bump", "type": "u8" }
+      ]
+    },
+    {
+      "name": "initt0v",
+      "discriminator": [159, 74, 62, 15, 13, 59, 140, 94],
+      "docs": ["Initialize token 0 vault"],
+      "accounts": [
+        { "name": "pool", "isMut": true, "isSigner": false },
+        { "name": "vault", "isMut": false, "isSigner": false },
+        { "name": "authority", "isMut": false, "isSigner": true },
+        { "name": "systemProgram", "isMut": false, "isSigner": false }
+      ],
+      "args": []
+    },
+    {
+      "name": "initt1v",
+      "discriminator": [138, 94, 45, 59, 28, 159, 78, 122],
+      "docs": ["Initialize token 1 vault"],
+      "accounts": [
+        { "name": "pool", "isMut": true, "isSigner": false },
+        { "name": "vault", "isMut": false, "isSigner": false },
+        { "name": "authority", "isMut": false, "isSigner": true },
+        { "name": "systemProgram", "isMut": false, "isSigner": false }
+      ],
+      "args": []
+    },
+    {
+      "name": "initlpm",
+      "discriminator": [242, 231, 184, 197, 163, 233, 209, 244],
+      "docs": ["Initialize LP mint"],
+      "accounts": [
+        { "name": "pool", "isMut": true, "isSigner": false },
+        { "name": "lpMint", "isMut": false, "isSigner": false },
+        { "name": "authority", "isMut": false, "isSigner": true },
+        { "name": "systemProgram", "isMut": false, "isSigner": false }
+      ],
+      "args": []
+    },
+    {
+      "name": "swap",
+      "discriminator": [200, 135, 117, 225, 145, 233, 194, 130],
+      "docs": ["Generic swap with from/to indices"],
+      "accounts": [
+        { "name": "pool", "isMut": true, "isSigner": false },
+        { "name": "vault0", "isMut": true, "isSigner": false },
+        { "name": "vault1", "isMut": true, "isSigner": false },
+        { "name": "userToken0", "isMut": true, "isSigner": false },
+        { "name": "userToken1", "isMut": true, "isSigner": false },
+        { "name": "user", "isMut": false, "isSigner": true },
+        { "name": "tokenProgram", "isMut": false, "isSigner": false }
+      ],
+      "args": [
+        { "name": "from", "type": "u8" },
+        { "name": "to", "type": "u8" },
+        { "name": "amountIn", "type": "u64" },
+        { "name": "minOut", "type": "u64" },
+        { "name": "deadline", "type": "i64" }
+      ]
+    },
+    {
+      "name": "swapt0t1",
+      "discriminator": [42, 78, 241, 224, 183, 242, 106, 100],
+      "docs": ["Swap token 0 for token 1"],
+      "accounts": [
+        { "name": "pool", "isMut": true, "isSigner": false },
+        { "name": "vault0", "isMut": true, "isSigner": false },
+        { "name": "vault1", "isMut": true, "isSigner": false },
+        { "name": "userToken0", "isMut": true, "isSigner": false },
+        { "name": "userToken1", "isMut": true, "isSigner": false },
+        { "name": "user", "isMut": false, "isSigner": true },
+        { "name": "tokenProgram", "isMut": false, "isSigner": false }
+      ],
+      "args": [
+        { "name": "amountIn", "type": "u64" },
+        { "name": "minOut", "type": "u64" }
+      ]
+    },
+    {
+      "name": "swapt1t0",
+      "discriminator": [200, 196, 117, 172, 27, 19, 14, 58],
+      "docs": ["Swap token 1 for token 0"],
+      "accounts": [
+        { "name": "pool", "isMut": true, "isSigner": false },
+        { "name": "vault0", "isMut": true, "isSigner": false },
+        { "name": "vault1", "isMut": true, "isSigner": false },
+        { "name": "userToken0", "isMut": true, "isSigner": false },
+        { "name": "userToken1", "isMut": true, "isSigner": false },
+        { "name": "user", "isMut": false, "isSigner": true },
+        { "name": "tokenProgram", "isMut": false, "isSigner": false }
+      ],
+      "args": [
+        { "name": "amountIn", "type": "u64" },
+        { "name": "minOut", "type": "u64" }
+      ]
+    },
+    {
+      "name": "swapn",
+      "discriminator": [248, 229, 217, 178, 199, 227, 168, 241],
+      "docs": ["N-token pool swap"],
+      "accounts": [
+        { "name": "pool", "isMut": true, "isSigner": false },
+        { "name": "vaultIn", "isMut": true, "isSigner": false },
+        { "name": "vaultOut", "isMut": true, "isSigner": false },
+        { "name": "userTokenIn", "isMut": true, "isSigner": false },
+        { "name": "userTokenOut", "isMut": true, "isSigner": false },
+        { "name": "user", "isMut": false, "isSigner": true },
+        { "name": "tokenProgram", "isMut": false, "isSigner": false }
+      ],
+      "args": [
+        { "name": "fromIdx", "type": "u8" },
+        { "name": "toIdx", "type": "u8" },
+        { "name": "amountIn", "type": "u64" },
+        { "name": "minOut", "type": "u64" }
+      ]
+    },
+    {
+      "name": "migt0t1",
+      "discriminator": [213, 233, 183, 195, 168, 241, 228, 210],
+      "docs": ["Migration swap 0->1 (1:1 with 0.1337% fee)"],
+      "accounts": [
+        { "name": "pool", "isMut": true, "isSigner": false },
+        { "name": "vault0", "isMut": true, "isSigner": false },
+        { "name": "vault1", "isMut": true, "isSigner": false },
+        { "name": "userToken0", "isMut": true, "isSigner": false },
+        { "name": "userToken1", "isMut": true, "isSigner": false },
+        { "name": "user", "isMut": false, "isSigner": true },
+        { "name": "tokenProgram", "isMut": false, "isSigner": false }
+      ],
+      "args": [
+        { "name": "amountIn", "type": "u64" },
+        { "name": "minOut", "type": "u64" }
+      ]
+    },
+    {
+      "name": "migt1t0",
+      "discriminator": [184, 219, 57, 38, 116, 136, 136, 24],
+      "docs": ["Migration swap 1->0 (1:1 with 0.1337% fee)"],
+      "accounts": [
+        { "name": "pool", "isMut": true, "isSigner": false },
+        { "name": "vault0", "isMut": true, "isSigner": false },
+        { "name": "vault1", "isMut": true, "isSigner": false },
+        { "name": "userToken0", "isMut": true, "isSigner": false },
+        { "name": "userToken1", "isMut": true, "isSigner": false },
+        { "name": "user", "isMut": false, "isSigner": true },
+        { "name": "tokenProgram", "isMut": false, "isSigner": false }
+      ],
+      "args": [
+        { "name": "amountIn", "type": "u64" },
+        { "name": "minOut", "type": "u64" }
+      ]
+    },
+    {
+      "name": "addliq",
+      "discriminator": [169, 229, 209, 179, 248, 196, 231, 162],
+      "docs": ["Add liquidity to 2-token pool"],
+      "accounts": [
+        { "name": "pool", "isMut": true, "isSigner": false },
+        { "name": "vault0", "isMut": true, "isSigner": false },
+        { "name": "vault1", "isMut": true, "isSigner": false },
+        { "name": "lpMint", "isMut": true, "isSigner": false },
+        { "name": "userToken0", "isMut": true, "isSigner": false },
+        { "name": "userToken1", "isMut": true, "isSigner": false },
+        { "name": "userLp", "isMut": true, "isSigner": false },
+        { "name": "user", "isMut": false, "isSigner": true },
+        { "name": "tokenProgram", "isMut": false, "isSigner": false }
+      ],
+      "args": [
+        { "name": "amount0", "type": "u64" },
+        { "name": "amount1", "type": "u64" },
+        { "name": "minLp", "type": "u64" }
+      ]
+    },
+    {
+      "name": "addliq1",
+      "discriminator": [230, 18, 46, 60, 78, 139, 201, 81],
+      "docs": ["Single-sided add liquidity"],
+      "accounts": [
+        { "name": "pool", "isMut": true, "isSigner": false },
+        { "name": "vaultIn", "isMut": true, "isSigner": false },
+        { "name": "lpMint", "isMut": true, "isSigner": false },
+        { "name": "userTokenIn", "isMut": true, "isSigner": false },
+        { "name": "userLp", "isMut": true, "isSigner": false },
+        { "name": "user", "isMut": false, "isSigner": true },
+        { "name": "tokenProgram", "isMut": false, "isSigner": false }
+      ],
+      "args": [
+        { "name": "amountIn", "type": "u64" },
+        { "name": "minLp", "type": "u64" }
+      ]
+    },
+    {
+      "name": "addliqn",
+      "discriminator": [246, 228, 233, 177, 168, 194, 247, 227],
+      "docs": ["Add liquidity to N-token pool"],
+      "accounts": [
+        { "name": "pool", "isMut": true, "isSigner": false },
+        { "name": "lpMint", "isMut": true, "isSigner": false },
+        { "name": "userLp", "isMut": true, "isSigner": false },
+        { "name": "user", "isMut": false, "isSigner": true },
+        { "name": "tokenProgram", "isMut": false, "isSigner": false }
+      ],
+      "args": [
+        { "name": "minLp", "type": "u64" }
+      ]
+    },
+    {
+      "name": "remliq",
+      "discriminator": [2, 249, 197, 117, 44, 188, 84, 46],
+      "docs": ["Remove liquidity from 2-token pool"],
+      "accounts": [
+        { "name": "pool", "isMut": true, "isSigner": false },
+        { "name": "vault0", "isMut": true, "isSigner": false },
+        { "name": "vault1", "isMut": true, "isSigner": false },
+        { "name": "lpMint", "isMut": true, "isSigner": false },
+        { "name": "userToken0", "isMut": true, "isSigner": false },
+        { "name": "userToken1", "isMut": true, "isSigner": false },
+        { "name": "userLp", "isMut": true, "isSigner": false },
+        { "name": "user", "isMut": false, "isSigner": true },
+        { "name": "tokenProgram", "isMut": false, "isSigner": false }
+      ],
+      "args": [
+        { "name": "lpAmount", "type": "u64" },
+        { "name": "min0", "type": "u64" },
+        { "name": "min1", "type": "u64" }
+      ]
+    },
+    {
+      "name": "remliqn",
+      "discriminator": [180, 177, 233, 215, 197, 162, 232, 179],
+      "docs": ["Remove liquidity from N-token pool"],
+      "accounts": [
+        { "name": "pool", "isMut": true, "isSigner": false },
+        { "name": "lpMint", "isMut": true, "isSigner": false },
+        { "name": "userLp", "isMut": true, "isSigner": false },
+        { "name": "user", "isMut": false, "isSigner": true },
+        { "name": "tokenProgram", "isMut": false, "isSigner": false }
+      ],
+      "args": [
+        { "name": "lpAmount", "type": "u64" }
+      ]
+    },
+    {
+      "name": "setpause",
+      "discriminator": [201, 110, 13, 224, 123, 118, 117, 224],
+      "docs": ["Pause/unpause pool"],
+      "accounts": [
+        { "name": "pool", "isMut": true, "isSigner": false },
+        { "name": "authority", "isMut": false, "isSigner": true }
+      ],
+      "args": [
+        { "name": "paused", "type": "bool" }
+      ]
+    },
+    {
+      "name": "updfee",
+      "discriminator": [74, 31, 157, 124, 91, 46, 58, 143],
+      "docs": ["Update swap fee"],
+      "accounts": [
+        { "name": "pool", "isMut": true, "isSigner": false },
+        { "name": "authority", "isMut": false, "isSigner": true }
+      ],
+      "args": [
+        { "name": "feeBps", "type": "u64" }
+      ]
+    },
+    {
+      "name": "wdrawfee",
+      "discriminator": [248, 231, 177, 200, 162, 211, 229, 249],
+      "docs": ["Withdraw admin fees"],
+      "accounts": [
+        { "name": "pool", "isMut": true, "isSigner": false },
+        { "name": "vault0", "isMut": true, "isSigner": false },
+        { "name": "vault1", "isMut": true, "isSigner": false },
+        { "name": "dest0", "isMut": true, "isSigner": false },
+        { "name": "dest1", "isMut": true, "isSigner": false },
+        { "name": "authority", "isMut": false, "isSigner": true },
+        { "name": "tokenProgram", "isMut": false, "isSigner": false }
+      ],
+      "args": []
+    },
+    {
+      "name": "commitamp",
+      "discriminator": [196, 226, 184, 165, 247, 227, 217, 193],
+      "docs": ["Commit amp change (1-hour timelock)"],
+      "accounts": [
+        { "name": "pool", "isMut": true, "isSigner": false },
+        { "name": "authority", "isMut": false, "isSigner": true }
+      ],
+      "args": [
+        { "name": "targetAmp", "type": "u64" }
+      ]
+    },
+    {
+      "name": "rampamp",
+      "discriminator": [106, 142, 45, 123, 63, 94, 28, 154],
+      "docs": ["Start ramping after timelock"],
+      "accounts": [
+        { "name": "pool", "isMut": true, "isSigner": false },
+        { "name": "authority", "isMut": false, "isSigner": true }
+      ],
+      "args": [
+        { "name": "targetAmp", "type": "u64" },
+        { "name": "duration", "type": "i64" }
+      ]
+    },
+    {
+      "name": "stopramp",
+      "discriminator": [83, 16, 162, 21, 187, 39, 148, 60],
+      "docs": ["Stop amp ramping"],
+      "accounts": [
+        { "name": "pool", "isMut": true, "isSigner": false },
+        { "name": "authority", "isMut": false, "isSigner": true }
+      ],
+      "args": []
+    },
+    {
+      "name": "initauth",
+      "discriminator": [244, 248, 225, 179, 201, 167, 226, 245],
+      "docs": ["Initiate authority transfer (1-hour timelock)"],
+      "accounts": [
+        { "name": "pool", "isMut": true, "isSigner": false },
+        { "name": "authority", "isMut": false, "isSigner": true },
+        { "name": "newAuthority", "isMut": false, "isSigner": false }
+      ],
+      "args": []
+    },
+    {
+      "name": "complauth",
+      "discriminator": [245, 225, 233, 183, 164, 210, 232, 246],
+      "docs": ["Complete authority transfer"],
+      "accounts": [
+        { "name": "pool", "isMut": true, "isSigner": false },
+        { "name": "newAuthority", "isMut": false, "isSigner": true }
+      ],
+      "args": []
+    },
+    {
+      "name": "cancelauth",
+      "discriminator": [246, 232, 178, 213, 193, 169, 227, 247],
+      "docs": ["Cancel authority transfer"],
+      "accounts": [
+        { "name": "pool", "isMut": true, "isSigner": false },
+        { "name": "authority", "isMut": false, "isSigner": true }
+      ],
+      "args": []
+    },
+    {
+      "name": "locklp",
+      "discriminator": [236, 140, 2, 95, 1, 131, 251, 254],
+      "docs": ["Lock LP tokens"],
+      "accounts": [
+        { "name": "userPosition", "isMut": true, "isSigner": false },
+        { "name": "farm", "isMut": true, "isSigner": false },
+        { "name": "user", "isMut": false, "isSigner": true },
+        { "name": "systemProgram", "isMut": false, "isSigner": false }
+      ],
+      "args": [
+        { "name": "amount", "type": "u64" },
+        { "name": "duration", "type": "i64" }
+      ]
+    },
+    {
+      "name": "claimulp",
+      "discriminator": [30, 139, 232, 92, 244, 147, 133, 202],
+      "docs": ["Claim unlocked LP"],
+      "accounts": [
+        { "name": "userPosition", "isMut": true, "isSigner": false },
+        { "name": "farm", "isMut": true, "isSigner": false },
+        { "name": "user", "isMut": false, "isSigner": true },
+        { "name": "systemProgram", "isMut": false, "isSigner": false }
+      ],
+      "args": []
+    },
+    {
+      "name": "createfarm",
+      "discriminator": [92, 93, 26, 47, 142, 12, 123, 109],
+      "docs": ["Create farming period"],
+      "accounts": [
+        { "name": "farm", "isMut": true, "isSigner": false },
+        { "name": "pool", "isMut": false, "isSigner": false },
+        { "name": "rewardMint", "isMut": false, "isSigner": false },
+        { "name": "authority", "isMut": true, "isSigner": true },
+        { "name": "systemProgram", "isMut": false, "isSigner": false }
+      ],
+      "args": [
+        { "name": "rewardRate", "type": "u64" },
+        { "name": "startTime", "type": "i64" },
+        { "name": "endTime", "type": "i64" }
+      ]
+    },
+    {
+      "name": "stakelp",
+      "discriminator": [247, 226, 185, 179, 167, 225, 212, 248],
+      "docs": ["Stake LP in farm"],
+      "accounts": [
+        { "name": "userPosition", "isMut": true, "isSigner": false },
+        { "name": "farm", "isMut": true, "isSigner": false },
+        { "name": "userLp", "isMut": true, "isSigner": false },
+        { "name": "lpVault", "isMut": true, "isSigner": false },
+        { "name": "user", "isMut": false, "isSigner": true },
+        { "name": "tokenProgram", "isMut": false, "isSigner": false }
+      ],
+      "args": [
+        { "name": "amount", "type": "u64" }
+      ]
+    },
+    {
+      "name": "unstakelp",
+      "discriminator": [188, 248, 52, 78, 101, 191, 102, 65],
+      "docs": ["Unstake LP from farm"],
+      "accounts": [
+        { "name": "userPosition", "isMut": true, "isSigner": false },
+        { "name": "farm", "isMut": true, "isSigner": false },
+        { "name": "userLp", "isMut": true, "isSigner": false },
+        { "name": "lpVault", "isMut": true, "isSigner": false },
+        { "name": "user", "isMut": false, "isSigner": true },
+        { "name": "tokenProgram", "isMut": false, "isSigner": false }
+      ],
+      "args": [
+        { "name": "amount", "type": "u64" }
+      ]
+    },
+    {
+      "name": "claimfarm",
+      "discriminator": [155, 236, 214, 224, 183, 98, 117, 7],
+      "docs": ["Claim farming rewards"],
+      "accounts": [
+        { "name": "userPosition", "isMut": true, "isSigner": false },
+        { "name": "farm", "isMut": true, "isSigner": false },
+        { "name": "pool", "isMut": false, "isSigner": false },
+        { "name": "rewardVault", "isMut": true, "isSigner": false },
+        { "name": "userReward", "isMut": true, "isSigner": false },
+        { "name": "user", "isMut": false, "isSigner": true },
+        { "name": "tokenProgram", "isMut": false, "isSigner": false }
+      ],
+      "args": []
+    },
+    {
+      "name": "enterlot",
+      "discriminator": [252, 72, 239, 78, 58, 56, 149, 231],
+      "docs": ["Enter lottery"],
+      "accounts": [
+        { "name": "lottery", "isMut": true, "isSigner": false },
+        { "name": "userEntry", "isMut": true, "isSigner": false },
+        { "name": "user", "isMut": false, "isSigner": true },
+        { "name": "userLp", "isMut": true, "isSigner": false },
+        { "name": "lotteryVault", "isMut": true, "isSigner": false },
+        { "name": "tokenProgram", "isMut": false, "isSigner": false }
+      ],
+      "args": [
+        { "name": "ticketCount", "type": "u64" }
+      ]
+    },
+    {
+      "name": "drawlot",
+      "discriminator": [43, 34, 13, 49, 167, 88, 235, 235],
+      "docs": ["Draw lottery winner"],
+      "accounts": [
+        { "name": "lottery", "isMut": true, "isSigner": false },
+        { "name": "authority", "isMut": false, "isSigner": true }
+      ],
+      "args": [
+        { "name": "randomSeed", "type": "u64" }
+      ]
+    },
+    {
+      "name": "claimlot",
+      "discriminator": [244, 60, 159, 21, 63, 94, 123, 126],
+      "docs": ["Claim lottery prize"],
+      "accounts": [
+        { "name": "lottery", "isMut": true, "isSigner": false },
+        { "name": "userEntry", "isMut": true, "isSigner": false },
+        { "name": "user", "isMut": false, "isSigner": true },
+        { "name": "userLp", "isMut": true, "isSigner": false },
+        { "name": "lotteryVault", "isMut": true, "isSigner": false },
+        { "name": "pool", "isMut": false, "isSigner": false },
+        { "name": "tokenProgram", "isMut": false, "isSigner": false }
+      ],
+      "args": []
+    },
+    {
+      "name": "initreg",
+      "discriminator": [24, 7, 96, 245, 212, 195, 178, 161],
+      "docs": ["Initialize registry"],
+      "accounts": [
+        { "name": "registry", "isMut": true, "isSigner": false },
+        { "name": "authority", "isMut": true, "isSigner": true },
+        { "name": "systemProgram", "isMut": false, "isSigner": false }
+      ],
+      "args": []
+    },
+    {
+      "name": "regpool",
+      "discriminator": [41, 24, 7, 246, 229, 212, 195, 178],
+      "docs": ["Register pool"],
+      "accounts": [
+        { "name": "registry", "isMut": true, "isSigner": false },
+        { "name": "pool", "isMut": false, "isSigner": false },
+        { "name": "authority", "isMut": false, "isSigner": true }
+      ],
+      "args": []
+    },
+    {
+      "name": "unregpool",
+      "discriminator": [48, 41, 24, 7, 246, 229, 212, 195],
+      "docs": ["Unregister pool"],
+      "accounts": [
+        { "name": "registry", "isMut": true, "isSigner": false },
+        { "name": "pool", "isMut": false, "isSigner": false },
+        { "name": "authority", "isMut": false, "isSigner": true }
+      ],
+      "args": []
+    },
+    {
+      "name": "initrega",
+      "discriminator": [65, 48, 41, 24, 7, 246, 229, 212],
+      "docs": ["Initiate registry authority transfer"],
+      "accounts": [
+        { "name": "registry", "isMut": true, "isSigner": false },
+        { "name": "authority", "isMut": false, "isSigner": true },
+        { "name": "newAuthority", "isMut": false, "isSigner": false }
+      ],
+      "args": []
+    },
+    {
+      "name": "complrega",
+      "discriminator": [82, 65, 48, 41, 24, 7, 246, 229],
+      "docs": ["Complete registry authority transfer"],
+      "accounts": [
+        { "name": "registry", "isMut": true, "isSigner": false },
+        { "name": "newAuthority", "isMut": false, "isSigner": true }
+      ],
+      "args": []
+    },
+    {
+      "name": "cancelrega",
+      "discriminator": [38, 5, 65, 48, 41, 24, 7, 246],
+      "docs": ["Cancel registry authority transfer"],
+      "accounts": [
+        { "name": "registry", "isMut": true, "isSigner": false },
+        { "name": "authority", "isMut": false, "isSigner": true }
+      ],
+      "args": []
+    },
+    {
+      "name": "gettwap",
+      "discriminator": [1, 116, 103, 97, 119, 112, 116, 116],
+      "docs": ["Get TWAP oracle price"],
+      "accounts": [
+        { "name": "pool", "isMut": false, "isSigner": false }
+      ],
+      "args": [
+        { "name": "window", "type": "u8" }
+      ],
+      "returns": "u64"
+    },
+    {
+      "name": "thExec",
+      "discriminator": [105, 37, 101, 197, 75, 251, 102, 26],
+      "docs": ["Transfer Hook Execute"],
+      "accounts": [
+        { "name": "source", "isMut": false, "isSigner": false },
+        { "name": "mint", "isMut": false, "isSigner": false },
+        { "name": "destination", "isMut": false, "isSigner": false },
+        { "name": "owner", "isMut": false, "isSigner": false },
+        { "name": "extraMetas", "isMut": false, "isSigner": false }
+      ],
+      "args": [
+        { "name": "amount", "type": "u64" }
+      ]
+    },
+    {
+      "name": "thInit",
+      "discriminator": [43, 34, 13, 49, 167, 88, 235, 26],
+      "docs": ["Initialize ExtraAccountMetaList"],
+      "accounts": [
+        { "name": "extraMetas", "isMut": true, "isSigner": false },
+        { "name": "mint", "isMut": false, "isSigner": false },
+        { "name": "authority", "isMut": true, "isSigner": true },
+        { "name": "systemProgram", "isMut": false, "isSigner": false }
+      ],
+      "args": []
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Pool",
+      "discriminator": [80, 79, 79, 76, 83, 87, 65, 80],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          { "name": "disc", "type": { "array": ["u8", 8] } },
+          { "name": "bump", "type": "u8" },
+          { "name": "paused", "type": "u8" },
+          { "name": "padding", "type": { "array": ["u8", 6] } },
+          { "name": "authority", "type": "publicKey" },
+          { "name": "pendingAuth", "type": "publicKey" },
+          { "name": "authTime", "type": "i64" },
+          { "name": "mint0", "type": "publicKey" },
+          { "name": "mint1", "type": "publicKey" },
+          { "name": "vault0", "type": "publicKey" },
+          { "name": "vault1", "type": "publicKey" },
+          { "name": "lpMint", "type": "publicKey" },
+          { "name": "bal0", "type": "u64" },
+          { "name": "bal1", "type": "u64" },
+          { "name": "lpSupply", "type": "u64" },
+          { "name": "amp", "type": "u64" },
+          { "name": "targetAmp", "type": "u64" },
+          { "name": "rampStart", "type": "i64" },
+          { "name": "rampEnd", "type": "i64" },
+          { "name": "pendingAmp", "type": "u64" },
+          { "name": "commitTime", "type": "i64" },
+          { "name": "feeBps", "type": "u64" },
+          { "name": "adminFee0", "type": "u64" },
+          { "name": "adminFee1", "type": "u64" },
+          { "name": "totalSwaps", "type": "u64" },
+          { "name": "totalVolume", "type": "u64" },
+          { "name": "lastSlot", "type": "u64" },
+          { "name": "hourlyIdx", "type": "u8" },
+          { "name": "dailyIdx", "type": "u8" },
+          { "name": "padding2", "type": { "array": ["u8", 6] } },
+          { "name": "hourlyCandles", "type": { "array": ["Candle", 24] } },
+          { "name": "dailyCandles", "type": { "array": ["Candle", 7] } },
+          { "name": "tradeCount", "type": "u32" },
+          { "name": "tradeSum", "type": "u64" },
+          { "name": "maxPrice", "type": "u32" },
+          { "name": "minPrice", "type": "u32" },
+          { "name": "bloom", "type": { "array": ["u8", 128] } }
+        ]
+      }
+    },
+    {
+      "name": "NPool",
+      "discriminator": [78, 80, 79, 79, 76, 83, 87, 65],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          { "name": "disc", "type": { "array": ["u8", 8] } },
+          { "name": "bump", "type": "u8" },
+          { "name": "paused", "type": "u8" },
+          { "name": "nTokens", "type": "u8" },
+          { "name": "padding", "type": { "array": ["u8", 5] } },
+          { "name": "authority", "type": "publicKey" },
+          { "name": "pendingAuth", "type": "publicKey" },
+          { "name": "authTime", "type": "i64" },
+          { "name": "mints", "type": { "array": ["publicKey", 8] } },
+          { "name": "vaults", "type": { "array": ["publicKey", 8] } },
+          { "name": "lpMint", "type": "publicKey" },
+          { "name": "balances", "type": { "array": ["u64", 8] } },
+          { "name": "lpSupply", "type": "u64" },
+          { "name": "amp", "type": "u64" },
+          { "name": "targetAmp", "type": "u64" },
+          { "name": "rampStart", "type": "i64" },
+          { "name": "rampEnd", "type": "i64" },
+          { "name": "pendingAmp", "type": "u64" },
+          { "name": "commitTime", "type": "i64" },
+          { "name": "feeBps", "type": "u64" },
+          { "name": "adminFees", "type": { "array": ["u64", 8] } },
+          { "name": "totalSwaps", "type": "u64" },
+          { "name": "totalVolume", "type": "u64" }
+        ]
+      }
+    },
+    {
+      "name": "Farm",
+      "discriminator": [70, 65, 82, 77, 83, 87, 65, 80],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          { "name": "disc", "type": { "array": ["u8", 8] } },
+          { "name": "bump", "type": "u8" },
+          { "name": "padding", "type": { "array": ["u8", 7] } },
+          { "name": "authority", "type": "publicKey" },
+          { "name": "pool", "type": "publicKey" },
+          { "name": "rewardMint", "type": "publicKey" },
+          { "name": "rewardVault", "type": "publicKey" },
+          { "name": "lpVault", "type": "publicKey" },
+          { "name": "rewardRate", "type": "u64" },
+          { "name": "startTime", "type": "i64" },
+          { "name": "endTime", "type": "i64" },
+          { "name": "lastUpdate", "type": "i64" },
+          { "name": "accReward", "type": "u128" },
+          { "name": "totalStaked", "type": "u64" }
+        ]
+      }
+    },
+    {
+      "name": "UserFarm",
+      "discriminator": [85, 70, 65, 82, 77, 83, 87, 65],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          { "name": "disc", "type": { "array": ["u8", 8] } },
+          { "name": "bump", "type": "u8" },
+          { "name": "padding", "type": { "array": ["u8", 7] } },
+          { "name": "owner", "type": "publicKey" },
+          { "name": "farm", "type": "publicKey" },
+          { "name": "staked", "type": "u64" },
+          { "name": "rewardDebt", "type": "u128" },
+          { "name": "lockedAmount", "type": "u64" },
+          { "name": "unlockTime", "type": "i64" }
+        ]
+      }
+    },
+    {
+      "name": "Lottery",
+      "discriminator": [76, 79, 84, 84, 69, 82, 89, 33],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          { "name": "disc", "type": { "array": ["u8", 8] } },
+          { "name": "bump", "type": "u8" },
+          { "name": "drawn", "type": "u8" },
+          { "name": "padding", "type": { "array": ["u8", 6] } },
+          { "name": "authority", "type": "publicKey" },
+          { "name": "pool", "type": "publicKey" },
+          { "name": "lpVault", "type": "publicKey" },
+          { "name": "ticketPrice", "type": "u64" },
+          { "name": "totalTickets", "type": "u64" },
+          { "name": "startTime", "type": "i64" },
+          { "name": "endTime", "type": "i64" },
+          { "name": "winner", "type": "publicKey" },
+          { "name": "winningTicket", "type": "u64" }
+        ]
+      }
+    },
+    {
+      "name": "LotteryEntry",
+      "discriminator": [76, 79, 84, 69, 78, 84, 82, 89],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          { "name": "disc", "type": { "array": ["u8", 8] } },
+          { "name": "bump", "type": "u8" },
+          { "name": "claimed", "type": "u8" },
+          { "name": "padding", "type": { "array": ["u8", 6] } },
+          { "name": "owner", "type": "publicKey" },
+          { "name": "lottery", "type": "publicKey" },
+          { "name": "ticketStart", "type": "u64" },
+          { "name": "ticketCount", "type": "u64" }
+        ]
+      }
+    },
+    {
+      "name": "Registry",
+      "discriminator": [82, 69, 71, 73, 83, 84, 82, 89],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          { "name": "disc", "type": { "array": ["u8", 8] } },
+          { "name": "bump", "type": "u8" },
+          { "name": "padding", "type": { "array": ["u8", 7] } },
+          { "name": "authority", "type": "publicKey" },
+          { "name": "pendingAuth", "type": "publicKey" },
+          { "name": "authTime", "type": "i64" },
+          { "name": "count", "type": "u32" },
+          { "name": "pools", "type": { "array": ["publicKey", 256] } }
+        ]
+      }
+    }
+  ],
+  "types": [
+    {
+      "name": "Candle",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          { "name": "open", "type": "u32" },
+          { "name": "highD", "type": "u16" },
+          { "name": "lowD", "type": "u16" },
+          { "name": "closeD", "type": "i16" },
+          { "name": "volume", "type": "u16" }
+        ]
+      }
+    }
+  ],
+  "errors": [
+    { "code": 6000, "name": "Paused", "msg": "Pool is paused" },
+    { "code": 6001, "name": "InvalidAmp", "msg": "Invalid amplification coefficient" },
+    { "code": 6002, "name": "MathOverflow", "msg": "Math overflow" },
+    { "code": 6003, "name": "ZeroAmount", "msg": "Zero amount" },
+    { "code": 6004, "name": "SlippageExceeded", "msg": "Slippage exceeded" },
+    { "code": 6005, "name": "InvalidInvariant", "msg": "Invalid invariant or PDA mismatch" },
+    { "code": 6006, "name": "InsufficientLiquidity", "msg": "Insufficient liquidity" },
+    { "code": 6007, "name": "VaultMismatch", "msg": "Vault mismatch" },
+    { "code": 6008, "name": "Expired", "msg": "Expired or ended" },
+    { "code": 6009, "name": "AlreadyInitialized", "msg": "Already initialized" },
+    { "code": 6010, "name": "Unauthorized", "msg": "Unauthorized" },
+    { "code": 6011, "name": "RampConstraint", "msg": "Ramp constraint violated" },
+    { "code": 6012, "name": "Locked", "msg": "Tokens are locked" },
+    { "code": 6013, "name": "FarmingError", "msg": "Farming error" },
+    { "code": 6014, "name": "InvalidOwner", "msg": "Invalid account owner" },
+    { "code": 6015, "name": "InvalidDiscriminator", "msg": "Invalid account discriminator" },
+    { "code": 6016, "name": "CpiFailed", "msg": "CPI call failed" }
+  ],
+  "constants": [
+    { "name": "MIN_AMP", "type": "u64", "value": "1" },
+    { "name": "MAX_AMP", "type": "u64", "value": "100000" },
+    { "name": "DEFAULT_FEE_BPS", "type": "u64", "value": "30" },
+    { "name": "ADMIN_FEE_PCT", "type": "u64", "value": "50" },
+    { "name": "MIN_SWAP", "type": "u64", "value": "100000" },
+    { "name": "MIN_DEPOSIT", "type": "u64", "value": "100000000" },
+    { "name": "NEWTON_ITERATIONS", "type": "u8", "value": "255" },
+    { "name": "RAMP_MIN_DURATION", "type": "i64", "value": "86400" },
+    { "name": "COMMIT_DELAY", "type": "i64", "value": "3600" },
+    { "name": "MIGRATION_FEE_BPS", "type": "u64", "value": "1337" },
+    { "name": "MAX_TOKENS", "type": "u8", "value": "8" },
+    { "name": "POOL_SIZE", "type": "u64", "value": "1024" },
+    { "name": "NPOOL_SIZE", "type": "u64", "value": "2048" }
+  ]
+}

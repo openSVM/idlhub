@@ -2,7 +2,7 @@
   "version": "1.0.0",
   "network": "solana-devnet",
   "gateway": "https://devnet.irys.xyz",
-  "lastUpdated": "2025-12-20T09:38:41.695Z",
+  "lastUpdated": "2025-12-25T15:20:39.961Z",
   "indexTxId": "GGsQtpzigkFE8KhxryiWgVURUxMdRx3qGSDHeWDg3qkY",
   "idls": {
     "acceleraytor": {
@@ -949,6 +949,13 @@
       "category": "defi",
       "programId": "TestProgram123",
       "uploadedAt": "2025-12-20T09:38:41.695Z"
+    },
+    "stableswap-amm": {
+      "txId": "LOCAL_1766676039961",
+      "name": "StableSwap AMM",
+      "category": "dex",
+      "repo": "https://github.com/openSVM/ammasm",
+      "uploadedAt": "2025-12-25T15:20:39.961Z"
     }
   }
 }
