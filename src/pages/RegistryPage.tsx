@@ -1213,7 +1213,16 @@ SolInstruction create_${instruction.name}_instruction(
         </div>
         <div className="protocol-detail-content">
           {/* Protocol Analytics Section */}
-          {protocolAnalytics && (
+          {loadingAnalytics && (
+            <div className="detail-section analytics-section">
+              <div className="detail-section-title">📊 Loading Analytics...</div>
+              <div className="loading-placeholder">
+                <div className="loading-spinner"></div>
+                <p>Fetching on-chain data...</p>
+              </div>
+            </div>
+          )}
+          {!loadingAnalytics && protocolAnalytics && (
             <div className="detail-section analytics-section">
               <div className="detail-section-title">📊 Protocol Health & Analytics</div>
               <div className="analytics-grid">
