@@ -1,5 +1,68 @@
 [
   {
+    "timestamp": "2025-12-25T21:22:28.842Z",
+    "verified": 24,
+    "total": 102,
+    "placeholder": 43,
+    "noProgram": 21,
+    "rpcError": 0,
+    "durationMs": 36710
+  },
+  {
+    "timestamp": "2025-12-25T20:22:28.839Z",
+    "verified": 24,
+    "total": 102,
+    "placeholder": 43,
+    "noProgram": 21,
+    "rpcError": 0,
+    "durationMs": 37886
+  },
+  {
+    "timestamp": "2025-12-25T19:22:28.793Z",
+    "verified": 24,
+    "total": 102,
+    "placeholder": 43,
+    "noProgram": 21,
+    "rpcError": 0,
+    "durationMs": 38013
+  },
+  {
+    "timestamp": "2025-12-25T18:22:28.693Z",
+    "verified": 24,
+    "total": 102,
+    "placeholder": 43,
+    "noProgram": 21,
+    "rpcError": 0,
+    "durationMs": 35255
+  },
+  {
+    "timestamp": "2025-12-25T17:22:28.654Z",
+    "verified": 24,
+    "total": 102,
+    "placeholder": 43,
+    "noProgram": 21,
+    "rpcError": 0,
+    "durationMs": 35705
+  },
+  {
+    "timestamp": "2025-12-25T16:22:28.582Z",
+    "verified": 24,
+    "total": 102,
+    "placeholder": 43,
+    "noProgram": 21,
+    "rpcError": 0,
+    "durationMs": 37880
+  },
+  {
+    "timestamp": "2025-12-25T15:22:28.581Z",
+    "verified": 24,
+    "total": 102,
+    "placeholder": 43,
+    "noProgram": 21,
+    "rpcError": 0,
+    "durationMs": 35597
+  },
+  {
     "timestamp": "2025-12-25T14:22:28.523Z",
     "verified": 24,
     "total": 102,
