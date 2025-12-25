@@ -65,7 +65,8 @@ export default function RegistryPage() {
   const [error, setError] = useState<string | null>(null);
   const [downloadingBulk, setDownloadingBulk] = useState(false);
   const [downloadProgress, setDownloadProgress] = useState(0);
-  const [expandedInstruction, setExpandedInstruction] = useState<number | null>(null);
+  const [selectedInstruction, setSelectedInstruction] = useState<any | null>(null);
+  const [showInstructionModal, setShowInstructionModal] = useState(false);
 
   // Load protocols from Arweave manifest
   useEffect(() => {
@@ -540,6 +541,18 @@ SolInstruction create_${instruction.name}_instruction(
     }
   };
 
+  // Open instruction modal
+  const openInstructionModal = (instruction: any) => {
+    setSelectedInstruction(instruction);
+    setShowInstructionModal(true);
+  };
+
+  // Close instruction modal
+  const closeInstructionModal = () => {
+    setShowInstructionModal(false);
+    setTimeout(() => setSelectedInstruction(null), 300);
+  };
+
   // Format metrics
   const formatMetrics = (metrics?: Protocol['metrics']) => {
     if (!metrics) return null;
@@ -802,132 +815,15 @@ SolInstruction create_${instruction.name}_instruction(
                 <div className="detail-item">Loading...</div>
               ) : (idlData.idl?.instructions || []).length > 0 ? (
                 (idlData.idl?.instructions || []).map((ix, i) => (
-                  <div key={i} className="instruction-item">
-                    <div
-                      className={`instruction-header ${expandedInstruction === i ? 'expanded' : ''}`}
-                      onClick={() => setExpandedInstruction(expandedInstruction === i ? null : i)}
-                    >
-                      <span className="instruction-name">{ix.name}</span>
-                      <span className="instruction-summary">
-                        {ix.args?.length || 0} args, {ix.accounts?.length || 0} accounts
-                      </span>
-                      <span className="expand-icon">{expandedInstruction === i ? '▼' : '▶'}</span>
-                    </div>
-
-                    {expandedInstruction === i && (
-                      <div className="instruction-details">
-                        {/* Arguments */}
-                        <div className="instruction-section">
-                          <div className="instruction-section-title">Arguments ({ix.args?.length || 0})</div>
-                          {(ix.args?.length || 0) > 0 ? (
-                            <table className="instruction-table">
-                              <thead>
-                                <tr>
-                                  <th>Name</th>
-                                  <th>Type</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {ix.args.map((arg: any, argIdx: number) => (
-                                  <tr key={argIdx}>
-                                    <td><code>{arg.name}</code></td>
-                                    <td><code>{typeof arg.type === 'string' ? arg.type : JSON.stringify(arg.type)}</code></td>
-                                  </tr>
-                                ))}
-                              </tbody>
-                            </table>
-                          ) : (
-                            <div className="instruction-empty">No arguments</div>
-                          )}
-                        </div>
-
-                        {/* Accounts */}
-                        <div className="instruction-section">
-                          <div className="instruction-section-title">Accounts ({ix.accounts?.length || 0})</div>
-                          {(ix.accounts?.length || 0) > 0 ? (
-                            <table className="instruction-table">
-                              <thead>
-                                <tr>
-                                  <th>#</th>
-                                  <th>Name</th>
-                                  <th>Writable</th>
-                                  <th>Signer</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {ix.accounts.map((acc: any, accIdx: number) => (
-                                  <tr key={accIdx}>
-                                    <td>{accIdx}</td>
-                                    <td><code>{acc.name}</code></td>
-                                    <td>{acc.isMut ? '✓' : '—'}</td>
-                                    <td>{acc.isSigner ? '✓' : '—'}</td>
-                                  </tr>
-                                ))}
-                              </tbody>
-                            </table>
-                          ) : (
-                            <div className="instruction-empty">No accounts</div>
-                          )}
-                        </div>
-
-                        {/* Code Snippets */}
-                        <div className="instruction-section">
-                          <div className="instruction-section-title">Code Snippets</div>
-                          <div className="code-snippets">
-                            {/* TypeScript */}
-                            <div className="code-snippet">
-                              <div className="code-snippet-header">
-                                <span className="code-snippet-lang">TypeScript</span>
-                                <button
-                                  className="code-copy-btn"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    copyCode(generateTypeScriptSnippet(ix, currentProtocol?.id || ''), 'TypeScript');
-                                  }}
-                                >
-                                  Copy
-                                </button>
-                              </div>
-                              <pre className="code-snippet-content"><code>{generateTypeScriptSnippet(ix, currentProtocol?.id || '')}</code></pre>
-                            </div>
-
-                            {/* Rust */}
-                            <div className="code-snippet">
-                              <div className="code-snippet-header">
-                                <span className="code-snippet-lang">Rust</span>
-                                <button
-                                  className="code-copy-btn"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    copyCode(generateRustSnippet(ix, currentProtocol?.id || ''), 'Rust');
-                                  }}
-                                >
-                                  Copy
-                                </button>
-                              </div>
-                              <pre className="code-snippet-content"><code>{generateRustSnippet(ix, currentProtocol?.id || '')}</code></pre>
-                            </div>
-
-                            {/* C */}
-                            <div className="code-snippet">
-                              <div className="code-snippet-header">
-                                <span className="code-snippet-lang">C</span>
-                                <button
-                                  className="code-copy-btn"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    copyCode(generateCSnippet(ix, currentProtocol?.id || ''), 'C');
-                                  }}
-                                >
-                                  Copy
-                                </button>
-                              </div>
-                              <pre className="code-snippet-content"><code>{generateCSnippet(ix, currentProtocol?.id || '')}</code></pre>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    )}
+                  <div
+                    key={i}
+                    className="detail-item instruction-clickable"
+                    onClick={() => openInstructionModal(ix)}
+                  >
+                    <span className="detail-item-name">{ix.name}</span>
+                    <span className="detail-item-type">
+                      {ix.args?.length || 0} args, {ix.accounts?.length || 0} accounts
+                    </span>
                   </div>
                 ))
               ) : (
@@ -1023,6 +919,123 @@ SolInstruction create_${instruction.name}_instruction(
           Contributions welcome! Help us complete missing IDLs.
         </p>
       </div>
+
+      {/* Instruction Detail Modal */}
+      {showInstructionModal && selectedInstruction && (
+        <div className="modal-overlay" onClick={closeInstructionModal}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>{selectedInstruction.name}</h2>
+              <button className="modal-close" onClick={closeInstructionModal}>
+                Close [X]
+              </button>
+            </div>
+            <div className="modal-body">
+              {/* Arguments */}
+              <div className="instruction-section">
+                <div className="instruction-section-title">Arguments ({selectedInstruction.args?.length || 0})</div>
+                {(selectedInstruction.args?.length || 0) > 0 ? (
+                  <table className="instruction-table">
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {selectedInstruction.args.map((arg: any, argIdx: number) => (
+                        <tr key={argIdx}>
+                          <td><code>{arg.name}</code></td>
+                          <td><code>{typeof arg.type === 'string' ? arg.type : JSON.stringify(arg.type)}</code></td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                ) : (
+                  <div className="instruction-empty">No arguments</div>
+                )}
+              </div>
+
+              {/* Accounts */}
+              <div className="instruction-section">
+                <div className="instruction-section-title">Accounts ({selectedInstruction.accounts?.length || 0})</div>
+                {(selectedInstruction.accounts?.length || 0) > 0 ? (
+                  <table className="instruction-table">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Writable</th>
+                        <th>Signer</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {selectedInstruction.accounts.map((acc: any, accIdx: number) => (
+                        <tr key={accIdx}>
+                          <td>{accIdx}</td>
+                          <td><code>{acc.name}</code></td>
+                          <td>{acc.isMut ? '✓' : '—'}</td>
+                          <td>{acc.isSigner ? '✓' : '—'}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                ) : (
+                  <div className="instruction-empty">No accounts</div>
+                )}
+              </div>
+
+              {/* Code Snippets */}
+              <div className="instruction-section">
+                <div className="instruction-section-title">Code Snippets</div>
+                <div className="code-snippets">
+                  {/* TypeScript */}
+                  <div className="code-snippet">
+                    <div className="code-snippet-header">
+                      <span className="code-snippet-lang">TypeScript</span>
+                      <button
+                        className="code-copy-btn"
+                        onClick={() => copyCode(generateTypeScriptSnippet(selectedInstruction, currentProtocol?.id || ''), 'TypeScript')}
+                      >
+                        Copy
+                      </button>
+                    </div>
+                    <pre className="code-snippet-content"><code>{generateTypeScriptSnippet(selectedInstruction, currentProtocol?.id || '')}</code></pre>
+                  </div>
+
+                  {/* Rust */}
+                  <div className="code-snippet">
+                    <div className="code-snippet-header">
+                      <span className="code-snippet-lang">Rust</span>
+                      <button
+                        className="code-copy-btn"
+                        onClick={() => copyCode(generateRustSnippet(selectedInstruction, currentProtocol?.id || ''), 'Rust')}
+                      >
+                        Copy
+                      </button>
+                    </div>
+                    <pre className="code-snippet-content"><code>{generateRustSnippet(selectedInstruction, currentProtocol?.id || '')}</code></pre>
+                  </div>
+
+                  {/* C */}
+                  <div className="code-snippet">
+                    <div className="code-snippet-header">
+                      <span className="code-snippet-lang">C</span>
+                      <button
+                        className="code-copy-btn"
+                        onClick={() => copyCode(generateCSnippet(selectedInstruction, currentProtocol?.id || ''), 'C')}
+                      >
+                        Copy
+                      </button>
+                    </div>
+                    <pre className="code-snippet-content"><code>{generateCSnippet(selectedInstruction, currentProtocol?.id || '')}</code></pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

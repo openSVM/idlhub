@@ -714,80 +714,19 @@
   border-color: var(--border-secondary);
 }
 
-/* Expandable Instruction Styles */
-.instruction-item {
-  margin-bottom: 4px;
-}
-
-.instruction-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 8px 12px;
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border-secondary);
+/* Clickable Instruction Styles */
+.instruction-clickable {
   cursor: pointer;
   transition: all 0.2s;
-  gap: 12px;
 }
 
-.instruction-header:hover {
-  border-color: var(--accent-primary);
+.instruction-clickable:hover {
   background: var(--bg-secondary);
+  border-color: var(--accent-primary);
 }
 
-.instruction-header.expanded {
-  border-bottom-color: transparent;
-  background: var(--accent-primary);
-  color: var(--bg-primary);
-}
-
-.instruction-name {
-  font-weight: 600;
-  font-size: 13px;
-  flex: 1;
-  font-family: 'Courier New', monospace;
-}
-
-.instruction-summary {
-  font-size: 11px;
-  color: var(--text-muted);
-  font-family: 'Courier New', monospace;
-}
-
-.instruction-header.expanded .instruction-summary {
-  color: var(--bg-secondary);
-}
-
-.expand-icon {
-  font-size: 10px;
+.instruction-clickable:hover .detail-item-name {
   color: var(--accent-primary);
-  transition: transform 0.2s;
-  width: 16px;
-  text-align: center;
-}
-
-.instruction-header.expanded .expand-icon {
-  color: var(--bg-primary);
-}
-
-.instruction-details {
-  border: 1px solid var(--border-secondary);
-  border-top: none;
-  padding: 16px;
-  background: var(--bg-primary);
-  animation: slideDown 0.2s ease-out;
-}
-
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    max-height: 0;
-  }
-  to {
-    opacity: 1;
-    max-height: 2000px;
-  }
 }
 
 .instruction-section {
@@ -934,4 +873,137 @@
 
 .code-snippet-content::-webkit-scrollbar-thumb:hover {
   background: var(--accent-primary);
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 20px;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modal-content {
+  background: var(--bg-primary);
+  border: 2px solid var(--border-primary);
+  max-width: 900px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 2px solid var(--border-primary);
+  background: var(--bg-secondary);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-family: 'Courier New', monospace;
+}
+
+.modal-header h2::before {
+  content: '> ';
+  color: var(--accent-primary);
+}
+
+.modal-close {
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-secondary);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.modal-close:hover {
+  background: var(--accent-primary);
+  color: var(--bg-primary);
+  border-color: var(--accent-primary);
+}
+
+.modal-body {
+  padding: 20px;
+}
+
+/* Modal scrollbar */
+.modal-content::-webkit-scrollbar {
+  width: 10px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+  background: var(--border-secondary);
+  border: 2px solid var(--bg-secondary);
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-primary);
+}
+
+/* Responsive modal */
+@media (max-width: 768px) {
+  .modal-overlay {
+    padding: 10px;
+  }
+
+  .modal-content {
+    max-height: 95vh;
+  }
+
+  .modal-header {
+    padding: 12px 16px;
+  }
+
+  .modal-header h2 {
+    font-size: 14px;
+  }
+
+  .modal-body {
+    padding: 16px;
+  }
 }

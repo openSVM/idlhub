@@ -1,5 +1,149 @@
 [
   {
+    "timestamp": "2025-12-25T00:22:27.620Z",
+    "verified": 24,
+    "total": 102,
+    "placeholder": 43,
+    "noProgram": 21,
+    "rpcError": 0,
+    "durationMs": 36378
+  },
+  {
+    "timestamp": "2025-12-24T23:22:27.520Z",
+    "verified": 24,
+    "total": 102,
+    "placeholder": 43,
+    "noProgram": 21,
+    "rpcError": 0,
+    "durationMs": 38354
+  },
+  {
+    "timestamp": "2025-12-24T22:22:27.467Z",
+    "verified": 24,
+    "total": 102,
+    "placeholder": 43,
+    "noProgram": 21,
+    "rpcError": 0,
+    "durationMs": 44546
+  },
+  {
+    "timestamp": "2025-12-24T21:22:27.372Z",
+    "verified": 24,
+    "total": 102,
+    "placeholder": 43,
+    "noProgram": 21,
+    "rpcError": 0,
+    "durationMs": 37863
+  },
+  {
+    "timestamp": "2025-12-24T20:22:27.364Z",
+    "verified": 24,
+    "total": 102,
+    "placeholder": 43,
+    "noProgram": 21,
+    "rpcError": 0,
+    "durationMs": 36483
+  },
+  {
+    "timestamp": "2025-12-24T18:27:13.693Z",
+    "verified": 24,
+    "total": 102,
+    "placeholder": 43,
+    "noProgram": 21,
+    "rpcError": 0,
+    "durationMs": 35912
+  },
+  {
+    "timestamp": "2025-12-24T17:13:59.561Z",
+    "verified": 24,
+    "total": 102,
+    "placeholder": 43,
+    "noProgram": 21,
+    "rpcError": 0,
+    "durationMs": 38997
+  },
+  {
+    "timestamp": "2025-12-24T16:13:55.483Z",
+    "verified": 24,
+    "total": 102,
+    "placeholder": 43,
+    "noProgram": 21,
+    "rpcError": 0,
+    "durationMs": 39965
+  },
+  {
+    "timestamp": "2025-12-24T15:13:55.424Z",
+    "verified": 24,
+    "total": 102,
+    "placeholder": 43,
+    "noProgram": 21,
+    "rpcError": 0,
+    "durationMs": 37961
+  },
+  {
+    "timestamp": "2025-12-24T14:13:55.324Z",
+    "verified": 24,
+    "total": 102,
+    "placeholder": 43,
+    "noProgram": 21,
+    "rpcError": 0,
+    "durationMs": 37383
+  },
+  {
+    "timestamp": "2025-12-24T13:13:55.305Z",
+    "verified": 24,
+    "total": 102,
+    "placeholder": 43,
+    "noProgram": 21,
+    "rpcError": 0,
+    "durationMs": 37112
+  },
+  {
+    "timestamp": "2025-12-24T12:13:55.284Z",
+    "verified": 24,
+    "total": 102,
+    "placeholder": 43,
+    "noProgram": 21,
+    "rpcError": 0,
+    "durationMs": 41609
+  },
+  {
+    "timestamp": "2025-12-24T11:13:55.260Z",
+    "verified": 24,
+    "total": 102,
+    "placeholder": 43,
+    "noProgram": 21,
+    "rpcError": 0,
+    "durationMs": 36958
+  },
+  {
+    "timestamp": "2025-12-24T10:13:55.231Z",
+    "verified": 24,
+    "total": 102,
+    "placeholder": 43,
+    "noProgram": 21,
+    "rpcError": 0,
+    "durationMs": 36619
+  },
+  {
+    "timestamp": "2025-12-24T09:13:55.147Z",
+    "verified": 24,
+    "total": 102,
+    "placeholder": 43,
+    "noProgram": 21,
+    "rpcError": 0,
+    "durationMs": 37009
+  },
+  {
+    "timestamp": "2025-12-24T08:13:55.048Z",
+    "verified": 24,
+    "total": 102,
+    "placeholder": 43,
+    "noProgram": 21,
+    "rpcError": 0,
+    "durationMs": 36291
+  },
+  {
     "timestamp": "2025-12-24T07:13:55.011Z",
     "verified": 24,
     "total": 102,
