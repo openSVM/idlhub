@@ -1,6 +1,6 @@
 {
   "lastRun": {
-    "timestamp": "2025-12-25T21:22:28.842Z",
+    "timestamp": "2025-12-25T22:22:28.941Z",
     "totalProtocols": 102,
     "verified": 24,
     "partial": 12,
@@ -16,7 +16,7 @@
         "protocolId": "idl-protocol",
         "protocolName": "IDL Protocol",
         "status": "devnet_only",
-        "timestamp": "2025-12-25T21:22:30.613Z",
+        "timestamp": "2025-12-25T22:22:30.353Z",
         "programs": [
           {
             "name": "IDL Protocol",
@@ -50,7 +50,7 @@
         "protocolId": "acceleraytor",
         "protocolName": "Acceleraytor",
         "status": "placeholder",
-        "timestamp": "2025-12-25T21:22:31.124Z",
+        "timestamp": "2025-12-25T22:22:30.825Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -60,7 +60,7 @@
         "protocolId": "adrena",
         "protocolName": "Adrena",
         "status": "placeholder",
-        "timestamp": "2025-12-25T21:22:31.224Z",
+        "timestamp": "2025-12-25T22:22:30.925Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -70,7 +70,7 @@
         "protocolId": "aldrin",
         "protocolName": "Aldrin",
         "status": "verified",
-        "timestamp": "2025-12-25T21:22:31.324Z",
+        "timestamp": "2025-12-25T22:22:31.026Z",
         "programs": [
           {
             "name": "Aldrin AMM",
@@ -104,7 +104,7 @@
         "protocolId": "apricot",
         "protocolName": "Apricot",
         "status": "no_program_id",
-        "timestamp": "2025-12-25T21:22:31.786Z",
+        "timestamp": "2025-12-25T22:22:31.479Z",
         "programs": [],
         "details": {
           "message": "No program ID found in IDL or known mappings"
@@ -114,7 +114,7 @@
         "protocolId": "arrow",
         "protocolName": "Arrow",
         "status": "partial",
-        "timestamp": "2025-12-25T21:22:31.886Z",
+        "timestamp": "2025-12-25T22:22:31.580Z",
         "programs": [
           {
             "name": "Arrow",
@@ -160,7 +160,7 @@
         "protocolId": "atrix",
         "protocolName": "Atrix",
         "status": "no_program_id",
-        "timestamp": "2025-12-25T21:22:32.567Z",
+        "timestamp": "2025-12-25T22:22:32.153Z",
         "programs": [],
         "details": {
           "message": "No program ID found in IDL or known mappings"
@@ -170,7 +170,7 @@
         "protocolId": "balansol",
         "protocolName": "Balansol",
         "status": "placeholder",
-        "timestamp": "2025-12-25T21:22:32.668Z",
+        "timestamp": "2025-12-25T22:22:32.254Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -180,7 +180,7 @@
         "protocolId": "beluga",
         "protocolName": "Beluga",
         "status": "placeholder",
-        "timestamp": "2025-12-25T21:22:32.768Z",
+        "timestamp": "2025-12-25T22:22:32.354Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -190,7 +190,7 @@
         "protocolId": "blaze",
         "protocolName": "Blaze",
         "status": "placeholder",
-        "timestamp": "2025-12-25T21:22:32.868Z",
+        "timestamp": "2025-12-25T22:22:32.455Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -200,7 +200,7 @@
         "protocolId": "bonfida",
         "protocolName": "Bonfida",
         "status": "verified",
-        "timestamp": "2025-12-25T21:22:32.969Z",
+        "timestamp": "2025-12-25T22:22:32.555Z",
         "programs": [
           {
             "name": "Bonfida",
@@ -234,7 +234,7 @@
         "protocolId": "byreal",
         "protocolName": "Byreal",
         "status": "placeholder",
-        "timestamp": "2025-12-25T21:22:33.366Z",
+        "timestamp": "2025-12-25T22:22:32.951Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -244,7 +244,7 @@
         "protocolId": "cashio",
         "protocolName": "Cashio",
         "status": "placeholder",
-        "timestamp": "2025-12-25T21:22:33.467Z",
+        "timestamp": "2025-12-25T22:22:33.051Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -254,7 +254,7 @@
         "protocolId": "clone",
         "protocolName": "Clone",
         "status": "placeholder",
-        "timestamp": "2025-12-25T21:22:33.567Z",
+        "timestamp": "2025-12-25T22:22:33.151Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -264,7 +264,7 @@
         "protocolId": "crate",
         "protocolName": "Crate",
         "status": "placeholder",
-        "timestamp": "2025-12-25T21:22:33.668Z",
+        "timestamp": "2025-12-25T22:22:33.252Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -274,7 +274,7 @@
         "protocolId": "crema",
         "protocolName": "Crema",
         "status": "verified",
-        "timestamp": "2025-12-25T21:22:33.768Z",
+        "timestamp": "2025-12-25T22:22:33.353Z",
         "programs": [
           {
             "name": "Crema",
@@ -308,7 +308,7 @@
         "protocolId": "cropper",
         "protocolName": "Cropper",
         "status": "placeholder",
-        "timestamp": "2025-12-25T21:22:34.142Z",
+        "timestamp": "2025-12-25T22:22:33.731Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -318,7 +318,7 @@
         "protocolId": "cyclos",
         "protocolName": "Cyclos",
         "status": "no_program_id",
-        "timestamp": "2025-12-25T21:22:34.243Z",
+        "timestamp": "2025-12-25T22:22:33.832Z",
         "programs": [],
         "details": {
           "message": "No program ID found in IDL or known mappings"
@@ -328,7 +328,7 @@
         "protocolId": "cykura",
         "protocolName": "Cykura",
         "status": "no_program_id",
-        "timestamp": "2025-12-25T21:22:34.343Z",
+        "timestamp": "2025-12-25T22:22:33.932Z",
         "programs": [],
         "details": {
           "message": "No program ID found in IDL or known mappings"
@@ -338,7 +338,7 @@
         "protocolId": "deltaone",
         "protocolName": "Deltaone",
         "status": "placeholder",
-        "timestamp": "2025-12-25T21:22:34.444Z",
+        "timestamp": "2025-12-25T22:22:34.033Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -348,7 +348,7 @@
         "protocolId": "dexlab",
         "protocolName": "Dexlab",
         "status": "no_program_id",
-        "timestamp": "2025-12-25T21:22:34.544Z",
+        "timestamp": "2025-12-25T22:22:34.134Z",
         "programs": [],
         "details": {
           "message": "No program ID found in IDL or known mappings"
@@ -358,7 +358,7 @@
         "protocolId": "dexterity",
         "protocolName": "Dexterity",
         "status": "no_program_id",
-        "timestamp": "2025-12-25T21:22:34.645Z",
+        "timestamp": "2025-12-25T22:22:34.234Z",
         "programs": [],
         "details": {
           "message": "No program ID found in IDL or known mappings"
@@ -368,7 +368,7 @@
         "protocolId": "drift",
         "protocolName": "Drift Protocol",
         "status": "verified",
-        "timestamp": "2025-12-25T21:22:34.746Z",
+        "timestamp": "2025-12-25T22:22:34.335Z",
         "programs": [
           {
             "name": "Drift Protocol",
@@ -402,7 +402,7 @@
         "protocolId": "ellipsis",
         "protocolName": "Ellipsis",
         "status": "placeholder",
-        "timestamp": "2025-12-25T21:22:35.293Z",
+        "timestamp": "2025-12-25T22:22:34.742Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -412,7 +412,7 @@
         "protocolId": "enjinstarter",
         "protocolName": "Enjinstarter",
         "status": "placeholder",
-        "timestamp": "2025-12-25T21:22:35.393Z",
+        "timestamp": "2025-12-25T22:22:34.842Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -422,7 +422,7 @@
         "protocolId": "flash",
         "protocolName": "Flash",
         "status": "placeholder",
-        "timestamp": "2025-12-25T21:22:35.494Z",
+        "timestamp": "2025-12-25T22:22:34.943Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -432,7 +432,7 @@
         "protocolId": "fluxbeam",
         "protocolName": "Fluxbeam",
         "status": "partial",
-        "timestamp": "2025-12-25T21:22:35.594Z",
+        "timestamp": "2025-12-25T22:22:35.042Z",
         "programs": [
           {
             "name": "FluxBeam",
@@ -478,7 +478,7 @@
         "protocolId": "francium",
         "protocolName": "Francium",
         "status": "partial",
-        "timestamp": "2025-12-25T21:22:36.051Z",
+        "timestamp": "2025-12-25T22:22:35.546Z",
         "programs": [
           {
             "name": "Francium",
@@ -524,7 +524,7 @@
         "protocolId": "gauge",
         "protocolName": "Gauge",
         "status": "placeholder",
-        "timestamp": "2025-12-25T21:22:36.616Z",
+        "timestamp": "2025-12-25T22:22:36.204Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -534,7 +534,7 @@
         "protocolId": "gavel",
         "protocolName": "Gavel",
         "status": "placeholder",
-        "timestamp": "2025-12-25T21:22:36.717Z",
+        "timestamp": "2025-12-25T22:22:36.305Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -544,7 +544,7 @@
         "protocolId": "gmx",
         "protocolName": "Gmx",
         "status": "placeholder",
-        "timestamp": "2025-12-25T21:22:36.817Z",
+        "timestamp": "2025-12-25T22:22:36.405Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -554,7 +554,7 @@
         "protocolId": "goki",
         "protocolName": "Goki",
         "status": "partial",
-        "timestamp": "2025-12-25T21:22:36.918Z",
+        "timestamp": "2025-12-25T22:22:36.506Z",
         "programs": [
           {
             "name": "Goki",
@@ -600,7 +600,7 @@
         "protocolId": "goonfi",
         "protocolName": "Goonfi",
         "status": "placeholder",
-        "timestamp": "2025-12-25T21:22:37.520Z",
+        "timestamp": "2025-12-25T22:22:37.359Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -610,7 +610,7 @@
         "protocolId": "goosefx",
         "protocolName": "Goosefx",
         "status": "verified",
-        "timestamp": "2025-12-25T21:22:37.621Z",
+        "timestamp": "2025-12-25T22:22:37.459Z",
         "programs": [
           {
             "name": "GooseFX",
@@ -661,7 +661,7 @@
         "protocolId": "hawksight",
         "protocolName": "Hawksight",
         "status": "placeholder",
-        "timestamp": "2025-12-25T21:22:38.306Z",
+        "timestamp": "2025-12-25T22:22:39.918Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -671,7 +671,7 @@
         "protocolId": "hubble",
         "protocolName": "Hubble",
         "status": "no_program_id",
-        "timestamp": "2025-12-25T21:22:38.407Z",
+        "timestamp": "2025-12-25T22:22:40.019Z",
         "programs": [],
         "details": {
           "message": "No program ID found in IDL or known mappings"
@@ -681,7 +681,7 @@
         "protocolId": "humidifi",
         "protocolName": "Humidifi",
         "status": "placeholder",
-        "timestamp": "2025-12-25T21:22:38.507Z",
+        "timestamp": "2025-12-25T22:22:40.119Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -691,7 +691,7 @@
         "protocolId": "hxro",
         "protocolName": "Hxro",
         "status": "no_program_id",
-        "timestamp": "2025-12-25T21:22:38.608Z",
+        "timestamp": "2025-12-25T22:22:40.220Z",
         "programs": [],
         "details": {
           "message": "No program ID found in IDL or known mappings"
@@ -701,7 +701,7 @@
         "protocolId": "invariant",
         "protocolName": "Invariant",
         "status": "verified",
-        "timestamp": "2025-12-25T21:22:38.708Z",
+        "timestamp": "2025-12-25T22:22:40.320Z",
         "programs": [
           {
             "name": "Invariant",
@@ -735,7 +735,7 @@
         "protocolId": "jet",
         "protocolName": "Jet",
         "status": "partial",
-        "timestamp": "2025-12-25T21:22:39.092Z",
+        "timestamp": "2025-12-25T22:22:41.078Z",
         "programs": [
           {
             "name": "Jet Protocol",
@@ -781,7 +781,7 @@
         "protocolId": "jito",
         "protocolName": "Jito",
         "status": "program_not_found",
-        "timestamp": "2025-12-25T21:22:39.765Z",
+        "timestamp": "2025-12-25T22:22:42.730Z",
         "programs": [
           {
             "name": "Jito Stake Pool",
@@ -826,7 +826,7 @@
         "protocolId": "jupiter",
         "protocolName": "Jupiter",
         "status": "verified",
-        "timestamp": "2025-12-25T21:22:42.806Z",
+        "timestamp": "2025-12-25T22:22:43.742Z",
         "programs": [
           {
             "name": "Jupiter v6",
@@ -894,7 +894,7 @@
         "protocolId": "kamino",
         "protocolName": "Kamino",
         "status": "partial",
-        "timestamp": "2025-12-25T21:22:44.601Z",
+        "timestamp": "2025-12-25T22:22:45.889Z",
         "programs": [
           {
             "name": "Kamino Lending",
@@ -940,7 +940,7 @@
         "protocolId": "larix",
         "protocolName": "Larix",
         "status": "no_program_id",
-        "timestamp": "2025-12-25T21:22:46.428Z",
+        "timestamp": "2025-12-25T22:22:46.554Z",
         "programs": [],
         "details": {
           "message": "No program ID found in IDL or known mappings"
@@ -950,7 +950,7 @@
         "protocolId": "launchmynft",
         "protocolName": "Launchmynft",
         "status": "placeholder",
-        "timestamp": "2025-12-25T21:22:46.529Z",
+        "timestamp": "2025-12-25T22:22:46.654Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -960,7 +960,7 @@
         "protocolId": "lifinity",
         "protocolName": "Lifinity",
         "status": "verified",
-        "timestamp": "2025-12-25T21:22:46.629Z",
+        "timestamp": "2025-12-25T22:22:46.755Z",
         "programs": [
           {
             "name": "Lifinity v1",
@@ -994,7 +994,7 @@
         "protocolId": "lifinity-v2",
         "protocolName": "Lifinity v2",
         "status": "partial",
-        "timestamp": "2025-12-25T21:22:46.967Z",
+        "timestamp": "2025-12-25T22:22:47.123Z",
         "programs": [
           {
             "name": "Lifinity v2",
@@ -1040,7 +1040,7 @@
         "protocolId": "magiceden",
         "protocolName": "Magiceden",
         "status": "verified",
-        "timestamp": "2025-12-25T21:22:47.530Z",
+        "timestamp": "2025-12-25T22:22:47.797Z",
         "programs": [
           {
             "name": "Magic Eden",
@@ -1074,7 +1074,7 @@
         "protocolId": "mango",
         "protocolName": "Mango Markets",
         "status": "verified",
-        "timestamp": "2025-12-25T21:22:48.240Z",
+        "timestamp": "2025-12-25T22:22:48.241Z",
         "programs": [
           {
             "name": "Mango v4",
@@ -1108,7 +1108,7 @@
         "protocolId": "mango-v3",
         "protocolName": "Mango v3",
         "status": "verified",
-        "timestamp": "2025-12-25T21:22:48.792Z",
+        "timestamp": "2025-12-25T22:22:48.581Z",
         "programs": [
           {
             "name": "Mango v3",
@@ -1142,7 +1142,7 @@
         "protocolId": "marginfi",
         "protocolName": "MarginFi",
         "status": "verified",
-        "timestamp": "2025-12-25T21:22:49.221Z",
+        "timestamp": "2025-12-25T22:22:49.813Z",
         "programs": [
           {
             "name": "MarginFi",
@@ -1176,7 +1176,7 @@
         "protocolId": "marinade",
         "protocolName": "Marinade Finance",
         "status": "verified",
-        "timestamp": "2025-12-25T21:22:50.683Z",
+        "timestamp": "2025-12-25T22:22:50.277Z",
         "programs": [
           {
             "name": "Marinade Finance",
@@ -1210,7 +1210,7 @@
         "protocolId": "mercurial",
         "protocolName": "Mercurial",
         "status": "verified",
-        "timestamp": "2025-12-25T21:22:51.025Z",
+        "timestamp": "2025-12-25T22:22:51.712Z",
         "programs": [
           {
             "name": "Mercurial",
@@ -1244,7 +1244,7 @@
         "protocolId": "merkle-distributor",
         "protocolName": "Merkle distributor",
         "status": "placeholder",
-        "timestamp": "2025-12-25T21:22:51.465Z",
+        "timestamp": "2025-12-25T22:22:52.064Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -1254,7 +1254,7 @@
         "protocolId": "meteora",
         "protocolName": "Meteora",
         "status": "verified",
-        "timestamp": "2025-12-25T21:22:51.564Z",
+        "timestamp": "2025-12-25T22:22:52.165Z",
         "programs": [
           {
             "name": "Meteora DLMM",
@@ -1305,7 +1305,7 @@
         "protocolId": "obric",
         "protocolName": "Obric",
         "status": "placeholder",
-        "timestamp": "2025-12-25T21:22:53.378Z",
+        "timestamp": "2025-12-25T22:22:53.866Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -1315,7 +1315,7 @@
         "protocolId": "openbook",
         "protocolName": "OpenBook",
         "status": "verified",
-        "timestamp": "2025-12-25T21:22:53.479Z",
+        "timestamp": "2025-12-25T22:22:53.967Z",
         "programs": [
           {
             "name": "OpenBook v2",
@@ -1349,7 +1349,7 @@
         "protocolId": "orca",
         "protocolName": "Orca (Whirlpool)",
         "status": "verified",
-        "timestamp": "2025-12-25T21:22:53.827Z",
+        "timestamp": "2025-12-25T22:22:54.431Z",
         "programs": [
           {
             "name": "Orca Whirlpool",
@@ -1383,7 +1383,7 @@
         "protocolId": "parrot",
         "protocolName": "Parrot",
         "status": "placeholder",
-        "timestamp": "2025-12-25T21:22:55.195Z",
+        "timestamp": "2025-12-25T22:22:55.783Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -1393,7 +1393,7 @@
         "protocolId": "penguin",
         "protocolName": "Penguin",
         "status": "placeholder",
-        "timestamp": "2025-12-25T21:22:55.296Z",
+        "timestamp": "2025-12-25T22:22:55.884Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -1403,7 +1403,7 @@
         "protocolId": "permalock",
         "protocolName": "Permalock",
         "status": "placeholder",
-        "timestamp": "2025-12-25T21:22:55.396Z",
+        "timestamp": "2025-12-25T22:22:55.984Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -1413,7 +1413,7 @@
         "protocolId": "phoenix",
         "protocolName": "Phoenix",
         "status": "verified",
-        "timestamp": "2025-12-25T21:22:55.497Z",
+        "timestamp": "2025-12-25T22:22:56.085Z",
         "programs": [
           {
             "name": "Phoenix DEX",
@@ -1447,7 +1447,7 @@
         "protocolId": "plasma",
         "protocolName": "Plasma",
         "status": "placeholder",
-        "timestamp": "2025-12-25T21:22:55.855Z",
+        "timestamp": "2025-12-25T22:22:56.453Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -1457,7 +1457,7 @@
         "protocolId": "pool-manager",
         "protocolName": "Pool manager",
         "status": "placeholder",
-        "timestamp": "2025-12-25T21:22:55.955Z",
+        "timestamp": "2025-12-25T22:22:56.553Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -1467,7 +1467,7 @@
         "protocolId": "port",
         "protocolName": "Port",
         "status": "verified",
-        "timestamp": "2025-12-25T21:22:56.056Z",
+        "timestamp": "2025-12-25T22:22:56.654Z",
         "programs": [
           {
             "name": "Port Finance",
@@ -1501,7 +1501,7 @@
         "protocolId": "prism",
         "protocolName": "Prism",
         "status": "no_program_id",
-        "timestamp": "2025-12-25T21:22:56.559Z",
+        "timestamp": "2025-12-25T22:22:57.024Z",
         "programs": [],
         "details": {
           "message": "No program ID found in IDL or known mappings"
@@ -1511,7 +1511,7 @@
         "protocolId": "pumpfun",
         "protocolName": "Pumpfun",
         "status": "no_program_id",
-        "timestamp": "2025-12-25T21:22:56.659Z",
+        "timestamp": "2025-12-25T22:22:57.125Z",
         "programs": [],
         "details": {
           "message": "No program ID found in IDL or known mappings"
@@ -1521,7 +1521,7 @@
         "protocolId": "pumpswap",
         "protocolName": "Pumpswap",
         "status": "placeholder",
-        "timestamp": "2025-12-25T21:22:56.760Z",
+        "timestamp": "2025-12-25T22:22:57.224Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -1531,7 +1531,7 @@
         "protocolId": "quarry",
         "protocolName": "Quarry",
         "status": "partial",
-        "timestamp": "2025-12-25T21:22:56.860Z",
+        "timestamp": "2025-12-25T22:22:57.325Z",
         "programs": [
           {
             "name": "Quarry",
@@ -1577,7 +1577,7 @@
         "protocolId": "ribbon",
         "protocolName": "Ribbon",
         "status": "no_program_id",
-        "timestamp": "2025-12-25T21:22:57.431Z",
+        "timestamp": "2025-12-25T22:22:57.825Z",
         "programs": [],
         "details": {
           "message": "No program ID found in IDL or known mappings"
@@ -1587,7 +1587,7 @@
         "protocolId": "saber",
         "protocolName": "Saber",
         "status": "verified",
-        "timestamp": "2025-12-25T21:22:57.532Z",
+        "timestamp": "2025-12-25T22:22:57.926Z",
         "programs": [
           {
             "name": "Saber Stable Swap",
@@ -1621,7 +1621,7 @@
         "protocolId": "saber-periphery",
         "protocolName": "Saber periphery",
         "status": "no_program_id",
-        "timestamp": "2025-12-25T21:22:57.895Z",
+        "timestamp": "2025-12-25T22:22:58.308Z",
         "programs": [],
         "details": {
           "message": "No program ID found in IDL or known mappings"
@@ -1631,7 +1631,7 @@
         "protocolId": "sanctum",
         "protocolName": "Sanctum",
         "status": "verified",
-        "timestamp": "2025-12-25T21:22:57.996Z",
+        "timestamp": "2025-12-25T22:22:58.409Z",
         "programs": [
           {
             "name": "Sanctum",
@@ -1665,7 +1665,7 @@
         "protocolId": "saros",
         "protocolName": "Saros",
         "status": "no_program_id",
-        "timestamp": "2025-12-25T21:22:58.561Z",
+        "timestamp": "2025-12-25T22:22:59.717Z",
         "programs": [],
         "details": {
           "message": "No program ID found in IDL or known mappings"
@@ -1675,7 +1675,7 @@
         "protocolId": "save",
         "protocolName": "Save",
         "status": "placeholder",
-        "timestamp": "2025-12-25T21:22:58.662Z",
+        "timestamp": "2025-12-25T22:22:59.817Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -1685,7 +1685,7 @@
         "protocolId": "sencha",
         "protocolName": "Sencha",
         "status": "partial",
-        "timestamp": "2025-12-25T21:22:58.762Z",
+        "timestamp": "2025-12-25T22:22:59.918Z",
         "programs": [
           {
             "name": "Sencha",
@@ -1731,7 +1731,7 @@
         "protocolId": "serum-v2",
         "protocolName": "Serum v2",
         "status": "verified",
-        "timestamp": "2025-12-25T21:22:59.228Z",
+        "timestamp": "2025-12-25T22:23:00.520Z",
         "programs": [
           {
             "name": "Serum v2",
@@ -1765,7 +1765,7 @@
         "protocolId": "snapshots",
         "protocolName": "Snapshots",
         "status": "placeholder",
-        "timestamp": "2025-12-25T21:23:00.576Z",
+        "timestamp": "2025-12-25T22:23:01.188Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -1775,7 +1775,7 @@
         "protocolId": "solanium",
         "protocolName": "Solanium",
         "status": "no_program_id",
-        "timestamp": "2025-12-25T21:23:00.677Z",
+        "timestamp": "2025-12-25T22:23:01.288Z",
         "programs": [],
         "details": {
           "message": "No program ID found in IDL or known mappings"
@@ -1785,7 +1785,7 @@
         "protocolId": "solend",
         "protocolName": "Solend",
         "status": "verified",
-        "timestamp": "2025-12-25T21:23:00.777Z",
+        "timestamp": "2025-12-25T22:23:01.389Z",
         "programs": [
           {
             "name": "Solend",
@@ -1819,7 +1819,7 @@
         "protocolId": "solfi",
         "protocolName": "Solfi",
         "status": "placeholder",
-        "timestamp": "2025-12-25T21:23:01.477Z",
+        "timestamp": "2025-12-25T22:23:01.757Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -1829,7 +1829,7 @@
         "protocolId": "solrazr",
         "protocolName": "Solrazr",
         "status": "placeholder",
-        "timestamp": "2025-12-25T21:23:01.578Z",
+        "timestamp": "2025-12-25T22:23:01.857Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -1839,7 +1839,7 @@
         "protocolId": "solstarter",
         "protocolName": "Solstarter",
         "status": "placeholder",
-        "timestamp": "2025-12-25T21:23:01.678Z",
+        "timestamp": "2025-12-25T22:23:01.958Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -1849,7 +1849,7 @@
         "protocolId": "stabble",
         "protocolName": "Stabble",
         "status": "placeholder",
-        "timestamp": "2025-12-25T21:23:01.779Z",
+        "timestamp": "2025-12-25T22:23:02.058Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -1859,7 +1859,7 @@
         "protocolId": "stable-swap",
         "protocolName": "Stable swap",
         "status": "no_program_id",
-        "timestamp": "2025-12-25T21:23:01.879Z",
+        "timestamp": "2025-12-25T22:23:02.159Z",
         "programs": [],
         "details": {
           "message": "No program ID found in IDL or known mappings"
@@ -1869,7 +1869,7 @@
         "protocolId": "starlaunch",
         "protocolName": "Starlaunch",
         "status": "placeholder",
-        "timestamp": "2025-12-25T21:23:01.980Z",
+        "timestamp": "2025-12-25T22:23:02.260Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -1879,7 +1879,7 @@
         "protocolId": "step",
         "protocolName": "Step",
         "status": "no_program_id",
-        "timestamp": "2025-12-25T21:23:02.081Z",
+        "timestamp": "2025-12-25T22:23:02.360Z",
         "programs": [],
         "details": {
           "message": "No program ID found in IDL or known mappings"
@@ -1889,7 +1889,7 @@
         "protocolId": "stepn",
         "protocolName": "Stepn",
         "status": "placeholder",
-        "timestamp": "2025-12-25T21:23:02.181Z",
+        "timestamp": "2025-12-25T22:23:02.461Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -1899,7 +1899,7 @@
         "protocolId": "sunny",
         "protocolName": "Sunny",
         "status": "no_program_id",
-        "timestamp": "2025-12-25T21:23:02.282Z",
+        "timestamp": "2025-12-25T22:23:02.561Z",
         "programs": [],
         "details": {
           "message": "No program ID found in IDL or known mappings"
@@ -1909,7 +1909,7 @@
         "protocolId": "switchboard",
         "protocolName": "Switchboard",
         "status": "verified",
-        "timestamp": "2025-12-25T21:23:02.382Z",
+        "timestamp": "2025-12-25T22:23:02.662Z",
         "programs": [
           {
             "name": "Switchboard",
@@ -1943,7 +1943,7 @@
         "protocolId": "symmetry",
         "protocolName": "Symmetry",
         "status": "no_program_id",
-        "timestamp": "2025-12-25T21:23:02.739Z",
+        "timestamp": "2025-12-25T22:23:03.094Z",
         "programs": [],
         "details": {
           "message": "No program ID found in IDL or known mappings"
@@ -1953,7 +1953,7 @@
         "protocolId": "synthetify",
         "protocolName": "Synthetify",
         "status": "no_program_id",
-        "timestamp": "2025-12-25T21:23:02.839Z",
+        "timestamp": "2025-12-25T22:23:03.195Z",
         "programs": [],
         "details": {
           "message": "No program ID found in IDL or known mappings"
@@ -1963,7 +1963,7 @@
         "protocolId": "tesserav",
         "protocolName": "Tesserav",
         "status": "placeholder",
-        "timestamp": "2025-12-25T21:23:02.940Z",
+        "timestamp": "2025-12-25T22:23:03.295Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -1973,7 +1973,7 @@
         "protocolId": "titan",
         "protocolName": "Titan",
         "status": "placeholder",
-        "timestamp": "2025-12-25T21:23:03.040Z",
+        "timestamp": "2025-12-25T22:23:03.396Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -1983,7 +1983,7 @@
         "protocolId": "tribeca",
         "protocolName": "Tribeca",
         "status": "partial",
-        "timestamp": "2025-12-25T21:23:03.141Z",
+        "timestamp": "2025-12-25T22:23:03.496Z",
         "programs": [
           {
             "name": "Tribeca",
@@ -2029,7 +2029,7 @@
         "protocolId": "tulip",
         "protocolName": "Tulip",
         "status": "no_program_id",
-        "timestamp": "2025-12-25T21:23:03.854Z",
+        "timestamp": "2025-12-25T22:23:03.991Z",
         "programs": [],
         "details": {
           "message": "No program ID found in IDL or known mappings"
@@ -2039,7 +2039,7 @@
         "protocolId": "uxd",
         "protocolName": "Uxd",
         "status": "partial",
-        "timestamp": "2025-12-25T21:23:03.955Z",
+        "timestamp": "2025-12-25T22:23:04.092Z",
         "programs": [
           {
             "name": "UXD",
@@ -2085,7 +2085,7 @@
         "protocolId": "venko",
         "protocolName": "Venko",
         "status": "placeholder",
-        "timestamp": "2025-12-25T21:23:04.626Z",
+        "timestamp": "2025-12-25T22:23:04.663Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -2095,7 +2095,7 @@
         "protocolId": "yi",
         "protocolName": "Yi",
         "status": "placeholder",
-        "timestamp": "2025-12-25T21:23:04.727Z",
+        "timestamp": "2025-12-25T22:23:04.764Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -2105,7 +2105,7 @@
         "protocolId": "zerofi",
         "protocolName": "Zerofi",
         "status": "placeholder",
-        "timestamp": "2025-12-25T21:23:04.827Z",
+        "timestamp": "2025-12-25T22:23:04.865Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -2115,7 +2115,7 @@
         "protocolId": "zeroone",
         "protocolName": "Zeroone",
         "status": "placeholder",
-        "timestamp": "2025-12-25T21:23:04.928Z",
+        "timestamp": "2025-12-25T22:23:04.965Z",
         "programs": [],
         "details": {
           "message": "IDL is a placeholder, not yet available"
@@ -2125,7 +2125,7 @@
         "protocolId": "zeta",
         "protocolName": "Zeta Markets",
         "status": "partial",
-        "timestamp": "2025-12-25T21:23:05.028Z",
+        "timestamp": "2025-12-25T22:23:05.066Z",
         "programs": [
           {
             "name": "Zeta Markets",
@@ -2168,14 +2168,14 @@
         }
       }
     ],
-    "durationMs": 36710
+    "durationMs": 36747
   },
   "protocolResults": {
     "idl-protocol": {
       "protocolId": "idl-protocol",
       "protocolName": "IDL Protocol",
       "status": "devnet_only",
-      "timestamp": "2025-12-25T21:22:30.613Z",
+      "timestamp": "2025-12-25T22:22:30.353Z",
       "programs": [
         {
           "name": "IDL Protocol",
@@ -2209,7 +2209,7 @@
       "protocolId": "acceleraytor",
       "protocolName": "Acceleraytor",
       "status": "placeholder",
-      "timestamp": "2025-12-25T21:22:31.124Z",
+      "timestamp": "2025-12-25T22:22:30.825Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -2219,7 +2219,7 @@
       "protocolId": "adrena",
       "protocolName": "Adrena",
       "status": "placeholder",
-      "timestamp": "2025-12-25T21:22:31.224Z",
+      "timestamp": "2025-12-25T22:22:30.925Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -2229,7 +2229,7 @@
       "protocolId": "aldrin",
       "protocolName": "Aldrin",
       "status": "verified",
-      "timestamp": "2025-12-25T21:22:31.324Z",
+      "timestamp": "2025-12-25T22:22:31.026Z",
       "programs": [
         {
           "name": "Aldrin AMM",
@@ -2263,7 +2263,7 @@
       "protocolId": "apricot",
       "protocolName": "Apricot",
       "status": "no_program_id",
-      "timestamp": "2025-12-25T21:22:31.786Z",
+      "timestamp": "2025-12-25T22:22:31.479Z",
       "programs": [],
       "details": {
         "message": "No program ID found in IDL or known mappings"
@@ -2273,7 +2273,7 @@
       "protocolId": "arrow",
       "protocolName": "Arrow",
       "status": "partial",
-      "timestamp": "2025-12-25T21:22:31.886Z",
+      "timestamp": "2025-12-25T22:22:31.580Z",
       "programs": [
         {
           "name": "Arrow",
@@ -2319,7 +2319,7 @@
       "protocolId": "atrix",
       "protocolName": "Atrix",
       "status": "no_program_id",
-      "timestamp": "2025-12-25T21:22:32.567Z",
+      "timestamp": "2025-12-25T22:22:32.153Z",
       "programs": [],
       "details": {
         "message": "No program ID found in IDL or known mappings"
@@ -2329,7 +2329,7 @@
       "protocolId": "balansol",
       "protocolName": "Balansol",
       "status": "placeholder",
-      "timestamp": "2025-12-25T21:22:32.668Z",
+      "timestamp": "2025-12-25T22:22:32.254Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -2339,7 +2339,7 @@
       "protocolId": "beluga",
       "protocolName": "Beluga",
       "status": "placeholder",
-      "timestamp": "2025-12-25T21:22:32.768Z",
+      "timestamp": "2025-12-25T22:22:32.354Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -2349,7 +2349,7 @@
       "protocolId": "blaze",
       "protocolName": "Blaze",
       "status": "placeholder",
-      "timestamp": "2025-12-25T21:22:32.868Z",
+      "timestamp": "2025-12-25T22:22:32.455Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -2359,7 +2359,7 @@
       "protocolId": "bonfida",
       "protocolName": "Bonfida",
       "status": "verified",
-      "timestamp": "2025-12-25T21:22:32.969Z",
+      "timestamp": "2025-12-25T22:22:32.555Z",
       "programs": [
         {
           "name": "Bonfida",
@@ -2393,7 +2393,7 @@
       "protocolId": "byreal",
       "protocolName": "Byreal",
       "status": "placeholder",
-      "timestamp": "2025-12-25T21:22:33.366Z",
+      "timestamp": "2025-12-25T22:22:32.951Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -2403,7 +2403,7 @@
       "protocolId": "cashio",
       "protocolName": "Cashio",
       "status": "placeholder",
-      "timestamp": "2025-12-25T21:22:33.467Z",
+      "timestamp": "2025-12-25T22:22:33.051Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -2413,7 +2413,7 @@
       "protocolId": "clone",
       "protocolName": "Clone",
       "status": "placeholder",
-      "timestamp": "2025-12-25T21:22:33.567Z",
+      "timestamp": "2025-12-25T22:22:33.151Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -2423,7 +2423,7 @@
       "protocolId": "crate",
       "protocolName": "Crate",
       "status": "placeholder",
-      "timestamp": "2025-12-25T21:22:33.668Z",
+      "timestamp": "2025-12-25T22:22:33.252Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -2433,7 +2433,7 @@
       "protocolId": "crema",
       "protocolName": "Crema",
       "status": "verified",
-      "timestamp": "2025-12-25T21:22:33.768Z",
+      "timestamp": "2025-12-25T22:22:33.353Z",
       "programs": [
         {
           "name": "Crema",
@@ -2467,7 +2467,7 @@
       "protocolId": "cropper",
       "protocolName": "Cropper",
       "status": "placeholder",
-      "timestamp": "2025-12-25T21:22:34.142Z",
+      "timestamp": "2025-12-25T22:22:33.731Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -2477,7 +2477,7 @@
       "protocolId": "cyclos",
       "protocolName": "Cyclos",
       "status": "no_program_id",
-      "timestamp": "2025-12-25T21:22:34.243Z",
+      "timestamp": "2025-12-25T22:22:33.832Z",
       "programs": [],
       "details": {
         "message": "No program ID found in IDL or known mappings"
@@ -2487,7 +2487,7 @@
       "protocolId": "cykura",
       "protocolName": "Cykura",
       "status": "no_program_id",
-      "timestamp": "2025-12-25T21:22:34.343Z",
+      "timestamp": "2025-12-25T22:22:33.932Z",
       "programs": [],
       "details": {
         "message": "No program ID found in IDL or known mappings"
@@ -2497,7 +2497,7 @@
       "protocolId": "deltaone",
       "protocolName": "Deltaone",
       "status": "placeholder",
-      "timestamp": "2025-12-25T21:22:34.444Z",
+      "timestamp": "2025-12-25T22:22:34.033Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -2507,7 +2507,7 @@
       "protocolId": "dexlab",
       "protocolName": "Dexlab",
       "status": "no_program_id",
-      "timestamp": "2025-12-25T21:22:34.544Z",
+      "timestamp": "2025-12-25T22:22:34.134Z",
       "programs": [],
       "details": {
         "message": "No program ID found in IDL or known mappings"
@@ -2517,7 +2517,7 @@
       "protocolId": "dexterity",
       "protocolName": "Dexterity",
       "status": "no_program_id",
-      "timestamp": "2025-12-25T21:22:34.645Z",
+      "timestamp": "2025-12-25T22:22:34.234Z",
       "programs": [],
       "details": {
         "message": "No program ID found in IDL or known mappings"
@@ -2527,7 +2527,7 @@
       "protocolId": "drift",
       "protocolName": "Drift Protocol",
       "status": "verified",
-      "timestamp": "2025-12-25T21:22:34.746Z",
+      "timestamp": "2025-12-25T22:22:34.335Z",
       "programs": [
         {
           "name": "Drift Protocol",
@@ -2561,7 +2561,7 @@
       "protocolId": "ellipsis",
       "protocolName": "Ellipsis",
       "status": "placeholder",
-      "timestamp": "2025-12-25T21:22:35.293Z",
+      "timestamp": "2025-12-25T22:22:34.742Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -2571,7 +2571,7 @@
       "protocolId": "enjinstarter",
       "protocolName": "Enjinstarter",
       "status": "placeholder",
-      "timestamp": "2025-12-25T21:22:35.393Z",
+      "timestamp": "2025-12-25T22:22:34.842Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -2581,7 +2581,7 @@
       "protocolId": "flash",
       "protocolName": "Flash",
       "status": "placeholder",
-      "timestamp": "2025-12-25T21:22:35.494Z",
+      "timestamp": "2025-12-25T22:22:34.943Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -2591,7 +2591,7 @@
       "protocolId": "fluxbeam",
       "protocolName": "Fluxbeam",
       "status": "partial",
-      "timestamp": "2025-12-25T21:22:35.594Z",
+      "timestamp": "2025-12-25T22:22:35.042Z",
       "programs": [
         {
           "name": "FluxBeam",
@@ -2637,7 +2637,7 @@
       "protocolId": "francium",
       "protocolName": "Francium",
       "status": "partial",
-      "timestamp": "2025-12-25T21:22:36.051Z",
+      "timestamp": "2025-12-25T22:22:35.546Z",
       "programs": [
         {
           "name": "Francium",
@@ -2683,7 +2683,7 @@
       "protocolId": "gauge",
       "protocolName": "Gauge",
       "status": "placeholder",
-      "timestamp": "2025-12-25T21:22:36.616Z",
+      "timestamp": "2025-12-25T22:22:36.204Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -2693,7 +2693,7 @@
       "protocolId": "gavel",
       "protocolName": "Gavel",
       "status": "placeholder",
-      "timestamp": "2025-12-25T21:22:36.717Z",
+      "timestamp": "2025-12-25T22:22:36.305Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -2703,7 +2703,7 @@
       "protocolId": "gmx",
       "protocolName": "Gmx",
       "status": "placeholder",
-      "timestamp": "2025-12-25T21:22:36.817Z",
+      "timestamp": "2025-12-25T22:22:36.405Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -2713,7 +2713,7 @@
       "protocolId": "goki",
       "protocolName": "Goki",
       "status": "partial",
-      "timestamp": "2025-12-25T21:22:36.918Z",
+      "timestamp": "2025-12-25T22:22:36.506Z",
       "programs": [
         {
           "name": "Goki",
@@ -2759,7 +2759,7 @@
       "protocolId": "goonfi",
       "protocolName": "Goonfi",
       "status": "placeholder",
-      "timestamp": "2025-12-25T21:22:37.520Z",
+      "timestamp": "2025-12-25T22:22:37.359Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -2769,7 +2769,7 @@
       "protocolId": "goosefx",
       "protocolName": "Goosefx",
       "status": "verified",
-      "timestamp": "2025-12-25T21:22:37.621Z",
+      "timestamp": "2025-12-25T22:22:37.459Z",
       "programs": [
         {
           "name": "GooseFX",
@@ -2820,7 +2820,7 @@
       "protocolId": "hawksight",
       "protocolName": "Hawksight",
       "status": "placeholder",
-      "timestamp": "2025-12-25T21:22:38.306Z",
+      "timestamp": "2025-12-25T22:22:39.918Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -2830,7 +2830,7 @@
       "protocolId": "hubble",
       "protocolName": "Hubble",
       "status": "no_program_id",
-      "timestamp": "2025-12-25T21:22:38.407Z",
+      "timestamp": "2025-12-25T22:22:40.019Z",
       "programs": [],
       "details": {
         "message": "No program ID found in IDL or known mappings"
@@ -2840,7 +2840,7 @@
       "protocolId": "humidifi",
       "protocolName": "Humidifi",
       "status": "placeholder",
-      "timestamp": "2025-12-25T21:22:38.507Z",
+      "timestamp": "2025-12-25T22:22:40.119Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -2850,7 +2850,7 @@
       "protocolId": "hxro",
       "protocolName": "Hxro",
       "status": "no_program_id",
-      "timestamp": "2025-12-25T21:22:38.608Z",
+      "timestamp": "2025-12-25T22:22:40.220Z",
       "programs": [],
       "details": {
         "message": "No program ID found in IDL or known mappings"
@@ -2860,7 +2860,7 @@
       "protocolId": "invariant",
       "protocolName": "Invariant",
       "status": "verified",
-      "timestamp": "2025-12-25T21:22:38.708Z",
+      "timestamp": "2025-12-25T22:22:40.320Z",
       "programs": [
         {
           "name": "Invariant",
@@ -2894,7 +2894,7 @@
       "protocolId": "jet",
       "protocolName": "Jet",
       "status": "partial",
-      "timestamp": "2025-12-25T21:22:39.092Z",
+      "timestamp": "2025-12-25T22:22:41.078Z",
       "programs": [
         {
           "name": "Jet Protocol",
@@ -2940,7 +2940,7 @@
       "protocolId": "jito",
       "protocolName": "Jito",
       "status": "program_not_found",
-      "timestamp": "2025-12-25T21:22:39.765Z",
+      "timestamp": "2025-12-25T22:22:42.730Z",
       "programs": [
         {
           "name": "Jito Stake Pool",
@@ -2985,7 +2985,7 @@
       "protocolId": "jupiter",
       "protocolName": "Jupiter",
       "status": "verified",
-      "timestamp": "2025-12-25T21:22:42.806Z",
+      "timestamp": "2025-12-25T22:22:43.742Z",
       "programs": [
         {
           "name": "Jupiter v6",
@@ -3053,7 +3053,7 @@
       "protocolId": "kamino",
       "protocolName": "Kamino",
       "status": "partial",
-      "timestamp": "2025-12-25T21:22:44.601Z",
+      "timestamp": "2025-12-25T22:22:45.889Z",
       "programs": [
         {
           "name": "Kamino Lending",
@@ -3099,7 +3099,7 @@
       "protocolId": "larix",
       "protocolName": "Larix",
       "status": "no_program_id",
-      "timestamp": "2025-12-25T21:22:46.428Z",
+      "timestamp": "2025-12-25T22:22:46.554Z",
       "programs": [],
       "details": {
         "message": "No program ID found in IDL or known mappings"
@@ -3109,7 +3109,7 @@
       "protocolId": "launchmynft",
       "protocolName": "Launchmynft",
       "status": "placeholder",
-      "timestamp": "2025-12-25T21:22:46.529Z",
+      "timestamp": "2025-12-25T22:22:46.654Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -3119,7 +3119,7 @@
       "protocolId": "lifinity",
       "protocolName": "Lifinity",
       "status": "verified",
-      "timestamp": "2025-12-25T21:22:46.629Z",
+      "timestamp": "2025-12-25T22:22:46.755Z",
       "programs": [
         {
           "name": "Lifinity v1",
@@ -3153,7 +3153,7 @@
       "protocolId": "lifinity-v2",
       "protocolName": "Lifinity v2",
       "status": "partial",
-      "timestamp": "2025-12-25T21:22:46.967Z",
+      "timestamp": "2025-12-25T22:22:47.123Z",
       "programs": [
         {
           "name": "Lifinity v2",
@@ -3199,7 +3199,7 @@
       "protocolId": "magiceden",
       "protocolName": "Magiceden",
       "status": "verified",
-      "timestamp": "2025-12-25T21:22:47.530Z",
+      "timestamp": "2025-12-25T22:22:47.797Z",
       "programs": [
         {
           "name": "Magic Eden",
@@ -3233,7 +3233,7 @@
       "protocolId": "mango",
       "protocolName": "Mango Markets",
       "status": "verified",
-      "timestamp": "2025-12-25T21:22:48.240Z",
+      "timestamp": "2025-12-25T22:22:48.241Z",
       "programs": [
         {
           "name": "Mango v4",
@@ -3267,7 +3267,7 @@
       "protocolId": "mango-v3",
       "protocolName": "Mango v3",
       "status": "verified",
-      "timestamp": "2025-12-25T21:22:48.792Z",
+      "timestamp": "2025-12-25T22:22:48.581Z",
       "programs": [
         {
           "name": "Mango v3",
@@ -3301,7 +3301,7 @@
       "protocolId": "marginfi",
       "protocolName": "MarginFi",
       "status": "verified",
-      "timestamp": "2025-12-25T21:22:49.221Z",
+      "timestamp": "2025-12-25T22:22:49.813Z",
       "programs": [
         {
           "name": "MarginFi",
@@ -3335,7 +3335,7 @@
       "protocolId": "marinade",
       "protocolName": "Marinade Finance",
       "status": "verified",
-      "timestamp": "2025-12-25T21:22:50.683Z",
+      "timestamp": "2025-12-25T22:22:50.277Z",
       "programs": [
         {
           "name": "Marinade Finance",
@@ -3369,7 +3369,7 @@
       "protocolId": "mercurial",
       "protocolName": "Mercurial",
       "status": "verified",
-      "timestamp": "2025-12-25T21:22:51.025Z",
+      "timestamp": "2025-12-25T22:22:51.712Z",
       "programs": [
         {
           "name": "Mercurial",
@@ -3403,7 +3403,7 @@
       "protocolId": "merkle-distributor",
       "protocolName": "Merkle distributor",
       "status": "placeholder",
-      "timestamp": "2025-12-25T21:22:51.465Z",
+      "timestamp": "2025-12-25T22:22:52.064Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -3413,7 +3413,7 @@
       "protocolId": "meteora",
       "protocolName": "Meteora",
       "status": "verified",
-      "timestamp": "2025-12-25T21:22:51.564Z",
+      "timestamp": "2025-12-25T22:22:52.165Z",
       "programs": [
         {
           "name": "Meteora DLMM",
@@ -3464,7 +3464,7 @@
       "protocolId": "obric",
       "protocolName": "Obric",
       "status": "placeholder",
-      "timestamp": "2025-12-25T21:22:53.378Z",
+      "timestamp": "2025-12-25T22:22:53.866Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -3474,7 +3474,7 @@
       "protocolId": "openbook",
       "protocolName": "OpenBook",
       "status": "verified",
-      "timestamp": "2025-12-25T21:22:53.479Z",
+      "timestamp": "2025-12-25T22:22:53.967Z",
       "programs": [
         {
           "name": "OpenBook v2",
@@ -3508,7 +3508,7 @@
       "protocolId": "orca",
       "protocolName": "Orca (Whirlpool)",
       "status": "verified",
-      "timestamp": "2025-12-25T21:22:53.827Z",
+      "timestamp": "2025-12-25T22:22:54.431Z",
       "programs": [
         {
           "name": "Orca Whirlpool",
@@ -3542,7 +3542,7 @@
       "protocolId": "parrot",
       "protocolName": "Parrot",
       "status": "placeholder",
-      "timestamp": "2025-12-25T21:22:55.195Z",
+      "timestamp": "2025-12-25T22:22:55.783Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -3552,7 +3552,7 @@
       "protocolId": "penguin",
       "protocolName": "Penguin",
       "status": "placeholder",
-      "timestamp": "2025-12-25T21:22:55.296Z",
+      "timestamp": "2025-12-25T22:22:55.884Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -3562,7 +3562,7 @@
       "protocolId": "permalock",
       "protocolName": "Permalock",
       "status": "placeholder",
-      "timestamp": "2025-12-25T21:22:55.396Z",
+      "timestamp": "2025-12-25T22:22:55.984Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -3572,7 +3572,7 @@
       "protocolId": "phoenix",
       "protocolName": "Phoenix",
       "status": "verified",
-      "timestamp": "2025-12-25T21:22:55.497Z",
+      "timestamp": "2025-12-25T22:22:56.085Z",
       "programs": [
         {
           "name": "Phoenix DEX",
@@ -3606,7 +3606,7 @@
       "protocolId": "plasma",
       "protocolName": "Plasma",
       "status": "placeholder",
-      "timestamp": "2025-12-25T21:22:55.855Z",
+      "timestamp": "2025-12-25T22:22:56.453Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -3616,7 +3616,7 @@
       "protocolId": "pool-manager",
       "protocolName": "Pool manager",
       "status": "placeholder",
-      "timestamp": "2025-12-25T21:22:55.955Z",
+      "timestamp": "2025-12-25T22:22:56.553Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -3626,7 +3626,7 @@
       "protocolId": "port",
       "protocolName": "Port",
       "status": "verified",
-      "timestamp": "2025-12-25T21:22:56.056Z",
+      "timestamp": "2025-12-25T22:22:56.654Z",
       "programs": [
         {
           "name": "Port Finance",
@@ -3660,7 +3660,7 @@
       "protocolId": "prism",
       "protocolName": "Prism",
       "status": "no_program_id",
-      "timestamp": "2025-12-25T21:22:56.559Z",
+      "timestamp": "2025-12-25T22:22:57.024Z",
       "programs": [],
       "details": {
         "message": "No program ID found in IDL or known mappings"
@@ -3670,7 +3670,7 @@
       "protocolId": "pumpfun",
       "protocolName": "Pumpfun",
       "status": "no_program_id",
-      "timestamp": "2025-12-25T21:22:56.659Z",
+      "timestamp": "2025-12-25T22:22:57.125Z",
       "programs": [],
       "details": {
         "message": "No program ID found in IDL or known mappings"
@@ -3680,7 +3680,7 @@
       "protocolId": "pumpswap",
       "protocolName": "Pumpswap",
       "status": "placeholder",
-      "timestamp": "2025-12-25T21:22:56.760Z",
+      "timestamp": "2025-12-25T22:22:57.224Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -3690,7 +3690,7 @@
       "protocolId": "quarry",
       "protocolName": "Quarry",
       "status": "partial",
-      "timestamp": "2025-12-25T21:22:56.860Z",
+      "timestamp": "2025-12-25T22:22:57.325Z",
       "programs": [
         {
           "name": "Quarry",
@@ -3736,7 +3736,7 @@
       "protocolId": "ribbon",
       "protocolName": "Ribbon",
       "status": "no_program_id",
-      "timestamp": "2025-12-25T21:22:57.431Z",
+      "timestamp": "2025-12-25T22:22:57.825Z",
       "programs": [],
       "details": {
         "message": "No program ID found in IDL or known mappings"
@@ -3746,7 +3746,7 @@
       "protocolId": "saber",
       "protocolName": "Saber",
       "status": "verified",
-      "timestamp": "2025-12-25T21:22:57.532Z",
+      "timestamp": "2025-12-25T22:22:57.926Z",
       "programs": [
         {
           "name": "Saber Stable Swap",
@@ -3780,7 +3780,7 @@
       "protocolId": "saber-periphery",
       "protocolName": "Saber periphery",
       "status": "no_program_id",
-      "timestamp": "2025-12-25T21:22:57.895Z",
+      "timestamp": "2025-12-25T22:22:58.308Z",
       "programs": [],
       "details": {
         "message": "No program ID found in IDL or known mappings"
@@ -3790,7 +3790,7 @@
       "protocolId": "sanctum",
       "protocolName": "Sanctum",
       "status": "verified",
-      "timestamp": "2025-12-25T21:22:57.996Z",
+      "timestamp": "2025-12-25T22:22:58.409Z",
       "programs": [
         {
           "name": "Sanctum",
@@ -3824,7 +3824,7 @@
       "protocolId": "saros",
       "protocolName": "Saros",
       "status": "no_program_id",
-      "timestamp": "2025-12-25T21:22:58.561Z",
+      "timestamp": "2025-12-25T22:22:59.717Z",
       "programs": [],
       "details": {
         "message": "No program ID found in IDL or known mappings"
@@ -3834,7 +3834,7 @@
       "protocolId": "save",
       "protocolName": "Save",
       "status": "placeholder",
-      "timestamp": "2025-12-25T21:22:58.662Z",
+      "timestamp": "2025-12-25T22:22:59.817Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -3844,7 +3844,7 @@
       "protocolId": "sencha",
       "protocolName": "Sencha",
       "status": "partial",
-      "timestamp": "2025-12-25T21:22:58.762Z",
+      "timestamp": "2025-12-25T22:22:59.918Z",
       "programs": [
         {
           "name": "Sencha",
@@ -3890,7 +3890,7 @@
       "protocolId": "serum-v2",
       "protocolName": "Serum v2",
       "status": "verified",
-      "timestamp": "2025-12-25T21:22:59.228Z",
+      "timestamp": "2025-12-25T22:23:00.520Z",
       "programs": [
         {
           "name": "Serum v2",
@@ -3924,7 +3924,7 @@
       "protocolId": "snapshots",
       "protocolName": "Snapshots",
       "status": "placeholder",
-      "timestamp": "2025-12-25T21:23:00.576Z",
+      "timestamp": "2025-12-25T22:23:01.188Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -3934,7 +3934,7 @@
       "protocolId": "solanium",
       "protocolName": "Solanium",
       "status": "no_program_id",
-      "timestamp": "2025-12-25T21:23:00.677Z",
+      "timestamp": "2025-12-25T22:23:01.288Z",
       "programs": [],
       "details": {
         "message": "No program ID found in IDL or known mappings"
@@ -3944,7 +3944,7 @@
       "protocolId": "solend",
       "protocolName": "Solend",
       "status": "verified",
-      "timestamp": "2025-12-25T21:23:00.777Z",
+      "timestamp": "2025-12-25T22:23:01.389Z",
       "programs": [
         {
           "name": "Solend",
@@ -3978,7 +3978,7 @@
       "protocolId": "solfi",
       "protocolName": "Solfi",
       "status": "placeholder",
-      "timestamp": "2025-12-25T21:23:01.477Z",
+      "timestamp": "2025-12-25T22:23:01.757Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -3988,7 +3988,7 @@
       "protocolId": "solrazr",
       "protocolName": "Solrazr",
       "status": "placeholder",
-      "timestamp": "2025-12-25T21:23:01.578Z",
+      "timestamp": "2025-12-25T22:23:01.857Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -3998,7 +3998,7 @@
       "protocolId": "solstarter",
       "protocolName": "Solstarter",
       "status": "placeholder",
-      "timestamp": "2025-12-25T21:23:01.678Z",
+      "timestamp": "2025-12-25T22:23:01.958Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -4008,7 +4008,7 @@
       "protocolId": "stabble",
       "protocolName": "Stabble",
       "status": "placeholder",
-      "timestamp": "2025-12-25T21:23:01.779Z",
+      "timestamp": "2025-12-25T22:23:02.058Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -4018,7 +4018,7 @@
       "protocolId": "stable-swap",
       "protocolName": "Stable swap",
       "status": "no_program_id",
-      "timestamp": "2025-12-25T21:23:01.879Z",
+      "timestamp": "2025-12-25T22:23:02.159Z",
       "programs": [],
       "details": {
         "message": "No program ID found in IDL or known mappings"
@@ -4028,7 +4028,7 @@
       "protocolId": "starlaunch",
       "protocolName": "Starlaunch",
       "status": "placeholder",
-      "timestamp": "2025-12-25T21:23:01.980Z",
+      "timestamp": "2025-12-25T22:23:02.260Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -4038,7 +4038,7 @@
       "protocolId": "step",
       "protocolName": "Step",
       "status": "no_program_id",
-      "timestamp": "2025-12-25T21:23:02.081Z",
+      "timestamp": "2025-12-25T22:23:02.360Z",
       "programs": [],
       "details": {
         "message": "No program ID found in IDL or known mappings"
@@ -4048,7 +4048,7 @@
       "protocolId": "stepn",
       "protocolName": "Stepn",
       "status": "placeholder",
-      "timestamp": "2025-12-25T21:23:02.181Z",
+      "timestamp": "2025-12-25T22:23:02.461Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -4058,7 +4058,7 @@
       "protocolId": "sunny",
       "protocolName": "Sunny",
       "status": "no_program_id",
-      "timestamp": "2025-12-25T21:23:02.282Z",
+      "timestamp": "2025-12-25T22:23:02.561Z",
       "programs": [],
       "details": {
         "message": "No program ID found in IDL or known mappings"
@@ -4068,7 +4068,7 @@
       "protocolId": "switchboard",
       "protocolName": "Switchboard",
       "status": "verified",
-      "timestamp": "2025-12-25T21:23:02.382Z",
+      "timestamp": "2025-12-25T22:23:02.662Z",
       "programs": [
         {
           "name": "Switchboard",
@@ -4102,7 +4102,7 @@
       "protocolId": "symmetry",
       "protocolName": "Symmetry",
       "status": "no_program_id",
-      "timestamp": "2025-12-25T21:23:02.739Z",
+      "timestamp": "2025-12-25T22:23:03.094Z",
       "programs": [],
       "details": {
         "message": "No program ID found in IDL or known mappings"
@@ -4112,7 +4112,7 @@
       "protocolId": "synthetify",
       "protocolName": "Synthetify",
       "status": "no_program_id",
-      "timestamp": "2025-12-25T21:23:02.839Z",
+      "timestamp": "2025-12-25T22:23:03.195Z",
       "programs": [],
       "details": {
         "message": "No program ID found in IDL or known mappings"
@@ -4122,7 +4122,7 @@
       "protocolId": "tesserav",
       "protocolName": "Tesserav",
       "status": "placeholder",
-      "timestamp": "2025-12-25T21:23:02.940Z",
+      "timestamp": "2025-12-25T22:23:03.295Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -4132,7 +4132,7 @@
       "protocolId": "titan",
       "protocolName": "Titan",
       "status": "placeholder",
-      "timestamp": "2025-12-25T21:23:03.040Z",
+      "timestamp": "2025-12-25T22:23:03.396Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -4142,7 +4142,7 @@
       "protocolId": "tribeca",
       "protocolName": "Tribeca",
       "status": "partial",
-      "timestamp": "2025-12-25T21:23:03.141Z",
+      "timestamp": "2025-12-25T22:23:03.496Z",
       "programs": [
         {
           "name": "Tribeca",
@@ -4188,7 +4188,7 @@
       "protocolId": "tulip",
       "protocolName": "Tulip",
       "status": "no_program_id",
-      "timestamp": "2025-12-25T21:23:03.854Z",
+      "timestamp": "2025-12-25T22:23:03.991Z",
       "programs": [],
       "details": {
         "message": "No program ID found in IDL or known mappings"
@@ -4198,7 +4198,7 @@
       "protocolId": "uxd",
       "protocolName": "Uxd",
       "status": "partial",
-      "timestamp": "2025-12-25T21:23:03.955Z",
+      "timestamp": "2025-12-25T22:23:04.092Z",
       "programs": [
         {
           "name": "UXD",
@@ -4244,7 +4244,7 @@
       "protocolId": "venko",
       "protocolName": "Venko",
       "status": "placeholder",
-      "timestamp": "2025-12-25T21:23:04.626Z",
+      "timestamp": "2025-12-25T22:23:04.663Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -4254,7 +4254,7 @@
       "protocolId": "yi",
       "protocolName": "Yi",
       "status": "placeholder",
-      "timestamp": "2025-12-25T21:23:04.727Z",
+      "timestamp": "2025-12-25T22:23:04.764Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -4264,7 +4264,7 @@
       "protocolId": "zerofi",
       "protocolName": "Zerofi",
       "status": "placeholder",
-      "timestamp": "2025-12-25T21:23:04.827Z",
+      "timestamp": "2025-12-25T22:23:04.865Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -4274,7 +4274,7 @@
       "protocolId": "zeroone",
       "protocolName": "Zeroone",
       "status": "placeholder",
-      "timestamp": "2025-12-25T21:23:04.928Z",
+      "timestamp": "2025-12-25T22:23:04.965Z",
       "programs": [],
       "details": {
         "message": "IDL is a placeholder, not yet available"
@@ -4284,7 +4284,7 @@
       "protocolId": "zeta",
       "protocolName": "Zeta Markets",
       "status": "partial",
-      "timestamp": "2025-12-25T21:23:05.028Z",
+      "timestamp": "2025-12-25T22:23:05.066Z",
       "programs": [
         {
           "name": "Zeta Markets",
