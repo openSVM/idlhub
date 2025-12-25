@@ -3,6 +3,28 @@ import { Link } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 import JSZip from 'jszip';
 import './RegistryPage.css';
+import {
+  fetchProtocolAnalytics,
+  fetchAccountState,
+  calculateRent,
+  estimateComputeUnits,
+  analyzeInstructionUsage,
+  analyzeSecurityIssues,
+  type ProtocolAnalytics,
+  type SecurityIssue,
+  type InstructionStats,
+} from '../utils/onChainAnalytics';
+import {
+  generateAnchorClient,
+  generatePackageJson,
+  generateTsConfig,
+  generateReadme,
+} from '../utils/anchorClientGenerator';
+import {
+  generateTemplate,
+  TEMPLATE_LANGUAGES,
+  type TemplateLanguage,
+} from '../utils/integrationTemplates';
 
 interface Protocol {
   id: string;
@@ -74,6 +96,21 @@ export default function RegistryPage() {
   const [selectedError, setSelectedError] = useState<any | null>(null);
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [expandedLanguages, setExpandedLanguages] = useState<Set<string>>(new Set());
+
+  // Analytics & monitoring state
+  const [protocolAnalytics, setProtocolAnalytics] = useState<ProtocolAnalytics | null>(null);
+  const [instructionStats, setInstructionStats] = useState<InstructionStats[]>([]);
+  const [securityIssues, setSecurityIssues] = useState<SecurityIssue[]>([]);
+  const [loadingAnalytics, setLoadingAnalytics] = useState(false);
+
+  // Account explorer state
+  const [accountExplorerAddress, setAccountExplorerAddress] = useState('');
+  const [accountExplorerData, setAccountExplorerData] = useState<any>(null);
+  const [loadingAccountData, setLoadingAccountData] = useState(false);
+
+  // Template & export state
+  const [showTemplatesModal, setShowTemplatesModal] = useState(false);
+  const [selectedTemplateLanguage, setSelectedTemplateLanguage] = useState<TemplateLanguage>('Next.js');
 
   // Load protocols from Arweave manifest
   useEffect(() => {
@@ -147,6 +184,47 @@ export default function RegistryPage() {
 
     loadIDL();
   }, [currentProtocolId, allProtocols]);
+
+  // Load analytics when IDL changes
+  useEffect(() => {
+    if (!idlData?.idl) {
+      setProtocolAnalytics(null);
+      setInstructionStats([]);
+      setSecurityIssues([]);
+      return;
+    }
+
+    const loadAnalytics = async () => {
+      setLoadingAnalytics(true);
+
+      try {
+        // Get program ID from IDL metadata
+        const programId = idlData.idl.metadata?.address || currentProtocol?.id || '';
+
+        // Fetch on-chain analytics (only if valid program ID)
+        if (programId && programId.length > 30) {
+          const analytics = await fetchProtocolAnalytics(programId, 'mainnet');
+          setProtocolAnalytics(analytics);
+        }
+
+        // Analyze instruction usage
+        if (idlData.idl.instructions) {
+          const stats = analyzeInstructionUsage(idlData.idl.instructions);
+          setInstructionStats(stats);
+        }
+
+        // Analyze security issues
+        const issues = analyzeSecurityIssues(idlData.idl);
+        setSecurityIssues(issues);
+      } catch (error) {
+        console.error('Error loading analytics:', error);
+      } finally {
+        setLoadingAnalytics(false);
+      }
+    };
+
+    loadAnalytics();
+  }, [idlData, currentProtocol]);
 
   // Filter protocols
   const filteredProtocols = useMemo(() => {
@@ -725,6 +803,94 @@ SolInstruction create_${instruction.name}_instruction(
     }
   };
 
+  // Download Anchor SDK as ZIP
+  const downloadAnchorSDK = async () => {
+    if (!idlData?.idl || !currentProtocol) return;
+
+    try {
+      const programId = idlData.idl.metadata?.address || currentProtocol.id || '';
+
+      const zip = new JSZip();
+
+      // Add main client file
+      const clientCode = generateAnchorClient(idlData.idl, programId);
+      zip.file('src/index.ts', clientCode);
+
+      // Add package.json
+      const packageJson = generatePackageJson(idlData.idl, programId);
+      zip.file('package.json', packageJson);
+
+      // Add tsconfig.json
+      const tsConfig = generateTsConfig();
+      zip.file('tsconfig.json', tsConfig);
+
+      // Add README.md
+      const readme = generateReadme(idlData.idl, programId);
+      zip.file('README.md', readme);
+
+      // Add IDL JSON
+      zip.file('src/idl.json', JSON.stringify(idlData.idl, null, 2));
+
+      // Generate ZIP
+      const blob = await zip.generateAsync({ type: 'blob' });
+
+      // Download
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${currentProtocol.id}-anchor-sdk.zip`;
+      a.click();
+      URL.revokeObjectURL(url);
+
+      alert('Anchor SDK downloaded successfully!');
+    } catch (error) {
+      console.error('Error generating SDK:', error);
+      alert('Failed to generate SDK');
+    }
+  };
+
+  // Download integration template
+  const downloadTemplate = (language: TemplateLanguage) => {
+    if (!idlData?.idl || !currentProtocol) return;
+
+    const programId = idlData.idl.metadata?.address || currentProtocol.id || '';
+    const code = generateTemplate(language, idlData.idl, programId);
+
+    // Create blob and download
+    const blob = new Blob([code], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+
+    const extensionMap: Record<TemplateLanguage, string> = {
+      'Next.js': 'tsx',
+      'React Native': 'tsx',
+      'Rust': 'rs',
+      'Python': 'py',
+    };
+
+    a.download = `${currentProtocol.id}-${language.toLowerCase().replace(/\s+/g, '-')}.${extensionMap[language]}`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  // Fetch account state
+  const fetchAccount = async () => {
+    if (!accountExplorerAddress) return;
+
+    setLoadingAccountData(true);
+    try {
+      const data = await fetchAccountState(accountExplorerAddress, 'mainnet');
+      setAccountExplorerData(data);
+    } catch (error) {
+      console.error('Error fetching account:', error);
+      setAccountExplorerData(null);
+      alert('Failed to fetch account data');
+    } finally {
+      setLoadingAccountData(false);
+    }
+  };
+
   // Open instruction modal
   const openInstructionModal = (instruction: any) => {
     setSelectedInstruction(instruction);
@@ -1039,6 +1205,167 @@ SolInstruction create_${instruction.name}_instruction(
           </button>
         </div>
         <div className="protocol-detail-content">
+          {/* Protocol Analytics Section */}
+          {protocolAnalytics && (
+            <div className="detail-section analytics-section">
+              <div className="detail-section-title">📊 Protocol Health & Analytics</div>
+              <div className="analytics-grid">
+                <div className="analytic-card">
+                  <div className="analytic-label">Status</div>
+                  <div className="analytic-value">
+                    {protocolAnalytics.isDeployed ? '✓ Deployed' : '✗ Not Found'}
+                  </div>
+                </div>
+                <div className="analytic-card">
+                  <div className="analytic-label">Verified</div>
+                  <div className="analytic-value">
+                    {protocolAnalytics.isVerified ? '✓ Yes' : '○ No'}
+                  </div>
+                </div>
+                <div className="analytic-card">
+                  <div className="analytic-label">Health Score</div>
+                  <div className="analytic-value" style={{
+                    color: protocolAnalytics.healthScore > 70 ? 'var(--accent-primary)' :
+                           protocolAnalytics.healthScore > 40 ? 'orange' : 'red'
+                  }}>
+                    {protocolAnalytics.healthScore}/100
+                  </div>
+                </div>
+                <div className="analytic-card">
+                  <div className="analytic-label">Last Activity</div>
+                  <div className="analytic-value">
+                    {protocolAnalytics.lastActivity
+                      ? new Date(protocolAnalytics.lastActivity).toLocaleDateString()
+                      : 'Unknown'}
+                  </div>
+                </div>
+                <div className="analytic-card">
+                  <div className="analytic-label">Transactions (24h)</div>
+                  <div className="analytic-value">
+                    {protocolAnalytics.transactions24h?.toLocaleString() || '0'}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Security Issues Section */}
+          {securityIssues.length > 0 && (
+            <div className="detail-section security-section">
+              <div className="detail-section-title">🔐 Security Indicators</div>
+              <div className="security-issues">
+                {securityIssues.map((issue, idx) => (
+                  <div key={idx} className={`security-issue severity-${issue.severity}`}>
+                    <div className="issue-header">
+                      <span className="issue-severity">{issue.severity.toUpperCase()}</span>
+                      <span className="issue-category">{issue.category}</span>
+                    </div>
+                    <div className="issue-message">{issue.message}</div>
+                    {issue.instruction && (
+                      <div className="issue-instruction">Instruction: {issue.instruction}</div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* SDK Generation Section */}
+          {idlData?.idl && (
+            <div className="detail-section sdk-section">
+              <div className="detail-section-title">💾 SDK & Templates</div>
+              <div className="sdk-actions">
+                <button className="sdk-button primary" onClick={downloadAnchorSDK}>
+                  📦 Download Anchor SDK (ZIP)
+                </button>
+                <button className="sdk-button" onClick={() => setShowTemplatesModal(true)}>
+                  📝 Integration Templates
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Account Explorer Section */}
+          {idlData?.idl && (
+            <div className="detail-section account-explorer-section">
+              <div className="detail-section-title">🔍 Account State Explorer</div>
+              <div className="account-explorer">
+                <div className="explorer-input-group">
+                  <input
+                    type="text"
+                    className="explorer-input"
+                    placeholder="Enter account address (mainnet)"
+                    value={accountExplorerAddress}
+                    onChange={(e) => setAccountExplorerAddress(e.target.value)}
+                  />
+                  <button
+                    className="explorer-button"
+                    onClick={fetchAccount}
+                    disabled={loadingAccountData || !accountExplorerAddress}
+                  >
+                    {loadingAccountData ? 'Loading...' : 'Fetch & Decode'}
+                  </button>
+                </div>
+                {accountExplorerData && (
+                  <div className="explorer-result">
+                    <div className="result-item">
+                      <span className="result-label">Address:</span>
+                      <span className="result-value">{accountExplorerData.address}</span>
+                    </div>
+                    <div className="result-item">
+                      <span className="result-label">Lamports:</span>
+                      <span className="result-value">{accountExplorerData.lamports?.toLocaleString()}</span>
+                    </div>
+                    <div className="result-item">
+                      <span className="result-label">Owner:</span>
+                      <span className="result-value">{accountExplorerData.owner}</span>
+                    </div>
+                    <div className="result-item">
+                      <span className="result-label">Executable:</span>
+                      <span className="result-value">{accountExplorerData.executable ? 'Yes' : 'No'}</span>
+                    </div>
+                    <div className="result-item result-item-full">
+                      <span className="result-label">Raw Data (Base64):</span>
+                      <pre className="result-data">{accountExplorerData.data}</pre>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Instruction Usage Heatmap */}
+          {instructionStats.length > 0 && (
+            <div className="detail-section heatmap-section">
+              <div className="detail-section-title">🔥 Instruction Usage Heatmap</div>
+              <div className="instruction-heatmap">
+                {instructionStats.map((stat, idx) => (
+                  <div key={idx} className="heatmap-item">
+                    <div className="heatmap-header">
+                      <span className="heatmap-name">{stat.name}</span>
+                      <span className="heatmap-percentage">{stat.percentage.toFixed(1)}%</span>
+                    </div>
+                    <div className="heatmap-bar">
+                      <div
+                        className="heatmap-fill"
+                        style={{
+                          width: `${stat.percentage}%`,
+                          backgroundColor: `hsl(${120 - stat.percentage * 1.2}, 70%, 50%)`
+                        }}
+                      />
+                    </div>
+                    <div className="heatmap-stats">
+                      <span>{stat.callCount.toLocaleString()} calls</span>
+                      {stat.lastCalled && (
+                        <span>Last: {new Date(stat.lastCalled).toLocaleDateString()}</span>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className="detail-section">
             <div className="detail-section-title">Instructions</div>
             <div className="detail-list">
@@ -1605,6 +1932,65 @@ try {
                     <span className="metadata-label">Decimal Code:</span>
                     <span className="metadata-value"><code>{selectedError.code}</code></span>
                   </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Integration Templates Modal */}
+      {showTemplatesModal && (
+        <div className="modal-overlay" onClick={() => setShowTemplatesModal(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2 className="modal-title">Integration Templates</h2>
+              <button className="modal-close" onClick={() => setShowTemplatesModal(false)}>×</button>
+            </div>
+            <div className="modal-body">
+              <div className="template-selector">
+                <div className="template-tabs">
+                  {TEMPLATE_LANGUAGES.map((lang) => (
+                    <button
+                      key={lang}
+                      className={`template-tab ${selectedTemplateLanguage === lang ? 'active' : ''}`}
+                      onClick={() => setSelectedTemplateLanguage(lang)}
+                    >
+                      {lang}
+                    </button>
+                  ))}
+                </div>
+                <div className="template-preview">
+                  <pre className="code-snippet-content">
+                    <code>
+                      {generateTemplate(
+                        selectedTemplateLanguage,
+                        idlData?.idl,
+                        idlData?.idl?.metadata?.address || currentProtocol?.id || ''
+                      )}
+                    </code>
+                  </pre>
+                </div>
+                <div className="template-actions">
+                  <button
+                    className="template-button primary"
+                    onClick={() => downloadTemplate(selectedTemplateLanguage)}
+                  >
+                    📥 Download {selectedTemplateLanguage} Template
+                  </button>
+                  <button
+                    className="template-button"
+                    onClick={() => {
+                      const code = generateTemplate(
+                        selectedTemplateLanguage,
+                        idlData?.idl,
+                        idlData?.idl?.metadata?.address || currentProtocol?.id || ''
+                      );
+                      copyCode(code, selectedTemplateLanguage);
+                    }}
+                  >
+                    📋 Copy Code
+                  </button>
                 </div>
               </div>
             </div>
