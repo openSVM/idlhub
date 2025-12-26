@@ -6,7 +6,14 @@
 
 import { PublicKey } from '@solana/web3.js';
 
-export const PROGRAM_ID = new PublicKey('3AMM53MsJZy2Jvf7PeHHga3bsGjWV4TSaYz29WUtcdje');
+// Lazy initialization to avoid module-scope side effects (breaks Vite builds)
+let _PROGRAM_ID: PublicKey;
+export const PROGRAM_ID = (() => {
+  if (!_PROGRAM_ID) {
+    _PROGRAM_ID = new PublicKey('3AMM53MsJZy2Jvf7PeHHga3bsGjWV4TSaYz29WUtcdje');
+  }
+  return _PROGRAM_ID;
+})();
 
 // ============================================================================
 // DISCRIMINATORS (8-byte little-endian)

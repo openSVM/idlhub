@@ -7,9 +7,23 @@ import { PROGRAM_ID, DISCRIMINATORS, CONSTANTS } from '../amm-types';
 
 const BN = anchor.BN;
 
-// Token Mints (you'll need to update these)
-const TOKEN0_MINT = new PublicKey('So11111111111111111111111111111111111111112'); // SOL
-const TOKEN1_MINT = new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'); // USDC
+// Lazy initialization to avoid module-scope side effects (breaks Vite builds)
+let _TOKEN0_MINT: PublicKey;
+let _TOKEN1_MINT: PublicKey;
+
+const getToken0Mint = () => {
+  if (!_TOKEN0_MINT) {
+    _TOKEN0_MINT = new PublicKey('So11111111111111111111111111111111111111112'); // SOL
+  }
+  return _TOKEN0_MINT;
+};
+
+const getToken1Mint = () => {
+  if (!_TOKEN1_MINT) {
+    _TOKEN1_MINT = new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'); // USDC
+  }
+  return _TOKEN1_MINT;
+};
 
 const TOKEN_DECIMALS = 6;
 
@@ -112,7 +126,7 @@ export function usePoolState() {
 
       // Pool PDA: seeds = [mint0, mint1, "pool"]
       const [poolPDA] = PublicKey.findProgramAddressSync(
-        [TOKEN0_MINT.toBuffer(), TOKEN1_MINT.toBuffer(), Buffer.from('pool')],
+        [getToken0Mint().toBuffer(), getToken1Mint().toBuffer(), Buffer.from('pool')],
         PROGRAM_ID
       );
 
@@ -219,12 +233,12 @@ export function useAMM() {
       }
 
       const [poolPDA] = PublicKey.findProgramAddressSync(
-        [TOKEN0_MINT.toBuffer(), TOKEN1_MINT.toBuffer(), Buffer.from('pool')],
+        [getToken0Mint().toBuffer(), getToken1Mint().toBuffer(), Buffer.from('pool')],
         PROGRAM_ID
       );
 
-      const userToken0 = await getAssociatedTokenAddress(TOKEN0_MINT, publicKey);
-      const userToken1 = await getAssociatedTokenAddress(TOKEN1_MINT, publicKey);
+      const userToken0 = await getAssociatedTokenAddress(getToken0Mint(), publicKey);
+      const userToken1 = await getAssociatedTokenAddress(getToken1Mint(), publicKey);
 
       const instruction = new TransactionInstruction({
         programId: PROGRAM_ID,
