@@ -1,55 +1,30 @@
 /**
- * Syntax highlighting utility using Prism.js
+ * Syntax highlighting utility - DISABLED for now
+ * Prism.js causes module initialization errors in production
+ * TODO: Implement server-side highlighting or simpler solution
  */
-import Prism from 'prismjs';
 
-// Import only core languages to avoid build issues
-// These are built into Prism.js core
-import 'prismjs/components/prism-javascript';
-import 'prismjs/components/prism-typescript';
-import 'prismjs/components/prism-clike';
-
-// Language mapping for code snippets
+// Language mapping for code snippets (for future use)
 const LANGUAGE_MAP: Record<string, string> = {
   'TypeScript': 'typescript',
-  'Rust': 'clike', // Use C-like for Rust (similar syntax)
-  'C': 'clike',
-  'Kotlin': 'clike', // Use C-like for Kotlin
-  'Crystal': 'clike', // Use C-like for Crystal
-  'Zig': 'clike', // Use C-like for Zig
-  'Python': 'javascript', // Use JavaScript for Python (better than nothing)
+  'Rust': 'rust',
+  'C': 'c',
+  'Kotlin': 'kotlin',
+  'Crystal': 'crystal',
+  'Zig': 'zig',
+  'Python': 'python',
   'Next.js': 'typescript',
   'React Native': 'typescript',
 };
 
 /**
- * Highlight code with Prism.js
- * Safe version with fallback to plain text
+ * Highlight code - TEMPORARILY DISABLED
+ * Returns escaped HTML without highlighting
  */
 export function highlightCode(code: string, language: string): string {
-  try {
-    // Check if Prism is available
-    if (!Prism || !Prism.languages) {
-      return escapeHtml(code);
-    }
-
-    const prismLang = LANGUAGE_MAP[language] || 'typescript';
-    const grammar = Prism.languages[prismLang];
-
-    if (!grammar) {
-      // Fallback to JavaScript grammar if available
-      const fallbackGrammar = Prism.languages.javascript || Prism.languages.markup;
-      if (fallbackGrammar) {
-        return Prism.highlight(code, fallbackGrammar, 'javascript');
-      }
-      return escapeHtml(code);
-    }
-
-    return Prism.highlight(code, grammar, prismLang);
-  } catch (error) {
-    console.error('Syntax highlighting error:', error);
-    return escapeHtml(code);
-  }
+  // Syntax highlighting disabled due to Prism.js module initialization issues
+  // Just return escaped HTML for now
+  return escapeHtml(code);
 }
 
 /**
