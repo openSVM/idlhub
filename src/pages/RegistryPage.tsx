@@ -25,7 +25,6 @@ import {
   TEMPLATE_LANGUAGES,
   type TemplateLanguage,
 } from '../utils/integrationTemplates';
-import { highlightCode } from '../utils/syntaxHighlight.tsx';
 
 interface Protocol {
   id: string;
@@ -1605,15 +1604,9 @@ SolInstruction create_${instruction.name}_instruction(
                     </div>
                     {expandedLanguages.has('typescript') && (
                       <pre className="code-snippet-content">
-                        <code
-                          className="language-typescript"
-                          dangerouslySetInnerHTML={{
-                            __html: highlightCode(
-                              generateTypeScriptSnippet(selectedInstruction, currentProtocol?.id || ''),
-                              'TypeScript'
-                            )
-                          }}
-                        />
+                        <code className="language-typescript">
+                          {generateTypeScriptSnippet(selectedInstruction, currentProtocol?.id || '')}
+                        </code>
                       </pre>
                     )}
                   </div>
@@ -1647,15 +1640,9 @@ SolInstruction create_${instruction.name}_instruction(
                     </div>
                     {expandedLanguages.has('rust') && (
                       <pre className="code-snippet-content">
-                        <code
-                          className="language-clike"
-                          dangerouslySetInnerHTML={{
-                            __html: highlightCode(
-                              generateRustSnippet(selectedInstruction, currentProtocol?.id || ''),
-                              'Rust'
-                            )
-                          }}
-                        />
+                        <code className="language-rust">
+                          {generateRustSnippet(selectedInstruction, currentProtocol?.id || '')}
+                        </code>
                       </pre>
                     )}
                   </div>

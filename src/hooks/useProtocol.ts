@@ -2,7 +2,14 @@ import { useState, useEffect, useCallback } from 'react';
 import { Connection, PublicKey } from '@solana/web3.js';
 import { useWallet } from '../context/WalletContext';
 
-const PROGRAM_ID = new PublicKey('BSn7neicVV2kEzgaZmd6tZEBm4tdgzBRyELov65Lq7dt');
+// Lazy initialization to avoid module-scope instantiation (breaks Vite code splitting)
+let _PROGRAM_ID: PublicKey;
+const getProgramId = () => {
+  if (!_PROGRAM_ID) {
+    _PROGRAM_ID = new PublicKey('BSn7neicVV2kEzgaZmd6tZEBm4tdgzBRyELov65Lq7dt');
+  }
+  return _PROGRAM_ID;
+};
 
 export interface ProtocolStats {
   totalStaked: bigint;
@@ -57,7 +64,7 @@ export function useProtocolStats() {
       try {
         const [statePDA] = PublicKey.findProgramAddressSync(
           [Buffer.from('state')],
-          PROGRAM_ID
+          getProgramId()
         );
         const account = await connection.getAccountInfo(statePDA);
         if (account) {
@@ -98,7 +105,7 @@ export function useBattles() {
       setLoading(true);
       // Fetch all battle accounts from chain
       // Battle account size: 8 (discriminator) + 32*3 (keys) + 8 (amount) + 1 (side) + 1 (status) + 33 (option winner) + 8 (created) + 9 (option accepted) + 1 (bump) = ~150
-      const accounts = await connection.getProgramAccounts(PROGRAM_ID, {
+      const accounts = await connection.getProgramAccounts(getProgramId(), {
         filters: [
           { dataSize: 150 } // Approximate battle account size
         ]
@@ -160,7 +167,7 @@ export function useGuilds() {
     try {
       setLoading(true);
       // Guild accounts have variable size due to name string
-      const accounts = await connection.getProgramAccounts(PROGRAM_ID);
+      const accounts = await connection.getProgramAccounts(getProgramId());
 
       const parsed: Guild[] = [];
       for (const { pubkey, account } of accounts) {
@@ -216,7 +223,7 @@ export function useMarkets() {
   const refresh = useCallback(async () => {
     try {
       setLoading(true);
-      const accounts = await connection.getProgramAccounts(PROGRAM_ID);
+      const accounts = await connection.getProgramAccounts(getProgramId());
 
       const parsed: Market[] = [];
       for (const { pubkey, account } of accounts) {
