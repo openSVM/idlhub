@@ -6,10 +6,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="IDLHub - Decentralized prediction market for Solana DeFi metrics built on a comprehensive IDL registry" />
     <meta name="keywords" content="Solana, IDL, DeFi, Prediction Markets, veIDL, Blockchain" />
+    <meta name="theme-color" content="#00ff9d" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="apple-touch-icon" href="/logo-idl.jpg" />
     <title>IDL Protocol - Stake, Predict, Earn</title>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <script>
+      // Register service worker for PWA offline support
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then(reg => console.log('[PWA] Service worker registered:', reg.scope))
+            .catch(err => console.error('[PWA] Service worker registration failed:', err));
+        });
+      }
+    </script>
   </body>
 </html>

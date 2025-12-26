@@ -1,0 +1,42 @@
+{
+  "name": "IDLHub - Solana IDL Registry",
+  "short_name": "IDLHub",
+  "description": "Comprehensive registry of Solana program IDLs with SDK generation, analytics, and developer tools",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0d1117",
+  "theme_color": "#00ff9d",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/logo-idl.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo-idl.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["development", "developer tools", "productivity"],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Registry",
+      "short_name": "Registry",
+      "description": "Browse Solana protocol IDLs",
+      "url": "/",
+      "icons": []
+    },
+    {
+      "name": "Swap",
+      "short_name": "Swap",
+      "description": "Swap tokens on StableSwap AMM",
+      "url": "/swap",
+      "icons": []
+    }
+  ]
+}

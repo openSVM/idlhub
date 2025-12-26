@@ -1,0 +1,138 @@
+/* Prism.js Terminal-style Dark Theme for IDLHub */
+
+code[class*="language-"],
+pre[class*="language-"] {
+  color: var(--text-primary);
+  background: none;
+  font-family: 'Courier New', Consolas, Monaco, monospace;
+  font-size: 11px;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  word-wrap: normal;
+  line-height: 1.6;
+  tab-size: 4;
+  hyphens: none;
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+  padding: 12px;
+  margin: 0;
+  overflow: auto;
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+  padding: 2px 4px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-primary);
+}
+
+/* Token colors - Terminal aesthetic */
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  color: #6a737d; /* Gray for comments */
+}
+
+.token.punctuation {
+  color: var(--text-secondary);
+}
+
+.token.namespace {
+  opacity: 0.7;
+}
+
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol,
+.token.deleted {
+  color: #79c0ff; /* Light blue */
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+  color: #a5d6ff; /* Cyan */
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+  color: #ff7b72; /* Red/Pink */
+}
+
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+  color: #ffa657; /* Orange */
+}
+
+.token.function,
+.token.class-name {
+  color: #d2a8ff; /* Purple */
+}
+
+.token.regex,
+.token.important,
+.token.variable {
+  color: #ffa657; /* Orange */
+}
+
+.token.important,
+.token.bold {
+  font-weight: bold;
+}
+
+.token.italic {
+  font-style: italic;
+}
+
+.token.entity {
+  cursor: help;
+}
+
+/* Line highlighting */
+.line-highlight {
+  background: rgba(255, 255, 255, 0.05);
+  border-left: 3px solid var(--accent-primary);
+}
+
+/* Line numbers */
+.line-numbers .line-numbers-rows {
+  border-right: 1px solid var(--border-primary);
+}
+
+.line-numbers-rows > span:before {
+  color: var(--text-secondary);
+}
+
+/* Toolbar */
+div.code-toolbar > .toolbar {
+  opacity: 1;
+}
+
+div.code-toolbar > .toolbar > .toolbar-item > button {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  color: var(--text-primary);
+  padding: 4px 8px;
+  font-size: 10px;
+  cursor: pointer;
+}
+
+div.code-toolbar > .toolbar > .toolbar-item > button:hover {
+  background: var(--bg-tertiary);
+  border-color: var(--accent-primary);
+}
