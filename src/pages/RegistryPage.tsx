@@ -1646,7 +1646,17 @@ SolInstruction create_${instruction.name}_instruction(
                       </button>
                     </div>
                     {expandedLanguages.has('rust') && (
-                      <pre className="code-snippet-content"><code>{generateRustSnippet(selectedInstruction, currentProtocol?.id || '')}</code></pre>
+                      <pre className="code-snippet-content">
+                        <code
+                          className="language-clike"
+                          dangerouslySetInnerHTML={{
+                            __html: highlightCode(
+                              generateRustSnippet(selectedInstruction, currentProtocol?.id || ''),
+                              'Rust'
+                            )
+                          }}
+                        />
+                      </pre>
                     )}
                   </div>
 

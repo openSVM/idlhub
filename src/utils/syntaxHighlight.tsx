@@ -24,17 +24,27 @@ const LANGUAGE_MAP: Record<string, string> = {
 
 /**
  * Highlight code with Prism.js
+ * Safe version with fallback to plain text
  */
 export function highlightCode(code: string, language: string): string {
-  const prismLang = LANGUAGE_MAP[language] || 'typescript';
-  const grammar = Prism.languages[prismLang];
-
-  if (!grammar) {
-    console.warn(`Grammar not found for language: ${prismLang}, using plain text`);
-    return escapeHtml(code);
-  }
-
   try {
+    // Check if Prism is available
+    if (!Prism || !Prism.languages) {
+      return escapeHtml(code);
+    }
+
+    const prismLang = LANGUAGE_MAP[language] || 'typescript';
+    const grammar = Prism.languages[prismLang];
+
+    if (!grammar) {
+      // Fallback to JavaScript grammar if available
+      const fallbackGrammar = Prism.languages.javascript || Prism.languages.markup;
+      if (fallbackGrammar) {
+        return Prism.highlight(code, fallbackGrammar, 'javascript');
+      }
+      return escapeHtml(code);
+    }
+
     return Prism.highlight(code, grammar, prismLang);
   } catch (error) {
     console.error('Syntax highlighting error:', error);
