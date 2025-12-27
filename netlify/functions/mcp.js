@@ -20,6 +20,53 @@ const TOOLS = [
   { name: 'get_bounty', description: 'Get bounty details for specific protocol', inputSchema: { type: 'object', properties: { protocol_id: { type: 'string' } }, required: ['protocol_id'] } },
 ];
 
+async function updateManifestOnArweave(protocol_id, name, category, repo, txId, programId) {
+  if (!IRYS_WALLET) {
+    console.log('No IRYS_WALLET - skipping manifest update');
+    return { updated: false };
+  }
+
+  try {
+    // Fetch current manifest
+    const manifestRes = await fetch('https://idlhub.com/arweave/manifest.json');
+    const manifest = await manifestRes.json();
+
+    // Add new IDL entry
+    manifest.idls[protocol_id] = {
+      txId,
+      name,
+      category: category || 'defi',
+      programId: programId || 'unknown',
+      repo: repo || null,
+      uploadedAt: new Date().toISOString()
+    };
+    manifest.lastUpdated = new Date().toISOString();
+
+    // Upload updated manifest to Arweave
+    const wallet = JSON.parse(IRYS_WALLET);
+    const irys = new Irys({ url: IRYS_NODE, token: 'solana', key: wallet, config: { providerUrl: SOLANA_RPC } });
+
+    const tags = [
+      { name: 'App-Name', value: 'IDLHub' },
+      { name: 'Content-Type', value: 'application/json' },
+      { name: 'Type', value: 'IDL-Manifest' },
+      { name: 'Version', value: manifest.version || '1.0.0' },
+    ];
+
+    const receipt = await irys.upload(JSON.stringify(manifest, null, 2), { tags });
+
+    console.log(`Manifest uploaded to Arweave: ${receipt.id}`);
+    return {
+      updated: true,
+      manifestTxId: receipt.id,
+      manifestUrl: `${IRYS_NODE}/${receipt.id}`
+    };
+  } catch (e) {
+    console.error('Arweave manifest update error:', e);
+    return { updated: false, error: e.message };
+  }
+}
+
 async function uploadToArweave(protocol_id, name, idl, category, repo) {
   if (!IRYS_WALLET) {
     throw new Error('Server not configured for uploads (IRYS_WALLET missing)');
@@ -54,9 +101,56 @@ async function uploadToArweave(protocol_id, name, idl, category, repo) {
   };
 }
 
-async function handleToolCall(name, args) {
+async function getLatestManifest() {
+  // Query Arweave/Irys for the latest manifest by tags
+  try {
+    const query = `
+      query {
+        transactions(
+          tags: [
+            { name: "App-Name", values: ["IDLHub"] },
+            { name: "Type", values: ["IDL-Manifest"] }
+          ],
+          first: 1,
+          order: DESC
+        ) {
+          edges {
+            node {
+              id
+            }
+          }
+        }
+      }
+    `;
+
+    const gqlRes = await fetch('https://devnet.irys.xyz/graphql', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query })
+    });
+
+    if (gqlRes.ok) {
+      const gqlData = await gqlRes.json();
+      const latestTxId = gqlData?.data?.transactions?.edges?.[0]?.node?.id;
+
+      if (latestTxId) {
+        const manifestRes = await fetch(`${IRYS_NODE}/${latestTxId}`);
+        if (manifestRes.ok) {
+          return await manifestRes.json();
+        }
+      }
+    }
+  } catch (e) {
+    console.error('Failed to query Arweave for latest manifest:', e);
+  }
+
+  // Fallback to static manifest
   const manifestRes = await fetch('https://idlhub.com/arweave/manifest.json');
-  const manifest = await manifestRes.json();
+  return await manifestRes.json();
+}
+
+async function handleToolCall(name, args) {
+  const manifest = await getLatestManifest();
 
   if (name === 'list_idls') {
     let idls = Object.entries(manifest.idls).map(([id, data]) => ({ 
@@ -113,6 +207,17 @@ async function handleToolCall(name, args) {
 
     const arweave = await uploadToArweave(args.protocol_id, args.name, args.idl, args.category, args.repo);
 
+    // Auto-update manifest on Arweave
+    const programId = args.idl.address || args.idl.metadata?.address || 'unknown';
+    const manifestResult = await updateManifestOnArweave(
+      args.protocol_id,
+      args.name,
+      args.category,
+      args.repo,
+      arweave.txId,
+      programId
+    );
+
     // Check for community bounty
     let communityBounty = 0;
     let bountyStakers = [];
@@ -160,13 +265,16 @@ async function handleToolCall(name, args) {
               instruction_count: instructionCount,
             }
           } : null,
+          manifest: manifestResult,
           message: isPlaceholder
             ? 'Warning: Uploaded IDL is a placeholder (0 instructions). No reward eligible.'
             : rewardEligible
               ? communityBounty > 0
                 ? `IDL uploaded successfully! ${totalReward} IDL reward pending verification (1000 base + ${communityBounty} bounty).`
                 : 'IDL uploaded successfully! 1000 IDL reward pending verification.'
-              : 'IDL uploaded to Arweave successfully. Will appear in registry after manifest update.',
+              : manifestResult.updated
+                ? `IDL uploaded and manifest updated on Arweave! New manifest: ${manifestResult.manifestUrl}`
+                : 'IDL uploaded to Arweave. Manifest update failed - will sync on next deploy.',
         }, null, 2)
       }]
     };
