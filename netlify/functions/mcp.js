@@ -12,7 +12,7 @@ const SOLANA_RPC = process.env.SOLANA_RPC || 'https://api.devnet.solana.com';
 const TOOLS = [
   { name: 'list_idls', description: 'List all available Solana IDLs from Arweave', inputSchema: { type: 'object', properties: { category: { type: 'string' }, limit: { type: 'number', default: 50 } } } },
   { name: 'search_idls', description: 'Search IDLs by name', inputSchema: { type: 'object', properties: { query: { type: 'string' } }, required: ['query'] } },
-  { name: 'get_idl', description: 'Get specific IDL', inputSchema: { type: 'object', properties: { protocol_id: { type: 'string' } }, required: ['protocol_id'] } },
+  { name: 'get_idl', description: 'Get IDL(s) by flexible query - supports protocol_id, name, program_id (full or partial), category, comma-separated program_ids, tx signature (returns IDLs for all programs in tx), or owner address', inputSchema: { type: 'object', properties: { query: { type: 'string', description: 'Protocol ID, name, program ID (full/partial), category, comma-separated program IDs, tx signature, or owner address' }, include_idl: { type: 'boolean', default: false, description: 'Include full IDL JSON in response (can be large)' } }, required: ['query'] } },
   { name: 'upload_idl', description: 'Upload IDL to Arweave (earn base 1000 IDL + community bounty)', inputSchema: { type: 'object', properties: { protocol_id: { type: 'string' }, name: { type: 'string' }, idl: { type: 'object' }, category: { type: 'string' }, repo: { type: 'string' }, uploader_wallet: { type: 'string', description: 'Solana wallet address to receive IDL reward' } }, required: ['protocol_id', 'name', 'idl'] } },
   { name: 'get_pending_rewards', description: 'Get pending verification rewards for a wallet', inputSchema: { type: 'object', properties: { wallet: { type: 'string' } }, required: ['wallet'] } },
   { name: 'add_bounty', description: 'Add IDL tokens to bounty pool for a missing IDL', inputSchema: { type: 'object', properties: { protocol_id: { type: 'string', description: 'Protocol missing IDL' }, amount: { type: 'number', description: 'IDL tokens to stake' }, staker_wallet: { type: 'string', description: 'Your wallet address' }, tx_signature: { type: 'string', description: 'Solana transaction signature proving stake' } }, required: ['protocol_id', 'amount', 'staker_wallet', 'tx_signature'] } },
@@ -174,12 +174,155 @@ async function handleToolCall(name, args) {
   }
 
   if (name === 'get_idl') {
-    const idlData = manifest.idls[args.protocol_id];
-    if (!idlData) throw new Error(`IDL not found: ${args.protocol_id}`);
-    const idlUrl = `${manifest.gateway}/${idlData.txId}`;
-    const idlRes = await fetch(idlUrl);
-    const idl = await idlRes.json();
-    return { content: [{ type: 'text', text: JSON.stringify({ protocol_id: args.protocol_id, name: idlData.name, category: idlData.category, arweaveUrl: idlUrl, repo: idlData.repo, idl }, null, 2) }] };
+    const query = (args.query || args.protocol_id || args.idlId || '').trim();
+    if (!query) throw new Error('Query is required');
+
+    const includeIdl = args.include_idl === true;
+    const allIdls = Object.entries(manifest.idls);
+    let matches = [];
+
+    // Check if it's a Solana transaction signature (base58, 87-88 chars)
+    const isTxSignature = /^[1-9A-HJ-NP-Za-km-z]{87,88}$/.test(query);
+
+    // Check if it's a Solana address/program ID (base58, 32-44 chars)
+    const isSolanaAddress = /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(query);
+
+    // Check if it's comma-separated program IDs
+    const isMultipleProgramIds = query.includes(',') && query.split(',').every(p => /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(p.trim()));
+
+    if (isTxSignature) {
+      // Fetch transaction and get program IDs from it
+      try {
+        const txRes = await fetch(SOLANA_RPC, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            jsonrpc: '2.0',
+            id: 1,
+            method: 'getTransaction',
+            params: [query, { encoding: 'jsonParsed', maxSupportedTransactionVersion: 0 }]
+          })
+        });
+        const txData = await txRes.json();
+
+        if (txData.result) {
+          // Extract all program IDs from the transaction
+          const programIds = new Set();
+          const accountKeys = txData.result.transaction?.message?.accountKeys || [];
+          const instructions = txData.result.transaction?.message?.instructions || [];
+          const innerInstructions = txData.result.meta?.innerInstructions || [];
+
+          // Get program IDs from instructions
+          instructions.forEach(ix => {
+            if (ix.programId) programIds.add(ix.programId);
+          });
+
+          // Get program IDs from inner instructions
+          innerInstructions.forEach(inner => {
+            inner.instructions?.forEach(ix => {
+              if (ix.programId) programIds.add(ix.programId);
+            });
+          });
+
+          // Find IDLs matching these program IDs
+          for (const [id, data] of allIdls) {
+            if (data.programId && programIds.has(data.programId)) {
+              matches.push({ id, ...data, matchType: 'tx_program' });
+            }
+          }
+        }
+      } catch (e) {
+        console.error('Failed to fetch transaction:', e);
+      }
+    } else if (isMultipleProgramIds) {
+      // Multiple comma-separated program IDs
+      const programIds = query.split(',').map(p => p.trim());
+      for (const [id, data] of allIdls) {
+        if (data.programId && programIds.includes(data.programId)) {
+          matches.push({ id, ...data, matchType: 'program_id' });
+        }
+      }
+    } else if (isSolanaAddress) {
+      // Could be program ID or owner address - search both
+      for (const [id, data] of allIdls) {
+        if (data.programId === query) {
+          matches.push({ id, ...data, matchType: 'program_id' });
+        }
+      }
+
+      // If no exact match, try partial program ID match
+      if (matches.length === 0) {
+        for (const [id, data] of allIdls) {
+          if (data.programId && data.programId.includes(query)) {
+            matches.push({ id, ...data, matchType: 'partial_program_id' });
+          }
+        }
+      }
+    } else {
+      // Text search: protocol_id, name, category, partial program ID
+      const q = query.toLowerCase();
+
+      // Exact protocol_id match first
+      if (manifest.idls[query]) {
+        matches.push({ id: query, ...manifest.idls[query], matchType: 'protocol_id' });
+      } else {
+        // Search by name, category, protocol_id substring, program_id substring
+        for (const [id, data] of allIdls) {
+          if (id.toLowerCase() === q) {
+            matches.push({ id, ...data, matchType: 'protocol_id' });
+          } else if (id.toLowerCase().includes(q)) {
+            matches.push({ id, ...data, matchType: 'partial_protocol_id' });
+          } else if (data.name && data.name.toLowerCase().includes(q)) {
+            matches.push({ id, ...data, matchType: 'name' });
+          } else if (data.category && data.category.toLowerCase() === q) {
+            matches.push({ id, ...data, matchType: 'category' });
+          } else if (data.programId && data.programId.toLowerCase().includes(q)) {
+            matches.push({ id, ...data, matchType: 'partial_program_id' });
+          }
+        }
+      }
+    }
+
+    if (matches.length === 0) {
+      throw new Error(`No IDLs found for query: ${query}`);
+    }
+
+    // Fetch full IDL content if requested and only a few results
+    const results = [];
+    for (const match of matches.slice(0, includeIdl ? 10 : 50)) {
+      const result = {
+        protocol_id: match.id,
+        name: match.name || match.id,
+        category: match.category,
+        programId: match.programId,
+        arweaveUrl: `${manifest.gateway}/${match.txId}`,
+        repo: match.repo,
+        matchType: match.matchType
+      };
+
+      if (includeIdl) {
+        try {
+          const idlRes = await fetch(`${manifest.gateway}/${match.txId}`);
+          result.idl = await idlRes.json();
+        } catch (e) {
+          result.idl_error = 'Failed to fetch IDL';
+        }
+      }
+
+      results.push(result);
+    }
+
+    return {
+      content: [{
+        type: 'text',
+        text: JSON.stringify({
+          query,
+          total: matches.length,
+          returned: results.length,
+          results: results.length === 1 ? results[0] : results
+        }, null, 2)
+      }]
+    };
   }
 
   if (name === 'upload_idl') {

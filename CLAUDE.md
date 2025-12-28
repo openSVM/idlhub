@@ -117,6 +117,26 @@ npm run arweave:list       # List uploaded IDLs
 npm run arweave:search     # Search IDLs
 ```
 
+### IDL Transaction Verification
+
+Verifies IDLs by attempting to decode real on-chain transactions using Anchor's BorshCoder:
+
+```bash
+# Verify sample protocols (drift, orca, marginfi, etc.)
+npm run verify:tx
+
+# Verify specific protocols
+npm run verify:tx -- protocol1 protocol2
+
+# Verify ALL protocols in manifest
+npm run verify:tx -- --all
+
+# Verbose output (shows decoded instructions)
+npm run verify:tx -- -v
+```
+
+Results saved to `data/tx-verification-results.json` and displayed on Registry page.
+
 ### Protocol Scripts
 
 ```bash
@@ -207,6 +227,12 @@ npm run bot:all            # Run all bots in parallel
 - **arweave/** - Arweave/Irys integration
   - Upload scripts, manifest, cache
 
+- **data/** - Verification and runtime data
+  - `verification-results.json` - Program existence verification results
+  - `verification-history.json` - Historical verification runs
+  - `tx-verification-results.json` - Transaction-based IDL verification
+  - `idl-bounties.json` - Community bounty data
+
 - **IDLs/** - IDL JSON files (100+ Solana protocols)
 
 - **scripts/** - Protocol initialization and testing
@@ -263,6 +289,36 @@ The protocol's key innovation is a **pure RPC oracle** that calculates DeFi metr
 
 See whitepaper `latex/idl-protocol.pdf` Section 11 for mathematical formulations and algorithms.
 
+### IDL Verification System
+
+Two-tier verification runs hourly via `api/services/verification-scheduler.js`:
+
+**1. Program Verification** (`api/services/idl-verifier.js`):
+- Checks if program exists on-chain via RPC
+- Validates program is executable
+- Uses custom RPC proxy: `solana-rpc-proxy.0xrinegade.workers.dev`
+
+**2. Transaction Verification** (`api/services/idl-tx-verifier.cjs`):
+- Fetches real transactions for each program
+- Attempts to decode instruction data using Anchor's BorshCoder
+- Parses both top-level AND CPI (inner) instructions
+- Reports success rate and instruction coverage
+
+**Verification Statuses:**
+- `verified` - 90%+ decode success (IDL works)
+- `partial` - 50-90% success
+- `outdated` - <50% success (IDL may be old version)
+- `invalid` - 0% success (wrong IDL)
+- `no_program_id` - IDL missing program address
+- `no_transactions` - Program has no recent activity
+- `no_program_instructions` - Transactions exist but none match
+- `coder_error` - IDL has broken type definitions
+
+**API Endpoints:**
+- `GET /api/status` - Overall verification summary
+- `GET /api/status/tx-verification` - Full TX verification results
+- `GET /api/status/tx-verification/:protocolId` - Live verify specific protocol
+
 ### Security Features (programs/idl-protocol/src/lib.rs)
 
 - **Commit-Reveal**: 5min commit window, 1hr reveal window prevents front-running
@@ -291,6 +347,31 @@ See whitepaper `latex/idl-protocol.pdf` Section 11 for mathematical formulations
 ## Common Workflows
 
 ### Add New IDL to Registry
+
+**Via MCP API (recommended):**
+```bash
+curl -X POST https://idlhub.com/api/mcp \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "jsonrpc": "2.0",
+    "method": "tools/call",
+    "params": {
+      "name": "upload_idl",
+      "arguments": {
+        "protocol_id": "my-protocol",
+        "name": "My Protocol",
+        "idl": { ... },
+        "category": "defi"
+      }
+    },
+    "id": 1
+  }'
+```
+- Auto-uploads to Arweave
+- Auto-updates manifest on Arweave (queries latest via GraphQL)
+- No manual file editing required
+
+**Via Local Upload:**
 1. Add JSON to `IDLs/` directory (e.g., `protocolIDL.json`)
 2. Update `index.json` metadata (id, name, description, category)
 3. Preview: `npm run arweave:upload:dry`
@@ -375,16 +456,30 @@ Solana Web3.js requires `Buffer` global in browser:
 
 ### Registry Page Architecture
 
-- `src/pages/RegistryPage.tsx` redirects to `/registry.html` (static HTML from git history)
-- Original registry has complex JavaScript for protocol list, IDL viewer, search/filters
-- Live site (idlhub.com) uses this design successfully
-- Local dev: API server (port 3000) must be running for registry.html to load data
+`src/pages/RegistryPage.tsx` - Full React implementation with table layout:
 
-**Registry Data Loading:**
-- Old registry.html expects: `GET /api/idl` and `GET /api/status/protocols`
-- React RegistryPage (if used) fetches: `GET /index.json` from `public/`
-- Vite copies `public/` contents to `dist/` during build
-- **CRITICAL**: `public/index.json` must exist for React registry to work
+**Table Columns:**
+- Checkbox (bulk selection)
+- Protocol name (with bookmark, bounty indicators)
+- Category
+- IDL Status (available/placeholder)
+- TX Verify (verification status badge)
+- Rate (decode success %)
+- Coverage (instruction coverage %)
+- Actions (download, view)
+
+**Data Loading:**
+- Fetches `/arweave/manifest.json` for IDL list and Arweave txIds
+- Fetches `/api/status/tx-verification` for verification status
+- Merges data to display verification badges per protocol
+- IDLs loaded from Arweave gateway: `https://devnet.irys.xyz/{txId}`
+
+**Features:**
+- Search/filter by name, category
+- Bulk select and download as ZIP
+- Bookmark protocols (persisted to localStorage)
+- Click row to expand IDL details panel
+- Code generation for 6 languages (TypeScript, Rust, C, Kotlin, Crystal, Zig)
 
 ### Swap Page (AMM)
 
@@ -568,13 +663,25 @@ All interactive elements must have:
 
 ### Security Status
 
-**Production**: ✅ 0 vulnerabilities
-**Development**: ⚠️ 5 non-critical vulnerabilities (bigint-buffer, esbuild - dev tools only)
+**Production & Development**: ✅ 0 vulnerabilities
+
+The codebase uses `lib/spl-token-utils.js` - a pure JavaScript implementation of SPL Token functions that replaces `@solana/spl-token`, eliminating the bigint-buffer vulnerability (CVE-2025-3194).
 
 Command to verify:
 ```bash
-npm audit --omit=dev  # Should show 0 vulnerabilities
+npm audit  # Should show 0 vulnerabilities
 ```
+
+### SPL Token Utilities (`lib/spl-token-utils.js`)
+
+Pure JS replacement for `@solana/spl-token` to eliminate CVE-2025-3194:
+- `TOKEN_PROGRAM_ID`, `ASSOCIATED_TOKEN_PROGRAM_ID` constants
+- `getAssociatedTokenAddress()`, `getAssociatedTokenAddressSync()`
+- `createAssociatedTokenAccountInstruction()`
+- `createMint()`, `createAccount()`, `mintTo()`, `getAccount()`
+- `unpackMint()`, `unpackAccount()` for parsing account data
+
+**Usage**: Import from `../lib/spl-token-utils.js` instead of `@solana/spl-token`
 
 ### Module System
 
