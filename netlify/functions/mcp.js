@@ -388,29 +388,41 @@ async function handleToolCall(name, args) {
 
       // Deep search inside IDL content if enabled and not enough matches
       if (deepSearch && matches.length < 20) {
-        const idlCache = new Map();
+        const matchedIds = new Set(matches.map(m => m.id));
+        const toSearch = allIdls.filter(([id]) => !matchedIds.has(id)).slice(0, 100);
 
-        for (const [id, data] of allIdls) {
-          // Skip if already matched
-          if (matches.some(m => m.id === id)) continue;
+        // Parallel fetch and search with concurrency limit
+        const BATCH_SIZE = 20;
+        const batches = [];
+        for (let i = 0; i < toSearch.length; i += BATCH_SIZE) {
+          batches.push(toSearch.slice(i, i + BATCH_SIZE));
+        }
 
-          try {
-            // Fetch IDL content
-            const idlRes = await fetch(`${manifest.gateway}/${data.txId}`);
-            const idl = await idlRes.json();
-            idlCache.set(id, idl);
+        const contentMatches = [];
+        for (const batch of batches) {
+          const batchResults = await Promise.allSettled(
+            batch.map(async ([id, data]) => {
+              const idlRes = await fetch(`${manifest.gateway}/${data.txId}`);
+              const idl = await idlRes.json();
+              const matchedIn = searchIdlContent(idl, q);
+              if (matchedIn.length > 0) {
+                return { id, ...data, matchType: 'content', matchedIn };
+              }
+              return null;
+            })
+          );
 
-            const matchedIn = searchIdlContent(idl, q);
-            if (matchedIn.length > 0) {
-              matches.push({ id, ...data, matchType: 'content', matchedIn });
+          for (const result of batchResults) {
+            if (result.status === 'fulfilled' && result.value) {
+              contentMatches.push(result.value);
             }
-          } catch (e) {
-            // Skip on error
           }
 
-          // Limit deep search to first 50 IDLs for performance
-          if (idlCache.size >= 50) break;
+          // Stop early if we have enough matches
+          if (contentMatches.length >= 30) break;
         }
+
+        matches.push(...contentMatches);
       }
     }
 
