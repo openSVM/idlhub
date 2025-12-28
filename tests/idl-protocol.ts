@@ -12,7 +12,7 @@ import {
   createAccount,
   mintTo,
   getAccount
-} from "@solana/spl-token";
+} from "../lib/spl-token-utils.js";
 import { assert } from "chai";
 import { createHash } from "crypto";
 
