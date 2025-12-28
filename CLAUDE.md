@@ -34,6 +34,40 @@ IDLHub is a **decentralized prediction market for Solana DeFi metrics** built on
 - Community governance via veIDL
 - On-chain oracle using only pure Solana RPC (no third-party APIs)
 
+## CRITICAL: Never Truncate Blockchain Identifiers
+
+**NEVER truncate, shorten, abbreviate, or use ellipsis (...) on ANY of the following identifiers when displaying them:**
+
+- Solana addresses (public keys)
+- Transaction signatures/IDs
+- Block hashes
+- Account addresses
+- Program IDs
+- Arweave transaction IDs
+- Any base58-encoded identifiers
+- Any cryptographic hashes (SHA256, etc.)
+
+**Why:** Truncated identifiers are useless for copy-paste, verification, or debugging. Users need the FULL identifier to interact with blockchain explorers, wallets, or programmatic tools.
+
+**Examples:**
+```
+WRONG: BSn7nei...65Lq7dt
+WRONG: 8aR1Auj...MGyv7N
+WRONG: So111...1111
+
+CORRECT: BSn7neicVV2kEzgaZmd6tZEBm4tdgzBRyELov65Lq7dt
+CORRECT: 8aR1AujJy5otN3W9AAvu1Aqo85kHLY2dVoNXh3MGyv7N
+CORRECT: So11111111111111111111111111111111111111112
+```
+
+**This applies to:**
+- Code output and logs
+- API responses
+- UI displays
+- Documentation
+- Error messages
+- Any context where identifiers are shown
+
 ## Common Commands
 
 ### Development
