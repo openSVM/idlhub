@@ -12,7 +12,7 @@ const SOLANA_RPC = process.env.SOLANA_RPC || 'https://api.devnet.solana.com';
 const TOOLS = [
   { name: 'list_idls', description: 'List all available Solana IDLs from Arweave', inputSchema: { type: 'object', properties: { category: { type: 'string' }, limit: { type: 'number', default: 50 } } } },
   { name: 'search_idls', description: 'Search IDLs by name', inputSchema: { type: 'object', properties: { query: { type: 'string' } }, required: ['query'] } },
-  { name: 'get_idl', description: 'Get IDL(s) by flexible query - supports protocol_id, name, program_id (full or partial), category, comma-separated program_ids, tx signature (returns IDLs for all programs in tx), or owner address', inputSchema: { type: 'object', properties: { query: { type: 'string', description: 'Protocol ID, name, program ID (full/partial), category, comma-separated program IDs, tx signature, or owner address' }, include_idl: { type: 'boolean', default: false, description: 'Include full IDL JSON in response (can be large)' } }, required: ['query'] } },
+  { name: 'get_idl', description: 'Get IDL(s) by flexible query - searches protocol_id, name, program_id, category, AND inside IDL content (instructions, accounts, types, events, errors). Supports comma-separated program_ids, tx signature (returns IDLs for all programs in tx)', inputSchema: { type: 'object', properties: { query: { type: 'string', description: 'Search term - matches protocol ID, name, program ID, category, instruction names, account names, type names, event names, error names/messages' }, include_idl: { type: 'boolean', default: false, description: 'Include full IDL JSON in response (can be large)' }, deep_search: { type: 'boolean', default: true, description: 'Search inside IDL content (instructions, accounts, types)' } }, required: ['query'] } },
   { name: 'upload_idl', description: 'Upload IDL to Arweave (earn base 1000 IDL + community bounty)', inputSchema: { type: 'object', properties: { protocol_id: { type: 'string' }, name: { type: 'string' }, idl: { type: 'object' }, category: { type: 'string' }, repo: { type: 'string' }, uploader_wallet: { type: 'string', description: 'Solana wallet address to receive IDL reward' } }, required: ['protocol_id', 'name', 'idl'] } },
   { name: 'get_pending_rewards', description: 'Get pending verification rewards for a wallet', inputSchema: { type: 'object', properties: { wallet: { type: 'string' } }, required: ['wallet'] } },
   { name: 'add_bounty', description: 'Add IDL tokens to bounty pool for a missing IDL', inputSchema: { type: 'object', properties: { protocol_id: { type: 'string', description: 'Protocol missing IDL' }, amount: { type: 'number', description: 'IDL tokens to stake' }, staker_wallet: { type: 'string', description: 'Your wallet address' }, tx_signature: { type: 'string', description: 'Solana transaction signature proving stake' } }, required: ['protocol_id', 'amount', 'staker_wallet', 'tx_signature'] } },
@@ -178,6 +178,7 @@ async function handleToolCall(name, args) {
     if (!query) throw new Error('Query is required');
 
     const includeIdl = args.include_idl === true;
+    const deepSearch = args.deep_search !== false; // default true
     const allIdls = Object.entries(manifest.idls);
     let matches = [];
 
@@ -189,6 +190,107 @@ async function handleToolCall(name, args) {
 
     // Check if it's comma-separated program IDs
     const isMultipleProgramIds = query.includes(',') && query.split(',').every(p => /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(p.trim()));
+
+    // Helper to search inside IDL content
+    const searchIdlContent = (idl, q) => {
+      const matchedIn = [];
+      const ql = q.toLowerCase();
+
+      // Search instructions
+      if (idl.instructions) {
+        for (const ix of idl.instructions) {
+          if (ix.name?.toLowerCase().includes(ql)) {
+            matchedIn.push({ type: 'instruction', name: ix.name });
+          }
+          // Search instruction args
+          if (ix.args) {
+            for (const arg of ix.args) {
+              if (arg.name?.toLowerCase().includes(ql)) {
+                matchedIn.push({ type: 'instruction_arg', instruction: ix.name, name: arg.name });
+              }
+            }
+          }
+          // Search instruction accounts
+          if (ix.accounts) {
+            for (const acc of ix.accounts) {
+              if (acc.name?.toLowerCase().includes(ql)) {
+                matchedIn.push({ type: 'instruction_account', instruction: ix.name, name: acc.name });
+              }
+            }
+          }
+        }
+      }
+
+      // Search accounts
+      if (idl.accounts) {
+        for (const acc of idl.accounts) {
+          if (acc.name?.toLowerCase().includes(ql)) {
+            matchedIn.push({ type: 'account', name: acc.name });
+          }
+          // Search account fields
+          if (acc.type?.fields) {
+            for (const field of acc.type.fields) {
+              if (field.name?.toLowerCase().includes(ql)) {
+                matchedIn.push({ type: 'account_field', account: acc.name, name: field.name });
+              }
+            }
+          }
+        }
+      }
+
+      // Search types
+      if (idl.types) {
+        for (const t of idl.types) {
+          if (t.name?.toLowerCase().includes(ql)) {
+            matchedIn.push({ type: 'type', name: t.name });
+          }
+          // Search type fields/variants
+          if (t.type?.fields) {
+            for (const field of t.type.fields) {
+              if (field.name?.toLowerCase().includes(ql)) {
+                matchedIn.push({ type: 'type_field', typeName: t.name, name: field.name });
+              }
+            }
+          }
+          if (t.type?.variants) {
+            for (const v of t.type.variants) {
+              if (v.name?.toLowerCase().includes(ql)) {
+                matchedIn.push({ type: 'type_variant', typeName: t.name, name: v.name });
+              }
+            }
+          }
+        }
+      }
+
+      // Search events
+      if (idl.events) {
+        for (const ev of idl.events) {
+          if (ev.name?.toLowerCase().includes(ql)) {
+            matchedIn.push({ type: 'event', name: ev.name });
+          }
+        }
+      }
+
+      // Search errors
+      if (idl.errors) {
+        for (const err of idl.errors) {
+          if (err.name?.toLowerCase().includes(ql) || err.msg?.toLowerCase().includes(ql)) {
+            matchedIn.push({ type: 'error', name: err.name, code: err.code });
+          }
+        }
+      }
+
+      // Search constants
+      if (idl.constants) {
+        for (const c of idl.constants) {
+          if (c.name?.toLowerCase().includes(ql)) {
+            matchedIn.push({ type: 'constant', name: c.name });
+          }
+        }
+      }
+
+      return matchedIn;
+    };
 
     if (isTxSignature) {
       // Fetch transaction and get program IDs from it
@@ -208,7 +310,6 @@ async function handleToolCall(name, args) {
         if (txData.result) {
           // Extract all program IDs from the transaction
           const programIds = new Set();
-          const accountKeys = txData.result.transaction?.message?.accountKeys || [];
           const instructions = txData.result.transaction?.message?.instructions || [];
           const innerInstructions = txData.result.meta?.innerInstructions || [];
 
@@ -227,7 +328,7 @@ async function handleToolCall(name, args) {
           // Find IDLs matching these program IDs
           for (const [id, data] of allIdls) {
             if (data.programId && programIds.has(data.programId)) {
-              matches.push({ id, ...data, matchType: 'tx_program' });
+              matches.push({ id, ...data, matchType: 'tx_program', matchedIn: [] });
             }
           }
         }
@@ -239,14 +340,14 @@ async function handleToolCall(name, args) {
       const programIds = query.split(',').map(p => p.trim());
       for (const [id, data] of allIdls) {
         if (data.programId && programIds.includes(data.programId)) {
-          matches.push({ id, ...data, matchType: 'program_id' });
+          matches.push({ id, ...data, matchType: 'program_id', matchedIn: [] });
         }
       }
     } else if (isSolanaAddress) {
-      // Could be program ID or owner address - search both
+      // Could be program ID - search exact and partial
       for (const [id, data] of allIdls) {
         if (data.programId === query) {
-          matches.push({ id, ...data, matchType: 'program_id' });
+          matches.push({ id, ...data, matchType: 'program_id', matchedIn: [] });
         }
       }
 
@@ -254,31 +355,61 @@ async function handleToolCall(name, args) {
       if (matches.length === 0) {
         for (const [id, data] of allIdls) {
           if (data.programId && data.programId.includes(query)) {
-            matches.push({ id, ...data, matchType: 'partial_program_id' });
+            matches.push({ id, ...data, matchType: 'partial_program_id', matchedIn: [] });
           }
         }
       }
     } else {
-      // Text search: protocol_id, name, category, partial program ID
+      // Text search: protocol_id, name, category, AND inside IDL content
       const q = query.toLowerCase();
 
       // Exact protocol_id match first
       if (manifest.idls[query]) {
-        matches.push({ id: query, ...manifest.idls[query], matchType: 'protocol_id' });
-      } else {
-        // Search by name, category, protocol_id substring, program_id substring
+        matches.push({ id: query, ...manifest.idls[query], matchType: 'protocol_id', matchedIn: [] });
+      }
+
+      // Search by name, category, protocol_id substring, program_id substring
+      for (const [id, data] of allIdls) {
+        // Skip if already matched
+        if (matches.some(m => m.id === id)) continue;
+
+        if (id.toLowerCase() === q) {
+          matches.push({ id, ...data, matchType: 'protocol_id', matchedIn: [] });
+        } else if (id.toLowerCase().includes(q)) {
+          matches.push({ id, ...data, matchType: 'partial_protocol_id', matchedIn: [] });
+        } else if (data.name && data.name.toLowerCase().includes(q)) {
+          matches.push({ id, ...data, matchType: 'name', matchedIn: [] });
+        } else if (data.category && data.category.toLowerCase() === q) {
+          matches.push({ id, ...data, matchType: 'category', matchedIn: [] });
+        } else if (data.programId && data.programId.toLowerCase().includes(q)) {
+          matches.push({ id, ...data, matchType: 'partial_program_id', matchedIn: [] });
+        }
+      }
+
+      // Deep search inside IDL content if enabled and not enough matches
+      if (deepSearch && matches.length < 20) {
+        const idlCache = new Map();
+
         for (const [id, data] of allIdls) {
-          if (id.toLowerCase() === q) {
-            matches.push({ id, ...data, matchType: 'protocol_id' });
-          } else if (id.toLowerCase().includes(q)) {
-            matches.push({ id, ...data, matchType: 'partial_protocol_id' });
-          } else if (data.name && data.name.toLowerCase().includes(q)) {
-            matches.push({ id, ...data, matchType: 'name' });
-          } else if (data.category && data.category.toLowerCase() === q) {
-            matches.push({ id, ...data, matchType: 'category' });
-          } else if (data.programId && data.programId.toLowerCase().includes(q)) {
-            matches.push({ id, ...data, matchType: 'partial_program_id' });
+          // Skip if already matched
+          if (matches.some(m => m.id === id)) continue;
+
+          try {
+            // Fetch IDL content
+            const idlRes = await fetch(`${manifest.gateway}/${data.txId}`);
+            const idl = await idlRes.json();
+            idlCache.set(id, idl);
+
+            const matchedIn = searchIdlContent(idl, q);
+            if (matchedIn.length > 0) {
+              matches.push({ id, ...data, matchType: 'content', matchedIn });
+            }
+          } catch (e) {
+            // Skip on error
           }
+
+          // Limit deep search to first 50 IDLs for performance
+          if (idlCache.size >= 50) break;
         }
       }
     }
@@ -287,7 +418,16 @@ async function handleToolCall(name, args) {
       throw new Error(`No IDLs found for query: ${query}`);
     }
 
-    // Fetch full IDL content if requested and only a few results
+    // Sort: exact matches first, then by number of content matches
+    matches.sort((a, b) => {
+      const priority = { 'protocol_id': 0, 'program_id': 1, 'name': 2, 'partial_protocol_id': 3, 'partial_program_id': 4, 'category': 5, 'content': 6, 'tx_program': 7 };
+      const pA = priority[a.matchType] ?? 99;
+      const pB = priority[b.matchType] ?? 99;
+      if (pA !== pB) return pA - pB;
+      return (b.matchedIn?.length || 0) - (a.matchedIn?.length || 0);
+    });
+
+    // Fetch full IDL content if requested
     const results = [];
     for (const match of matches.slice(0, includeIdl ? 10 : 50)) {
       const result = {
@@ -297,7 +437,8 @@ async function handleToolCall(name, args) {
         programId: match.programId,
         arweaveUrl: `${manifest.gateway}/${match.txId}`,
         repo: match.repo,
-        matchType: match.matchType
+        matchType: match.matchType,
+        matchedIn: match.matchedIn?.length > 0 ? match.matchedIn.slice(0, 10) : undefined
       };
 
       if (includeIdl) {
@@ -319,6 +460,7 @@ async function handleToolCall(name, args) {
           query,
           total: matches.length,
           returned: results.length,
+          deep_search: deepSearch,
           results: results.length === 1 ? results[0] : results
         }, null, 2)
       }]
