@@ -1,0 +1,3526 @@
+{
+  "timestamp": "2025-12-28T21:08:49.751Z",
+  "totalChecked": 167,
+  "verified": 28,
+  "partial": 0,
+  "outdated": 0,
+  "invalid": 1,
+  "errors": 138,
+  "protocols": [
+    {
+      "protocolId": "aex402-amm",
+      "programId": "3AMM53MsJZy2Jvf7PeHHga3bsGjWV4TSaYz29WUtcdje",
+      "idlName": "aex402_amm",
+      "idlVersion": "0.2.0",
+      "instructionCount": 72,
+      "timestamp": "2025-12-28T21:08:50.185Z",
+      "status": "no_transactions",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "message": "No recent transactions found for this program"
+      }
+    },
+    {
+      "protocolId": "acceleraytor",
+      "programId": null,
+      "idlName": "acceleraytor",
+      "idlVersion": "0.1.0",
+      "instructionCount": 0,
+      "timestamp": "2025-12-28T21:08:50.935Z",
+      "status": "no_program_id",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "No program ID found in IDL or known mappings"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "adrena",
+      "programId": null,
+      "idlName": "adrena",
+      "idlVersion": "0.1.0",
+      "instructionCount": 0,
+      "timestamp": "2025-12-28T21:08:51.197Z",
+      "status": "no_program_id",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "No program ID found in IDL or known mappings"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "aldrin-clob",
+      "programId": "AMM55ShdkoGRB5jVYPjWziwk8m5MpwyDgsMWHaMSQWH6",
+      "idlName": "Aldrin CLOB Dex",
+      "idlVersion": "0.0.0",
+      "instructionCount": 18,
+      "timestamp": "2025-12-28T21:08:51.593Z",
+      "status": "coder_error",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "Failed to create BorshCoder: Type not found: {\"name\":\"inner\",\"type\":{\"defined\":\"MarketState\"},\"docs\":[]}"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "aldrin",
+      "programId": "AMM55ShdkoGRB5jVYPjWziwk8m5MpwyDgsMWHaMSQWH6",
+      "idlName": "aldrin_amm",
+      "idlVersion": "0.1.0",
+      "instructionCount": 2,
+      "timestamp": "2025-12-28T21:08:51.886Z",
+      "status": "verified",
+      "txChecked": 20,
+      "txDecoded": 20,
+      "txFailed": 0,
+      "decodedInstructions": {
+        "swap": 20
+      },
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 20,
+        "successRate": 100,
+        "uniqueDecodedInstructions": 1,
+        "uniqueFailedDiscriminators": 0,
+        "message": "IDL verified: 100% decode success rate",
+        "idlInstructionsCovered": 1,
+        "idlInstructionsTotal": 2,
+        "coveragePercent": 50
+      }
+    },
+    {
+      "protocolId": "apricot",
+      "programId": "6FLTtosMrW1JgPDZ8TAffNJDQ9zr3L78bDdpzqHCevDm",
+      "idlName": "apricot",
+      "idlVersion": "0.1.0",
+      "instructionCount": 2,
+      "timestamp": "2025-12-28T21:08:56.614Z",
+      "status": "no_transactions",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "message": "No recent transactions found for this program"
+      }
+    },
+    {
+      "protocolId": "arrow",
+      "programId": "ARoWLTBWoWrKMvxEiaE2EH9DrWyV7mLpKywGDWxBGeq9",
+      "idlName": "arrow",
+      "idlVersion": "0.1.0",
+      "instructionCount": 2,
+      "timestamp": "2025-12-28T21:08:57.087Z",
+      "status": "no_program_instructions",
+      "txChecked": 20,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 0,
+        "message": "No instructions found for this program in checked transactions",
+        "idlInstructionsCovered": 0,
+        "idlInstructionsTotal": 2,
+        "coveragePercent": 0
+      }
+    },
+    {
+      "protocolId": "atrix",
+      "programId": "ATRiH29rGgf5N3uKEDDEa3vjDixbL9jRnrUh9oHv3gfN",
+      "idlName": "atrix",
+      "idlVersion": "0.1.0",
+      "instructionCount": 2,
+      "timestamp": "2025-12-28T21:09:03.289Z",
+      "status": "no_transactions",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "message": "No recent transactions found for this program"
+      }
+    },
+    {
+      "protocolId": "balansol",
+      "programId": "D3BBjqUdCYuP18fNvvMbPAZ8DpcRi4io2EsYHQawJDag",
+      "idlName": "balansol",
+      "idlVersion": "0.1.0",
+      "instructionCount": 0,
+      "timestamp": "2025-12-28T21:09:03.817Z",
+      "status": "invalid_idl",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "IDL has no instructions defined"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "beluga",
+      "programId": null,
+      "idlName": "beluga",
+      "idlVersion": "0.1.0",
+      "instructionCount": 0,
+      "timestamp": "2025-12-28T21:09:04.077Z",
+      "status": "no_program_id",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "No program ID found in IDL or known mappings"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "blaze",
+      "programId": null,
+      "idlName": "blaze",
+      "idlVersion": "0.1.0",
+      "instructionCount": 0,
+      "timestamp": "2025-12-28T21:09:04.467Z",
+      "status": "no_program_id",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "No program ID found in IDL or known mappings"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "bonfida",
+      "programId": "namesLPneVptA9Z5rqUDD9tMTWEJwofgaYwp8cawRkX",
+      "idlName": "name_service",
+      "idlVersion": "0.1.0",
+      "instructionCount": 2,
+      "timestamp": "2025-12-28T21:09:04.762Z",
+      "status": "no_program_instructions",
+      "txChecked": 20,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 0,
+        "message": "No instructions found for this program in checked transactions",
+        "idlInstructionsCovered": 0,
+        "idlInstructionsTotal": 2,
+        "coveragePercent": 0
+      }
+    },
+    {
+      "protocolId": "bonkswap",
+      "programId": "BSwp6bEBihVLdqJRKGgzjcGLHkcTuzmSo1TQkHepzH8p",
+      "idlName": "bonkswap",
+      "idlVersion": "0.1.1",
+      "instructionCount": 19,
+      "timestamp": "2025-12-28T21:09:09.420Z",
+      "status": "verified",
+      "txChecked": 20,
+      "txDecoded": 22,
+      "txFailed": 0,
+      "decodedInstructions": {
+        "swap": 22
+      },
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 22,
+        "successRate": 100,
+        "uniqueDecodedInstructions": 1,
+        "uniqueFailedDiscriminators": 0,
+        "message": "IDL verified: 100% decode success rate",
+        "idlInstructionsCovered": 1,
+        "idlInstructionsTotal": 19,
+        "coveragePercent": 5
+      }
+    },
+    {
+      "protocolId": "boop",
+      "programId": "boop8hVGQGqehUK2iVEMEnMrL5RbjywRzHKBmBE7ry4",
+      "idlName": "unknown",
+      "idlVersion": "unknown",
+      "instructionCount": 29,
+      "timestamp": "2025-12-28T21:09:15.348Z",
+      "status": "coder_error",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "Failed to create BorshCoder: Cannot use 'in' operator to search for 'vec' in pubkey"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "byreal",
+      "programId": null,
+      "idlName": "byreal",
+      "idlVersion": "0.1.0",
+      "instructionCount": 0,
+      "timestamp": "2025-12-28T21:09:15.638Z",
+      "status": "no_program_id",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "No program ID found in IDL or known mappings"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "cashio",
+      "programId": null,
+      "idlName": "cashio",
+      "idlVersion": "0.1.0",
+      "instructionCount": 0,
+      "timestamp": "2025-12-28T21:09:15.901Z",
+      "status": "no_program_id",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "No program ID found in IDL or known mappings"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "clone",
+      "programId": null,
+      "idlName": "clone",
+      "idlVersion": "0.1.0",
+      "instructionCount": 0,
+      "timestamp": "2025-12-28T21:09:16.328Z",
+      "status": "no_program_id",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "No program ID found in IDL or known mappings"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "crate",
+      "programId": "CRATwLpu6YZEeiVq9ajjxs61wPQ9f29s1UoQR9siJCRs",
+      "idlName": "crate",
+      "idlVersion": "0.1.0",
+      "instructionCount": 0,
+      "timestamp": "2025-12-28T21:09:16.589Z",
+      "status": "invalid_idl",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "IDL has no instructions defined"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "crema",
+      "programId": "CLMM9tUoggJu2wagPkkqs9eFG4BWhVBZWkP1qv3Sp7tR",
+      "idlName": "clmm",
+      "idlVersion": "0.1.0",
+      "instructionCount": 2,
+      "timestamp": "2025-12-28T21:09:16.850Z",
+      "status": "no_program_instructions",
+      "txChecked": 20,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 0,
+        "message": "No instructions found for this program in checked transactions",
+        "idlInstructionsCovered": 0,
+        "idlInstructionsTotal": 2,
+        "coveragePercent": 0
+      }
+    },
+    {
+      "protocolId": "cropper",
+      "programId": "CTMAxxk34HjKWxQ3QLZK1HpaLXmBveao3ESePXbiyfzh",
+      "idlName": "cropper",
+      "idlVersion": "0.1.0",
+      "instructionCount": 0,
+      "timestamp": "2025-12-28T21:09:22.507Z",
+      "status": "invalid_idl",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "IDL has no instructions defined"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "cyclos",
+      "programId": "CYCLosMaPQkNaMfNXWg4eZJ2TgQ1Ckrwq8TKbBkuLcxu",
+      "idlName": "cyclos",
+      "idlVersion": "0.1.0",
+      "instructionCount": 2,
+      "timestamp": "2025-12-28T21:09:22.771Z",
+      "status": "no_transactions",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "message": "No recent transactions found for this program"
+      }
+    },
+    {
+      "protocolId": "cykura",
+      "programId": "cysPXAjehMpVKUapzbMCCnpFxUFFryEWEaLgnb9NrR8",
+      "idlName": "cykura",
+      "idlVersion": "0.1.0",
+      "instructionCount": 2,
+      "timestamp": "2025-12-28T21:09:23.237Z",
+      "status": "no_program_instructions",
+      "txChecked": 20,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 0,
+        "message": "No instructions found for this program in checked transactions",
+        "idlInstructionsCovered": 0,
+        "idlInstructionsTotal": 2,
+        "coveragePercent": 0
+      }
+    },
+    {
+      "protocolId": "deltaone",
+      "programId": null,
+      "idlName": "deltaone",
+      "idlVersion": "0.1.0",
+      "instructionCount": 0,
+      "timestamp": "2025-12-28T21:09:31.008Z",
+      "status": "no_program_id",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "No program ID found in IDL or known mappings"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "dexlab",
+      "programId": "DexLaB7TkQN3xLSfzFkXYVJgNJnFJfWDHtqHJN2EHHXz",
+      "idlName": "dexlab",
+      "idlVersion": "0.1.0",
+      "instructionCount": 1,
+      "timestamp": "2025-12-28T21:09:31.304Z",
+      "status": "no_transactions",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "message": "No recent transactions found for this program"
+      }
+    },
+    {
+      "protocolId": "dexterity",
+      "programId": "Dex1111111111111111111111111111111111111111",
+      "idlName": "dexterity",
+      "idlVersion": "0.1.0",
+      "instructionCount": 2,
+      "timestamp": "2025-12-28T21:09:31.774Z",
+      "status": "no_transactions",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "message": "No recent transactions found for this program"
+      }
+    },
+    {
+      "protocolId": "drift",
+      "programId": "dRiftyHA39MWEi3m9aunc5MzRF1JYuBsbn6VPcn33UH",
+      "idlName": "drift",
+      "idlVersion": "2.106.0",
+      "instructionCount": 194,
+      "timestamp": "2025-12-28T21:09:32.254Z",
+      "status": "verified",
+      "txChecked": 20,
+      "txDecoded": 5,
+      "txFailed": 0,
+      "decodedInstructions": {
+        "postPythLazerOracleUpdate": 3,
+        "placePerpOrder": 2
+      },
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 5,
+        "successRate": 100,
+        "uniqueDecodedInstructions": 2,
+        "uniqueFailedDiscriminators": 0,
+        "message": "IDL verified: 100% decode success rate",
+        "idlInstructionsCovered": 2,
+        "idlInstructionsTotal": 194,
+        "coveragePercent": 1
+      }
+    },
+    {
+      "protocolId": "dumpfun",
+      "programId": "DumpFunGAgW6kPHzWMA3Nnqecyrd6SGnLZvNGp2aHwEa",
+      "idlName": "unknown",
+      "idlVersion": "unknown",
+      "instructionCount": 5,
+      "timestamp": "2025-12-28T21:09:37.730Z",
+      "status": "coder_error",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "Failed to create BorshCoder: Type not found: {\"type\":{\"defined\":{\"name\":\"RampingLimit\"}}}"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "ellipsis",
+      "programId": null,
+      "idlName": "ellipsis",
+      "idlVersion": "0.1.0",
+      "instructionCount": 0,
+      "timestamp": "2025-12-28T21:09:37.993Z",
+      "status": "no_program_id",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "No program ID found in IDL or known mappings"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "enjinstarter",
+      "programId": null,
+      "idlName": "enjinstarter",
+      "idlVersion": "0.1.0",
+      "instructionCount": 0,
+      "timestamp": "2025-12-28T21:09:38.253Z",
+      "status": "no_program_id",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "No program ID found in IDL or known mappings"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "flash",
+      "programId": null,
+      "idlName": "flash",
+      "idlVersion": "0.1.0",
+      "instructionCount": 0,
+      "timestamp": "2025-12-28T21:09:38.513Z",
+      "status": "no_program_id",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "No program ID found in IDL or known mappings"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "fluxbeam",
+      "programId": "FLUXubRmkEi2q6K3Y9kBPg9248ggaZVsoSFhtJHSrm1X",
+      "idlName": "fluxbeam",
+      "idlVersion": "0.1.0",
+      "instructionCount": 1,
+      "timestamp": "2025-12-28T21:09:38.774Z",
+      "status": "no_program_instructions",
+      "txChecked": 20,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 0,
+        "message": "No instructions found for this program in checked transactions",
+        "idlInstructionsCovered": 0,
+        "idlInstructionsTotal": 1,
+        "coveragePercent": 0
+      }
+    },
+    {
+      "protocolId": "francium",
+      "programId": "FC81tbGt6JWRXidaWYFXxGnTk4VgobhJHATvTRVMqgWj",
+      "idlName": "francium",
+      "idlVersion": "0.1.0",
+      "instructionCount": 2,
+      "timestamp": "2025-12-28T21:09:44.482Z",
+      "status": "no_program_instructions",
+      "txChecked": 20,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 0,
+        "message": "No instructions found for this program in checked transactions",
+        "idlInstructionsCovered": 0,
+        "idlInstructionsTotal": 2,
+        "coveragePercent": 0
+      }
+    },
+    {
+      "protocolId": "gauge",
+      "programId": null,
+      "idlName": "gauge",
+      "idlVersion": "0.1.0",
+      "instructionCount": 0,
+      "timestamp": "2025-12-28T21:09:50.023Z",
+      "status": "no_program_id",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "No program ID found in IDL or known mappings"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "gavel",
+      "programId": null,
+      "idlName": "gavel",
+      "idlVersion": "0.1.0",
+      "instructionCount": 0,
+      "timestamp": "2025-12-28T21:09:50.286Z",
+      "status": "no_program_id",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "No program ID found in IDL or known mappings"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "gmx",
+      "programId": null,
+      "idlName": "gmx",
+      "idlVersion": "0.1.0",
+      "instructionCount": 0,
+      "timestamp": "2025-12-28T21:09:50.905Z",
+      "status": "no_program_id",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "No program ID found in IDL or known mappings"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "goki",
+      "programId": "GokivDYuQXPZCWRkwMhdH2h91KpDQXBEmpgBgs55bnpH",
+      "idlName": "goki_smart_wallet",
+      "idlVersion": "0.1.0",
+      "instructionCount": 2,
+      "timestamp": "2025-12-28T21:09:51.199Z",
+      "status": "coder_error",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "Failed to create BorshCoder: Type not found: {\"type\":{\"defined\":\"TxInstruction\"}}"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "goonfi",
+      "programId": "goonERTdGsjnkZqWuVjs73BZ3Pb9qoCUdBUL17BnS5j",
+      "idlName": "GoonFi",
+      "idlVersion": "0.1.0",
+      "instructionCount": 1,
+      "timestamp": "2025-12-28T21:09:51.618Z",
+      "status": "no_program_instructions",
+      "txChecked": 20,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 0,
+        "message": "No instructions found for this program in checked transactions",
+        "idlInstructionsCovered": 0,
+        "idlInstructionsTotal": 1,
+        "coveragePercent": 0
+      }
+    },
+    {
+      "protocolId": "goosefx",
+      "programId": "7WduLbRfYhTJktjLw5FDEyrqoEv61aTTCuGAetgLjzN5",
+      "idlName": "goosefx_ssl",
+      "idlVersion": "0.1.0",
+      "instructionCount": 2,
+      "timestamp": "2025-12-28T21:09:56.381Z",
+      "status": "no_program_instructions",
+      "txChecked": 20,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 0,
+        "message": "No instructions found for this program in checked transactions",
+        "idlInstructionsCovered": 0,
+        "idlInstructionsTotal": 2,
+        "coveragePercent": 0
+      }
+    },
+    {
+      "protocolId": "hawksight",
+      "programId": null,
+      "idlName": "hawksight",
+      "idlVersion": "0.1.0",
+      "instructionCount": 0,
+      "timestamp": "2025-12-28T21:10:02.157Z",
+      "status": "no_program_id",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "No program ID found in IDL or known mappings"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "heaven",
+      "programId": "GgE4QoiM8VYoQNZkiNLHNbzXEkKyynzsApC8BvBY4b1V",
+      "idlName": "unknown",
+      "idlVersion": "unknown",
+      "instructionCount": 32,
+      "timestamp": "2025-12-28T21:10:02.422Z",
+      "status": "coder_error",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "Failed to create BorshCoder: Type not found: {\"name\":\"update\",\"type\":{\"defined\":{\"name\":\"AdminUpdateLiquidityPoolState\"}}}"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "hubble",
+      "programId": "HbbLE47k4s8Aw4YsagCa1E6MRyJUtVVoRcSBXBCTaYH",
+      "idlName": "borrowing",
+      "idlVersion": "0.1.0",
+      "instructionCount": 2,
+      "timestamp": "2025-12-28T21:10:02.685Z",
+      "status": "no_transactions",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "message": "No recent transactions found for this program"
+      }
+    },
+    {
+      "protocolId": "humidifi",
+      "programId": null,
+      "idlName": "humidifi",
+      "idlVersion": "0.1.0",
+      "instructionCount": 0,
+      "timestamp": "2025-12-28T21:10:03.158Z",
+      "status": "no_program_id",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "No program ID found in IDL or known mappings"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "hxro",
+      "programId": "HxroShip8KkXZVYcrth6X2zLMnCXfXJmhLHUQZYH7jH",
+      "idlName": "hxro_network",
+      "idlVersion": "0.1.0",
+      "instructionCount": 2,
+      "timestamp": "2025-12-28T21:10:03.530Z",
+      "status": "no_transactions",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "message": "No recent transactions found for this program"
+      }
+    },
+    {
+      "protocolId": "idl-protocol",
+      "programId": "BSn7neicVV2kEzgaZmd6tZEBm4tdgzBRyELov65Lq7dt",
+      "idlName": "idl_protocol",
+      "idlVersion": "0.1.0",
+      "instructionCount": 15,
+      "timestamp": "2025-12-28T21:10:04.058Z",
+      "status": "no_transactions",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "message": "No recent transactions found for this program"
+      }
+    },
+    {
+      "protocolId": "invariant",
+      "programId": "HyaB3W9q6XdA5xwpU4XnSZV94htfmbmqJXZcEbRaJutt",
+      "idlName": "invariant",
+      "idlVersion": "0.1.0",
+      "instructionCount": 2,
+      "timestamp": "2025-12-28T21:10:04.543Z",
+      "status": "verified",
+      "txChecked": 20,
+      "txDecoded": 17,
+      "txFailed": 0,
+      "decodedInstructions": {
+        "swap": 17
+      },
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 17,
+        "successRate": 100,
+        "uniqueDecodedInstructions": 1,
+        "uniqueFailedDiscriminators": 0,
+        "message": "IDL verified: 100% decode success rate",
+        "idlInstructionsCovered": 1,
+        "idlInstructionsTotal": 2,
+        "coveragePercent": 50
+      }
+    },
+    {
+      "protocolId": "jet",
+      "programId": "JPLockxtkngHkaQT5AuRYow3HyUv5qWzmhwsCPd653n",
+      "idlName": "jet",
+      "idlVersion": "0.1.0",
+      "instructionCount": 3,
+      "timestamp": "2025-12-28T21:10:09.300Z",
+      "status": "no_program_instructions",
+      "txChecked": 20,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 0,
+        "message": "No instructions found for this program in checked transactions",
+        "idlInstructionsCovered": 0,
+        "idlInstructionsTotal": 3,
+        "coveragePercent": 0
+      }
+    },
+    {
+      "protocolId": "jito",
+      "programId": "Jito4APyf642JPZPx3hGc6WWJ8zPKtRbRs4P815Awbb",
+      "idlName": "jito_steward",
+      "idlVersion": "0.1.0",
+      "instructionCount": 2,
+      "timestamp": "2025-12-28T21:10:15.357Z",
+      "status": "no_program_instructions",
+      "txChecked": 20,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 0,
+        "message": "No instructions found for this program in checked transactions",
+        "idlInstructionsCovered": 0,
+        "idlInstructionsTotal": 2,
+        "coveragePercent": 0
+      }
+    },
+    {
+      "protocolId": "jupiter",
+      "programId": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+      "idlName": "unknown",
+      "idlVersion": "unknown",
+      "instructionCount": 16,
+      "timestamp": "2025-12-28T21:10:21.051Z",
+      "status": "coder_error",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "Failed to create BorshCoder: Type not found: {\"type\":{\"defined\":{\"name\":\"RoutePlanStep\"}}}"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "kamino",
+      "programId": null,
+      "idlName": "kamino_lending",
+      "idlVersion": "1.12.6",
+      "instructionCount": 49,
+      "timestamp": "2025-12-28T21:10:21.326Z",
+      "status": "no_program_id",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "No program ID found in IDL or known mappings"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "komunitas",
+      "programId": "KoMNiTasVCj6xgJwXaf67FwToS2iE6jHyR7zE8x8Dqt",
+      "idlName": "kommunitas",
+      "idlVersion": "0.1.0",
+      "instructionCount": 2,
+      "timestamp": "2025-12-28T21:10:21.587Z",
+      "status": "no_transactions",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "message": "No recent transactions found for this program"
+      }
+    },
+    {
+      "protocolId": "larix",
+      "programId": "LARiTAAoXkNqwt2fQAL9QsWvBm7fLZZP1fgmj5R2Lf2",
+      "idlName": "larix",
+      "idlVersion": "0.1.0",
+      "instructionCount": 2,
+      "timestamp": "2025-12-28T21:10:22.050Z",
+      "status": "no_transactions",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "message": "No recent transactions found for this program"
+      }
+    },
+    {
+      "protocolId": "launchmynft",
+      "programId": null,
+      "idlName": "launchmynft",
+      "idlVersion": "0.1.0",
+      "instructionCount": 0,
+      "timestamp": "2025-12-28T21:10:22.518Z",
+      "status": "no_program_id",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "No program ID found in IDL or known mappings"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "lifinity-dummy_idl",
+      "programId": "EewxydAPCCVuNEyrVN68PuSYdQ7wKn27V9Gjeoi8dy3S",
+      "idlName": "Lifinity",
+      "idlVersion": "0.0.0",
+      "instructionCount": 1,
+      "timestamp": "2025-12-28T21:10:23.003Z",
+      "status": "invalid",
+      "txChecked": 20,
+      "txDecoded": 0,
+      "txFailed": 2,
+      "decodedInstructions": {},
+      "failedInstructions": {
+        "f8c69e91e17587c8": 2
+      },
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 2,
+        "successRate": 0,
+        "uniqueDecodedInstructions": 0,
+        "uniqueFailedDiscriminators": 1,
+        "message": "IDL appears to be a stub (only 1 instructions, none match on-chain)",
+        "idlInstructionsCovered": 0,
+        "idlInstructionsTotal": 1,
+        "coveragePercent": 0
+      }
+    },
+    {
+      "protocolId": "lifinity-idl-0.1.1",
+      "programId": "EewxydAPCCVuNEyrVN68PuSYdQ7wKn27V9Gjeoi8dy3S",
+      "idlName": "Lifinity",
+      "idlVersion": "0.1.1",
+      "instructionCount": 3,
+      "timestamp": "2025-12-28T21:10:28.956Z",
+      "status": "verified",
+      "txChecked": 20,
+      "txDecoded": 13,
+      "txFailed": 0,
+      "decodedInstructions": {
+        "swap": 2,
+        "withdrawAllTokenTypes": 11
+      },
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 13,
+        "successRate": 100,
+        "uniqueDecodedInstructions": 2,
+        "uniqueFailedDiscriminators": 0,
+        "message": "IDL verified: 100% decode success rate",
+        "idlInstructionsCovered": 2,
+        "idlInstructionsTotal": 3,
+        "coveragePercent": 67
+      }
+    },
+    {
+      "protocolId": "lifinity-v2",
+      "programId": "2wT8Yq49kHgDzXuPxZSaeLaH1qbmGXtEyPy64bL7aD3c",
+      "idlName": "lifinity_v2",
+      "idlVersion": "0.2.0",
+      "instructionCount": 2,
+      "timestamp": "2025-12-28T21:10:35.318Z",
+      "status": "no_program_instructions",
+      "txChecked": 20,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 0,
+        "message": "No instructions found for this program in checked transactions",
+        "idlInstructionsCovered": 0,
+        "idlInstructionsTotal": 2,
+        "coveragePercent": 0
+      }
+    },
+    {
+      "protocolId": "lifinity",
+      "programId": "EewxydAPCCVuNEyrVN68PuSYdQ7wKn27V9Gjeoi8dy3S",
+      "idlName": "lifinity",
+      "idlVersion": "0.1.0",
+      "instructionCount": 2,
+      "timestamp": "2025-12-28T21:10:40.408Z",
+      "status": "verified",
+      "txChecked": 20,
+      "txDecoded": 2,
+      "txFailed": 0,
+      "decodedInstructions": {
+        "swap": 2
+      },
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 2,
+        "successRate": 100,
+        "uniqueDecodedInstructions": 1,
+        "uniqueFailedDiscriminators": 0,
+        "message": "IDL verified: 100% decode success rate",
+        "idlInstructionsCovered": 1,
+        "idlInstructionsTotal": 2,
+        "coveragePercent": 50
+      }
+    },
+    {
+      "protocolId": "magiceden-m2",
+      "programId": "M2mx93ekt1fmXSVkTrUL9xVFHkmME8HTUi5Cyc5aF7K",
+      "idlName": "m2",
+      "idlVersion": "0.1.0",
+      "instructionCount": 18,
+      "timestamp": "2025-12-28T21:10:46.890Z",
+      "status": "verified",
+      "txChecked": 20,
+      "txDecoded": 69,
+      "txFailed": 0,
+      "decodedInstructions": {
+        "buyV2": 65,
+        "mip1Sell": 4
+      },
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 69,
+        "successRate": 100,
+        "uniqueDecodedInstructions": 2,
+        "uniqueFailedDiscriminators": 0,
+        "message": "IDL verified: 100% decode success rate",
+        "idlInstructionsCovered": 2,
+        "idlInstructionsTotal": 18,
+        "coveragePercent": 11
+      }
+    },
+    {
+      "protocolId": "magiceden-m3",
+      "programId": "M3mxk5W2tt27WGT7THox7PmgRDp4m6NEhL5xvxrBfS1",
+      "idlName": "mmm",
+      "idlVersion": "0.2.0",
+      "instructionCount": 20,
+      "timestamp": "2025-12-28T21:10:52.312Z",
+      "status": "no_program_instructions",
+      "txChecked": 20,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 0,
+        "message": "No instructions found for this program in checked transactions",
+        "idlInstructionsCovered": 0,
+        "idlInstructionsTotal": 20,
+        "coveragePercent": 0
+      }
+    },
+    {
+      "protocolId": "magiceden",
+      "programId": "M2mx93ekt1fmXSVkTrUL9xVFHkmME8HTUi5Cyc5aF7K",
+      "idlName": "magic_eden",
+      "idlVersion": "0.1.0",
+      "instructionCount": 2,
+      "timestamp": "2025-12-28T21:10:57.155Z",
+      "status": "verified",
+      "txChecked": 20,
+      "txDecoded": 1,
+      "txFailed": 0,
+      "decodedInstructions": {
+        "sell": 1
+      },
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 1,
+        "successRate": 100,
+        "uniqueDecodedInstructions": 1,
+        "uniqueFailedDiscriminators": 0,
+        "message": "IDL verified: 100% decode success rate",
+        "idlInstructionsCovered": 1,
+        "idlInstructionsTotal": 2,
+        "coveragePercent": 50
+      }
+    },
+    {
+      "protocolId": "mango-v3",
+      "programId": "mv3ekLzLbnVPNxjSKvqBpU3ZeZXPQdEC3bp5MDEBG68",
+      "idlName": "mango_v3",
+      "idlVersion": "0.1.0",
+      "instructionCount": 2,
+      "timestamp": "2025-12-28T21:11:02.809Z",
+      "status": "no_program_instructions",
+      "txChecked": 20,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 0,
+        "message": "No instructions found for this program in checked transactions",
+        "idlInstructionsCovered": 0,
+        "idlInstructionsTotal": 2,
+        "coveragePercent": 0
+      }
+    },
+    {
+      "protocolId": "mango",
+      "programId": "4MangoMjqJ2firMokCjjGgoK8d4MXcrgL7XJaL3w6fVg",
+      "idlName": "mango_v4",
+      "idlVersion": "0.1.0",
+      "instructionCount": 3,
+      "timestamp": "2025-12-28T21:11:09.025Z",
+      "status": "no_program_instructions",
+      "txChecked": 20,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 0,
+        "message": "No instructions found for this program in checked transactions",
+        "idlInstructionsCovered": 0,
+        "idlInstructionsTotal": 3,
+        "coveragePercent": 0
+      }
+    },
+    {
+      "protocolId": "marginfi",
+      "programId": "MFv2hWf31Z9kbCa1snEPYctwafyhdvnV7FZnsebVacA",
+      "idlName": "marginfi",
+      "idlVersion": "0.1.0",
+      "instructionCount": 2,
+      "timestamp": "2025-12-28T21:11:15.237Z",
+      "status": "verified",
+      "txChecked": 20,
+      "txDecoded": 15,
+      "txFailed": 0,
+      "decodedInstructions": {
+        "lendingAccountDeposit": 4,
+        "lendingAccountBorrow": 11
+      },
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 15,
+        "successRate": 100,
+        "uniqueDecodedInstructions": 2,
+        "uniqueFailedDiscriminators": 0,
+        "message": "IDL verified: 100% decode success rate",
+        "idlInstructionsCovered": 2,
+        "idlInstructionsTotal": 2,
+        "coveragePercent": 100
+      }
+    },
+    {
+      "protocolId": "marinade",
+      "programId": "MarBmsSgKXdrN1egZf5sqe1TMai9K1rChYNDJgjq7aD",
+      "idlName": "marinade_finance",
+      "idlVersion": "0.1.0",
+      "instructionCount": 1,
+      "timestamp": "2025-12-28T21:11:20.552Z",
+      "status": "verified",
+      "txChecked": 20,
+      "txDecoded": 2,
+      "txFailed": 0,
+      "decodedInstructions": {
+        "deposit": 2
+      },
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 2,
+        "successRate": 100,
+        "uniqueDecodedInstructions": 1,
+        "uniqueFailedDiscriminators": 0,
+        "message": "IDL verified: 100% decode success rate",
+        "idlInstructionsCovered": 1,
+        "idlInstructionsTotal": 1,
+        "coveragePercent": 100
+      }
+    },
+    {
+      "protocolId": "mercurial",
+      "programId": "MERLuDFBMmsHnsBPZw2sDQZHvXFMwp8EdjudcU2HKky",
+      "idlName": "mercurial_vault",
+      "idlVersion": "0.1.0",
+      "instructionCount": 2,
+      "timestamp": "2025-12-28T21:11:25.133Z",
+      "status": "no_program_instructions",
+      "txChecked": 20,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 0,
+        "message": "No instructions found for this program in checked transactions",
+        "idlInstructionsCovered": 0,
+        "idlInstructionsTotal": 2,
+        "coveragePercent": 0
+      }
+    },
+    {
+      "protocolId": "merkle-distributor",
+      "programId": "MErKy6nZVoVAkryxAejJz2juifQ4ArgLgHmaJCQkU7N",
+      "idlName": "merkle_distributor",
+      "idlVersion": "0.1.0",
+      "instructionCount": 0,
+      "timestamp": "2025-12-28T21:11:30.700Z",
+      "status": "invalid_idl",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "IDL has no instructions defined"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "metaplex-auction",
+      "programId": "auctxRXPeJoc4817jDhf4HbjnhEcr1cCXenosMhK5R8",
+      "idlName": "auction",
+      "idlVersion": "0.0.0",
+      "instructionCount": 8,
+      "timestamp": "2025-12-28T21:11:30.972Z",
+      "status": "coder_error",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "Failed to create BorshCoder: Cannot use 'in' operator to search for 'vec' in unixTimestamp"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "metaplex-bubblegum",
+      "programId": "BGUMAp9Gq7iTEuizy4pqaxsTyUCBK68MDfK752saRPUY",
+      "idlName": "bubblegum",
+      "idlVersion": "0.12.0",
+      "instructionCount": 17,
+      "timestamp": "2025-12-28T21:11:31.485Z",
+      "status": "verified",
+      "txChecked": 20,
+      "txDecoded": 14,
+      "txFailed": 0,
+      "decodedInstructions": {
+        "transfer": 5,
+        "mintToCollectionV1": 9
+      },
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 14,
+        "successRate": 100,
+        "uniqueDecodedInstructions": 2,
+        "uniqueFailedDiscriminators": 0,
+        "message": "IDL verified: 100% decode success rate",
+        "idlInstructionsCovered": 2,
+        "idlInstructionsTotal": 17,
+        "coveragePercent": 12
+      }
+    },
+    {
+      "protocolId": "metaplex-metaplex",
+      "programId": "p1exdMJcjVao65QdewkaZRUnU6VPSXhus9n2GzWfh98",
+      "idlName": "metaplex",
+      "idlVersion": "0.0.0",
+      "instructionCount": 24,
+      "timestamp": "2025-12-28T21:11:36.886Z",
+      "status": "coder_error",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "Failed to create BorshCoder: Type not found: {\"name\":\"winning_config_type\",\"type\":{\"defined\":\"WinningConfigType\"},\"docs\":[]}"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "metaplex-nft_candy_machine",
+      "programId": "cndy3Z4yapfJBmL3ShUp5exZKqR3z33thTzeNMm2gRZ",
+      "idlName": "nft_candy_machine",
+      "idlVersion": "0.1.0",
+      "instructionCount": 7,
+      "timestamp": "2025-12-28T21:11:37.285Z",
+      "status": "verified",
+      "txChecked": 20,
+      "txDecoded": 20,
+      "txFailed": 0,
+      "decodedInstructions": {
+        "withdrawFunds": 8,
+        "mintNft": 11,
+        "addConfigLines": 1
+      },
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 20,
+        "successRate": 100,
+        "uniqueDecodedInstructions": 3,
+        "uniqueFailedDiscriminators": 0,
+        "message": "IDL verified: 100% decode success rate",
+        "idlInstructionsCovered": 3,
+        "idlInstructionsTotal": 7,
+        "coveragePercent": 43
+      }
+    },
+    {
+      "protocolId": "metaplex-nft_candy_machine_v2",
+      "programId": "cndy3Z4yapfJBmL3ShUp5exZKqR3z33thTzeNMm2gRZ",
+      "idlName": "nft_candy_machine_v2",
+      "idlVersion": "3.0.0",
+      "instructionCount": 6,
+      "timestamp": "2025-12-28T21:11:42.462Z",
+      "status": "verified",
+      "txChecked": 20,
+      "txDecoded": 20,
+      "txFailed": 0,
+      "decodedInstructions": {
+        "withdrawFunds": 8,
+        "mintNft": 11,
+        "addConfigLines": 1
+      },
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 20,
+        "successRate": 100,
+        "uniqueDecodedInstructions": 3,
+        "uniqueFailedDiscriminators": 0,
+        "message": "IDL verified: 100% decode success rate",
+        "idlInstructionsCovered": 3,
+        "idlInstructionsTotal": 6,
+        "coveragePercent": 50
+      }
+    },
+    {
+      "protocolId": "metaplex-token-metadata",
+      "programId": "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s",
+      "idlName": "token_metadata",
+      "idlVersion": "1.14.0",
+      "instructionCount": 56,
+      "timestamp": "2025-12-28T21:11:48.599Z",
+      "status": "coder_error",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "Failed to create BorshCoder: Not yet implemented: [object Object]"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "metaplex-token-vault",
+      "programId": "vau1zxA2LbssAUEF7Gpw91zMM1LvXrvpzJtmZ58rPsn",
+      "idlName": "token-vault",
+      "idlVersion": "0.0.0",
+      "instructionCount": 11,
+      "timestamp": "2025-12-28T21:11:48.892Z",
+      "status": "coder_error",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "Failed to create BorshCoder: Type not found: {\"name\":\"key\",\"type\":{\"defined\":\"Key\"},\"docs\":[]}"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "meteora-amm",
+      "programId": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+      "idlName": "amm",
+      "idlVersion": "0.4.12",
+      "instructionCount": 19,
+      "timestamp": "2025-12-28T21:11:49.157Z",
+      "status": "no_program_instructions",
+      "txChecked": 20,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 0,
+        "message": "No instructions found for this program in checked transactions",
+        "idlInstructionsCovered": 0,
+        "idlInstructionsTotal": 19,
+        "coveragePercent": 0
+      }
+    },
+    {
+      "protocolId": "meteora-amm_052",
+      "programId": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+      "idlName": "amm",
+      "idlVersion": "0.5.2",
+      "instructionCount": 26,
+      "timestamp": "2025-12-28T21:11:54.839Z",
+      "status": "no_program_instructions",
+      "txChecked": 20,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 0,
+        "message": "No instructions found for this program in checked transactions",
+        "idlInstructionsCovered": 0,
+        "idlInstructionsTotal": 26,
+        "coveragePercent": 0
+      }
+    },
+    {
+      "protocolId": "meteora-cp_amm_011",
+      "programId": "cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG",
+      "idlName": "unknown",
+      "idlVersion": "unknown",
+      "instructionCount": 28,
+      "timestamp": "2025-12-28T21:12:00.887Z",
+      "status": "coder_error",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "Failed to create BorshCoder: Type not found: {\"name\":\"params\",\"type\":{\"defined\":{\"name\":\"AddLiquidityParameters\"}}}"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "meteora-cp_amm_015",
+      "programId": "cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG",
+      "idlName": "unknown",
+      "idlVersion": "unknown",
+      "instructionCount": 32,
+      "timestamp": "2025-12-28T21:12:01.155Z",
+      "status": "coder_error",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "Failed to create BorshCoder: Type not found: {\"name\":\"params\",\"type\":{\"defined\":{\"name\":\"AddLiquidityParameters\"}}}"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "meteora-dynamic_bonding_curve",
+      "programId": "dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN",
+      "idlName": "unknown",
+      "idlVersion": "unknown",
+      "instructionCount": 25,
+      "timestamp": "2025-12-28T21:12:01.529Z",
+      "status": "coder_error",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "Failed to create BorshCoder: Type not found: {\"name\":\"config_parameters\",\"type\":{\"defined\":{\"name\":\"ConfigParameters\"}}}"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "meteora-lb_clmm",
+      "programId": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+      "idlName": "lb_clmm",
+      "idlVersion": "0.5.1",
+      "instructionCount": 42,
+      "timestamp": "2025-12-28T21:12:01.833Z",
+      "status": "no_program_instructions",
+      "txChecked": 20,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 0,
+        "message": "No instructions found for this program in checked transactions",
+        "idlInstructionsCovered": 0,
+        "idlInstructionsTotal": 42,
+        "coveragePercent": 0
+      }
+    },
+    {
+      "protocolId": "meteora-lb_clmm_090",
+      "programId": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+      "idlName": "lb_clmm",
+      "idlVersion": "0.9.0",
+      "instructionCount": 64,
+      "timestamp": "2025-12-28T21:12:07.310Z",
+      "status": "no_program_instructions",
+      "txChecked": 20,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 0,
+        "message": "No instructions found for this program in checked transactions",
+        "idlInstructionsCovered": 0,
+        "idlInstructionsTotal": 64,
+        "coveragePercent": 0
+      }
+    },
+    {
+      "protocolId": "meteora",
+      "programId": "Eo7WjKq67rjJQSZxS6z3YkapzY3eMj6Xy8X5EQVn5UaB",
+      "idlName": "meteora",
+      "idlVersion": "0.1.0",
+      "instructionCount": 2,
+      "timestamp": "2025-12-28T21:12:11.898Z",
+      "status": "verified",
+      "txChecked": 20,
+      "txDecoded": 14,
+      "txFailed": 0,
+      "decodedInstructions": {
+        "swap": 14
+      },
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 14,
+        "successRate": 100,
+        "uniqueDecodedInstructions": 1,
+        "uniqueFailedDiscriminators": 0,
+        "message": "IDL verified: 100% decode success rate",
+        "idlInstructionsCovered": 1,
+        "idlInstructionsTotal": 2,
+        "coveragePercent": 50
+      }
+    },
+    {
+      "protocolId": "moonshot",
+      "programId": "MoonCVVNZFSYkqNXP6bxHLPL6QQJiMagDL3qcqUQTrG",
+      "idlName": "token_launchpad",
+      "idlVersion": "0.1.0",
+      "instructionCount": 6,
+      "timestamp": "2025-12-28T21:12:17.590Z",
+      "status": "verified",
+      "txChecked": 20,
+      "txDecoded": 20,
+      "txFailed": 0,
+      "decodedInstructions": {
+        "sell": 18,
+        "tokenMint": 1,
+        "buy": 1
+      },
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 20,
+        "successRate": 100,
+        "uniqueDecodedInstructions": 3,
+        "uniqueFailedDiscriminators": 0,
+        "message": "IDL verified: 100% decode success rate",
+        "idlInstructionsCovered": 3,
+        "idlInstructionsTotal": 6,
+        "coveragePercent": 50
+      }
+    },
+    {
+      "protocolId": "native-compute-budget",
+      "programId": "ComputeBudget111111111111111111111111111111",
+      "idlName": "solana_compute_budget_program",
+      "idlVersion": "1.13.5",
+      "instructionCount": 0,
+      "timestamp": "2025-12-28T21:12:22.962Z",
+      "status": "invalid_idl",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "IDL has no instructions defined"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "native-config",
+      "programId": "Config1111111111111111111111111111111111111",
+      "idlName": "config",
+      "idlVersion": "0.0.0",
+      "instructionCount": 2,
+      "timestamp": "2025-12-28T21:12:23.247Z",
+      "status": "no_program_instructions",
+      "txChecked": 20,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 0,
+        "message": "No instructions found for this program in checked transactions",
+        "idlInstructionsCovered": 0,
+        "idlInstructionsTotal": 2,
+        "coveragePercent": 0
+      }
+    },
+    {
+      "protocolId": "native-stake",
+      "programId": "Stake11111111111111111111111111111111111111",
+      "idlName": "stake",
+      "idlVersion": "0.0.0",
+      "instructionCount": 13,
+      "timestamp": "2025-12-28T21:12:28.589Z",
+      "status": "no_program_instructions",
+      "txChecked": 20,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 0,
+        "message": "No instructions found for this program in checked transactions",
+        "idlInstructionsCovered": 0,
+        "idlInstructionsTotal": 13,
+        "coveragePercent": 0
+      }
+    },
+    {
+      "protocolId": "native-system",
+      "programId": "11111111111111111111111111111111",
+      "idlName": "system",
+      "idlVersion": "0.0.0",
+      "instructionCount": 12,
+      "timestamp": "2025-12-28T21:12:34.206Z",
+      "status": "no_program_instructions",
+      "txChecked": 20,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 0,
+        "message": "No instructions found for this program in checked transactions",
+        "idlInstructionsCovered": 0,
+        "idlInstructionsTotal": 12,
+        "coveragePercent": 0
+      }
+    },
+    {
+      "protocolId": "native-vote",
+      "programId": "Vote111111111111111111111111111111111111111",
+      "idlName": "vote",
+      "idlVersion": "0.0.1",
+      "instructionCount": 16,
+      "timestamp": "2025-12-28T21:12:39.235Z",
+      "status": "coder_error",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "Failed to create BorshCoder: Not yet implemented: [object Object]"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "obric-obric_v2",
+      "programId": null,
+      "idlName": "obric_solana",
+      "idlVersion": "0.1.0",
+      "instructionCount": 12,
+      "timestamp": "2025-12-28T21:12:39.496Z",
+      "status": "no_program_id",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "No program ID found in IDL or known mappings"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "obric-obric_v3",
+      "programId": null,
+      "idlName": "obric_solana_v3",
+      "idlVersion": "0.1.0",
+      "instructionCount": 8,
+      "timestamp": "2025-12-28T21:12:39.870Z",
+      "status": "no_program_id",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "No program ID found in IDL or known mappings"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "obric",
+      "programId": null,
+      "idlName": "obric",
+      "idlVersion": "0.1.0",
+      "instructionCount": 0,
+      "timestamp": "2025-12-28T21:12:40.558Z",
+      "status": "no_program_id",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "No program ID found in IDL or known mappings"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "okx-okx",
+      "programId": "6m2CDdhRgxpH4WjvdzxAYbGxwdGUz5MziiL5jek2kBma",
+      "idlName": "unknown",
+      "idlVersion": "unknown",
+      "instructionCount": 18,
+      "timestamp": "2025-12-28T21:12:40.892Z",
+      "status": "coder_error",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "Failed to create BorshCoder: Type not found: {\"name\":\"data\",\"type\":{\"defined\":{\"name\":\"SwapArgs\"}}}"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "okx-okx_v3",
+      "programId": "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u",
+      "idlName": "unknown",
+      "idlVersion": "unknown",
+      "instructionCount": 10,
+      "timestamp": "2025-12-28T21:12:41.154Z",
+      "status": "coder_error",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "Failed to create BorshCoder: Type not found: {\"name\":\"args\",\"type\":{\"defined\":{\"name\":\"SwapArgs\"}}}"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "open-book-dex",
+      "programId": "srmqPvymJeFKQ4zGQed1GFppgkRHL9kaELCbyksJtPX",
+      "idlName": "OpenBook Dex",
+      "idlVersion": "0.0.0",
+      "instructionCount": 21,
+      "timestamp": "2025-12-28T21:12:41.556Z",
+      "status": "coder_error",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "Failed to create BorshCoder: Type not found: {\"name\":\"inner\",\"type\":{\"defined\":\"MarketState\"},\"docs\":[]}"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "open-book-openbook_v2",
+      "programId": "opnb2LAfJYbRMAHHvqjCwQxanZn7ReEHp1k81EohpZb",
+      "idlName": "openbook_v2",
+      "idlVersion": "0.1.0",
+      "instructionCount": 29,
+      "timestamp": "2025-12-28T21:12:42.188Z",
+      "status": "verified",
+      "txChecked": 20,
+      "txDecoded": 2,
+      "txFailed": 0,
+      "decodedInstructions": {
+        "consumeEvents": 1,
+        "placeTakeOrder": 1
+      },
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 2,
+        "successRate": 100,
+        "uniqueDecodedInstructions": 2,
+        "uniqueFailedDiscriminators": 0,
+        "message": "IDL verified: 100% decode success rate",
+        "idlInstructionsCovered": 2,
+        "idlInstructionsTotal": 29,
+        "coveragePercent": 7
+      }
+    },
+    {
+      "protocolId": "openbook",
+      "programId": "opnb2LAfJYbRMAHHvqjCwQxanZn7ReEHp1k81EohpZb",
+      "idlName": "openbook_v2",
+      "idlVersion": "0.1.0",
+      "instructionCount": 2,
+      "timestamp": "2025-12-28T21:12:47.733Z",
+      "status": "no_program_instructions",
+      "txChecked": 20,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 0,
+        "message": "No instructions found for this program in checked transactions",
+        "idlInstructionsCovered": 0,
+        "idlInstructionsTotal": 2,
+        "coveragePercent": 0
+      }
+    },
+    {
+      "protocolId": "orca-lyf_orca",
+      "programId": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+      "idlName": "lyf_orca",
+      "idlVersion": "0.0.0",
+      "instructionCount": 41,
+      "timestamp": "2025-12-28T21:12:53.101Z",
+      "status": "verified",
+      "txChecked": 20,
+      "txDecoded": 7,
+      "txFailed": 0,
+      "decodedInstructions": {
+        "swap": 7
+      },
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 7,
+        "successRate": 100,
+        "uniqueDecodedInstructions": 1,
+        "uniqueFailedDiscriminators": 0,
+        "message": "IDL verified: 100% decode success rate",
+        "idlInstructionsCovered": 1,
+        "idlInstructionsTotal": 41,
+        "coveragePercent": 2
+      }
+    },
+    {
+      "protocolId": "orca-whirlpool",
+      "programId": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+      "idlName": "whirlpool",
+      "idlVersion": "0.1.0",
+      "instructionCount": 25,
+      "timestamp": "2025-12-28T21:12:57.871Z",
+      "status": "verified",
+      "txChecked": 20,
+      "txDecoded": 8,
+      "txFailed": 0,
+      "decodedInstructions": {
+        "swap": 8
+      },
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 8,
+        "successRate": 100,
+        "uniqueDecodedInstructions": 1,
+        "uniqueFailedDiscriminators": 0,
+        "message": "IDL verified: 100% decode success rate",
+        "idlInstructionsCovered": 1,
+        "idlInstructionsTotal": 25,
+        "coveragePercent": 4
+      }
+    },
+    {
+      "protocolId": "orca-whirlpool_v2",
+      "programId": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+      "idlName": "whirlpool",
+      "idlVersion": "0.3.6",
+      "instructionCount": 58,
+      "timestamp": "2025-12-28T21:13:03.447Z",
+      "status": "verified",
+      "txChecked": 20,
+      "txDecoded": 18,
+      "txFailed": 0,
+      "decodedInstructions": {
+        "swapV2": 11,
+        "swap": 7
+      },
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 18,
+        "successRate": 100,
+        "uniqueDecodedInstructions": 2,
+        "uniqueFailedDiscriminators": 0,
+        "message": "IDL verified: 100% decode success rate",
+        "idlInstructionsCovered": 2,
+        "idlInstructionsTotal": 58,
+        "coveragePercent": 3
+      }
+    },
+    {
+      "protocolId": "orca",
+      "programId": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+      "idlName": "whirlpool",
+      "idlVersion": "0.1.0",
+      "instructionCount": 1,
+      "timestamp": "2025-12-28T21:13:08.628Z",
+      "status": "verified",
+      "txChecked": 20,
+      "txDecoded": 15,
+      "txFailed": 0,
+      "decodedInstructions": {
+        "swap": 15
+      },
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 15,
+        "successRate": 100,
+        "uniqueDecodedInstructions": 1,
+        "uniqueFailedDiscriminators": 0,
+        "message": "IDL verified: 100% decode success rate",
+        "idlInstructionsCovered": 1,
+        "idlInstructionsTotal": 1,
+        "coveragePercent": 100
+      }
+    },
+    {
+      "protocolId": "pancakeswap",
+      "programId": "HpNfyc2Saw7RKkQd8nEL4khUcuPhQ7WwY1B2qjx8jxFq",
+      "idlName": "unknown",
+      "idlVersion": "unknown",
+      "instructionCount": 27,
+      "timestamp": "2025-12-28T21:13:13.929Z",
+      "status": "coder_error",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "Failed to create BorshCoder: Type not found: {\"name\":\"param\",\"type\":{\"defined\":{\"name\":\"InitializeRewardParam\"}}}"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "parrot",
+      "programId": "PARrVs6F5egaNuz8g6pKJyU4ze3eX5xGZCFb3GLiVvu",
+      "idlName": "parrot",
+      "idlVersion": "0.1.0",
+      "instructionCount": 0,
+      "timestamp": "2025-12-28T21:13:14.242Z",
+      "status": "invalid_idl",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "IDL has no instructions defined"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "penguin",
+      "programId": null,
+      "idlName": "penguin",
+      "idlVersion": "0.1.0",
+      "instructionCount": 0,
+      "timestamp": "2025-12-28T21:13:14.649Z",
+      "status": "no_program_id",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "No program ID found in IDL or known mappings"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "permalock",
+      "programId": null,
+      "idlName": "permalock",
+      "idlVersion": "0.1.0",
+      "instructionCount": 0,
+      "timestamp": "2025-12-28T21:13:14.918Z",
+      "status": "no_program_id",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "No program ID found in IDL or known mappings"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "phoenix",
+      "programId": "PhoeNiXZ8ByJGLkxNfZRnkUfjvmuYqLR89jjFHGqdXY",
+      "idlName": "phoenix_v1",
+      "idlVersion": "0.2.4",
+      "instructionCount": 28,
+      "timestamp": "2025-12-28T21:13:15.249Z",
+      "status": "no_program_instructions",
+      "txChecked": 20,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 0,
+        "message": "No instructions found for this program in checked transactions",
+        "idlInstructionsCovered": 0,
+        "idlInstructionsTotal": 28,
+        "coveragePercent": 0
+      }
+    },
+    {
+      "protocolId": "plasma",
+      "programId": "srAMMzfVHVAtgSJc8iH6CfKzuWuUTzLHVCE81QU1rgi",
+      "idlName": "plasma",
+      "idlVersion": "0.1.0",
+      "instructionCount": 10,
+      "timestamp": "2025-12-28T21:13:20.952Z",
+      "status": "no_program_instructions",
+      "txChecked": 20,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 0,
+        "message": "No instructions found for this program in checked transactions",
+        "idlInstructionsCovered": 0,
+        "idlInstructionsTotal": 10,
+        "coveragePercent": 0
+      }
+    },
+    {
+      "protocolId": "pool-manager",
+      "programId": null,
+      "idlName": "pool_manager",
+      "idlVersion": "0.1.0",
+      "instructionCount": 0,
+      "timestamp": "2025-12-28T21:13:24.896Z",
+      "status": "no_program_id",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "No program ID found in IDL or known mappings"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "port",
+      "programId": "Port7uDYB3wk6GJAw4KT1WpTeMtSu9bTcChBHkX2LfR",
+      "idlName": "port_finance",
+      "idlVersion": "0.1.0",
+      "instructionCount": 2,
+      "timestamp": "2025-12-28T21:13:25.159Z",
+      "status": "no_program_instructions",
+      "txChecked": 20,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 0,
+        "message": "No instructions found for this program in checked transactions",
+        "idlInstructionsCovered": 0,
+        "idlInstructionsTotal": 2,
+        "coveragePercent": 0
+      }
+    },
+    {
+      "protocolId": "prism",
+      "programId": "PRSMNi6muTeXJUdTcvgqRfiNGZYZx1JFNvtQcuVpumT",
+      "idlName": "prism",
+      "idlVersion": "0.1.0",
+      "instructionCount": 2,
+      "timestamp": "2025-12-28T21:13:31.992Z",
+      "status": "no_transactions",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "message": "No recent transactions found for this program"
+      }
+    },
+    {
+      "protocolId": "pumpfun",
+      "programId": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+      "idlName": "unknown",
+      "idlVersion": "unknown",
+      "instructionCount": 23,
+      "timestamp": "2025-12-28T21:13:32.527Z",
+      "status": "coder_error",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "Failed to create BorshCoder: Cannot use 'in' operator to search for 'vec' in pubkey"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "pumpswap",
+      "programId": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+      "idlName": "unknown",
+      "idlVersion": "unknown",
+      "instructionCount": 21,
+      "timestamp": "2025-12-28T21:13:32.794Z",
+      "status": "coder_error",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "Failed to create BorshCoder: Cannot use 'in' operator to search for 'vec' in pubkey"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "quarry",
+      "programId": "QMNeHCGYnLVDn1icRAfQZpjPLBNkfGbSKRB83G5d8KB",
+      "idlName": "quarry_mine",
+      "idlVersion": "0.1.0",
+      "instructionCount": 3,
+      "timestamp": "2025-12-28T21:13:33.171Z",
+      "status": "verified",
+      "txChecked": 20,
+      "txDecoded": 7,
+      "txFailed": 0,
+      "decodedInstructions": {
+        "stakeTokens": 7
+      },
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 7,
+        "successRate": 100,
+        "uniqueDecodedInstructions": 1,
+        "uniqueFailedDiscriminators": 0,
+        "message": "IDL verified: 100% decode success rate",
+        "idlInstructionsCovered": 1,
+        "idlInstructionsTotal": 3,
+        "coveragePercent": 33
+      }
+    },
+    {
+      "protocolId": "raydium-amm_v3",
+      "programId": "CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK",
+      "idlName": "amm_v3",
+      "idlVersion": "0.1.0",
+      "instructionCount": 18,
+      "timestamp": "2025-12-28T21:13:38.461Z",
+      "status": "verified",
+      "txChecked": 20,
+      "txDecoded": 2,
+      "txFailed": 0,
+      "decodedInstructions": {
+        "swap": 2
+      },
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 2,
+        "successRate": 100,
+        "uniqueDecodedInstructions": 1,
+        "uniqueFailedDiscriminators": 0,
+        "message": "IDL verified: 100% decode success rate",
+        "idlInstructionsCovered": 1,
+        "idlInstructionsTotal": 18,
+        "coveragePercent": 6
+      }
+    },
+    {
+      "protocolId": "raydium-amm_v3_with_swapv2",
+      "programId": "CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK",
+      "idlName": "amm_v3",
+      "idlVersion": "0.1.0",
+      "instructionCount": 23,
+      "timestamp": "2025-12-28T21:13:43.869Z",
+      "status": "verified",
+      "txChecked": 20,
+      "txDecoded": 10,
+      "txFailed": 0,
+      "decodedInstructions": {
+        "decreaseLiquidityV2": 2,
+        "swap": 2,
+        "swapV2": 6
+      },
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 10,
+        "successRate": 100,
+        "uniqueDecodedInstructions": 3,
+        "uniqueFailedDiscriminators": 0,
+        "message": "IDL verified: 100% decode success rate",
+        "idlInstructionsCovered": 3,
+        "idlInstructionsTotal": 23,
+        "coveragePercent": 13
+      }
+    },
+    {
+      "protocolId": "raydium-launchpad",
+      "programId": "LanMV9sAd7wArD4vJFi2qDdfnVhFxYSUg6eADduJ3uj",
+      "idlName": "unknown",
+      "idlVersion": "unknown",
+      "instructionCount": 22,
+      "timestamp": "2025-12-28T21:13:49.915Z",
+      "status": "coder_error",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "Failed to create BorshCoder: Type not found: {\"name\":\"platform_params\",\"type\":{\"defined\":{\"name\":\"PlatformParams\"}}}"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "raydium-pool_v4",
+      "programId": "675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8",
+      "idlName": "Raydium Liquidity Pool V4",
+      "idlVersion": "4.0.0",
+      "instructionCount": 33,
+      "timestamp": "2025-12-28T21:13:50.211Z",
+      "status": "no_program_instructions",
+      "txChecked": 20,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 0,
+        "message": "No instructions found for this program in checked transactions",
+        "idlInstructionsCovered": 0,
+        "idlInstructionsTotal": 33,
+        "coveragePercent": 0
+      }
+    },
+    {
+      "protocolId": "raydium-raydium_amm",
+      "programId": "675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8",
+      "idlName": "raydium_amm",
+      "idlVersion": "0.3.0",
+      "instructionCount": 18,
+      "timestamp": "2025-12-28T21:13:54.587Z",
+      "status": "coder_error",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "Failed to create BorshCoder: Type not found: {\"name\":\"fees\",\"type\":{\"defined\":\"Fees\"}}"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "raydium-raydium_cp",
+      "programId": "CPMMoo8L3F4NbTegBCKVNunggL7H1ZpdTHKxQB5qKP1C",
+      "idlName": "raydium_cp_swap",
+      "idlVersion": "0.1.0",
+      "instructionCount": 10,
+      "timestamp": "2025-12-28T21:13:55.084Z",
+      "status": "verified",
+      "txChecked": 20,
+      "txDecoded": 20,
+      "txFailed": 0,
+      "decodedInstructions": {
+        "swapBaseInput": 19,
+        "withdraw": 1
+      },
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 20,
+        "successRate": 100,
+        "uniqueDecodedInstructions": 2,
+        "uniqueFailedDiscriminators": 0,
+        "message": "IDL verified: 100% decode success rate",
+        "idlInstructionsCovered": 2,
+        "idlInstructionsTotal": 10,
+        "coveragePercent": 20
+      }
+    },
+    {
+      "protocolId": "raydium",
+      "programId": "675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8",
+      "idlName": "raydium_amm",
+      "idlVersion": "0.1.0",
+      "instructionCount": 3,
+      "timestamp": "2025-12-28T21:14:00.924Z",
+      "status": "no_program_instructions",
+      "txChecked": 20,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 0,
+        "message": "No instructions found for this program in checked transactions",
+        "idlInstructionsCovered": 0,
+        "idlInstructionsTotal": 3,
+        "coveragePercent": 0
+      }
+    },
+    {
+      "protocolId": "ribbon",
+      "programId": "RiBBoNxJJaMKYnqYPDTNTJLHoTugKxYaKYTgrn4jSgp",
+      "idlName": "ribbon_finance",
+      "idlVersion": "0.1.0",
+      "instructionCount": 2,
+      "timestamp": "2025-12-28T21:14:06.356Z",
+      "status": "no_transactions",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "message": "No recent transactions found for this program"
+      }
+    },
+    {
+      "protocolId": "saber-periphery",
+      "programId": "DecZY86MU5Gj7kppfUCEmd4LbXXuyZH1yHaP2NTqdiZB",
+      "idlName": "saber_periphery",
+      "idlVersion": "0.1.0",
+      "instructionCount": 2,
+      "timestamp": "2025-12-28T21:14:06.821Z",
+      "status": "no_program_instructions",
+      "txChecked": 20,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 0,
+        "message": "No instructions found for this program in checked transactions",
+        "idlInstructionsCovered": 0,
+        "idlInstructionsTotal": 2,
+        "coveragePercent": 0
+      }
+    },
+    {
+      "protocolId": "saber",
+      "programId": "SSwpkEEcbUqx4vtoEByFjSkhKdCT862DNVb52nZg1UZ",
+      "idlName": "stable_swap",
+      "idlVersion": "0.1.0",
+      "instructionCount": 2,
+      "timestamp": "2025-12-28T21:14:11.385Z",
+      "status": "no_program_instructions",
+      "txChecked": 20,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 0,
+        "message": "No instructions found for this program in checked transactions",
+        "idlInstructionsCovered": 0,
+        "idlInstructionsTotal": 2,
+        "coveragePercent": 0
+      }
+    },
+    {
+      "protocolId": "sanctum",
+      "programId": "sanctumFUXB7kqhM8hPvLxuTBfLBBVsAKmWWQKh9hLuFnJ",
+      "idlName": "sanctum_spl_stake_pool",
+      "idlVersion": "0.1.0",
+      "instructionCount": 2,
+      "timestamp": "2025-12-28T21:14:17.353Z",
+      "status": "error",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "Invalid public key input"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "saros",
+      "programId": "SSwapUtytfBdBn1b9NUGG6foMVPtcWgpRU32HToDUZr",
+      "idlName": "chainlink_dfeed",
+      "idlVersion": "0.1.0",
+      "instructionCount": 3,
+      "timestamp": "2025-12-28T21:14:17.615Z",
+      "status": "no_program_instructions",
+      "txChecked": 20,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 0,
+        "message": "No instructions found for this program in checked transactions",
+        "idlInstructionsCovered": 0,
+        "idlInstructionsTotal": 3,
+        "coveragePercent": 0
+      }
+    },
+    {
+      "protocolId": "save",
+      "programId": null,
+      "idlName": "save",
+      "idlVersion": "0.1.0",
+      "instructionCount": 0,
+      "timestamp": "2025-12-28T21:14:22.946Z",
+      "status": "no_program_id",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "No program ID found in IDL or known mappings"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "sencha",
+      "programId": "SCHAtsf8mbjyjiv4LkhLKutTf6JnZAbdJKFkXQNMFHZ",
+      "idlName": "sencha",
+      "idlVersion": "0.1.0",
+      "instructionCount": 2,
+      "timestamp": "2025-12-28T21:14:23.211Z",
+      "status": "verified",
+      "txChecked": 20,
+      "txDecoded": 28,
+      "txFailed": 0,
+      "decodedInstructions": {
+        "swap": 28
+      },
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 28,
+        "successRate": 100,
+        "uniqueDecodedInstructions": 1,
+        "uniqueFailedDiscriminators": 0,
+        "message": "IDL verified: 100% decode success rate",
+        "idlInstructionsCovered": 1,
+        "idlInstructionsTotal": 2,
+        "coveragePercent": 50
+      }
+    },
+    {
+      "protocolId": "serum-v2",
+      "programId": "9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin",
+      "idlName": "serum_dex_v2",
+      "idlVersion": "0.2.0",
+      "instructionCount": 2,
+      "timestamp": "2025-12-28T21:14:28.450Z",
+      "status": "no_program_instructions",
+      "txChecked": 20,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 0,
+        "message": "No instructions found for this program in checked transactions",
+        "idlInstructionsCovered": 0,
+        "idlInstructionsTotal": 2,
+        "coveragePercent": 0
+      }
+    },
+    {
+      "protocolId": "serum",
+      "programId": "9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin",
+      "idlName": "Serum Dex",
+      "idlVersion": "0.0.0",
+      "instructionCount": 18,
+      "timestamp": "2025-12-28T21:14:33.998Z",
+      "status": "coder_error",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "Failed to create BorshCoder: Type not found: {\"name\":\"inner\",\"type\":{\"defined\":\"MarketState\"},\"docs\":[]}"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "snapshots",
+      "programId": null,
+      "idlName": "snapshots",
+      "idlVersion": "0.1.0",
+      "instructionCount": 0,
+      "timestamp": "2025-12-28T21:14:34.259Z",
+      "status": "no_program_id",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "No program ID found in IDL or known mappings"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "solanium",
+      "programId": "SoLaUMhM3P6Qy9iRHNMcY52y9tppKSRvb2VX3vW92Jg",
+      "idlName": "solanium",
+      "idlVersion": "0.1.0",
+      "instructionCount": 2,
+      "timestamp": "2025-12-28T21:14:34.641Z",
+      "status": "no_transactions",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "message": "No recent transactions found for this program"
+      }
+    },
+    {
+      "protocolId": "solend",
+      "programId": "So1endDq2YkqhipRh3WViPa8hdiSpxWy6z3Z6tMCpAo",
+      "idlName": "solend",
+      "idlVersion": "0.1.0",
+      "instructionCount": 3,
+      "timestamp": "2025-12-28T21:14:35.168Z",
+      "status": "no_program_instructions",
+      "txChecked": 20,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 0,
+        "message": "No instructions found for this program in checked transactions",
+        "idlInstructionsCovered": 0,
+        "idlInstructionsTotal": 3,
+        "coveragePercent": 0
+      }
+    },
+    {
+      "protocolId": "solfi-solfi",
+      "programId": "SoLFiHG9TfgtdUXUjWAxi3LtvYuFyDLVhBWxdMZxyCe",
+      "idlName": "Solfi",
+      "idlVersion": "0.1.0",
+      "instructionCount": 1,
+      "timestamp": "2025-12-28T21:14:39.608Z",
+      "status": "no_program_instructions",
+      "txChecked": 20,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 0,
+        "message": "No instructions found for this program in checked transactions",
+        "idlInstructionsCovered": 0,
+        "idlInstructionsTotal": 1,
+        "coveragePercent": 0
+      }
+    },
+    {
+      "protocolId": "solfi-solfi_v2",
+      "programId": "SV2EYYJyRz2YhfXwXnhNAevDEui5Q6yrfyo13WtupPF",
+      "idlName": "Solfi_v2",
+      "idlVersion": "0.2.0",
+      "instructionCount": 1,
+      "timestamp": "2025-12-28T21:14:45.475Z",
+      "status": "no_program_instructions",
+      "txChecked": 20,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 0,
+        "message": "No instructions found for this program in checked transactions",
+        "idlInstructionsCovered": 0,
+        "idlInstructionsTotal": 1,
+        "coveragePercent": 0
+      }
+    },
+    {
+      "protocolId": "solfi",
+      "programId": null,
+      "idlName": "solfi",
+      "idlVersion": "0.1.0",
+      "instructionCount": 0,
+      "timestamp": "2025-12-28T21:14:50.958Z",
+      "status": "no_program_id",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "No program ID found in IDL or known mappings"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "solrazr",
+      "programId": null,
+      "idlName": "solrazr",
+      "idlVersion": "0.1.0",
+      "instructionCount": 0,
+      "timestamp": "2025-12-28T21:14:51.436Z",
+      "status": "no_program_id",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "No program ID found in IDL or known mappings"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "solstarter",
+      "programId": null,
+      "idlName": "solstarter",
+      "idlVersion": "0.1.0",
+      "instructionCount": 0,
+      "timestamp": "2025-12-28T21:14:51.698Z",
+      "status": "no_program_id",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "No program ID found in IDL or known mappings"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "spl-associated-token-account",
+      "programId": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+      "idlName": "spl_associated_token_account",
+      "idlVersion": "1.1.2",
+      "instructionCount": 1,
+      "timestamp": "2025-12-28T21:14:52.084Z",
+      "status": "no_program_instructions",
+      "txChecked": 20,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 0,
+        "message": "No instructions found for this program in checked transactions",
+        "idlInstructionsCovered": 0,
+        "idlInstructionsTotal": 1,
+        "coveragePercent": 0
+      }
+    },
+    {
+      "protocolId": "spl-associated-token-program",
+      "programId": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+      "idlName": "spl_associated_token_account",
+      "idlVersion": "1.1.0",
+      "instructionCount": 3,
+      "timestamp": "2025-12-28T21:14:56.660Z",
+      "status": "no_program_instructions",
+      "txChecked": 20,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 0,
+        "message": "No instructions found for this program in checked transactions",
+        "idlInstructionsCovered": 0,
+        "idlInstructionsTotal": 3,
+        "coveragePercent": 0
+      }
+    },
+    {
+      "protocolId": "spl-memo",
+      "programId": "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr",
+      "idlName": "spl_memo",
+      "idlVersion": "3.0.1",
+      "instructionCount": 0,
+      "timestamp": "2025-12-28T21:15:02.687Z",
+      "status": "invalid_idl",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "IDL has no instructions defined"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "spl-name-service",
+      "programId": "namesLPneVptA9Z5rqUDD9tMTWEJwofgaYwp8cawRkX",
+      "idlName": "spl_name_service",
+      "idlVersion": "0.2.0",
+      "instructionCount": 4,
+      "timestamp": "2025-12-28T21:15:03.059Z",
+      "status": "no_program_instructions",
+      "txChecked": 20,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 0,
+        "message": "No instructions found for this program in checked transactions",
+        "idlInstructionsCovered": 0,
+        "idlInstructionsTotal": 4,
+        "coveragePercent": 0
+      }
+    },
+    {
+      "protocolId": "spl-shared-memory",
+      "programId": null,
+      "idlName": "spl_shared_memory",
+      "idlVersion": "2.0.6",
+      "instructionCount": 0,
+      "timestamp": "2025-12-28T21:15:08.279Z",
+      "status": "no_program_id",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "No program ID found in IDL or known mappings"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "spl-token-2022",
+      "programId": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+      "idlName": "spl_token_2022",
+      "idlVersion": "0.9.1",
+      "instructionCount": 43,
+      "timestamp": "2025-12-28T21:15:08.775Z",
+      "status": "coder_error",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "Failed to create BorshCoder: Type not found: {\"name\":\"uiAmount\",\"type\":{\"defined\":\"&'astr\"}}"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "spl-token-lending",
+      "programId": "LendZqTs7gn5CTSJU1jWKhKuVpjJGom45nnwPb2AMTi",
+      "idlName": "spl_token_lending",
+      "idlVersion": "0.2.0",
+      "instructionCount": 15,
+      "timestamp": "2025-12-28T21:15:09.039Z",
+      "status": "coder_error",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "Failed to create BorshCoder: Type not found: {\"name\":\"marketValue\",\"type\":{\"defined\":\"Decimal\"}}"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "spl-token-swap",
+      "programId": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "idlName": "spl_token_swap",
+      "idlVersion": "3.0.0",
+      "instructionCount": 6,
+      "timestamp": "2025-12-28T21:15:09.533Z",
+      "status": "coder_error",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "Failed to create BorshCoder: Type not found: {\"name\":\"calculator\",\"type\":{\"defined\":\"Arc<dynCurveCalculator+Sync+Send>\"}}"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "spl-token",
+      "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+      "idlName": "token",
+      "idlVersion": "0.0.0",
+      "instructionCount": 21,
+      "timestamp": "2025-12-28T21:15:09.888Z",
+      "status": "no_program_instructions",
+      "txChecked": 20,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 0,
+        "message": "No instructions found for this program in checked transactions",
+        "idlInstructionsCovered": 0,
+        "idlInstructionsTotal": 21,
+        "coveragePercent": 0
+      }
+    },
+    {
+      "protocolId": "stabble",
+      "programId": null,
+      "idlName": "stabble",
+      "idlVersion": "0.1.0",
+      "instructionCount": 0,
+      "timestamp": "2025-12-28T21:15:15.793Z",
+      "status": "no_program_id",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "No program ID found in IDL or known mappings"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "stable-swap",
+      "programId": "SSwpkEEcbUqx4vtoEByFjSkhKdCT862DNVb52nZg1UZ",
+      "idlName": "stable_swap",
+      "idlVersion": "0.1.0",
+      "instructionCount": 2,
+      "timestamp": "2025-12-28T21:15:16.056Z",
+      "status": "coder_error",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "Failed to create BorshCoder: Type not found: {\"name\":\"fees\",\"type\":{\"defined\":\"Fees\"}}"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "starlaunch",
+      "programId": null,
+      "idlName": "starlaunch",
+      "idlVersion": "0.1.0",
+      "instructionCount": 0,
+      "timestamp": "2025-12-28T21:15:16.433Z",
+      "status": "no_program_id",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "No program ID found in IDL or known mappings"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "step",
+      "programId": "STEP6uo1vC9GdDLkqXRs8D7mw6Y3Vhn9rjxhHEV8sTg",
+      "idlName": "step_finance",
+      "idlVersion": "0.1.0",
+      "instructionCount": 1,
+      "timestamp": "2025-12-28T21:15:16.979Z",
+      "status": "no_transactions",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "message": "No recent transactions found for this program"
+      }
+    },
+    {
+      "protocolId": "stepn",
+      "programId": null,
+      "idlName": "stepn",
+      "idlVersion": "0.1.0",
+      "instructionCount": 0,
+      "timestamp": "2025-12-28T21:15:17.437Z",
+      "status": "no_program_id",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "No program ID found in IDL or known mappings"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "store",
+      "programId": null,
+      "idlName": "store",
+      "idlVersion": "1.0.0",
+      "instructionCount": 13,
+      "timestamp": "2025-12-28T21:15:18.083Z",
+      "status": "no_program_id",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "No program ID found in IDL or known mappings"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "sunny",
+      "programId": "SUNNY6y3j1qLwf6TUVQeaEfZQ8HaZphRH5W97HWZZLX",
+      "idlName": "sunny_aggregator",
+      "idlVersion": "0.1.0",
+      "instructionCount": 2,
+      "timestamp": "2025-12-28T21:15:18.379Z",
+      "status": "no_transactions",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "message": "No recent transactions found for this program"
+      }
+    },
+    {
+      "protocolId": "switchboard",
+      "programId": "SW1TCH7qEPTdLsDHRgPuMQjbQxKdH2aBStViMFnt64f",
+      "idlName": "switchboard_v2",
+      "idlVersion": "0.1.0",
+      "instructionCount": 2,
+      "timestamp": "2025-12-28T21:15:18.849Z",
+      "status": "coder_error",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "Failed to create BorshCoder: Type not found: {\"name\":\"params\",\"type\":{\"defined\":\"AggregatorInitParams\"}}"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "symmetry",
+      "programId": "symwMw4ZF1ATh9PNvBjGFqYJkXLqgCK7zZSkhh5Y6DX",
+      "idlName": "symmetry_engine",
+      "idlVersion": "0.1.0",
+      "instructionCount": 2,
+      "timestamp": "2025-12-28T21:15:19.114Z",
+      "status": "no_transactions",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "message": "No recent transactions found for this program"
+      }
+    },
+    {
+      "protocolId": "synthetify",
+      "programId": "SNTYtJHabQgFsEHV1vvZhQ7XLk2TwK6c6M6dXqK8C4C",
+      "idlName": "synthetify",
+      "idlVersion": "0.1.0",
+      "instructionCount": 2,
+      "timestamp": "2025-12-28T21:15:19.580Z",
+      "status": "no_transactions",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "message": "No recent transactions found for this program"
+      }
+    },
+    {
+      "protocolId": "tensor",
+      "programId": "TSWAPaqyCSx2KABk68Shruf4rp7CxcNi8hAsbdwmHbN",
+      "idlName": "tensorswap",
+      "idlVersion": "3.1.0",
+      "instructionCount": 46,
+      "timestamp": "2025-12-28T21:15:20.047Z",
+      "status": "verified",
+      "txChecked": 20,
+      "txDecoded": 17,
+      "txFailed": 0,
+      "decodedInstructions": {
+        "depositMarginAccount": 7,
+        "withdrawMarginAccountCpiTcomp": 6,
+        "initMarginAccount": 2,
+        "withdrawMarginAccount": 2
+      },
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 17,
+        "successRate": 100,
+        "uniqueDecodedInstructions": 4,
+        "uniqueFailedDiscriminators": 0,
+        "message": "IDL verified: 100% decode success rate",
+        "idlInstructionsCovered": 4,
+        "idlInstructionsTotal": 46,
+        "coveragePercent": 9
+      }
+    },
+    {
+      "protocolId": "tesserav",
+      "programId": null,
+      "idlName": "tesserav",
+      "idlVersion": "0.1.0",
+      "instructionCount": 0,
+      "timestamp": "2025-12-28T21:15:24.542Z",
+      "status": "no_program_id",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "No program ID found in IDL or known mappings"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "titan",
+      "programId": null,
+      "idlName": "titan",
+      "idlVersion": "0.1.0",
+      "instructionCount": 0,
+      "timestamp": "2025-12-28T21:15:24.831Z",
+      "status": "no_program_id",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "No program ID found in IDL or known mappings"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "tribeca",
+      "programId": "Govz1VyoyLD5BL6CSCxUJLVLsQHRwjfFj1prNsdNg5Jw",
+      "idlName": "govern",
+      "idlVersion": "0.1.0",
+      "instructionCount": 3,
+      "timestamp": "2025-12-28T21:15:25.093Z",
+      "status": "coder_error",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "Failed to create BorshCoder: Type not found: {\"name\":\"params\",\"type\":{\"defined\":\"GovernanceParameters\"}}"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "tulip",
+      "programId": "TuLipcqtGVXP9XR62wM8WWCm6a9vhLs7T9g8bHrzGxe",
+      "idlName": "tulip",
+      "idlVersion": "0.1.0",
+      "instructionCount": 2,
+      "timestamp": "2025-12-28T21:15:25.354Z",
+      "status": "no_transactions",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "message": "No recent transactions found for this program"
+      }
+    },
+    {
+      "protocolId": "uxd",
+      "programId": "UXD8m9cvwk4RcSxnX2HZ9VudQCEeDH6fRnB4CAP57Dr",
+      "idlName": "uxd",
+      "idlVersion": "0.1.0",
+      "instructionCount": 2,
+      "timestamp": "2025-12-28T21:15:25.874Z",
+      "status": "verified",
+      "txChecked": 20,
+      "txDecoded": 20,
+      "txFailed": 0,
+      "decodedInstructions": {
+        "redeem": 20
+      },
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 20,
+        "successRate": 100,
+        "uniqueDecodedInstructions": 1,
+        "uniqueFailedDiscriminators": 0,
+        "message": "IDL verified: 100% decode success rate",
+        "idlInstructionsCovered": 1,
+        "idlInstructionsTotal": 2,
+        "coveragePercent": 50
+      }
+    },
+    {
+      "protocolId": "venko",
+      "programId": null,
+      "idlName": "venko",
+      "idlVersion": "0.1.0",
+      "instructionCount": 0,
+      "timestamp": "2025-12-28T21:15:31.847Z",
+      "status": "no_program_id",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "No program ID found in IDL or known mappings"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "whirlpool",
+      "programId": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+      "idlName": "whirlpool",
+      "idlVersion": "0.1.0",
+      "instructionCount": 2,
+      "timestamp": "2025-12-28T21:15:32.106Z",
+      "status": "verified",
+      "txChecked": 20,
+      "txDecoded": 12,
+      "txFailed": 0,
+      "decodedInstructions": {
+        "swap": 12
+      },
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 12,
+        "successRate": 100,
+        "uniqueDecodedInstructions": 1,
+        "uniqueFailedDiscriminators": 0,
+        "message": "IDL verified: 100% decode success rate",
+        "idlInstructionsCovered": 1,
+        "idlInstructionsTotal": 2,
+        "coveragePercent": 50
+      }
+    },
+    {
+      "protocolId": "yi",
+      "programId": "EewxydAPCCVuNEyrVN68PuSYdQ7wKn27V9Gjeoi8dy3S",
+      "idlName": "yi",
+      "idlVersion": "0.1.0",
+      "instructionCount": 0,
+      "timestamp": "2025-12-28T21:15:37.555Z",
+      "status": "invalid_idl",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "IDL has no instructions defined"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "zerofi",
+      "programId": null,
+      "idlName": "zerofi",
+      "idlVersion": "0.1.0",
+      "instructionCount": 0,
+      "timestamp": "2025-12-28T21:15:37.816Z",
+      "status": "no_program_id",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "No program ID found in IDL or known mappings"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "zeroone",
+      "programId": null,
+      "idlName": "zeroone",
+      "idlVersion": "0.1.0",
+      "instructionCount": 0,
+      "timestamp": "2025-12-28T21:15:38.081Z",
+      "status": "no_program_id",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "No program ID found in IDL or known mappings"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "zeta",
+      "programId": "ZETAxsqBRek56DhiGXrn75yj2NHU3aYUnxvHXpkf3aD",
+      "idlName": "zeta",
+      "idlVersion": "0.1.0",
+      "instructionCount": 3,
+      "timestamp": "2025-12-28T21:15:38.347Z",
+      "status": "no_program_instructions",
+      "txChecked": 20,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [],
+      "details": {
+        "signaturesFound": 20,
+        "totalInstructionsAttempted": 0,
+        "message": "No instructions found for this program in checked transactions",
+        "idlInstructionsCovered": 0,
+        "idlInstructionsTotal": 3,
+        "coveragePercent": 0
+      }
+    },
+    {
+      "protocolId": "test-upload",
+      "programId": null,
+      "idlName": "test_upload",
+      "idlVersion": "0.1.0",
+      "instructionCount": 0,
+      "timestamp": "2025-12-28T21:15:44.932Z",
+      "status": "no_program_id",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "No program ID found in IDL or known mappings"
+      ],
+      "details": {}
+    },
+    {
+      "protocolId": "stableswap-amm",
+      "programId": "3AMM53MsJZy2Jvf7PeHHga3bsGjWV4TSaYz29WUtcdje",
+      "idlName": "stableswap_amm",
+      "idlVersion": "0.1.0",
+      "instructionCount": 43,
+      "timestamp": "2025-12-28T21:15:45.259Z",
+      "status": "coder_error",
+      "txChecked": 0,
+      "txDecoded": 0,
+      "txFailed": 0,
+      "decodedInstructions": {},
+      "failedInstructions": {},
+      "errors": [
+        "Failed to create BorshCoder: Cannot use 'in' operator to search for 'vec' in Candle"
+      ],
+      "details": {}
+    }
+  ]
+}

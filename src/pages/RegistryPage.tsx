@@ -45,6 +45,12 @@ interface Protocol {
     accounts?: number;
     tvl?: number;
   };
+  txVerification?: {
+    status: string;
+    successRate?: number;
+    coverage?: number;
+    message?: string;
+  };
 }
 
 interface IDLData {
@@ -129,6 +135,40 @@ export default function RegistryPage() {
           console.log('No bounties data available');
         }
 
+        // Load tx verification results from static file
+        let txVerificationMap: Record<string, any> = {};
+        try {
+          const txRes = await fetch('/data/tx-verification-results.json');
+          if (txRes.ok) {
+            const txData = await txRes.json();
+            if (txData.protocols) {
+              for (const p of txData.protocols) {
+                // Calculate success rate as percentage
+                const successRate = p.txChecked > 0
+                  ? Math.round((p.txDecoded / p.txChecked) * 100)
+                  : null;
+                // Calculate coverage as percentage of decoded instructions
+                const decodedCount = Object.keys(p.decodedInstructions || {}).length;
+                const coverage = p.instructionCount > 0
+                  ? Math.round((decodedCount / p.instructionCount) * 100)
+                  : null;
+
+                txVerificationMap[p.protocolId] = {
+                  status: p.status,
+                  successRate,
+                  coverage,
+                  message: p.details?.message || p.errors?.[0] || p.status,
+                  programId: p.programId,
+                  txChecked: p.txChecked,
+                  txDecoded: p.txDecoded,
+                };
+              }
+            }
+          }
+        } catch (e) {
+          console.log('No tx verification data available');
+        }
+
         const protocols: Protocol[] = Object.entries(manifest.idls).map(([id, data]: [string, any]) => {
           const bountyData = bounties.bounties[id];
           return {
@@ -144,7 +184,8 @@ export default function RegistryPage() {
             bounty: bountyData ? {
               total: 1000 + bountyData.total_amount,
               stakers: bountyData.stakers?.length || 0
-            } : undefined
+            } : undefined,
+            txVerification: txVerificationMap[id],
           };
         });
 
@@ -266,7 +307,9 @@ export default function RegistryPage() {
   const stats = useMemo(() => ({
     total: allProtocols.length,
     available: allProtocols.filter(p => p.status === 'available').length,
-    selected: selectedProtocols.size
+    selected: selectedProtocols.size,
+    txVerified: allProtocols.filter(p => p.txVerification?.status === 'verified').length,
+    txIssues: allProtocols.filter(p => p.txVerification && p.txVerification.status !== 'verified').length,
   }), [allProtocols, selectedProtocols]);
 
   // Save bookmarks to localStorage
@@ -1054,6 +1097,14 @@ SolInstruction create_${instruction.name}_instruction(
             <div className="stat-label">IDLs Available</div>
           </div>
           <div className="stat">
+            <div className="stat-number stat-verified">{stats.txVerified}</div>
+            <div className="stat-label">TX Verified</div>
+          </div>
+          <div className="stat">
+            <div className="stat-number stat-issues">{stats.txIssues}</div>
+            <div className="stat-label">Need Fixing</div>
+          </div>
+          <div className="stat">
             <div className="stat-number">{stats.selected}</div>
             <div className="stat-label">Selected</div>
           </div>
@@ -1112,94 +1163,131 @@ SolInstruction create_${instruction.name}_instruction(
         </div>
       </div>
 
-      {/* Protocols List */}
-      <div className="protocols-list">
+      {/* Protocols Table */}
+      <div className="protocols-table-container">
         {filteredProtocols.length === 0 ? (
           <div className="no-results">
             <h3>No protocols found</h3>
             <p>Try adjusting your search or filters</p>
           </div>
         ) : (
-          filteredProtocols.map(protocol => (
-            <div
-              key={protocol.id}
-              className={`protocol-item ${currentProtocolId === protocol.id ? 'selected' : ''}`}
-              onClick={(e) => selectProtocol(protocol.id, e)}
-            >
-              <input
-                type="checkbox"
-                className="protocol-checkbox"
-                checked={selectedProtocols.has(protocol.id)}
-                onChange={() => toggleCheckbox(protocol.id)}
-              />
-              <button
-                className={`bookmark-btn ${bookmarkedProtocols.has(protocol.id) ? 'bookmarked' : ''}`}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  toggleBookmark(protocol.id);
-                }}
-                title={bookmarkedProtocols.has(protocol.id) ? 'Remove bookmark' : 'Bookmark protocol'}
-              >
-                ★
-              </button>
-              <div className="protocol-info">
-                <div className="protocol-header">
-                  <span className="protocol-name">{protocol.name}</span>
-                  <span className={`protocol-badge badge-${protocol.status || 'placeholder'}`}>
-                    {protocol.status || 'placeholder'}
-                  </span>
-                  <span className="category-badge">{protocol.category || 'Unknown'}</span>
-                  {protocol.bounty && (
-                    <span className="bounty-badge" title={`${protocol.bounty.stakers} community contributor${protocol.bounty.stakers !== 1 ? 's' : ''}`}>
-                      💰 {protocol.bounty.total} IDL
+          <table className="protocols-table">
+            <thead>
+              <tr>
+                <th className="col-checkbox"></th>
+                <th className="col-name">Protocol</th>
+                <th className="col-category">Category</th>
+                <th className="col-status">IDL Status</th>
+                <th className="col-tx-status">TX Verify</th>
+                <th className="col-rate">Rate</th>
+                <th className="col-coverage">Coverage</th>
+                <th className="col-actions">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredProtocols.map(protocol => (
+                <tr
+                  key={protocol.id}
+                  className={`protocol-row ${currentProtocolId === protocol.id ? 'selected' : ''}`}
+                  onClick={(e) => selectProtocol(protocol.id, e)}
+                >
+                  <td className="col-checkbox">
+                    <input
+                      type="checkbox"
+                      className="protocol-checkbox"
+                      checked={selectedProtocols.has(protocol.id)}
+                      onChange={() => toggleCheckbox(protocol.id)}
+                    />
+                  </td>
+                  <td className="col-name">
+                    <div className="protocol-name-cell">
+                      <button
+                        className={`bookmark-btn ${bookmarkedProtocols.has(protocol.id) ? 'bookmarked' : ''}`}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleBookmark(protocol.id);
+                        }}
+                        title={bookmarkedProtocols.has(protocol.id) ? 'Remove bookmark' : 'Bookmark'}
+                      >
+                        ★
+                      </button>
+                      <span className="protocol-name">{protocol.name}</span>
+                      {protocol.bounty && (
+                        <span className="bounty-badge" title={`${protocol.bounty.total} IDL bounty`}>
+                          💰
+                        </span>
+                      )}
+                    </div>
+                  </td>
+                  <td className="col-category">
+                    <span className="category-badge">{protocol.category || 'Unknown'}</span>
+                  </td>
+                  <td className="col-status">
+                    <span className={`protocol-badge badge-${protocol.status || 'placeholder'}`}>
+                      {protocol.status || 'placeholder'}
                     </span>
-                  )}
-                </div>
-                <div className="protocol-description">
-                  {protocol.description || 'No description available'}
-                </div>
-                <div className="protocol-meta">
-                  {protocol.repo && (
-                    <>
-                      <a href={protocol.repo} target="_blank" rel="noopener noreferrer">Repository</a>
-                      {' • '}
-                    </>
-                  )}
-                  Version {protocol.version || 'N/A'} • Updated {protocol.lastUpdated || 'N/A'}
-                </div>
-                {formatMetrics(protocol.metrics)}
-              </div>
-              <div className="protocol-actions">
-                <button
-                  className="icon-btn"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    window.open(`/api/idl/${protocol.id}`, '_blank');
-                  }}
-                  title="View IDL"
-                >
-                  View IDL
-                </button>
-                <button
-                  className="icon-btn"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    downloadIDL(protocol.id);
-                  }}
-                  title="Download IDL"
-                >
-                  Download
-                </button>
-                <a
-                  href={`/protocol#bet-${protocol.id}`}
-                  className="icon-btn btn-bet"
-                  title="Bet on Metrics"
-                >
-                  Bet on Metrics
-                </a>
-              </div>
-            </div>
-          ))
+                  </td>
+                  <td className="col-tx-status">
+                    {protocol.txVerification ? (
+                      <span
+                        className={`tx-verify-badge tx-verify-${protocol.txVerification.status}`}
+                        title={protocol.txVerification.message || protocol.txVerification.status}
+                      >
+                        {protocol.txVerification.status === 'verified' && '✓ Verified'}
+                        {protocol.txVerification.status === 'partial' && '~ Partial'}
+                        {protocol.txVerification.status === 'outdated' && '! Outdated'}
+                        {protocol.txVerification.status === 'invalid' && '✗ Invalid'}
+                        {protocol.txVerification.status === 'invalid_idl' && '✗ Bad IDL'}
+                        {protocol.txVerification.status === 'no_program_id' && '? No ID'}
+                        {protocol.txVerification.status === 'no_transactions' && '○ No TXs'}
+                        {protocol.txVerification.status === 'no_program_instructions' && '○ No Match'}
+                        {protocol.txVerification.status === 'coder_error' && '! Coder Err'}
+                        {protocol.txVerification.status === 'error' && '✗ Error'}
+                      </span>
+                    ) : (
+                      <span className="tx-verify-badge tx-verify-pending">—</span>
+                    )}
+                  </td>
+                  <td className="col-rate">
+                    {protocol.txVerification?.successRate !== undefined ? (
+                      <span className={protocol.txVerification.successRate === 100 ? 'rate-good' : protocol.txVerification.successRate >= 50 ? 'rate-partial' : 'rate-bad'}>
+                        {protocol.txVerification.successRate}%
+                      </span>
+                    ) : '—'}
+                  </td>
+                  <td className="col-coverage">
+                    {protocol.txVerification?.coverage !== undefined ? (
+                      <span className={protocol.txVerification.coverage >= 50 ? 'coverage-good' : 'coverage-low'}>
+                        {protocol.txVerification.coverage}%
+                      </span>
+                    ) : '—'}
+                  </td>
+                  <td className="col-actions">
+                    <button
+                      className="icon-btn"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        downloadIDL(protocol.id);
+                      }}
+                      title="Download IDL"
+                    >
+                      ↓
+                    </button>
+                    <button
+                      className="icon-btn"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        window.open(`/api/idl/${protocol.id}`, '_blank');
+                      }}
+                      title="View JSON"
+                    >
+                      { }
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         )}
       </div>
 

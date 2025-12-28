@@ -136,6 +136,14 @@
   color: var(--accent-primary);
 }
 
+.stat-number.stat-verified {
+  color: #00ff88;
+}
+
+.stat-number.stat-issues {
+  color: #ffa500;
+}
+
 .stat-label {
   font-size: 11px;
   color: var(--text-secondary);
@@ -387,6 +395,180 @@
   font-weight: 600;
   text-transform: uppercase;
   cursor: help;
+}
+
+/* TX Verification badges */
+.tx-verify-badge {
+  padding: 2px 6px;
+  border-radius: 0;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  cursor: help;
+}
+
+.tx-verify-verified {
+  background: rgba(0, 255, 136, 0.1);
+  color: #00ff88;
+  border: 1px solid #00ff88;
+}
+
+.tx-verify-partial {
+  background: rgba(255, 165, 0, 0.1);
+  color: #ffa500;
+  border: 1px solid #ffa500;
+}
+
+.tx-verify-outdated {
+  background: rgba(255, 165, 0, 0.1);
+  color: #ffa500;
+  border: 1px solid #ffa500;
+}
+
+.tx-verify-invalid,
+.tx-verify-invalid_idl,
+.tx-verify-error {
+  background: rgba(255, 0, 0, 0.1);
+  color: #ff4444;
+  border: 1px solid #ff4444;
+}
+
+.tx-verify-no_program_id,
+.tx-verify-no_transactions,
+.tx-verify-no_program_instructions {
+  background: rgba(128, 128, 128, 0.1);
+  color: #888;
+  border: 1px solid #666;
+}
+
+.tx-verify-coder_error {
+  background: rgba(255, 100, 0, 0.1);
+  color: #ff6400;
+  border: 1px solid #ff6400;
+}
+
+.tx-verify-pending {
+  color: var(--text-secondary);
+}
+
+/* Protocols Table */
+.protocols-table-container {
+  overflow-x: auto;
+  background: var(--bg-secondary);
+}
+
+.protocols-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.protocols-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.protocols-table th {
+  padding: 10px 12px;
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  font-size: 10px;
+  background: var(--bg-tertiary);
+  border-bottom: 2px solid var(--border-primary);
+  white-space: nowrap;
+}
+
+.protocols-table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border-secondary);
+  vertical-align: middle;
+}
+
+.protocols-table .protocol-row {
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.protocols-table .protocol-row:hover {
+  background: var(--bg-tertiary);
+}
+
+.protocols-table .protocol-row.selected {
+  background: rgba(0, 255, 136, 0.05);
+  border-left: 2px solid var(--accent-primary);
+}
+
+/* Column widths */
+.col-checkbox { width: 30px; text-align: center; }
+.col-name { min-width: 150px; }
+.col-category { width: 80px; }
+.col-status { width: 80px; }
+.col-tx-status { width: 100px; }
+.col-rate { width: 60px; text-align: center; }
+.col-coverage { width: 70px; text-align: center; }
+.col-actions { width: 80px; text-align: center; }
+
+/* Protocol name cell */
+.protocol-name-cell {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.protocol-name-cell .bookmark-btn {
+  padding: 0;
+  width: 16px;
+  height: 16px;
+  font-size: 12px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.protocol-name-cell .protocol-name {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.protocol-name-cell .bounty-badge {
+  font-size: 10px;
+  padding: 0;
+  border: none;
+  background: none;
+}
+
+/* Rate and coverage colors */
+.rate-good { color: #00ff88; font-weight: 600; }
+.rate-partial { color: #ffa500; }
+.rate-bad { color: #ff4444; }
+
+.coverage-good { color: #00ff88; }
+.coverage-low { color: var(--text-secondary); }
+
+/* Table action buttons */
+.col-actions .icon-btn {
+  padding: 4px 8px;
+  font-size: 12px;
+  margin: 0 2px;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .protocols-table {
+    font-size: 11px;
+  }
+
+  .col-category,
+  .col-coverage {
+    display: none;
+  }
+
+  .protocols-table th,
+  .protocols-table td {
+    padding: 6px 8px;
+  }
 }
 
 .protocol-description {
