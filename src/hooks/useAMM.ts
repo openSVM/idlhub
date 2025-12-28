@@ -1,26 +1,73 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useWallet } from '../context/WalletContext';
 import { PublicKey, Transaction, TransactionInstruction, SystemProgram } from '@solana/web3.js';
-import { TOKEN_PROGRAM_ID, getAssociatedTokenAddress, createAssociatedTokenAccountInstruction } from '@solana/spl-token';
 import * as anchor from '@coral-xyz/anchor';
 import { PROGRAM_ID, DISCRIMINATORS, CONSTANTS } from '../amm-types';
+
+// Token Program constants - replacing @solana/spl-token to eliminate bigint-buffer vulnerability
+const TOKEN_PROGRAM_ID = new PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA');
+const ASSOCIATED_TOKEN_PROGRAM_ID = new PublicKey('ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL');
+
+// Pure JS implementation of getAssociatedTokenAddress (no native bindings)
+async function getAssociatedTokenAddress(
+  mint: PublicKey,
+  owner: PublicKey,
+  allowOwnerOffCurve = false,
+  programId = TOKEN_PROGRAM_ID,
+  associatedTokenProgramId = ASSOCIATED_TOKEN_PROGRAM_ID
+): Promise<PublicKey> {
+  const [address] = PublicKey.findProgramAddressSync(
+    [owner.toBuffer(), programId.toBuffer(), mint.toBuffer()],
+    associatedTokenProgramId
+  );
+  return address;
+}
 
 const BN = anchor.BN;
 
 // Lazy initialization to avoid module-scope side effects (breaks Vite builds)
 let _TOKEN0_MINT: PublicKey;
 let _TOKEN1_MINT: PublicKey;
+let _tokensInitialized = false;
+
+// Try to load devnet tokens from config, fallback to defaults
+const initTokens = async () => {
+  if (_tokensInitialized) return;
+
+  try {
+    const res = await fetch('/api/faucet/config');
+    if (res.ok) {
+      const config = await res.json();
+      if (config.tokens?.bags?.devnet && config.tokens?.pump?.devnet) {
+        _TOKEN0_MINT = new PublicKey(config.tokens.bags.devnet);
+        _TOKEN1_MINT = new PublicKey(config.tokens.pump.devnet);
+        _tokensInitialized = true;
+        console.log('AMM: Using devnet BAGS/PUMP tokens');
+        return;
+      }
+    }
+  } catch {
+    // Fallback to defaults
+  }
+
+  // Fallback: use mainnet BAGS/PUMP
+  _TOKEN0_MINT = new PublicKey('8zdhHxthCFoigAGw4QRxWfXUWLY1KkMZ1r7CTcmiBAGS'); // BAGS
+  _TOKEN1_MINT = new PublicKey('4GihJrYJGQ9pjqDySTjd57y1h3nNkEZNbzJxCbispump'); // PUMP
+  _tokensInitialized = true;
+  console.log('AMM: Using mainnet BAGS/PUMP tokens (fallback)');
+};
 
 const getToken0Mint = () => {
   if (!_TOKEN0_MINT) {
-    _TOKEN0_MINT = new PublicKey('So11111111111111111111111111111111111111112'); // SOL
+    // Sync fallback - will be overridden by async init
+    _TOKEN0_MINT = new PublicKey('8zdhHxthCFoigAGw4QRxWfXUWLY1KkMZ1r7CTcmiBAGS');
   }
   return _TOKEN0_MINT;
 };
 
 const getToken1Mint = () => {
   if (!_TOKEN1_MINT) {
-    _TOKEN1_MINT = new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'); // USDC
+    _TOKEN1_MINT = new PublicKey('4GihJrYJGQ9pjqDySTjd57y1h3nNkEZNbzJxCbispump');
   }
   return _TOKEN1_MINT;
 };
@@ -124,9 +171,12 @@ export function usePoolState() {
       setLoading(true);
       setError(null);
 
-      // Pool PDA: seeds = [mint0, mint1, "pool"]
+      // Initialize tokens from config (devnet or mainnet)
+      await initTokens();
+
+      // Pool PDA: seeds = ["pool", mint0]
       const [poolPDA] = PublicKey.findProgramAddressSync(
-        [getToken0Mint().toBuffer(), getToken1Mint().toBuffer(), Buffer.from('pool')],
+        [Buffer.from('pool'), getToken0Mint().toBuffer()],
         PROGRAM_ID
       );
 

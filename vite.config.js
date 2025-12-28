@@ -39,7 +39,7 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          'solana': ['@solana/web3.js', '@solana/spl-token'],
+          'solana': ['@solana/web3.js'],
           'react-vendor': ['react', 'react-dom', 'react-router-dom']
         }
       }

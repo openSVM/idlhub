@@ -60,7 +60,12 @@
     "bot:telegram": "npx ts-node bots/telegram-bot.ts",
     "bot:twitter": "npx ts-node bots/twitter-bot.ts",
     "bot:market-maker": "npx ts-node bots/ai-market-maker.ts",
-    "bot:all": "npm-run-all --parallel bot:telegram bot:twitter bot:market-maker"
+    "bot:all": "npm-run-all --parallel bot:telegram bot:twitter bot:market-maker",
+    "verify:tx": "node api/services/idl-tx-verifier.cjs",
+    "verify:tx:all": "node api/services/idl-tx-verifier.cjs --all",
+    "verify:tx:verbose": "node api/services/idl-tx-verifier.cjs -v",
+    "devnet:setup": "node scripts/devnet-setup.js",
+    "devnet:init-pool": "node scripts/devnet-init-pool.js"
   },
   "bin": {
     "idlhub-mcp": "./mcp-server/src/index.js"
@@ -108,6 +113,6 @@
     "pngjs": "^7.0.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3",
-    "vite": "^5.4.21"
+    "vite": "^7.3.0"
   }
 }
