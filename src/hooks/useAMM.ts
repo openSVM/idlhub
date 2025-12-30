@@ -5,20 +5,38 @@ import * as anchor from '@coral-xyz/anchor';
 import { getProgramId, DISCRIMINATORS, CONSTANTS } from '../amm-types';
 
 // Token Program constants - replacing @solana/spl-token to eliminate bigint-buffer vulnerability
-const TOKEN_PROGRAM_ID = new PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA');
-const ASSOCIATED_TOKEN_PROGRAM_ID = new PublicKey('ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL');
+// Lazy initialization to avoid module-scope side effects (breaks Vite builds)
+let _TOKEN_PROGRAM_ID: PublicKey;
+let _ASSOCIATED_TOKEN_PROGRAM_ID: PublicKey;
+
+const getTokenProgramId = () => {
+  if (!_TOKEN_PROGRAM_ID) {
+    _TOKEN_PROGRAM_ID = new PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA');
+  }
+  return _TOKEN_PROGRAM_ID;
+};
+
+const getAssociatedTokenProgramId = () => {
+  if (!_ASSOCIATED_TOKEN_PROGRAM_ID) {
+    _ASSOCIATED_TOKEN_PROGRAM_ID = new PublicKey('ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL');
+  }
+  return _ASSOCIATED_TOKEN_PROGRAM_ID;
+};
 
 // Pure JS implementation of getAssociatedTokenAddress (no native bindings)
 async function getAssociatedTokenAddress(
   mint: PublicKey,
   owner: PublicKey,
   allowOwnerOffCurve = false,
-  programId = TOKEN_PROGRAM_ID,
-  associatedTokenProgramId = ASSOCIATED_TOKEN_PROGRAM_ID
+  programId?: PublicKey,
+  associatedTokenProgramId?: PublicKey
 ): Promise<PublicKey> {
+  const tokenProgramId = programId || getTokenProgramId();
+  const assocTokenProgramId = associatedTokenProgramId || getAssociatedTokenProgramId();
+
   const [address] = PublicKey.findProgramAddressSync(
-    [owner.toBuffer(), programId.toBuffer(), mint.toBuffer()],
-    associatedTokenProgramId
+    [owner.toBuffer(), tokenProgramId.toBuffer(), mint.toBuffer()],
+    assocTokenProgramId
   );
   return address;
 }
@@ -299,7 +317,7 @@ export function useAMM() {
           { pubkey: userToken0, isSigner: false, isWritable: true },
           { pubkey: userToken1, isSigner: false, isWritable: true },
           { pubkey: publicKey, isSigner: true, isWritable: false },
-          { pubkey: TOKEN_PROGRAM_ID, isSigner: false, isWritable: false },
+          { pubkey: getTokenProgramId(), isSigner: false, isWritable: false },
         ],
         data: Buffer.concat([
           fromToken === 'token0'

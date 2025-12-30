@@ -13,11 +13,13 @@ import { fileURLToPath } from 'url';
 import { createRequire } from 'module';
 import * as arweaveUpload from './services/arweave-upload.js';
 import * as txMetrics from './services/tx-metrics.js';
+import faucetRouter from './routes/faucet.js';
 
 // Use require for CommonJS modules
 const require = createRequire(import.meta.url);
 const idlVerifier = require('./services/idl-verifier.js');
 const verificationScheduler = require('./services/verification-scheduler.js');
+const idlTxVerifier = require('./services/idl-tx-verifier.cjs');
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -595,14 +597,35 @@ app.get('/api/status', (req, res) => {
   const schedulerStatus = verificationScheduler.getSchedulerStatus();
   const persisted = verificationScheduler.getPersistedData();
 
+  // Load tx verification results
+  let txVerification = null;
+  const txResultsFile = path.join(__dirname, '../data/tx-verification-results.json');
+  try {
+    if (fs.existsSync(txResultsFile)) {
+      const txData = JSON.parse(fs.readFileSync(txResultsFile, 'utf-8'));
+      txVerification = {
+        timestamp: txData.timestamp,
+        totalChecked: txData.totalChecked,
+        verified: txData.verified,
+        partial: txData.partial,
+        outdated: txData.outdated,
+        invalid: txData.invalid,
+        errors: txData.errors,
+      };
+    }
+  } catch (err) {
+    console.error('Failed to load tx verification results:', err.message);
+  }
+
   res.json({
     service: 'IDLHub',
-    version: '4.0.0',
+    version: '4.1.0',
     status: summary.status || 'operational',
     verification: {
       ...summary,
       scheduler: schedulerStatus,
     },
+    txVerification,
     // Include historical data if available
     history: persisted.history?.slice(0, 24) || summary.uptimeHistory || [],
   });
@@ -691,6 +714,66 @@ app.post('/api/status/scheduler/stop', (req, res) => {
   res.json({ success: true, message: 'Scheduler stopped' });
 });
 
+// Transaction-based IDL verification results
+app.get('/api/status/tx-verification', (req, res) => {
+  const txResultsFile = path.join(__dirname, '../data/tx-verification-results.json');
+
+  try {
+    if (fs.existsSync(txResultsFile)) {
+      const data = JSON.parse(fs.readFileSync(txResultsFile, 'utf-8'));
+      res.json(data);
+    } else {
+      res.json({
+        message: 'No transaction verification data yet',
+        hint: 'Run npm run verify:tx to generate results',
+      });
+    }
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Verify a specific protocol via transaction parsing
+app.get('/api/status/tx-verification/:protocolId', async (req, res) => {
+  const { protocolId } = req.params;
+
+  try {
+    // First check cached results
+    const txResultsFile = path.join(__dirname, '../data/tx-verification-results.json');
+    if (fs.existsSync(txResultsFile)) {
+      const data = JSON.parse(fs.readFileSync(txResultsFile, 'utf-8'));
+      const cached = data.protocols?.find(p => p.protocolId === protocolId);
+      if (cached) {
+        return res.json({ ...cached, source: 'cached' });
+      }
+    }
+
+    // Not cached - run live verification
+    const manifestPath = path.join(__dirname, '../public/arweave/manifest.json');
+    const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf-8'));
+
+    const entry = manifest.idls[protocolId];
+    if (!entry) {
+      return res.status(404).json({ error: 'Protocol not found in manifest' });
+    }
+
+    // Fetch IDL from Arweave
+    const idlUrl = `${manifest.gateway}/${entry.txId}`;
+    const idlResp = await fetch(idlUrl);
+    if (!idlResp.ok) {
+      return res.status(500).json({ error: 'Failed to fetch IDL from Arweave' });
+    }
+    const idl = await idlResp.json();
+
+    // Verify
+    const result = await idlTxVerifier.verifyIdlWithTransactions(protocolId, idl, { verbose: false });
+    res.json({ ...result, source: 'live' });
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // API documentation
 app.get('/api/docs', (req, res) => {
   res.json({
@@ -739,6 +822,9 @@ app.use((err, req, res, _next) => {
   console.error('Error:', err);
   res.status(500).json({ error: 'Internal server error', details: err.message });
 });
+
+// Faucet routes
+app.use('/api/faucet', faucetRouter);
 
 // Start server
 app.listen(PORT, () => {

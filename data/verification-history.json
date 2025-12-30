@@ -1,5 +1,122 @@
 [
   {
+    "timestamp": "2025-12-26T18:22:54.633Z",
+    "verified": 24,
+    "total": 102,
+    "placeholder": 43,
+    "noProgram": 21,
+    "rpcError": 0,
+    "durationMs": 36340
+  },
+  {
+    "timestamp": "2025-12-26T17:22:54.571Z",
+    "verified": 24,
+    "total": 102,
+    "placeholder": 43,
+    "noProgram": 21,
+    "rpcError": 0,
+    "durationMs": 73716
+  },
+  {
+    "timestamp": "2025-12-26T16:22:54.524Z",
+    "verified": 24,
+    "total": 102,
+    "placeholder": 43,
+    "noProgram": 21,
+    "rpcError": 0,
+    "durationMs": 38177
+  },
+  {
+    "timestamp": "2025-12-26T15:23:17.827Z",
+    "verified": 0,
+    "total": 102,
+    "placeholder": 0,
+    "noProgram": 0,
+    "rpcError": 0,
+    "durationMs": 893300
+  },
+  {
+    "timestamp": "2025-12-26T14:24:45.068Z",
+    "verified": 0,
+    "total": 102,
+    "placeholder": 0,
+    "noProgram": 0,
+    "rpcError": 0,
+    "durationMs": 1412652
+  },
+  {
+    "timestamp": "2025-12-26T13:26:11.140Z",
+    "verified": 0,
+    "total": 102,
+    "placeholder": 0,
+    "noProgram": 0,
+    "rpcError": 0,
+    "durationMs": 1282707
+  },
+  {
+    "timestamp": "2025-12-26T12:22:29.854Z",
+    "verified": 24,
+    "total": 102,
+    "placeholder": 43,
+    "noProgram": 21,
+    "rpcError": 0,
+    "durationMs": 37070
+  },
+  {
+    "timestamp": "2025-12-26T11:22:29.799Z",
+    "verified": 24,
+    "total": 102,
+    "placeholder": 43,
+    "noProgram": 21,
+    "rpcError": 0,
+    "durationMs": 36614
+  },
+  {
+    "timestamp": "2025-12-26T10:22:29.699Z",
+    "verified": 24,
+    "total": 102,
+    "placeholder": 43,
+    "noProgram": 21,
+    "rpcError": 0,
+    "durationMs": 37818
+  },
+  {
+    "timestamp": "2025-12-26T09:22:29.679Z",
+    "verified": 24,
+    "total": 102,
+    "placeholder": 43,
+    "noProgram": 21,
+    "rpcError": 0,
+    "durationMs": 37345
+  },
+  {
+    "timestamp": "2025-12-26T08:22:29.602Z",
+    "verified": 24,
+    "total": 102,
+    "placeholder": 43,
+    "noProgram": 21,
+    "rpcError": 0,
+    "durationMs": 39063
+  },
+  {
+    "timestamp": "2025-12-26T07:22:29.502Z",
+    "verified": 24,
+    "total": 102,
+    "placeholder": 43,
+    "noProgram": 21,
+    "rpcError": 0,
+    "durationMs": 36298
+  },
+  {
+    "timestamp": "2025-12-26T06:22:29.460Z",
+    "verified": 24,
+    "total": 102,
+    "placeholder": 43,
+    "noProgram": 21,
+    "rpcError": 0,
+    "durationMs": 38571
+  },
+  {
     "timestamp": "2025-12-26T05:22:29.361Z",
     "verified": 24,
     "total": 102,

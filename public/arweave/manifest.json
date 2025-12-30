@@ -5,6 +5,14 @@
   "lastUpdated": "2025-12-25T21:31:26.359Z",
   "indexTxId": "GGsQtpzigkFE8KhxryiWgVURUxMdRx3qGSDHeWDg3qkY",
   "idls": {
+    "aex402-amm": {
+      "txId": "8aR1AujJy5otN3W9AAvu1Aqo85kHLY2dVoNXh3MGyv7N",
+      "name": "AeX402 AMM",
+      "category": "amm",
+      "programId": "3AMM53MsJZy2Jvf7PeHHga3bsGjWV4TSaYz29WUtcdje",
+      "repo": "https://github.com/openSVM/ammasm",
+      "uploadedAt": "2025-12-27T18:20:00.000Z"
+    },
     "acceleraytor": {
       "txId": "G4Muuy1vxrqQEk6o5DJvgXNyL89Q5yybvvUCBK1uLFvc",
       "name": "Acceleraytor",

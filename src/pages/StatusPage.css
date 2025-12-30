@@ -112,8 +112,126 @@
   font-family: monospace;
 }
 
+/* Verification Section */
+.verification-section {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-secondary);
+  padding: var(--section-padding);
+}
+
+.verification-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--grid-gap-md);
+}
+
+.status-value.neutral {
+  color: var(--text-secondary);
+}
+
+.loading-state,
+.error-state {
+  padding: var(--space-lg);
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+.error-state {
+  color: var(--error-color);
+}
+
+/* TX Verification Table */
+.tx-verification-section {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-secondary);
+  padding: var(--section-padding);
+}
+
+.section-description {
+  color: var(--text-secondary);
+  margin: 0 0 var(--space-lg);
+  font-size: var(--font-sm);
+}
+
+.tx-results-table {
+  overflow-x: auto;
+}
+
+.tx-results-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tx-results-table th,
+.tx-results-table td {
+  padding: var(--space-sm) var(--space-md);
+  text-align: left;
+  border-bottom: 1px solid var(--border-secondary);
+}
+
+.tx-results-table th {
+  font-size: var(--font-sm);
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  background: var(--bg-tertiary);
+}
+
+.tx-results-table td {
+  font-size: var(--font-sm);
+  color: var(--text-primary);
+}
+
+.tx-results-table .protocol-name {
+  font-weight: 600;
+  font-family: monospace;
+}
+
+.tx-results-table .decoded-list {
+  font-family: monospace;
+  font-size: var(--font-xs);
+  color: var(--text-secondary);
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  font-size: var(--font-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.status-badge.online {
+  background: rgba(0, 255, 136, 0.1);
+  color: var(--accent-green);
+  border: 1px solid var(--accent-green);
+}
+
+.status-badge.warning {
+  background: rgba(255, 165, 0, 0.1);
+  color: var(--accent-orange);
+  border: 1px solid var(--accent-orange);
+}
+
+.status-badge.offline {
+  background: rgba(255, 0, 0, 0.1);
+  color: var(--error-color);
+  border: 1px solid var(--error-color);
+}
+
+.status-badge.neutral {
+  background: rgba(128, 128, 128, 0.1);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-secondary);
+}
+
 @media (max-width: 768px) {
-  .status-grid {
+  .status-grid,
+  .verification-grid {
     grid-template-columns: 1fr;
   }
 
@@ -126,5 +244,9 @@
   .contract-address {
     font-size: var(--font-sm);
     word-break: break-all;
+  }
+
+  .tx-results-table .decoded-list {
+    max-width: 150px;
   }
 }

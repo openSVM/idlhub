@@ -15,6 +15,7 @@ const crypto = require('crypto');
 
 // RPC endpoints with fallbacks
 const RPC_ENDPOINTS = [
+  'https://solana-rpc-proxy.0xrinegade.workers.dev',
   'https://api.mainnet-beta.solana.com',
   'https://solana-api.projectserum.com',
   'https://rpc.ankr.com/solana',

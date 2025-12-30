@@ -8,11 +8,20 @@
 const fs = require('fs');
 const path = require('path');
 const { verifyAllProtocols, getSummary, getLatestResults } = require('./idl-verifier');
+const { verifyAllIdls: verifyIdlsWithTransactions } = require('./idl-tx-verifier.cjs');
 
 // Configuration
 const VERIFICATION_INTERVAL_MS = 60 * 60 * 1000; // 1 hour
 const RESULTS_FILE = path.join(__dirname, '../../data/verification-results.json');
 const HISTORY_FILE = path.join(__dirname, '../../data/verification-history.json');
+const TX_RESULTS_FILE = path.join(__dirname, '../../data/tx-verification-results.json');
+
+// Priority protocols for transaction verification (most active/important)
+const TX_VERIFY_PROTOCOLS = [
+  'drift', 'orca', 'marginfi', 'kamino', 'lifinity',
+  'meteora', 'mango', 'jupiter', 'raydium', 'phoenix',
+  'openbook', 'tensor', 'solend', 'jito', 'marinade',
+];
 
 // Ensure data directory exists
 const dataDir = path.dirname(RESULTS_FILE);
@@ -84,6 +93,36 @@ function persistHistory(history) {
 }
 
 /**
+ * Run transaction-based verification for priority protocols
+ */
+async function runTxVerification() {
+  console.log(`\nStarting transaction-based IDL verification...`);
+  console.log(`Checking ${TX_VERIFY_PROTOCOLS.length} priority protocols`);
+
+  try {
+    const manifestPath = path.join(__dirname, '../../public/arweave/manifest.json');
+
+    const txResults = await verifyIdlsWithTransactions(manifestPath, {
+      protocols: TX_VERIFY_PROTOCOLS,
+      verbose: false,
+    });
+
+    console.log(`\nTransaction verification complete:`);
+    console.log(`  - Verified: ${txResults.verified}/${txResults.totalChecked}`);
+    console.log(`  - Partial: ${txResults.partial}`);
+    console.log(`  - Outdated: ${txResults.outdated}`);
+    console.log(`  - Invalid: ${txResults.invalid}`);
+    console.log(`  - Errors: ${txResults.errors}`);
+
+    return txResults;
+
+  } catch (err) {
+    console.error('Transaction verification failed:', err.message);
+    return { error: err.message };
+  }
+}
+
+/**
  * Run a single verification cycle
  */
 async function runVerification() {
@@ -99,11 +138,15 @@ async function runVerification() {
   console.log(`Starting scheduled verification at ${lastRunTime.toISOString()}`);
   console.log('='.repeat(60));
 
+  let results = null;
+  let txResults = null;
+
   try {
+    // 1. Run program existence verification
     const indexPath = path.join(__dirname, '../../index.json');
     const idlsPath = path.join(__dirname, '../../IDLs');
 
-    const results = await verifyAllProtocols(indexPath, idlsPath);
+    results = await verifyAllProtocols(indexPath, idlsPath);
 
     // Persist results
     const latestResults = getLatestResults();
@@ -122,14 +165,17 @@ async function runVerification() {
     });
     persistHistory(history);
 
-    console.log(`\nVerification complete:`);
+    console.log(`\nProgram verification complete:`);
     console.log(`  - Verified: ${results.verified}/${results.totalProtocols}`);
     console.log(`  - Placeholder: ${results.placeholder}`);
     console.log(`  - No Program ID: ${results.noProgram}`);
     console.log(`  - RPC Errors: ${results.rpcError}`);
     console.log(`  - Duration: ${results.durationMs}ms`);
 
-    return results;
+    // 2. Run transaction-based IDL verification
+    txResults = await runTxVerification();
+
+    return { programVerification: results, txVerification: txResults };
 
   } catch (err) {
     console.error('Verification run failed:', err);

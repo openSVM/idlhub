@@ -1,10 +1,28 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useWallet } from '../context/WalletContext';
 import { useAMM, usePoolState } from '../hooks/useAMM';
 import './SwapPage.css';
 
+interface FaucetConfig {
+  tokens: {
+    bags: { devnet: string; mainnet: string; symbol: string };
+    pump: { devnet: string; mainnet: string; symbol: string };
+  };
+  tiers: Array<{ minHolding: string; airdrop: string }>;
+  defaultAirdrop: string;
+}
+
+interface FaucetCheck {
+  wallet: string;
+  mainnet: { bags: string; pump: string; total: string };
+  airdrop: { bags: string; pump: string; total: string };
+  canClaim: boolean;
+  cooldownRemaining: number;
+  tier: string;
+}
+
 export default function SwapPage() {
-  const { connected } = useWallet();
+  const { connected, publicKey } = useWallet();
   const { pool, loading: poolLoading, error: poolError } = usePoolState();
   const { getSwapQuote, swap } = useAMM();
 
@@ -13,6 +31,67 @@ export default function SwapPage() {
   const [fromToken, setFromToken] = useState<'token0' | 'token1'>('token0');
   const [slippage, setSlippage] = useState(0.5);
   const [swapping, setSwapping] = useState(false);
+
+  // Faucet state
+  const [faucetConfig, setFaucetConfig] = useState<FaucetConfig | null>(null);
+  const [faucetCheck, setFaucetCheck] = useState<FaucetCheck | null>(null);
+  const [claiming, setClaiming] = useState(false);
+  const [claimResult, setClaimResult] = useState<string | null>(null);
+
+  // Load faucet config
+  useEffect(() => {
+    fetch('/api/faucet/config')
+      .then(res => res.json())
+      .then(data => {
+        if (!data.error) setFaucetConfig(data);
+      })
+      .catch(() => {});
+  }, []);
+
+  // Check wallet eligibility when connected
+  useEffect(() => {
+    if (connected && publicKey) {
+      fetch(`/api/faucet/check/${publicKey.toString()}`)
+        .then(res => res.json())
+        .then(data => {
+          if (!data.error) setFaucetCheck(data);
+        })
+        .catch(() => {});
+    } else {
+      setFaucetCheck(null);
+    }
+  }, [connected, publicKey]);
+
+  const handleClaim = async () => {
+    if (!connected || !publicKey) return;
+
+    setClaiming(true);
+    setClaimResult(null);
+
+    try {
+      const res = await fetch('/api/faucet/claim', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ wallet: publicKey.toString() }),
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        setClaimResult(`Airdrop received: ${data.airdrop.bags} BAGS + ${data.airdrop.pump} PUMP`);
+        // Refresh check
+        const checkRes = await fetch(`/api/faucet/check/${publicKey.toString()}`);
+        const checkData = await checkRes.json();
+        if (!checkData.error) setFaucetCheck(checkData);
+      } else {
+        setClaimResult(data.error || 'Claim failed');
+      }
+    } catch (err: any) {
+      setClaimResult(`Error: ${err.message}`);
+    } finally {
+      setClaiming(false);
+    }
+  };
 
   const handleSwap = async () => {
     if (!connected || !pool || !fromAmount) return;
@@ -59,34 +138,94 @@ export default function SwapPage() {
     setToAmount(fromAmount);
   };
 
+  const getTierLabel = (tier: string) => {
+    switch (tier) {
+      case 'whale': return '🐋 Whale';
+      case 'holder': return '💎 Diamond Hands';
+      case 'small': return '🌱 Early Supporter';
+      default: return '🆕 New User';
+    }
+  };
+
   return (
     <div className="swap-page">
-      <h1>Swap</h1>
+      <h1>BAGS ⟷ PUMP Swap</h1>
+      <p className="swap-subtitle">StableSwap AMM on Devnet</p>
 
-      {!connected && (
-        <div className="connect-prompt">
-          Connect your wallet to start swapping
+      {/* Faucet Section */}
+      {faucetConfig && (
+        <div className="faucet-section">
+          <h2>Devnet Faucet</h2>
+          <p className="faucet-description">
+            Get free devnet tokens to test the AMM. Holders of mainnet BAGS/PUMP get larger airdrops!
+          </p>
+
+          {!connected ? (
+            <div className="connect-prompt">
+              Connect your wallet to claim devnet tokens
+            </div>
+          ) : faucetCheck ? (
+            <div className="faucet-info">
+              <div className="faucet-stats">
+                <div className="faucet-stat">
+                  <span className="label">Mainnet Holdings</span>
+                  <span className="value">{faucetCheck.mainnet.total} IDL</span>
+                </div>
+                <div className="faucet-stat">
+                  <span className="label">Your Tier</span>
+                  <span className="value">{getTierLabel(faucetCheck.tier)}</span>
+                </div>
+                <div className="faucet-stat">
+                  <span className="label">Airdrop Amount</span>
+                  <span className="value">{faucetCheck.airdrop.total} tokens</span>
+                </div>
+              </div>
+
+              {faucetCheck.canClaim ? (
+                <button
+                  className="claim-btn"
+                  onClick={handleClaim}
+                  disabled={claiming}
+                >
+                  {claiming ? 'Claiming...' : `Claim ${faucetCheck.airdrop.bags} BAGS + ${faucetCheck.airdrop.pump} PUMP`}
+                </button>
+              ) : (
+                <div className="cooldown-notice">
+                  Cooldown: {faucetCheck.cooldownRemaining} minutes remaining
+                </div>
+              )}
+
+              {claimResult && (
+                <div className={`claim-result ${claimResult.includes('Error') ? 'error' : 'success'}`}>
+                  {claimResult}
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="loading">Checking eligibility...</div>
+          )}
         </div>
       )}
 
+      {/* Pool Status */}
       {poolLoading && <div className="loading">Loading pool...</div>}
       {poolError && (
         <div className="pool-not-found">
           <h2>Pool Not Initialized</h2>
-          <p>The SOL/USDC StableSwap pool hasn't been initialized on-chain yet.</p>
+          <p>The BAGS/PUMP StableSwap pool hasn't been initialized on devnet yet.</p>
           <div className="pool-info">
             <div className="info-item">
               <strong>Program:</strong> 3AMM53MsJZy2Jvf7PeHHga3bsGjWV4TSaYz29WUtcdje
             </div>
             <div className="info-item">
-              <strong>Token 0:</strong> SOL (So11111111111111111111111111111111111111112)
+              <strong>BAGS:</strong> {faucetConfig?.tokens.bags.devnet || 'Not configured'}
             </div>
             <div className="info-item">
-              <strong>Token 1:</strong> USDC (EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v)
+              <strong>PUMP:</strong> {faucetConfig?.tokens.pump.devnet || 'Not configured'}
             </div>
           </div>
           <p className="note">
-            To initialize the pool, run: <code>anchor run init-pool</code> from the idlhub directory.
+            Run <code>npm run devnet:init-pool</code> to initialize the pool.
           </p>
           <details className="technical-details">
             <summary>Technical Details</summary>
@@ -95,16 +234,17 @@ export default function SwapPage() {
         </div>
       )}
 
+      {/* Swap Interface */}
       {pool && (
         <>
           <div className="pool-stats">
             <div className="stat">
-              <div className="label">Pool Balance (Token 0)</div>
-              <div className="value">{(Number(pool.balance0) / 1e6).toFixed(2)}</div>
+              <div className="label">BAGS Balance</div>
+              <div className="value">{(Number(pool.balance0) / 1e6).toLocaleString()}</div>
             </div>
             <div className="stat">
-              <div className="label">Pool Balance (Token 1)</div>
-              <div className="value">{(Number(pool.balance1) / 1e6).toFixed(2)}</div>
+              <div className="label">PUMP Balance</div>
+              <div className="value">{(Number(pool.balance1) / 1e6).toLocaleString()}</div>
             </div>
             <div className="stat">
               <div className="label">Fee</div>
@@ -112,7 +252,7 @@ export default function SwapPage() {
             </div>
             <div className="stat">
               <div className="label">LP Supply</div>
-              <div className="value">{(Number(pool.lpSupply) / 1e6).toFixed(2)}</div>
+              <div className="value">{(Number(pool.lpSupply) / 1e6).toLocaleString()}</div>
             </div>
           </div>
 
@@ -126,10 +266,10 @@ export default function SwapPage() {
                 placeholder="0.00"
                 disabled={!connected || poolLoading}
               />
-              <div className="token-label">{fromToken === 'token0' ? 'Token 0' : 'Token 1'}</div>
+              <div className="token-label">{fromToken === 'token0' ? 'BAGS' : 'PUMP'}</div>
             </div>
 
-            <button className="switch-btn" onClick={switchTokens}>
+            <button className="switch-btn" onClick={switchTokens} title="Switch tokens">
               ↓↑
             </button>
 
@@ -142,7 +282,7 @@ export default function SwapPage() {
                 disabled
                 readOnly
               />
-              <div className="token-label">{fromToken === 'token0' ? 'Token 1' : 'Token 0'}</div>
+              <div className="token-label">{fromToken === 'token0' ? 'PUMP' : 'BAGS'}</div>
             </div>
 
             <div className="slippage-control">
@@ -170,6 +310,16 @@ export default function SwapPage() {
           </div>
         </>
       )}
+
+      {/* Mainnet Info */}
+      <div className="mainnet-info">
+        <h3>Mainnet Tokens</h3>
+        <p>Hold these tokens on mainnet to get larger devnet airdrops:</p>
+        <ul>
+          <li><strong>BAGS-IDL:</strong> <code>8zdhHxthCFoigAGw4QRxWfXUWLY1KkMZ1r7CTcmiBAGS</code></li>
+          <li><strong>PUMP-IDL:</strong> <code>4GihJrYJGQ9pjqDySTjd57y1h3nNkEZNbzJxCbispump</code></li>
+        </ul>
+      </div>
     </div>
   );
 }

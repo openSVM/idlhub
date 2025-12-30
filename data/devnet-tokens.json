@@ -1,0 +1,11 @@
+{
+  "network": "devnet",
+  "createdAt": "2025-12-27T05:19:09.383Z",
+  "bagsMint": "9eFUMRnJgsxFqgtmPHopEPgB6AgYrgc2qpVKdprMw69z",
+  "pumpMint": "4S4Da8MhQMLdXMB71QA2b89czTSQVNEf97vF9eW6T6TZ",
+  "mintAuthority": "55KLP138Pp4MAaxFnoUR585kVRzYNrpMCSs9Hseh91Pk",
+  "decimals": 6,
+  "mainnetBags": "8zdhHxthCFoigAGw4QRxWfXUWLY1KkMZ1r7CTcmiBAGS",
+  "mainnetPump": "4GihJrYJGQ9pjqDySTjd57y1h3nNkEZNbzJxCbispump",
+  "ammProgram": "3AMM53MsJZy2Jvf7PeHHga3bsGjWV4TSaYz29WUtcdje"
+}
