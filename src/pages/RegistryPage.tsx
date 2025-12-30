@@ -107,6 +107,9 @@ export default function RegistryPage() {
   const [protocolAnalytics, setProtocolAnalytics] = useState<ProtocolAnalytics | null>(null);
   const [instructionStats, setInstructionStats] = useState<InstructionStats[]>([]);
   const [securityIssues, setSecurityIssues] = useState<SecurityIssue[]>([]);
+
+  // Derived state - MUST be declared early to avoid TDZ errors in useEffect hooks below
+  const currentProtocol = allProtocols.find(p => p.id === currentProtocolId);
   const [loadingAnalytics, setLoadingAnalytics] = useState(false);
 
   // Account explorer state
@@ -1052,8 +1055,6 @@ SolInstruction create_${instruction.name}_instruction(
       </div>
     );
   }
-
-  const currentProtocol = allProtocols.find(p => p.id === currentProtocolId);
 
   return (
     <div className="container">
