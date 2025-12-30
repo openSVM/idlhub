@@ -1250,18 +1250,22 @@ SolInstruction create_${instruction.name}_instruction(
                     )}
                   </td>
                   <td className="col-rate">
-                    {protocol.txVerification?.successRate !== undefined ? (
+                    {protocol.txVerification?.successRate != null ? (
                       <span className={protocol.txVerification.successRate === 100 ? 'rate-good' : protocol.txVerification.successRate >= 50 ? 'rate-partial' : 'rate-bad'}>
                         {protocol.txVerification.successRate}%
                       </span>
-                    ) : '—'}
+                    ) : (
+                      <span className="rate-bad">—</span>
+                    )}
                   </td>
                   <td className="col-coverage">
-                    {protocol.txVerification?.coverage !== undefined ? (
+                    {protocol.txVerification?.coverage != null ? (
                       <span className={protocol.txVerification.coverage >= 50 ? 'coverage-good' : 'coverage-low'}>
                         {protocol.txVerification.coverage}%
                       </span>
-                    ) : '—'}
+                    ) : (
+                      <span className="coverage-low">—</span>
+                    )}
                   </td>
                   <td className="col-actions">
                     <button
