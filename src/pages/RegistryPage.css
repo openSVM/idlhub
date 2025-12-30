@@ -581,9 +581,26 @@
 
 /* Table action buttons */
 .col-actions .icon-btn {
-  padding: 4px 8px;
-  font-size: 12px;
-  margin: 0 2px;
+  padding: 6px 10px;
+  font-size: 14px;
+  margin: 0 3px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: 0;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 30px;
+  height: 28px;
+}
+
+.col-actions .icon-btn:hover {
+  background: var(--accent-primary);
+  color: var(--bg-primary);
+  border-color: var(--accent-primary);
 }
 
 /* Pagination */
