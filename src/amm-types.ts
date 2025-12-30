@@ -8,12 +8,12 @@ import { PublicKey } from '@solana/web3.js';
 
 // Lazy initialization to avoid module-scope side effects (breaks Vite builds)
 let _PROGRAM_ID: PublicKey;
-export const PROGRAM_ID = (() => {
+export const getProgramId = () => {
   if (!_PROGRAM_ID) {
     _PROGRAM_ID = new PublicKey('3AMM53MsJZy2Jvf7PeHHga3bsGjWV4TSaYz29WUtcdje');
   }
   return _PROGRAM_ID;
-})();
+};
 
 // ============================================================================
 // DISCRIMINATORS (8-byte little-endian)
@@ -414,14 +414,14 @@ export function createPoolNData(amp: bigint, nTokens: number, bump: number): Buf
 export function derivePoolPda(mint0: PublicKey): [PublicKey, number] {
   return PublicKey.findProgramAddressSync(
     [Buffer.from('pool'), mint0.toBuffer()],
-    PROGRAM_ID
+    getProgramId()
   );
 }
 
 export function deriveNPoolPda(mint0: PublicKey): [PublicKey, number] {
   return PublicKey.findProgramAddressSync(
     [Buffer.from('npool'), mint0.toBuffer()],
-    PROGRAM_ID
+    getProgramId()
   );
 }
 

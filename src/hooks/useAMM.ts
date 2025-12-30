@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useWallet } from '../context/WalletContext';
 import { PublicKey, Transaction, TransactionInstruction, SystemProgram } from '@solana/web3.js';
 import * as anchor from '@coral-xyz/anchor';
-import { PROGRAM_ID, DISCRIMINATORS, CONSTANTS } from '../amm-types';
+import { getProgramId, DISCRIMINATORS, CONSTANTS } from '../amm-types';
 
 // Token Program constants - replacing @solana/spl-token to eliminate bigint-buffer vulnerability
 const TOKEN_PROGRAM_ID = new PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA');
@@ -177,7 +177,7 @@ export function usePoolState() {
       // Pool PDA: seeds = ["pool", mint0]
       const [poolPDA] = PublicKey.findProgramAddressSync(
         [Buffer.from('pool'), getToken0Mint().toBuffer()],
-        PROGRAM_ID
+        getProgramId()
       );
 
       const account = await connection.getAccountInfo(poolPDA);
@@ -284,14 +284,14 @@ export function useAMM() {
 
       const [poolPDA] = PublicKey.findProgramAddressSync(
         [getToken0Mint().toBuffer(), getToken1Mint().toBuffer(), Buffer.from('pool')],
-        PROGRAM_ID
+        getProgramId()
       );
 
       const userToken0 = await getAssociatedTokenAddress(getToken0Mint(), publicKey);
       const userToken1 = await getAssociatedTokenAddress(getToken1Mint(), publicKey);
 
       const instruction = new TransactionInstruction({
-        programId: PROGRAM_ID,
+        programId: getProgramId(),
         keys: [
           { pubkey: poolPDA, isSigner: false, isWritable: true },
           { pubkey: pool.t0Vault, isSigner: false, isWritable: true },
