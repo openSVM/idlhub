@@ -407,9 +407,6 @@
   text-transform: uppercase;
   cursor: help;
   white-space: nowrap;
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .tx-verify-verified {
@@ -490,8 +487,6 @@
   padding: 8px 12px;
   border-bottom: 1px solid var(--border-secondary);
   vertical-align: middle;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .protocols-table .protocol-row {
@@ -523,12 +518,12 @@
   white-space: nowrap;
 }
 .col-status {
-  width: 100px;
+  min-width: 100px;
   text-align: center;
   white-space: nowrap;
 }
 .col-tx-status {
-  width: 110px;
+  min-width: 110px;
   text-align: center;
   white-space: nowrap;
 }
