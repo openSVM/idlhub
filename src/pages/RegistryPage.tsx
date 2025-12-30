@@ -121,6 +121,9 @@ export default function RegistryPage() {
   const [showTemplatesModal, setShowTemplatesModal] = useState(false);
   const [selectedTemplateLanguage, setSelectedTemplateLanguage] = useState<TemplateLanguage>('Next.js');
 
+  // Performance optimization - progressive loading
+  const [maxVisibleProtocols, setMaxVisibleProtocols] = useState(100);
+
   // Load protocols from Arweave manifest
   useEffect(() => {
     const loadProtocols = async () => {
@@ -292,6 +295,9 @@ export default function RegistryPage() {
       return matchesSearch && matchesCategory;
     });
   }, [allProtocols, searchQuery, currentCategory, bookmarkedProtocols]);
+
+  // Progressive loading - show limited protocols initially for better performance
+  const visibleProtocols = filteredProtocols.slice(0, maxVisibleProtocols);
 
   // Get unique categories
   const categories = useMemo(() => {
@@ -1172,6 +1178,7 @@ SolInstruction create_${instruction.name}_instruction(
             <p>Try adjusting your search or filters</p>
           </div>
         ) : (
+          <>
           <table className="protocols-table">
             <thead>
               <tr>
@@ -1186,7 +1193,7 @@ SolInstruction create_${instruction.name}_instruction(
               </tr>
             </thead>
             <tbody>
-              {filteredProtocols.map(protocol => (
+              {visibleProtocols.map(protocol => (
                 <tr
                   key={protocol.id}
                   className={`protocol-row ${currentProtocolId === protocol.id ? 'selected' : ''}`}
@@ -1293,6 +1300,19 @@ SolInstruction create_${instruction.name}_instruction(
               ))}
             </tbody>
           </table>
+
+          {/* Load More Button */}
+          {filteredProtocols.length > maxVisibleProtocols && (
+            <div className="load-more-section">
+              <button
+                className="load-more-btn"
+                onClick={() => setMaxVisibleProtocols(prev => prev + 100)}
+              >
+                Load More ({filteredProtocols.length - maxVisibleProtocols} remaining)
+              </button>
+            </div>
+          )}
+          </>
         )}
       </div>
 
