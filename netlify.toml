@@ -45,6 +45,21 @@
   to = "/.netlify/functions/upload-idl"
   status = 200
 
+[[redirects]]
+  from = "/api/idl/*"
+  to = "/.netlify/functions/idl"
+  status = 200
+
+[[redirects]]
+  from = "/api/status/*"
+  to = "/.netlify/functions/status"
+  status = 200
+
+[[redirects]]
+  from = "/api/metrics/*"
+  to = "/.netlify/functions/metrics"
+  status = 200
+
 # SPA catch-all (must be last)
 [[redirects]]
   from = "/*"
