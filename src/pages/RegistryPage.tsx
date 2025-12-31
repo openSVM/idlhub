@@ -1283,7 +1283,7 @@ SolInstruction create_${instruction.name}_instruction(
                       }}
                       title="Download IDL"
                     >
-                      ↓
+                      ⬇
                     </button>
                     <button
                       className="icon-btn"
@@ -1293,7 +1293,7 @@ SolInstruction create_${instruction.name}_instruction(
                       }}
                       title="View JSON"
                     >
-                      { }
+                      👁
                     </button>
                   </td>
                 </tr>
